@@ -464,70 +464,53 @@ Use a Hash Map (`Dictionary<int, int>`). As we iterate through each element `num
 ### 6. C# Solution (.NET 8)
 
 ```csharp
-using System;
-using System.Collections.Generic;
-
-public static class TwoSumSolver
+// Unsorted Array: Hash Map (O(N) Time, O(N) Space)
+public int[] TwoSum(int[] nums, int target)
 {
-    /// <summary>
-    /// Finds two indices such that their values sum to the specified target.
-    /// Scenario: Matching transaction debits and credits in an Order Settlement Engine.
-    /// </summary>
-    public static int[] TwoSum(int[] nums, int target)
+    var map = new Dictionary<int, int>();
+
+    for (int i = 0; i < nums.Length; i++)
     {
-        ArgumentNullException.ThrowIfNull(nums);
+        int diff = target - nums[i];
 
-        // Pre-size dictionary to avoid rehashing allocations
-        var seenComplements = new Dictionary<int, int>(capacity: nums.Length);
-
-        for (int i = 0; i < nums.Length; i++)
+        if (map.ContainsKey(diff))
         {
-            int current = nums[i];
-            int complement = target - current;
-
-            if (seenComplements.TryGetValue(complement, out int complementIndex))
-            {
-                return [complementIndex, i]; // C# 12 collection expression
-            }
-
-            // In case of duplicates, keeping the latest index is acceptable unless specified
-            seenComplements[current] = i;
+            return [map[diff], i];
         }
 
-        return [];
+        map[nums[i]] = i;
     }
 
-    /// <summary>
-    /// Sorted Variant: Solves Two Sum in O(1) auxiliary space using Converging Two Pointers.
-    /// </summary>
-    public static int[] TwoSumSorted(ReadOnlySpan<int> sortedNums, int target)
+    return [];
+}
+
+// Sorted Array Variant: Two Pointers (O(N) Time, O(1) Space)
+public int[] TwoSumSorted(int[] nums, int target)
+{
+    int l = 0;
+    int r = nums.Length - 1;
+
+    while (l < r)
     {
-        int left = 0;
-        int right = sortedNums.Length - 1;
+        int sum = nums[l] + nums[r];
 
-        while (left < right)
+        if (sum == target) return [l, r];
+
+        if (sum < target)
         {
-            long currentSum = (long)sortedNums[left] + sortedNums[right]; // Guard against integer overflow
-
-            if (currentSum == target)
-            {
-                return [left, right];
-            }
-
-            if (currentSum < target)
-            {
-                left++; // Need a larger sum, move left pointer rightward
-            }
-            else
-            {
-                right--; // Need a smaller sum, move right pointer leftward
-            }
+            l++;
         }
-
-        return [];
+        else
+        {
+            r--;
+        }
     }
+
+    return [];
 }
 ```
+
+> 💡 **.NET Senior Note:** In production C#, you can replace `map.ContainsKey(diff)` + `map[diff]` with `map.TryGetValue(diff, out int idx)` to avoid two hash lookups. In technical whiteboard interviews, `ContainsKey` is universally accepted and 10x easier to explain!
 
 ### 7. Complexity Analysis
 - **Unsorted (Hash Map):**
@@ -594,73 +577,28 @@ $$\text{maxSum} = \max(\text{maxSum}, \text{currentSum})$$
 ### 6. C# Solution (.NET 8)
 
 ```csharp
-using System;
-
-public static class SubarrayOptimizer
+public int MaxSubArray(int[] nums)
 {
-    /// <summary>
-    /// Computes the maximum contiguous subarray sum using Kadane's Algorithm.
-    /// Scenario: Finding the peak operational revenue delta in a payment settlement window.
-    /// </summary>
-    public static int MaxSubArray(ReadOnlySpan<int> nums)
+    int curSum = 0;
+    int maxSum = nums[0];
+
+    foreach (int n in nums)
     {
-        if (nums.IsEmpty)
-            throw new ArgumentException("Array cannot be empty.", nameof(nums));
-
-        int currentStreak = nums[0];
-        int globalMax = nums[0];
-
-        for (int i = 1; i < nums.Length; i++)
+        // If current streak is dragging us below zero, reset it
+        if (curSum < 0)
         {
-            int val = nums[i];
-            // Either continue the previous streak or start anew at current element
-            currentStreak = (currentStreak > 0) ? currentStreak + val : val;
-
-            if (currentStreak > globalMax)
-            {
-                globalMax = currentStreak;
-            }
+            curSum = 0;
         }
 
-        return globalMax;
+        curSum += n;
+        maxSum = Math.Max(maxSum, curSum);
     }
 
-    /// <summary>
-    /// Variation: Returns the actual start and end indices of the maximal subarray.
-    /// </summary>
-    public static (int MaxSum, int StartIndex, int EndIndex) MaxSubArrayWithIndices(ReadOnlySpan<int> nums)
-    {
-        if (nums.IsEmpty)
-            throw new ArgumentException("Array cannot be empty.", nameof(nums));
-
-        int globalMax = nums[0];
-        int currentStreak = nums[0];
-        int start = 0, end = 0, tempStart = 0;
-
-        for (int i = 1; i < nums.Length; i++)
-        {
-            if (currentStreak > 0)
-            {
-                currentStreak += nums[i];
-            }
-            else
-            {
-                currentStreak = nums[i];
-                tempStart = i; // Mark candidate start
-            }
-
-            if (currentStreak > globalMax)
-            {
-                globalMax = currentStreak;
-                start = tempStart;
-                end = i;
-            }
-        }
-
-        return (globalMax, start, end);
-    }
+    return maxSum;
 }
 ```
+
+> 💡 **.NET Senior Note:** If you want zero allocations over a slice of a large buffer in .NET, you can accept `ReadOnlySpan<int> nums`. The loop logic remains identical!
 
 ### 7. Complexity Analysis
 - **Time Complexity:** $O(N)$ — Single linear scan through the array.
@@ -714,40 +652,27 @@ Result is `[4, 5, 1, 2, 3]`. Correct!
 ### 6. C# Solution (.NET 8)
 
 ```csharp
-using System;
-
-public static class ArrayRotator
+public void Rotate(int[] nums, int k)
 {
-    /// <summary>
-    /// Rotates array in-place to the right by k steps in O(N) time and O(1) space.
-    /// Scenario: Shifting active server partitions in a round-robin load balancer.
-    /// </summary>
-    public static void Rotate(Span<int> nums, int k)
+    k = k % nums.Length;
+
+    // 1. Reverse entire array
+    Reverse(nums, 0, nums.Length - 1);
+
+    // 2. Reverse first k elements
+    Reverse(nums, 0, k - 1);
+
+    // 3. Reverse the rest
+    Reverse(nums, k, nums.Length - 1);
+}
+
+private void Reverse(int[] nums, int l, int r)
+{
+    while (l < r)
     {
-        if (nums.Length <= 1) return;
-
-        k %= nums.Length; // Normalize k when k >= Length
-        if (k == 0) return;
-
-        // Step 1: Reverse entire span
-        Reverse(nums, 0, nums.Length - 1);
-
-        // Step 2: Reverse first k elements
-        Reverse(nums, 0, k - 1);
-
-        // Step 3: Reverse remaining n - k elements
-        Reverse(nums, k, nums.Length - 1);
-    }
-
-    private static void Reverse(Span<int> span, int start, int end)
-    {
-        while (start < end)
-        {
-            // C# tuple swap (compiled to efficient register swaps without temp variable)
-            (span[start], span[end]) = (span[end], span[start]);
-            start++;
-            end--;
-        }
+        (nums[l], nums[r]) = (nums[r], nums[l]);
+        l++;
+        r--;
     }
 }
 ```
@@ -814,38 +739,27 @@ Graph transitions:
 ### 6. C# Solution (.NET 8)
 
 ```csharp
-using System;
-
-public static class DuplicateFinder
+public int FindDuplicate(int[] nums)
 {
-    /// <summary>
-    /// Finds the duplicate number in an immutable array using Floyd's Tortoise and Hare.
-    /// Scenario: Detecting duplicate transaction identifiers in a validated batch stream.
-    /// </summary>
-    public static int FindDuplicate(ReadOnlySpan<int> nums)
+    int slow = nums[0];
+    int fast = nums[0];
+
+    // 1. Detect intersection point in cycle
+    do
     {
-        if (nums.Length <= 1) return -1;
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+    } while (slow != fast);
 
-        int slow = nums[0];
-        int fast = nums[0];
-
-        // Phase 1: Detect cycle
-        do
-        {
-            slow = nums[slow];
-            fast = nums[nums[fast]];
-        } while (slow != fast);
-
-        // Phase 2: Locate cycle start (duplicate value)
-        slow = nums[0];
-        while (slow != fast)
-        {
-            slow = nums[slow];
-            fast = nums[fast];
-        }
-
-        return slow;
+    // 2. Find cycle entrance (the duplicate number)
+    slow = nums[0];
+    while (slow != fast)
+    {
+        slow = nums[slow];
+        fast = nums[fast];
     }
+
+    return slow;
 }
 ```
 
@@ -889,49 +803,32 @@ Given an array of intervals where `intervals[i] = [start_i, end_i]`, merge all o
 ### 5. C# Solution (.NET 8)
 
 ```csharp
-using System;
-using System.Collections.Generic;
-
-public static class IntervalMerger
+public int[][] Merge(int[][] intervals)
 {
-    public readonly record struct Interval(int Start, int End);
+    if (intervals.Length <= 1) return intervals;
 
-    /// <summary>
-    /// Merges overlapping time intervals.
-    /// Scenario: Healthcare operating room appointment conflict consolidation.
-    /// </summary>
-    public static List<Interval> Merge(Interval[] intervals)
+    // 1. Sort intervals by start time
+    Array.Sort(intervals, (a, b) => a[0].CompareTo(b[0]));
+
+    var res = new List<int[]>();
+    res.Add(intervals[0]);
+
+    // 2. Iterate and merge overlapping intervals
+    foreach (var interval in intervals)
     {
-        if (intervals == null || intervals.Length == 0)
-            return [];
+        var last = res[res.Count - 1];
 
-        // Sort by Start time ascending
-        Array.Sort(intervals, static (a, b) => a.Start.CompareTo(b.Start));
-
-        var merged = new List<Interval>(capacity: intervals.Length);
-        Interval current = intervals[0];
-
-        for (int i = 1; i < intervals.Length; i++)
+        if (interval[0] <= last[1])
         {
-            Interval next = intervals[i];
-
-            if (next.Start <= current.End)
-            {
-                // Overlap detected: expand current interval's boundary
-                current = current with { End = Math.Max(current.End, next.End) };
-            }
-            else
-            {
-                // Disjoint interval: commit current and advance
-                merged.Add(current);
-                current = next;
-            }
+            last[1] = Math.Max(last[1], interval[1]); // Extend end time
         }
-
-        // Commit the final interval
-        merged.Add(current);
-        return merged;
+        else
+        {
+            res.Add(interval);
+        }
     }
+
+    return res.ToArray();
 }
 ```
 
@@ -979,37 +876,28 @@ Final result: `[24, 12, 8, 6]`. Correct! ($2*3*4=24$, $1*3*4=12$, $1*2*4=8$, $1*
 ### 5. C# Solution (.NET 8)
 
 ```csharp
-using System;
-
-public static class ArrayProductSolver
+public int[] ProductExceptSelf(int[] nums)
 {
-    /// <summary>
-    /// Computes product of array except self in O(N) time and O(1) auxiliary space (excluding output).
-    /// Scenario: Calculating multi-factor risk weighting scores across independent portfolio tranches.
-    /// </summary>
-    public static int[] ProductExceptSelf(int[] nums)
+    int n = nums.Length;
+    int[] res = new int[n];
+
+    // 1. Calculate prefix products
+    int prefix = 1;
+    for (int i = 0; i < n; i++)
     {
-        ArgumentNullException.ThrowIfNull(nums);
-        int n = nums.Length;
-        int[] result = new int[n];
-
-        // Step 1: Compute prefix products directly in result array
-        result[0] = 1;
-        for (int i = 1; i < n; i++)
-        {
-            result[i] = result[i - 1] * nums[i - 1];
-        }
-
-        // Step 2: Accumulate suffix products in a single scalar variable
-        int runningSuffix = 1;
-        for (int i = n - 1; i >= 0; i--)
-        {
-            result[i] *= runningSuffix;
-            runningSuffix *= nums[i];
-        }
-
-        return result;
+        res[i] = prefix;
+        prefix *= nums[i];
     }
+
+    // 2. Multiply with postfix products
+    int postfix = 1;
+    for (int i = n - 1; i >= 0; i--)
+    {
+        res[i] *= postfix;
+        postfix *= nums[i];
+    }
+
+    return res;
 }
 ```
 
@@ -1125,46 +1013,33 @@ sequenceDiagram
 ### 4. C# Solution (.NET 8 with ReadOnlySpan<int>)
 
 ```csharp
-using System;
-
-public static class ContainerOptimizer
+public int MaxArea(int[] height)
 {
-    /// <summary>
-    /// Computes the maximum water retention volume between two pillars in O(N) time and O(1) space.
-    /// Uses ReadOnlySpan to ensure zero heap allocations on high-frequency evaluation pipelines.
-    /// </summary>
-    public static int MaxArea(ReadOnlySpan<int> height)
+    int l = 0;
+    int r = height.Length - 1;
+    int maxArea = 0;
+
+    while (l < r)
     {
-        if (height.Length < 2) return 0;
+        int area = (r - l) * Math.Min(height[l], height[r]);
+        maxArea = Math.Max(maxArea, area);
 
-        int left = 0;
-        int right = height.Length - 1;
-        int maxWaterArea = 0;
-
-        while (left < right)
+        // Move the shorter pillar inward
+        if (height[l] < height[r])
         {
-            int hLeft = height[left];
-            int hRight = height[right];
-            int currentWidth = right - left;
-
-            if (hLeft < hRight)
-            {
-                int currentArea = currentWidth * hLeft;
-                if (currentArea > maxWaterArea) maxWaterArea = currentArea;
-                left++; // Eliminate shorter left pillar
-            }
-            else
-            {
-                int currentArea = currentWidth * hRight;
-                if (currentArea > maxWaterArea) maxWaterArea = currentArea;
-                right--; // Eliminate shorter (or equal) right pillar
-            }
+            l++;
         }
-
-        return maxWaterArea;
+        else
+        {
+            r--;
+        }
     }
+
+    return maxArea;
 }
 ```
+
+> 💡 **.NET Senior Note:** In .NET 8, accepting `ReadOnlySpan<int> height` allows passing array slices without heap allocation. The algorithm stays identical!
 
 ### 5. Complexity Analysis
 - **Time Complexity:** $O(N)$ — Every iteration decrements $(R - L)$ by exactly 1. Total iterations $\le N$.
@@ -1211,65 +1086,46 @@ Sorted Array: [ -4,   -1,   -1,    0,    1,    2 ]
 ### 3. C# Solution (.NET 8)
 
 ```csharp
-using System;
-using System.Collections.Generic;
-
-public static class SettlementClearinghouse
+public IList<IList<int>> ThreeSum(int[] nums)
 {
-    /// <summary>
-    /// Finds all unique triplets that sum to 0 in O(N^2) time with zero duplicate triplets.
-    /// </summary>
-    public static IList<IList<int>> ThreeSum(int[] nums)
+    Array.Sort(nums);
+    var res = new List<IList<int>>();
+
+    for (int i = 0; i < nums.Length; i++)
     {
-        var results = new List<IList<int>>();
-        if (nums == null || nums.Length < 3) return results;
+        if (nums[i] > 0) break; // If smallest number > 0, cannot sum to 0
+        if (i > 0 && nums[i] == nums[i - 1]) continue; // Skip duplicate pivot
 
-        // Step 1: In-place Dual-Pivot QuickSort / IntroSort
-        Array.Sort(nums);
+        int l = i + 1;
+        int r = nums.Length - 1;
 
-        int n = nums.Length;
-
-        for (int i = 0; i < n - 2; i++)
+        while (l < r)
         {
-            // Early exit optimization: If the smallest number is > 0, three positive numbers cannot sum to 0
-            if (nums[i] > 0) break;
+            int sum = nums[i] + nums[l] + nums[r];
 
-            // Duplicate avoidance for Pivot
-            if (i > 0 && nums[i] == nums[i - 1]) continue;
-
-            int left = i + 1;
-            int right = n - 1;
-            int target = -nums[i];
-
-            while (left < right)
+            if (sum == 0)
             {
-                int sum = nums[left] + nums[right];
+                res.Add([nums[i], nums[l], nums[r]]);
 
-                if (sum == target)
-                {
-                    results.Add(new List<int> { nums[i], nums[left], nums[right] });
+                // Skip duplicates for left and right
+                while (l < r && nums[l] == nums[l + 1]) l++;
+                while (l < r && nums[r] == nums[r - 1]) r--;
 
-                    // Duplicate avoidance for Left pointer
-                    while (left < right && nums[left] == nums[left + 1]) left++;
-                    // Duplicate avoidance for Right pointer
-                    while (left < right && nums[right] == nums[right - 1]) right--;
-
-                    left++;
-                    right--;
-                }
-                else if (sum < target)
-                {
-                    left++; // Need a larger value
-                }
-                else
-                {
-                    right--; // Need a smaller value
-                }
+                l++;
+                r--;
+            }
+            else if (sum < 0)
+            {
+                l++;
+            }
+            else
+            {
+                r--;
             }
         }
-
-        return results;
     }
+
+    return res;
 }
 ```
 
@@ -1339,53 +1195,31 @@ flowchart TD
 ### 3. C# Solution (.NET 8)
 
 ```csharp
-using System;
-
-public static class HydraulicAnalyzer
+public int Trap(int[] height)
 {
-    /// <summary>
-    /// Computes total trapped rainwater in O(N) time and O(1) auxiliary heap allocation.
-    /// </summary>
-    public static int Trap(ReadOnlySpan<int> height)
+    if (height.Length == 0) return 0;
+
+    int l = 0, r = height.Length - 1;
+    int leftMax = height[l], rightMax = height[r];
+    int res = 0;
+
+    while (l < r)
     {
-        if (height.Length < 3) return 0;
-
-        int left = 0;
-        int right = height.Length - 1;
-        int leftMax = 0;
-        int rightMax = 0;
-        int totalWater = 0;
-
-        while (left < right)
+        if (leftMax < rightMax)
         {
-            if (height[left] < height[right])
-            {
-                if (height[left] >= leftMax)
-                {
-                    leftMax = height[left];
-                }
-                else
-                {
-                    totalWater += leftMax - height[left];
-                }
-                left++;
-            }
-            else
-            {
-                if (height[right] >= rightMax)
-                {
-                    rightMax = height[right];
-                }
-                else
-                {
-                    totalWater += rightMax - height[right];
-                }
-                right--;
-            }
+            l++;
+            leftMax = Math.Max(leftMax, height[l]);
+            res += leftMax - height[l];
         }
-
-        return totalWater;
+        else
+        {
+            r--;
+            rightMax = Math.Max(rightMax, height[r]);
+            res += rightMax - height[r];
+        }
     }
+
+    return res;
 }
 ```
 
@@ -1448,42 +1282,29 @@ stateDiagram-v2
 ### 3. C# Solution (.NET 8)
 
 ```csharp
-using System;
-
-public static class DutchNationalFlagSorter
+public void SortColors(int[] nums)
 {
-    /// <summary>
-    /// Partitions an array into 0s, 1s, and 2s in a single pass O(N) time and O(1) space.
-    /// </summary>
-    public static void SortColors(Span<int> nums)
+    int low = 0;
+    int mid = 0;
+    int high = nums.Length - 1;
+
+    while (mid <= high)
     {
-        int low = 0;
-        int mid = 0;
-        int high = nums.Length - 1;
-
-        while (mid <= high)
+        if (nums[mid] == 0)
         {
-            switch (nums[mid])
-            {
-                case 0:
-                    // Swap nums[low] and nums[mid], then advance both
-                    (nums[low], nums[mid]) = (nums[mid], nums[low]);
-                    low++;
-                    mid++;
-                    break;
-
-                case 1:
-                    // Already in correct middle section; just advance scanner
-                    mid++;
-                    break;
-
-                case 2:
-                    // Swap nums[mid] and nums[high], shrink high boundary.
-                    // DO NOT advance mid because the newly swapped nums[mid] is unexamined!
-                    (nums[mid], nums[high]) = (nums[high], nums[mid]);
-                    high--;
-                    break;
-            }
+            (nums[low], nums[mid]) = (nums[mid], nums[low]);
+            low++;
+            mid++;
+        }
+        else if (nums[mid] == 1)
+        {
+            mid++;
+        }
+        else // nums[mid] == 2
+        {
+            (nums[mid], nums[high]) = (nums[high], nums[mid]);
+            high--;
+            // Do NOT advance mid here: swapped value is still uninspected!
         }
     }
 }
@@ -1512,55 +1333,42 @@ Final:    [ 1,  3, 12,  0,   0 ]
 ### 2. C# Solutions (.NET 8)
 
 ```csharp
-using System;
-
-public static class BufferCompactor
+public int RemoveDuplicates(int[] nums)
 {
-    /// <summary>
-    /// Removes duplicates from sorted span in O(N) time and O(1) space.
-    /// Returns the new valid length.
-    /// </summary>
-    public static int RemoveDuplicates(Span<int> nums)
+    if (nums.Length == 0) return 0;
+
+    int w = 1; // write pointer
+
+    for (int r = 1; r < nums.Length; r++) // read pointer
     {
-        if (nums.Length == 0) return 0;
-
-        int writeIndex = 1;
-
-        for (int readIndex = 1; readIndex < nums.Length; readIndex++)
+        if (nums[r] != nums[r - 1])
         {
-            if (nums[readIndex] != nums[readIndex - 1])
-            {
-                nums[writeIndex] = nums[readIndex];
-                writeIndex++;
-            }
+            nums[w] = nums[r];
+            w++;
         }
-
-        return writeIndex;
     }
 
-    /// <summary>
-    /// Moves all zeros to the end of the span while maintaining relative order of non-zeros.
-    /// O(N) time, O(1) space, zero allocations.
-    /// </summary>
-    public static void MoveZeroes(Span<int> nums)
+    return w;
+}
+
+public void MoveZeroes(int[] nums)
+{
+    int w = 0; // write pointer
+
+    // 1. Shift non-zero values to front
+    for (int r = 0; r < nums.Length; r++)
     {
-        int writeIndex = 0;
-
-        // Phase 1: Shift all non-zero elements to front
-        for (int readIndex = 0; readIndex < nums.Length; readIndex++)
+        if (nums[r] != 0)
         {
-            if (nums[readIndex] != 0)
-            {
-                nums[writeIndex] = nums[readIndex];
-                writeIndex++;
-            }
+            nums[w] = nums[r];
+            w++;
         }
+    }
 
-        // Phase 2: Clear remaining slots to zero
-        while (writeIndex < nums.Length)
-        {
-            nums[writeIndex++] = 0;
-        }
+    // 2. Fill remaining slots with 0
+    while (w < nums.Length)
+    {
+        nums[w++] = 0;
     }
 }
 ```
@@ -1759,51 +1567,30 @@ Result: 2.
 ### 4. C# Solution (.NET 8)
 
 ```csharp
-using System;
-
-public static class SubstringFinder
+public int LengthOfLongestSubstring(string s)
 {
-    /// <summary>
-    /// Computes length of longest substring without repeating characters using Sliding Window.
-    /// Scenario: Identifying unique sequence tokens in an authentication JWT claim string.
-    /// </summary>
-    public static int LengthOfLongestSubstring(ReadOnlySpan<char> s)
+    var charSet = new HashSet<char>();
+    int l = 0;
+    int maxLen = 0;
+
+    for (int r = 0; r < s.Length; r++)
     {
-        if (s.IsEmpty) return 0;
-
-        // Use direct-mapped 128-element array for all standard ASCII characters
-        Span<int> lastSeenIndex = stackalloc int[128];
-        lastSeenIndex.Fill(-1);
-
-        int maxLength = 0;
-        int windowLeft = 0;
-
-        for (int windowRight = 0; windowRight < s.Length; windowRight++)
+        // Shrink window from left until duplicate character is removed
+        while (charSet.Contains(s[r]))
         {
-            char currentChar = s[windowRight];
-
-            // If character seen and inside current window, jump left boundary past it
-            if (currentChar < 128 && lastSeenIndex[currentChar] >= windowLeft)
-            {
-                windowLeft = lastSeenIndex[currentChar] + 1;
-            }
-
-            if (currentChar < 128)
-            {
-                lastSeenIndex[currentChar] = windowRight;
-            }
-
-            int currentWindowLength = windowRight - windowLeft + 1;
-            if (currentWindowLength > maxLength)
-            {
-                maxLength = currentWindowLength;
-            }
+            charSet.Remove(s[l]);
+            l++;
         }
 
-        return maxLength;
+        charSet.Add(s[r]);
+        maxLen = Math.Max(maxLen, r - l + 1);
     }
+
+    return maxLen;
 }
 ```
+
+> 💡 **.NET Senior Note:** In low-latency .NET systems, you can replace `HashSet<char>` with a `stackalloc int[128]` array storing last-seen indices to achieve zero allocations. In interview discussions, `HashSet<char>` is universally preferred for clarity!
 
 ### 5. Complexity Analysis
 - **Time Complexity:** $O(N)$ — `windowRight` scans from 0 to $N-1$ once.
@@ -2430,39 +2217,26 @@ Given an array of strings, group the anagrams together.
 ### 2. C# Solution (.NET 8)
 
 ```csharp
-using System;
-using System.Collections.Generic;
-
-public static class AnagramGrouper
+public IList<IList<string>> GroupAnagrams(string[] strs)
 {
-    /// <summary>
-    /// Groups words that are anagrams into common lists.
-    /// Scenario: Categorizing mutated audit log signatures in a financial fraud detector.
-    /// </summary>
-    public static IList<IList<string>> GroupAnagrams(string[] strs)
+    var map = new Dictionary<string, List<string>>();
+
+    foreach (string s in strs)
     {
-        if (strs == null || strs.Length == 0) return [];
+        // Sort string to use as the canonical dictionary key
+        char[] chars = s.ToCharArray();
+        Array.Sort(chars);
+        string key = new string(chars);
 
-        var groups = new Dictionary<string, IList<string>>(capacity: strs.Length);
-
-        foreach (string word in strs)
+        if (!map.ContainsKey(key))
         {
-            // Canonical key by sorting characters
-            char[] chars = word.ToCharArray();
-            Array.Sort(chars);
-            string key = new string(chars);
-
-            if (!groups.TryGetValue(key, out var list))
-            {
-                list = new List<string>();
-                groups[key] = list;
-            }
-
-            list.Add(word);
+            map[key] = new List<string>();
         }
 
-        return new List<IList<string>>(groups.Values);
+        map[key].Add(s);
     }
+
+    return map.Values.ToList<IList<string>>();
 }
 ```
 
@@ -2485,53 +2259,38 @@ Given an integer array `nums` and an integer `K`, return the $K$ most frequent e
 ### 2. C# Solution (.NET 8)
 
 ```csharp
-using System;
-using System.Collections.Generic;
-
-public static class FrequencyAnalyzer
+public int[] TopKFrequent(int[] nums, int k)
 {
-    /// <summary>
-    /// Identifies the Top K frequent items in O(N) linear time using Bucket Sort.
-    /// Scenario: Extracting top error codes in an ASP.NET Core API telemetry ingestion pipeline.
-    /// </summary>
-    public static int[] TopKFrequent(int[] nums, int k)
+    // 1. Count frequencies
+    var count = new Dictionary<int, int>();
+    foreach (int n in nums)
     {
-        ArgumentNullException.ThrowIfNull(nums);
-
-        // Step 1: Frequency count
-        var frequencyMap = new Dictionary<int, int>();
-        foreach (int num in nums)
-        {
-            frequencyMap[num] = frequencyMap.GetValueOrDefault(num, 0) + 1;
-        }
-
-        // Step 2: Bucket array where index represents frequency
-        var buckets = new List<int>[nums.Length + 1];
-
-        foreach (var (num, freq) in frequencyMap)
-        {
-            buckets[freq] ??= new List<int>();
-            buckets[freq].Add(num);
-        }
-
-        // Step 3: Gather top K from highest to lowest bucket
-        int[] result = new int[k];
-        int count = 0;
-
-        for (int freq = buckets.Length - 1; freq >= 0 && count < k; freq--)
-        {
-            if (buckets[freq] != null)
-            {
-                foreach (int item in buckets[freq])
-                {
-                    result[count++] = item;
-                    if (count == k) break;
-                }
-            }
-        }
-
-        return result;
+        count[n] = count.GetValueOrDefault(n, 0) + 1;
     }
+
+    // 2. Bucket sort: index = frequency, value = list of numbers
+    var buckets = new List<int>[nums.Length + 1];
+    foreach (var pair in count)
+    {
+        int freq = pair.Value;
+        if (buckets[freq] == null)
+        {
+            buckets[freq] = new List<int>();
+        }
+        buckets[freq].Add(pair.Key);
+    }
+
+    // 3. Collect top k elements from highest frequency down to lowest
+    var res = new List<int>();
+    for (int i = buckets.Length - 1; i >= 0 && res.Count < k; i--)
+    {
+        if (buckets[i] != null)
+        {
+            res.AddRange(buckets[i]);
+        }
+    }
+
+    return res.Take(k).ToArray();
 }
 ```
 
@@ -2968,7 +2727,9 @@ public static class ShippingCapacityOptimizer
 When a human looks up the name "Smith" in a printed phonebook, they do not open the exact middle page (M). They open near the end (S).
 **Interpolation Search** mimics this intuition for sorted arrays whose elements are **uniformly distributed** (e.g. sequential IDs, timestamps, linear sensor readings).
 - Instead of fixed midpoint splitting ($50\%$), it uses linear interpolation:
-  $$	ext{pos} = 	ext{low} + \left\lfloor rac{	ext{target} - 	ext{arr}[	ext{low}]}{	ext{arr}[	ext{high}] - 	ext{arr}[	ext{low}]} 	imes (	ext{high} - 	ext{low}) ightfloor$$
+  $$	ext{pos} = 	ext{low} + \left\lfloor rac{	ext{target} - 	ext{arr}[	ext{low}]}{	ext{arr}[	ext{high}] - 	ext{arr}[	ext{low}]} 	imes (	ext{high} - 	ext{low}) 
+ight
+floor$$
 
 ```
 Binary Search Probe:        [------------------- MID (50%) -------------------]
@@ -3550,7 +3311,8 @@ public static class QuickSortEngine
 ### 1. Invariants & Complete Binary Tree Mapping
 Heap Sort is an in-place $O(N \log N)$ algorithm that requires **$O(1)$ auxiliary memory**.
 It models the flat array as a Complete Binary Tree:
-- **Parent Index:** $	ext{parent}(i) = \lfloor (i - 1) / 2 floor$
+- **Parent Index:** $	ext{parent}(i) = \lfloor (i - 1) / 2 
+floor$
 - **Left Child:** $	ext{left}(i) = 2i + 1$
 - **Right Child:** $	ext{right}(i) = 2i + 2$
 
@@ -3566,7 +3328,8 @@ Index:    0   1   2   3   4   5   6
 
 ### 2. The Two Execution Phases
 1. **Phase 1: Build Max-Heap ($O(N)$ Time):**
-   - Starting from the lowest non-leaf node $\lfloor N/2 floor - 1$ down to index $0$, run `SiftDown`.
+   - Starting from the lowest non-leaf node $\lfloor N/2 
+floor - 1$ down to index $0$, run `SiftDown`.
    - Amazingly, building the heap is $O(N)$, not $O(N \log N)$, because the majority of nodes reside near the bottom with minimal tree height.
 2. **Phase 2: Repeated Extraction ($O(N \log N)$ Time):**
    - The maximum element is always at index $0$.
@@ -3789,7 +3552,8 @@ flowchart TD
 
 ### The Three Protective Pillars of IntroSort
 1. **Median-of-3 QuickSort:** Prevents the $O(N^2)$ trap on sorted or reverse-sorted input by picking the median of the first, middle, and last elements.
-2. **HeapSort Fallback Guard:** If the recursion tree exceeds $2 	imes \lfloor \log_2 N floor$ levels (indicating an adversarial input designed to degrade QuickSort), the runtime instantly switches to **HeapSort**. This strictly guarantees an upper bound of $O(N \log N)$ and prevents `StackOverflowException`.
+2. **HeapSort Fallback Guard:** If the recursion tree exceeds $2 	imes \lfloor \log_2 N 
+floor$ levels (indicating an adversarial input designed to degrade QuickSort), the runtime instantly switches to **HeapSort**. This strictly guarantees an upper bound of $O(N \log N)$ and prevents `StackOverflowException`.
 3. **InsertionSort Leaf Optimization:** When partitions shrink to $\le 16$ elements, the runtime switches to **InsertionSort**. On micro-arrays, InsertionSort out-performs QuickSort by avoiding function prologue/epilogue overhead and exploiting CPU branch prediction.
 
 > **Interview Answer:** *"Why does .NET not use MergeSort for `Array.Sort`?"*  

@@ -1331,69 +1331,56 @@ Span&lt;int&gt; slice = arr.AsSpan().Slice(start: 2, length: 5);
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">using System;
-using System.Collections.Generic;
-
-public static class TwoSumSolver
+    <pre><code class="language-csharp">// Unsorted Array: Hash Map (O(N) Time, O(N) Space)
+public int[] TwoSum(int[] nums, int target)
 {
-    /// &lt;summary&gt;
-    /// Finds two indices such that their values sum to the specified target.
-    /// Scenario: Matching transaction debits and credits in an Order Settlement Engine.
-    /// &lt;/summary&gt;
-    public static int[] TwoSum(int[] nums, int target)
+    var map = new Dictionary&lt;int, int&gt;();
+
+    for (int i = 0; i &lt; nums.Length; i++)
     {
-        ArgumentNullException.ThrowIfNull(nums);
+        int diff = target - nums[i];
 
-        // Pre-size dictionary to avoid rehashing allocations
-        var seenComplements = new Dictionary&lt;int, int&gt;(capacity: nums.Length);
-
-        for (int i = 0; i &lt; nums.Length; i++)
+        if (map.ContainsKey(diff))
         {
-            int current = nums[i];
-            int complement = target - current;
-
-            if (seenComplements.TryGetValue(complement, out int complementIndex))
-            {
-                return [complementIndex, i]; // C# 12 collection expression
-            }
-
-            // In case of duplicates, keeping the latest index is acceptable unless specified
-            seenComplements[current] = i;
+            return [map[diff], i];
         }
 
-        return [];
+        map[nums[i]] = i;
     }
 
-    /// &lt;summary&gt;
-    /// Sorted Variant: Solves Two Sum in O(1) auxiliary space using Converging Two Pointers.
-    /// &lt;/summary&gt;
-    public static int[] TwoSumSorted(ReadOnlySpan&lt;int&gt; sortedNums, int target)
+    return [];
+}
+
+// Sorted Array Variant: Two Pointers (O(N) Time, O(1) Space)
+public int[] TwoSumSorted(int[] nums, int target)
+{
+    int l = 0;
+    int r = nums.Length - 1;
+
+    while (l &lt; r)
     {
-        int left = 0;
-        int right = sortedNums.Length - 1;
+        int sum = nums[l] + nums[r];
 
-        while (left &lt; right)
+        if (sum == target) return [l, r];
+
+        if (sum &lt; target)
         {
-            long currentSum = (long)sortedNums[left] + sortedNums[right]; // Guard against integer overflow
-
-            if (currentSum == target)
-            {
-                return [left, right];
-            }
-
-            if (currentSum &lt; target)
-            {
-                left++; // Need a larger sum, move left pointer rightward
-            }
-            else
-            {
-                right--; // Need a smaller sum, move right pointer leftward
-            }
+            l++;
         }
-
-        return [];
+        else
+        {
+            r--;
+        }
     }
+
+    return [];
 }</code></pre>
+</div>
+
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> In production C#, you can replace <code>map.ContainsKey(diff)</code> + <code>map[diff]</code> with <code>map.TryGetValue(diff, out int idx)</code> to avoid two hash lookups. In technical whiteboard interviews, <code>ContainsKey</code> is universally accepted and 10x easier to explain!</div>
 </div>
 
 <h3 id='7-complexity-analysis'>7. Complexity Analysis</h3>
@@ -1471,72 +1458,31 @@ public static class TwoSumSolver
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">using System;
-
-public static class SubarrayOptimizer
+    <pre><code class="language-csharp">public int MaxSubArray(int[] nums)
 {
-    /// &lt;summary&gt;
-    /// Computes the maximum contiguous subarray sum using Kadane&#x27;s Algorithm.
-    /// Scenario: Finding the peak operational revenue delta in a payment settlement window.
-    /// &lt;/summary&gt;
-    public static int MaxSubArray(ReadOnlySpan&lt;int&gt; nums)
+    int curSum = 0;
+    int maxSum = nums[0];
+
+    foreach (int n in nums)
     {
-        if (nums.IsEmpty)
-            throw new ArgumentException(&quot;Array cannot be empty.&quot;, nameof(nums));
-
-        int currentStreak = nums[0];
-        int globalMax = nums[0];
-
-        for (int i = 1; i &lt; nums.Length; i++)
+        // If current streak is dragging us below zero, reset it
+        if (curSum &lt; 0)
         {
-            int val = nums[i];
-            // Either continue the previous streak or start anew at current element
-            currentStreak = (currentStreak &gt; 0) ? currentStreak + val : val;
-
-            if (currentStreak &gt; globalMax)
-            {
-                globalMax = currentStreak;
-            }
+            curSum = 0;
         }
 
-        return globalMax;
+        curSum += n;
+        maxSum = Math.Max(maxSum, curSum);
     }
 
-    /// &lt;summary&gt;
-    /// Variation: Returns the actual start and end indices of the maximal subarray.
-    /// &lt;/summary&gt;
-    public static (int MaxSum, int StartIndex, int EndIndex) MaxSubArrayWithIndices(ReadOnlySpan&lt;int&gt; nums)
-    {
-        if (nums.IsEmpty)
-            throw new ArgumentException(&quot;Array cannot be empty.&quot;, nameof(nums));
-
-        int globalMax = nums[0];
-        int currentStreak = nums[0];
-        int start = 0, end = 0, tempStart = 0;
-
-        for (int i = 1; i &lt; nums.Length; i++)
-        {
-            if (currentStreak &gt; 0)
-            {
-                currentStreak += nums[i];
-            }
-            else
-            {
-                currentStreak = nums[i];
-                tempStart = i; // Mark candidate start
-            }
-
-            if (currentStreak &gt; globalMax)
-            {
-                globalMax = currentStreak;
-                start = tempStart;
-                end = i;
-            }
-        }
-
-        return (globalMax, start, end);
-    }
+    return maxSum;
 }</code></pre>
+</div>
+
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> If you want zero allocations over a slice of a large buffer in .NET, you can accept <code>ReadOnlySpan&lt;int&gt; nums</code>. The loop logic remains identical!</div>
 </div>
 
 <h3 id='7-complexity-analysis'>7. Complexity Analysis</h3>
@@ -1601,40 +1547,27 @@ public static class SubarrayOptimizer
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">using System;
-
-public static class ArrayRotator
+    <pre><code class="language-csharp">public void Rotate(int[] nums, int k)
 {
-    /// &lt;summary&gt;
-    /// Rotates array in-place to the right by k steps in O(N) time and O(1) space.
-    /// Scenario: Shifting active server partitions in a round-robin load balancer.
-    /// &lt;/summary&gt;
-    public static void Rotate(Span&lt;int&gt; nums, int k)
+    k = k % nums.Length;
+
+    // 1. Reverse entire array
+    Reverse(nums, 0, nums.Length - 1);
+
+    // 2. Reverse first k elements
+    Reverse(nums, 0, k - 1);
+
+    // 3. Reverse the rest
+    Reverse(nums, k, nums.Length - 1);
+}
+
+private void Reverse(int[] nums, int l, int r)
+{
+    while (l &lt; r)
     {
-        if (nums.Length &lt;= 1) return;
-
-        k %= nums.Length; // Normalize k when k &gt;= Length
-        if (k == 0) return;
-
-        // Step 1: Reverse entire span
-        Reverse(nums, 0, nums.Length - 1);
-
-        // Step 2: Reverse first k elements
-        Reverse(nums, 0, k - 1);
-
-        // Step 3: Reverse remaining n - k elements
-        Reverse(nums, k, nums.Length - 1);
-    }
-
-    private static void Reverse(Span&lt;int&gt; span, int start, int end)
-    {
-        while (start &lt; end)
-        {
-            // C# tuple swap (compiled to efficient register swaps without temp variable)
-            (span[start], span[end]) = (span[end], span[start]);
-            start++;
-            end--;
-        }
+        (nums[l], nums[r]) = (nums[r], nums[l]);
+        l++;
+        r--;
     }
 }</code></pre>
 </div>
@@ -1716,38 +1649,27 @@ public static class ArrayRotator
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">using System;
-
-public static class DuplicateFinder
+    <pre><code class="language-csharp">public int FindDuplicate(int[] nums)
 {
-    /// &lt;summary&gt;
-    /// Finds the duplicate number in an immutable array using Floyd&#x27;s Tortoise and Hare.
-    /// Scenario: Detecting duplicate transaction identifiers in a validated batch stream.
-    /// &lt;/summary&gt;
-    public static int FindDuplicate(ReadOnlySpan&lt;int&gt; nums)
+    int slow = nums[0];
+    int fast = nums[0];
+
+    // 1. Detect intersection point in cycle
+    do
     {
-        if (nums.Length &lt;= 1) return -1;
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+    } while (slow != fast);
 
-        int slow = nums[0];
-        int fast = nums[0];
-
-        // Phase 1: Detect cycle
-        do
-        {
-            slow = nums[slow];
-            fast = nums[nums[fast]];
-        } while (slow != fast);
-
-        // Phase 2: Locate cycle start (duplicate value)
-        slow = nums[0];
-        while (slow != fast)
-        {
-            slow = nums[slow];
-            fast = nums[fast];
-        }
-
-        return slow;
+    // 2. Find cycle entrance (the duplicate number)
+    slow = nums[0];
+    while (slow != fast)
+    {
+        slow = nums[slow];
+        fast = nums[fast];
     }
+
+    return slow;
 }</code></pre>
 </div>
 
@@ -1802,49 +1724,32 @@ public static class DuplicateFinder
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">using System;
-using System.Collections.Generic;
-
-public static class IntervalMerger
+    <pre><code class="language-csharp">public int[][] Merge(int[][] intervals)
 {
-    public readonly record struct Interval(int Start, int End);
+    if (intervals.Length &lt;= 1) return intervals;
 
-    /// &lt;summary&gt;
-    /// Merges overlapping time intervals.
-    /// Scenario: Healthcare operating room appointment conflict consolidation.
-    /// &lt;/summary&gt;
-    public static List&lt;Interval&gt; Merge(Interval[] intervals)
+    // 1. Sort intervals by start time
+    Array.Sort(intervals, (a, b) =&gt; a[0].CompareTo(b[0]));
+
+    var res = new List&lt;int[]&gt;();
+    res.Add(intervals[0]);
+
+    // 2. Iterate and merge overlapping intervals
+    foreach (var interval in intervals)
     {
-        if (intervals == null || intervals.Length == 0)
-            return [];
+        var last = res[res.Count - 1];
 
-        // Sort by Start time ascending
-        Array.Sort(intervals, static (a, b) =&gt; a.Start.CompareTo(b.Start));
-
-        var merged = new List&lt;Interval&gt;(capacity: intervals.Length);
-        Interval current = intervals[0];
-
-        for (int i = 1; i &lt; intervals.Length; i++)
+        if (interval[0] &lt;= last[1])
         {
-            Interval next = intervals[i];
-
-            if (next.Start &lt;= current.End)
-            {
-                // Overlap detected: expand current interval&#x27;s boundary
-                current = current with { End = Math.Max(current.End, next.End) };
-            }
-            else
-            {
-                // Disjoint interval: commit current and advance
-                merged.Add(current);
-                current = next;
-            }
+            last[1] = Math.Max(last[1], interval[1]); // Extend end time
         }
-
-        // Commit the final interval
-        merged.Add(current);
-        return merged;
+        else
+        {
+            res.Add(interval);
+        }
     }
+
+    return res.ToArray();
 }</code></pre>
 </div>
 
@@ -1899,37 +1804,28 @@ public static class IntervalMerger
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">using System;
-
-public static class ArrayProductSolver
+    <pre><code class="language-csharp">public int[] ProductExceptSelf(int[] nums)
 {
-    /// &lt;summary&gt;
-    /// Computes product of array except self in O(N) time and O(1) auxiliary space (excluding output).
-    /// Scenario: Calculating multi-factor risk weighting scores across independent portfolio tranches.
-    /// &lt;/summary&gt;
-    public static int[] ProductExceptSelf(int[] nums)
+    int n = nums.Length;
+    int[] res = new int[n];
+
+    // 1. Calculate prefix products
+    int prefix = 1;
+    for (int i = 0; i &lt; n; i++)
     {
-        ArgumentNullException.ThrowIfNull(nums);
-        int n = nums.Length;
-        int[] result = new int[n];
-
-        // Step 1: Compute prefix products directly in result array
-        result[0] = 1;
-        for (int i = 1; i &lt; n; i++)
-        {
-            result[i] = result[i - 1] * nums[i - 1];
-        }
-
-        // Step 2: Accumulate suffix products in a single scalar variable
-        int runningSuffix = 1;
-        for (int i = n - 1; i &gt;= 0; i--)
-        {
-            result[i] *= runningSuffix;
-            runningSuffix *= nums[i];
-        }
-
-        return result;
+        res[i] = prefix;
+        prefix *= nums[i];
     }
+
+    // 2. Multiply with postfix products
+    int postfix = 1;
+    for (int i = n - 1; i &gt;= 0; i--)
+    {
+        res[i] *= postfix;
+        postfix *= nums[i];
+    }
+
+    return res;
 }</code></pre>
 </div>
 
@@ -2046,45 +1942,36 @@ Height: [ 1,   8,   6,   2,   5,   4,   8,   3,   7 ]
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">using System;
-
-public static class ContainerOptimizer
+    <pre><code class="language-csharp">public int MaxArea(int[] height)
 {
-    /// &lt;summary&gt;
-    /// Computes the maximum water retention volume between two pillars in O(N) time and O(1) space.
-    /// Uses ReadOnlySpan to ensure zero heap allocations on high-frequency evaluation pipelines.
-    /// &lt;/summary&gt;
-    public static int MaxArea(ReadOnlySpan&lt;int&gt; height)
+    int l = 0;
+    int r = height.Length - 1;
+    int maxArea = 0;
+
+    while (l &lt; r)
     {
-        if (height.Length &lt; 2) return 0;
+        int area = (r - l) * Math.Min(height[l], height[r]);
+        maxArea = Math.Max(maxArea, area);
 
-        int left = 0;
-        int right = height.Length - 1;
-        int maxWaterArea = 0;
-
-        while (left &lt; right)
+        // Move the shorter pillar inward
+        if (height[l] &lt; height[r])
         {
-            int hLeft = height[left];
-            int hRight = height[right];
-            int currentWidth = right - left;
-
-            if (hLeft &lt; hRight)
-            {
-                int currentArea = currentWidth * hLeft;
-                if (currentArea &gt; maxWaterArea) maxWaterArea = currentArea;
-                left++; // Eliminate shorter left pillar
-            }
-            else
-            {
-                int currentArea = currentWidth * hRight;
-                if (currentArea &gt; maxWaterArea) maxWaterArea = currentArea;
-                right--; // Eliminate shorter (or equal) right pillar
-            }
+            l++;
         }
-
-        return maxWaterArea;
+        else
+        {
+            r--;
+        }
     }
+
+    return maxArea;
 }</code></pre>
+</div>
+
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> In .NET 8, accepting <code>ReadOnlySpan&lt;int&gt; height</code> allows passing array slices without heap allocation. The algorithm stays identical!</div>
 </div>
 
 <h3 id='5-complexity-analysis'>5. Complexity Analysis</h3>
@@ -2143,65 +2030,46 @@ Sorted Array: [ -4,   -1,   -1,    0,    1,    2 ]
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">using System;
-using System.Collections.Generic;
-
-public static class SettlementClearinghouse
+    <pre><code class="language-csharp">public IList&lt;IList&lt;int&gt;&gt; ThreeSum(int[] nums)
 {
-    /// &lt;summary&gt;
-    /// Finds all unique triplets that sum to 0 in O(N^2) time with zero duplicate triplets.
-    /// &lt;/summary&gt;
-    public static IList&lt;IList&lt;int&gt;&gt; ThreeSum(int[] nums)
+    Array.Sort(nums);
+    var res = new List&lt;IList&lt;int&gt;&gt;();
+
+    for (int i = 0; i &lt; nums.Length; i++)
     {
-        var results = new List&lt;IList&lt;int&gt;&gt;();
-        if (nums == null || nums.Length &lt; 3) return results;
+        if (nums[i] &gt; 0) break; // If smallest number &gt; 0, cannot sum to 0
+        if (i &gt; 0 &amp;&amp; nums[i] == nums[i - 1]) continue; // Skip duplicate pivot
 
-        // Step 1: In-place Dual-Pivot QuickSort / IntroSort
-        Array.Sort(nums);
+        int l = i + 1;
+        int r = nums.Length - 1;
 
-        int n = nums.Length;
-
-        for (int i = 0; i &lt; n - 2; i++)
+        while (l &lt; r)
         {
-            // Early exit optimization: If the smallest number is &gt; 0, three positive numbers cannot sum to 0
-            if (nums[i] &gt; 0) break;
+            int sum = nums[i] + nums[l] + nums[r];
 
-            // Duplicate avoidance for Pivot
-            if (i &gt; 0 &amp;&amp; nums[i] == nums[i - 1]) continue;
-
-            int left = i + 1;
-            int right = n - 1;
-            int target = -nums[i];
-
-            while (left &lt; right)
+            if (sum == 0)
             {
-                int sum = nums[left] + nums[right];
+                res.Add([nums[i], nums[l], nums[r]]);
 
-                if (sum == target)
-                {
-                    results.Add(new List&lt;int&gt; { nums[i], nums[left], nums[right] });
+                // Skip duplicates for left and right
+                while (l &lt; r &amp;&amp; nums[l] == nums[l + 1]) l++;
+                while (l &lt; r &amp;&amp; nums[r] == nums[r - 1]) r--;
 
-                    // Duplicate avoidance for Left pointer
-                    while (left &lt; right &amp;&amp; nums[left] == nums[left + 1]) left++;
-                    // Duplicate avoidance for Right pointer
-                    while (left &lt; right &amp;&amp; nums[right] == nums[right - 1]) right--;
-
-                    left++;
-                    right--;
-                }
-                else if (sum &lt; target)
-                {
-                    left++; // Need a larger value
-                }
-                else
-                {
-                    right--; // Need a smaller value
-                }
+                l++;
+                r--;
+            }
+            else if (sum &lt; 0)
+            {
+                l++;
+            }
+            else
+            {
+                r--;
             }
         }
-
-        return results;
     }
+
+    return res;
 }</code></pre>
 </div>
 
@@ -2277,53 +2145,31 @@ Total Trapped Water = 6 Units</code></pre>
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">using System;
-
-public static class HydraulicAnalyzer
+    <pre><code class="language-csharp">public int Trap(int[] height)
 {
-    /// &lt;summary&gt;
-    /// Computes total trapped rainwater in O(N) time and O(1) auxiliary heap allocation.
-    /// &lt;/summary&gt;
-    public static int Trap(ReadOnlySpan&lt;int&gt; height)
+    if (height.Length == 0) return 0;
+
+    int l = 0, r = height.Length - 1;
+    int leftMax = height[l], rightMax = height[r];
+    int res = 0;
+
+    while (l &lt; r)
     {
-        if (height.Length &lt; 3) return 0;
-
-        int left = 0;
-        int right = height.Length - 1;
-        int leftMax = 0;
-        int rightMax = 0;
-        int totalWater = 0;
-
-        while (left &lt; right)
+        if (leftMax &lt; rightMax)
         {
-            if (height[left] &lt; height[right])
-            {
-                if (height[left] &gt;= leftMax)
-                {
-                    leftMax = height[left];
-                }
-                else
-                {
-                    totalWater += leftMax - height[left];
-                }
-                left++;
-            }
-            else
-            {
-                if (height[right] &gt;= rightMax)
-                {
-                    rightMax = height[right];
-                }
-                else
-                {
-                    totalWater += rightMax - height[right];
-                }
-                right--;
-            }
+            l++;
+            leftMax = Math.Max(leftMax, height[l]);
+            res += leftMax - height[l];
         }
-
-        return totalWater;
+        else
+        {
+            r--;
+            rightMax = Math.Max(rightMax, height[r]);
+            res += rightMax - height[r];
+        }
     }
+
+    return res;
 }</code></pre>
 </div>
 
@@ -2400,42 +2246,29 @@ public static class HydraulicAnalyzer
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">using System;
-
-public static class DutchNationalFlagSorter
+    <pre><code class="language-csharp">public void SortColors(int[] nums)
 {
-    /// &lt;summary&gt;
-    /// Partitions an array into 0s, 1s, and 2s in a single pass O(N) time and O(1) space.
-    /// &lt;/summary&gt;
-    public static void SortColors(Span&lt;int&gt; nums)
+    int low = 0;
+    int mid = 0;
+    int high = nums.Length - 1;
+
+    while (mid &lt;= high)
     {
-        int low = 0;
-        int mid = 0;
-        int high = nums.Length - 1;
-
-        while (mid &lt;= high)
+        if (nums[mid] == 0)
         {
-            switch (nums[mid])
-            {
-                case 0:
-                    // Swap nums[low] and nums[mid], then advance both
-                    (nums[low], nums[mid]) = (nums[mid], nums[low]);
-                    low++;
-                    mid++;
-                    break;
-
-                case 1:
-                    // Already in correct middle section; just advance scanner
-                    mid++;
-                    break;
-
-                case 2:
-                    // Swap nums[mid] and nums[high], shrink high boundary.
-                    // DO NOT advance mid because the newly swapped nums[mid] is unexamined!
-                    (nums[mid], nums[high]) = (nums[high], nums[mid]);
-                    high--;
-                    break;
-            }
+            (nums[low], nums[mid]) = (nums[mid], nums[low]);
+            low++;
+            mid++;
+        }
+        else if (nums[mid] == 1)
+        {
+            mid++;
+        }
+        else // nums[mid] == 2
+        {
+            (nums[mid], nums[high]) = (nums[high], nums[mid]);
+            high--;
+            // Do NOT advance mid here: swapped value is still uninspected!
         }
     }
 }</code></pre>
@@ -2470,55 +2303,42 @@ Final:    [ 1,  3, 12,  0,   0 ]</code></pre>
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">using System;
-
-public static class BufferCompactor
+    <pre><code class="language-csharp">public int RemoveDuplicates(int[] nums)
 {
-    /// &lt;summary&gt;
-    /// Removes duplicates from sorted span in O(N) time and O(1) space.
-    /// Returns the new valid length.
-    /// &lt;/summary&gt;
-    public static int RemoveDuplicates(Span&lt;int&gt; nums)
+    if (nums.Length == 0) return 0;
+
+    int w = 1; // write pointer
+
+    for (int r = 1; r &lt; nums.Length; r++) // read pointer
     {
-        if (nums.Length == 0) return 0;
-
-        int writeIndex = 1;
-
-        for (int readIndex = 1; readIndex &lt; nums.Length; readIndex++)
+        if (nums[r] != nums[r - 1])
         {
-            if (nums[readIndex] != nums[readIndex - 1])
-            {
-                nums[writeIndex] = nums[readIndex];
-                writeIndex++;
-            }
+            nums[w] = nums[r];
+            w++;
         }
-
-        return writeIndex;
     }
 
-    /// &lt;summary&gt;
-    /// Moves all zeros to the end of the span while maintaining relative order of non-zeros.
-    /// O(N) time, O(1) space, zero allocations.
-    /// &lt;/summary&gt;
-    public static void MoveZeroes(Span&lt;int&gt; nums)
+    return w;
+}
+
+public void MoveZeroes(int[] nums)
+{
+    int w = 0; // write pointer
+
+    // 1. Shift non-zero values to front
+    for (int r = 0; r &lt; nums.Length; r++)
     {
-        int writeIndex = 0;
-
-        // Phase 1: Shift all non-zero elements to front
-        for (int readIndex = 0; readIndex &lt; nums.Length; readIndex++)
+        if (nums[r] != 0)
         {
-            if (nums[readIndex] != 0)
-            {
-                nums[writeIndex] = nums[readIndex];
-                writeIndex++;
-            }
+            nums[w] = nums[r];
+            w++;
         }
+    }
 
-        // Phase 2: Clear remaining slots to zero
-        while (writeIndex &lt; nums.Length)
-        {
-            nums[writeIndex++] = 0;
-        }
+    // 2. Fill remaining slots with 0
+    while (w &lt; nums.Length)
+    {
+        nums[w++] = 0;
     }
 }</code></pre>
 </div>
@@ -2739,50 +2559,33 @@ public static class AnagramValidator
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">using System;
-
-public static class SubstringFinder
+    <pre><code class="language-csharp">public int LengthOfLongestSubstring(string s)
 {
-    /// &lt;summary&gt;
-    /// Computes length of longest substring without repeating characters using Sliding Window.
-    /// Scenario: Identifying unique sequence tokens in an authentication JWT claim string.
-    /// &lt;/summary&gt;
-    public static int LengthOfLongestSubstring(ReadOnlySpan&lt;char&gt; s)
+    var charSet = new HashSet&lt;char&gt;();
+    int l = 0;
+    int maxLen = 0;
+
+    for (int r = 0; r &lt; s.Length; r++)
     {
-        if (s.IsEmpty) return 0;
-
-        // Use direct-mapped 128-element array for all standard ASCII characters
-        Span&lt;int&gt; lastSeenIndex = stackalloc int[128];
-        lastSeenIndex.Fill(-1);
-
-        int maxLength = 0;
-        int windowLeft = 0;
-
-        for (int windowRight = 0; windowRight &lt; s.Length; windowRight++)
+        // Shrink window from left until duplicate character is removed
+        while (charSet.Contains(s[r]))
         {
-            char currentChar = s[windowRight];
-
-            // If character seen and inside current window, jump left boundary past it
-            if (currentChar &lt; 128 &amp;&amp; lastSeenIndex[currentChar] &gt;= windowLeft)
-            {
-                windowLeft = lastSeenIndex[currentChar] + 1;
-            }
-
-            if (currentChar &lt; 128)
-            {
-                lastSeenIndex[currentChar] = windowRight;
-            }
-
-            int currentWindowLength = windowRight - windowLeft + 1;
-            if (currentWindowLength &gt; maxLength)
-            {
-                maxLength = currentWindowLength;
-            }
+            charSet.Remove(s[l]);
+            l++;
         }
 
-        return maxLength;
+        charSet.Add(s[r]);
+        maxLen = Math.Max(maxLen, r - l + 1);
     }
+
+    return maxLen;
 }</code></pre>
+</div>
+
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> In low-latency .NET systems, you can replace <code>HashSet&lt;char&gt;</code> with a <code>stackalloc int[128]</code> array storing last-seen indices to achieve zero allocations. In interview discussions, <code>HashSet&lt;char&gt;</code> is universally preferred for clarity!</div>
 </div>
 
 <h3 id='5-complexity-analysis'>5. Complexity Analysis</h3>
@@ -3467,39 +3270,26 @@ _entries array:   ┌───────────────┐           
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">using System;
-using System.Collections.Generic;
-
-public static class AnagramGrouper
+    <pre><code class="language-csharp">public IList&lt;IList&lt;string&gt;&gt; GroupAnagrams(string[] strs)
 {
-    /// &lt;summary&gt;
-    /// Groups words that are anagrams into common lists.
-    /// Scenario: Categorizing mutated audit log signatures in a financial fraud detector.
-    /// &lt;/summary&gt;
-    public static IList&lt;IList&lt;string&gt;&gt; GroupAnagrams(string[] strs)
+    var map = new Dictionary&lt;string, List&lt;string&gt;&gt;();
+
+    foreach (string s in strs)
     {
-        if (strs == null || strs.Length == 0) return [];
+        // Sort string to use as the canonical dictionary key
+        char[] chars = s.ToCharArray();
+        Array.Sort(chars);
+        string key = new string(chars);
 
-        var groups = new Dictionary&lt;string, IList&lt;string&gt;&gt;(capacity: strs.Length);
-
-        foreach (string word in strs)
+        if (!map.ContainsKey(key))
         {
-            // Canonical key by sorting characters
-            char[] chars = word.ToCharArray();
-            Array.Sort(chars);
-            string key = new string(chars);
-
-            if (!groups.TryGetValue(key, out var list))
-            {
-                list = new List&lt;string&gt;();
-                groups[key] = list;
-            }
-
-            list.Add(word);
+            map[key] = new List&lt;string&gt;();
         }
 
-        return new List&lt;IList&lt;string&gt;&gt;(groups.Values);
+        map[key].Add(s);
     }
+
+    return map.Values.ToList&lt;IList&lt;string&gt;&gt;();
 }</code></pre>
 </div>
 
@@ -3526,53 +3316,38 @@ public static class AnagramGrouper
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">using System;
-using System.Collections.Generic;
-
-public static class FrequencyAnalyzer
+    <pre><code class="language-csharp">public int[] TopKFrequent(int[] nums, int k)
 {
-    /// &lt;summary&gt;
-    /// Identifies the Top K frequent items in O(N) linear time using Bucket Sort.
-    /// Scenario: Extracting top error codes in an ASP.NET Core API telemetry ingestion pipeline.
-    /// &lt;/summary&gt;
-    public static int[] TopKFrequent(int[] nums, int k)
+    // 1. Count frequencies
+    var count = new Dictionary&lt;int, int&gt;();
+    foreach (int n in nums)
     {
-        ArgumentNullException.ThrowIfNull(nums);
-
-        // Step 1: Frequency count
-        var frequencyMap = new Dictionary&lt;int, int&gt;();
-        foreach (int num in nums)
-        {
-            frequencyMap[num] = frequencyMap.GetValueOrDefault(num, 0) + 1;
-        }
-
-        // Step 2: Bucket array where index represents frequency
-        var buckets = new List&lt;int&gt;[nums.Length + 1];
-
-        foreach (var (num, freq) in frequencyMap)
-        {
-            buckets[freq] ??= new List&lt;int&gt;();
-            buckets[freq].Add(num);
-        }
-
-        // Step 3: Gather top K from highest to lowest bucket
-        int[] result = new int[k];
-        int count = 0;
-
-        for (int freq = buckets.Length - 1; freq &gt;= 0 &amp;&amp; count &lt; k; freq--)
-        {
-            if (buckets[freq] != null)
-            {
-                foreach (int item in buckets[freq])
-                {
-                    result[count++] = item;
-                    if (count == k) break;
-                }
-            }
-        }
-
-        return result;
+        count[n] = count.GetValueOrDefault(n, 0) + 1;
     }
+
+    // 2. Bucket sort: index = frequency, value = list of numbers
+    var buckets = new List&lt;int&gt;[nums.Length + 1];
+    foreach (var pair in count)
+    {
+        int freq = pair.Value;
+        if (buckets[freq] == null)
+        {
+            buckets[freq] = new List&lt;int&gt;();
+        }
+        buckets[freq].Add(pair.Key);
+    }
+
+    // 3. Collect top k elements from highest frequency down to lowest
+    var res = new List&lt;int&gt;();
+    for (int i = buckets.Length - 1; i &gt;= 0 &amp;&amp; res.Count &lt; k; i--)
+    {
+        if (buckets[i] != null)
+        {
+            res.AddRange(buckets[i]);
+        }
+    }
+
+    return res.Take(k).ToArray();
 }</code></pre>
 </div>
 
