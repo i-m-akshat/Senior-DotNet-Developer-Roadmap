@@ -20,7 +20,6 @@
     <!-- Mermaid for Interactive Diagrams -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <style>
-
 :root, [data-theme="dark"] {
     --bg-page: #0b0f19;
     --bg-surface: #111827;
@@ -561,29 +560,26 @@ li::marker { color: var(--primary); }
     font-weight: 600;
     color: var(--heading-color);
 }
-
-    </style>
+</style>
 </head>
 <body>
-    <!-- SIDEBAR -->
     <aside id="sidebar">
         <div class="sidebar-header">
             <a href="index.html" class="sidebar-brand">
-                <span class="brand-icon">⚡</span>
-                <span class="brand-text">.NET Master Guide</span>
+                <span class="sidebar-logo">⚡</span>
+                <div>
+                    <div class="sidebar-title">.NET Master Guide</div>
+                    <div class="sidebar-sub">Infosys & Tier-1 Prep</div>
+                </div>
             </a>
-            <div class="theme-toggle-wrap">
-                <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme">
-                    <span class="theme-icon">🌙</span>
-                    <span class="theme-label">Dark</span>
-                </button>
-            </div>
+            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+                <span class="theme-icon">🌙</span>
+                <span class="theme-label">Dark</span>
+            </button>
         </div>
-        <div class="sidebar-search">
-            <input type="text" id="searchInput" placeholder="Filter sections..." onkeyup="filterNav()">
-        </div>
-        <ul class="nav-list" id="navList">
-
+        <div class="nav-section-title">Knowledge Base</div>
+        <ul class="nav-list">
+            
         <li class="nav-item">
             <a href="Volume-0-Software-Engineering-Fundamentals.html" class="nav-link ">
                 <span class="nav-icon">🧠</span>
@@ -710,24 +706,21 @@ li::marker { color: var(--primary); }
         </li>
         
         </ul>
-        <div class="sidebar-footer">
-            <a href="index.html" class="home-btn">🏠 Portal Home</a>
-        </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main id="main">
-        <header class="chapter-hero">
-            <div class="hero-meta">
-                <span class="hero-badge">Algorithmic Mastery</span>
-                <span class="hero-vol">Volume 1</span>
+    <div id="content-wrapper">
+        <main id="main-content">
+            <div class="chapter-hero">
+                <div class="hero-meta">
+                    <span class="hero-badge">Algorithmic Mastery</span>
+                    <span class="hero-vol">Volume 1</span>
+                </div>
+                <h1>Logical Thinking & Data Structures and Algorithms</h1>
+                <p>10 thinking patterns, arrays, strings, Dictionary bucket hashing, trees, graphs, dynamic programming, and verbatim Infosys interview transcript.</p>
             </div>
-            <h1>Logical Thinking & Data Structures and Algorithms</h1>
-            <p>10 thinking patterns, arrays, strings, Dictionary bucket hashing, trees, graphs, dynamic programming, and verbatim Infosys interview transcript.</p>
-        </header>
 
-        <article class="content-body">
-<h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
+            <article class="doc-body">
+                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
 <h2 id='volume-1-logical-thinking-data-structures-and-algorithms'>Volume 1: Logical Thinking & Data Structures and Algorithms</h2>
 
 <div class="callout note">
@@ -4046,7 +4039,9 @@ public static class ShippingCapacityOptimizer
 <ul>
 <li>Instead of fixed midpoint splitting ($50\%$), it uses linear interpolation:</li>
 </ul>
-<p>$$	ext{pos} = 	ext{low} + \left\lfloor rac{	ext{target} - 	ext{arr}[	ext{low}]}{	ext{arr}[	ext{high}] - 	ext{arr}[	ext{low}]} 	imes (	ext{high} - 	ext{low}) ightfloor$$</p>
+<p>$$	ext{pos} = 	ext{low} + \left\lfloor rac{	ext{target} - 	ext{arr}[	ext{low}]}{	ext{arr}[	ext{high}] - 	ext{arr}[	ext{low}]} 	imes (	ext{high} - 	ext{low})</p>
+<p>ight</p>
+<p>floor$$</p>
 
 <div class="code-container">
     <div class="code-header">
@@ -4686,7 +4681,10 @@ public static class QuickSortEngine
 <p>Heap Sort is an in-place $O(N \log N)$ algorithm that requires <strong>$O(1)$ auxiliary memory</strong>.</p>
 <p>It models the flat array as a Complete Binary Tree:</p>
 <ul>
-<li><strong>Parent Index:</strong> $	ext{parent}(i) = \lfloor (i - 1) / 2 floor$</li>
+<li><strong>Parent Index:</strong> $	ext{parent}(i) = \lfloor (i - 1) / 2</li>
+</ul>
+<p>floor$</p>
+<ul>
 <li><strong>Left Child:</strong> $	ext{left}(i) = 2i + 1$</li>
 <li><strong>Right Child:</strong> $	ext{right}(i) = 2i + 2$</li>
 </ul>
@@ -4710,7 +4708,10 @@ Index:    0   1   2   3   4   5   6
 <li><strong>Phase 1: Build Max-Heap ($O(N)$ Time):</strong></li>
 </ol>
 <ul>
-<li>Starting from the lowest non-leaf node $\lfloor N/2 floor - 1$ down to index $0$, run <code>SiftDown</code>.</li>
+<li>Starting from the lowest non-leaf node $\lfloor N/2</li>
+</ul>
+<p>floor - 1$ down to index $0$, run <code>SiftDown</code>.</p>
+<ul>
 <li>Amazingly, building the heap is $O(N)$, not $O(N \log N)$, because the majority of nodes reside near the bottom with minimal tree height.</li>
 </ul>
 <ol>
@@ -4954,7 +4955,10 @@ public static class RadixSortEngine
 <h3 id='the-three-protective-pillars-of-introsort'>The Three Protective Pillars of IntroSort</h3>
 <ol>
 <li><strong>Median-of-3 QuickSort:</strong> Prevents the $O(N^2)$ trap on sorted or reverse-sorted input by picking the median of the first, middle, and last elements.</li>
-<li><strong>HeapSort Fallback Guard:</strong> If the recursion tree exceeds $2 	imes \lfloor \log_2 N floor$ levels (indicating an adversarial input designed to degrade QuickSort), the runtime instantly switches to <strong>HeapSort</strong>. This strictly guarantees an upper bound of $O(N \log N)$ and prevents <code>StackOverflowException</code>.</li>
+<li><strong>HeapSort Fallback Guard:</strong> If the recursion tree exceeds $2 	imes \lfloor \log_2 N</li>
+</ol>
+<p>floor$ levels (indicating an adversarial input designed to degrade QuickSort), the runtime instantly switches to <strong>HeapSort</strong>. This strictly guarantees an upper bound of $O(N \log N)$ and prevents <code>StackOverflowException</code>.</p>
+<ol>
 <li><strong>InsertionSort Leaf Optimization:</strong> When partitions shrink to $\le 16$ elements, the runtime switches to <strong>InsertionSort</strong>. On micro-arrays, InsertionSort out-performs QuickSort by avoiding function prologue/epilogue overhead and exploiting CPU branch prediction.</li>
 </ol>
 
@@ -6696,30 +6700,28 @@ public static class SingleNumberSolver
 <tr><td><strong><code>PriorityQueue&lt;TElement, TPriority&gt;</code></strong></td><td>N/A</td><td>$O(N)$</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(N)$</td><td>Array-backed 4-ary or binary Min-Heap; sift-up / sift-down.</td></tr>
 <tr><td><strong><code>SortedSet&lt;T&gt;</code> / <code>SortedDictionary&lt;K, V&gt;</code></strong></td><td>N/A</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(N)$</td><td>Self-balancing Red-Black Tree.</td></tr>
 </table></div>
-        </article>
+            </article>
 
-        <!-- CHAPTER NAV -->
-        <div class="chapter-nav">
-            
-<a href="Volume-X-DotNet-Platform-Core-Encyclopedia.html" class="nav-card">
-    <span class="nav-card-dir">← Previous Module</span>
-    <span class="nav-card-title">Volume X: .NET Platform & CoreCLR Runtime Encyclopedia</span>
-</a>
+            <nav class="chapter-nav">
+                
+    <a href="Volume-X-DotNet-Platform-Core-Encyclopedia.html" class="nav-card">
+        <span class="nav-card-dir">← Previous Module</span>
+        <span class="nav-card-title">Volume X: .NET Platform & CoreCLR Runtime Encyclopedia</span>
+    </a>
+    
+                
+    <a href="Volume-2-CSharp-Encyclopedia.html" class="nav-card" style="text-align: right;">
+        <span class="nav-card-dir">Next Module →</span>
+        <span class="nav-card-title">Volume 2: C# Complete Language Encyclopedia</span>
+    </a>
+    
+            </nav>
+        </main>
 
-            
-<a href="Volume-2-CSharp-Encyclopedia.html" class="nav-card" style="text-align: right;">
-    <span class="nav-card-dir">Next Module →</span>
-    <span class="nav-card-title">Volume 2: C# Complete Language Encyclopedia</span>
-</a>
-
-        </div>
-    </main>
-
-    <!-- RIGHT TOC -->
-    <aside id="toc-panel">
-        <div class="toc-title">On This Page</div>
-        <ul class="toc-list">
-
+        <aside id="toc-sidebar">
+            <div class="toc-title">On This Page</div>
+            <ul class="toc-list">
+                
         <li class="toc-item level-1">
             <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
         </li>
@@ -6869,75 +6871,43 @@ public static class SingleNumberSolver
             <a href="#32-modern-net-8-mechanics-spant-readonlyspant-and-zero-allocation-slicing" class="toc-link">3.2 Modern .NET 8 Mechanics: Span&lt;T&gt;, ReadOnl</a>
         </li>
         
-        </ul>
-    </aside>
+            </ul>
+        </aside>
+    </div>
 
     <script>
-        // Init Highlight.js
-        hljs.highlightAll();
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme toggle script
+            const toggle = document.getElementById('theme-toggle');
+            function updateToggleUI(theme) {
+                if (!toggle) return;
+                toggle.querySelector('.theme-icon').innerText = theme === 'dark' ? '🌙' : '☀️';
+                toggle.querySelector('.theme-label').innerText = theme === 'dark' ? 'Dark' : 'Light';
+            }
+            
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            updateToggleUI(currentTheme);
 
-        // Init Mermaid
-        function initMermaid(theme) {
-            mermaid.initialize({
-                startOnLoad: false,
-                theme: theme === 'dark' ? 'dark' : 'default',
-                themeVariables: {
-                    darkMode: theme === 'dark',
-                    background: theme === 'dark' ? '#0b0f19' : '#ffffff',
-                    primaryColor: '#3b82f6',
-                    primaryBorderColor: '#2563eb',
-                    lineColor: theme === 'dark' ? '#9ca3af' : '#475569',
-                    fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif'
-                }
-            });
-            mermaid.run();
-        }
-        
-        const initialTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-        initMermaid(initialTheme);
-
-        // Theme Toggle Handler
-        const themeToggle = document.getElementById('theme-toggle');
-        function updateToggleBtn(theme) {
-            if (!themeToggle) return;
-            themeToggle.querySelector('.theme-icon').innerText = theme === 'dark' ? '🌙' : '☀️';
-            themeToggle.querySelector('.theme-label').innerText = theme === 'dark' ? 'Dark' : 'Light';
-        }
-        updateToggleBtn(initialTheme);
-
-        if (themeToggle) {
-            themeToggle.addEventListener('click', () => {
-                const current = document.documentElement.getAttribute('data-theme') || 'dark';
-                const next = current === 'dark' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', next);
-                localStorage.setItem('theme', next);
-                updateToggleBtn(next);
-                location.reload(); // Re-render mermaid & styles cleanly
-            });
-        }
-
-        // Code Copy Buttons
-        document.querySelectorAll('pre').forEach(pre => {
-            const copyBtn = document.createElement('button');
-            copyBtn.className = 'copy-btn';
-            copyBtn.innerText = 'Copy';
-            copyBtn.addEventListener('click', () => {
-                const code = pre.querySelector('code') ? pre.querySelector('code').innerText : pre.innerText;
-                navigator.clipboard.writeText(code).then(() => {
-                    copyBtn.innerText = 'Copied!';
-                    setTimeout(() => copyBtn.innerText = 'Copy', 2000);
+            if (toggle) {
+                toggle.addEventListener('click', () => {
+                    const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+                    const next = cur === 'dark' ? 'light' : 'dark';
+                    document.documentElement.setAttribute('data-theme', next);
+                    localStorage.setItem('theme', next);
+                    updateToggleUI(next);
                 });
-            });
-            pre.appendChild(copyBtn);
-        });
+            }
 
-        // Filter Nav
-        function filterNav() {
-            const input = document.getElementById('searchInput').value.toLowerCase();
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.style.display = item.innerText.toLowerCase().includes(input) ? '' : 'none';
+            // Highlight syntax
+            hljs.highlightAll();
+
+            // Mermaid diagrams
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: currentTheme === 'dark' ? 'dark' : 'neutral',
+                securityLevel: 'loose'
             });
-        }
+        });
     </script>
 </body>
 </html>
