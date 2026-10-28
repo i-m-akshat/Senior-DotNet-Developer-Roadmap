@@ -324,9 +324,7 @@ body {
     line-height: 1.6;
 }
 
-/* ========================================================
-   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
-   ======================================================== */
+/* FOCUS CONTROLS TOOLBAR */
 .focus-control-bar {
     position: sticky;
     top: 14px;
@@ -428,9 +426,7 @@ input:checked + .slider:before {
     color: var(--heading-color);
 }
 
-/* ========================================================
-   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
-   ======================================================== */
+/* CHAPTER ACCORDION STYLING */
 .chapter-accordion {
     background: var(--bg-surface);
     border: 1px solid var(--border);
@@ -866,7 +862,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-3-Advanced-CSharp.html" class="nav-link ">
                 <span class="nav-icon">🔥</span>
-                <span>Advanced C# & Memory Management</span>
+                <span>Advanced C# & Concurrency Encyclopedia</span>
                 <span class="nav-vol">V3</span>
             </a>
         </li>
@@ -1002,7 +998,22 @@ li::marker { color: var(--primary); }
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='master-table-of-contents'>MASTER TABLE OF CONTENTS</h2>
+
+<details class="chapter-accordion toc-section-accordion" id="table-of-contents" open>
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">NAVIGATION</span>
+            <span class="accordion-title-text">Table of Contents & Quick Jump Matrix</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+
 <ol>
 <li><a href="#1-clr-cts-cls-il-jit-tiered-compilation-native-aot-assembly-metadata-and-namespaces">CLR, CTS, CLS, IL, JIT (Tiered Compilation & Native AOT), Assembly Metadata & Namespaces</a></li>
 <li><a href="#2-value-types-vs-reference-types">Value Types vs Reference Types (Stack vs Heap, Memory Layout, Escape Analysis)</a></li>
@@ -1027,7 +1038,25 @@ li::marker { color: var(--primary); }
 <li><a href="#21-pattern-matching-evolution">Pattern Matching (Switch Expressions, Property, Positional & List Patterns)</a></li>
 </ol>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='1-clr-cts-cls-il-jit-tiered-compilation-native-aot-assembly-metadata-and-namespaces'>1. CLR, CTS, CLS, IL, JIT (Tiered Compilation, Native AOT), Assembly Metadata and Namespaces</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-1" data-chapter="1" open>
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 01</span>
+            <span class="accordion-title-text">1. CLR, CTS, CLS, IL, JIT (Tiered Compilation, Native AOT), Assembly Metadata and Namespaces</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="1-clr-cts-cls-il-jit-tiered-compilation-native-aot-assembly-metadata-and-namespaces" class="accordion-anchor"></a>
+        <a id="1-clr-cts-cls-il-jit-tiered-compilation-native-aot-assembly-metadata-and-namespaces" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p>The <strong>Common Language Runtime (CLR)</strong> is the virtual execution engine for .NET. It manages memory allocation, garbage collection, thread management, exception dispatching, type safety, and code execution.</p>
 <ul>
@@ -1220,7 +1249,25 @@ public readonly record struct SettlementResult(
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='2-value-types-vs-reference-types'>2. Value Types vs Reference Types</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-2" data-chapter="2" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 02</span>
+            <span class="accordion-title-text">2. Value Types vs Reference Types</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="2-value-types-vs-reference-types" class="accordion-anchor"></a>
+        <a id="2-value-types-vs-reference-types" class="accordion-anchor"></a>
+
 <h3 id='2-memory-layout-stack-vs-heap-and-allocation-mechanics'>2. Memory Layout, Stack vs Heap, and Allocation Mechanics</h3>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -1414,7 +1461,25 @@ public sealed class TelemetryIngestionService
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='3-boxing-and-unboxing'>3. Boxing and Unboxing</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-3" data-chapter="3" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 03</span>
+            <span class="accordion-title-text">3. Boxing and Unboxing</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="3-boxing-and-unboxing" class="accordion-anchor"></a>
+        <a id="3-boxing-and-unboxing" class="accordion-anchor"></a>
+
 <h3 id='1-il-opcodes-heap-allocation-costs-and-benchmark-mechanics'>1. IL Opcodes, Heap Allocation Costs, and Benchmark Mechanics</h3>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -1596,7 +1661,25 @@ public sealed class FinancialAuditLogger
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='4-nullable-types'>4. Nullable Types</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-4" data-chapter="4" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 04</span>
+            <span class="accordion-title-text">4. Nullable Types</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="4-nullable-types" class="accordion-anchor"></a>
+        <a id="4-nullable-types" class="accordion-anchor"></a>
+
 <h3 id='nullablet-null-forgiving-operator-and-nullable-reference-types-nrt-in-c-8'>Nullable<T>, Null-Forgiving Operator, and Nullable Reference Types (NRT) in C# 8+</h3>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -1795,7 +1878,25 @@ public sealed class PatientDischargeRecord
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='5-classes-objects-constructors-static-constructors-and-sealed-devirtualization'>5. Classes, Objects, Constructors, Static Constructors, and Sealed Devirtualization</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-5" data-chapter="5" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 05</span>
+            <span class="accordion-title-text">5. Classes, Objects, Constructors, Static Constructors, and Sealed Devirtualization</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="5-classes-objects-constructors-static-constructors-and-sealed-devirtualization" class="accordion-anchor"></a>
+        <a id="5-classes-objects-constructors-static-constructors-and-sealed-devirtualization" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
 <li><strong>Class:</strong> A blueprint for reference types allocated on the managed heap.</li>
@@ -1963,7 +2064,25 @@ public sealed class JwtTokenValidator : ITokenValidator
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='6-structs-memory-layout-readonly-structs-and-ref-structs-spant'>6. Structs, Memory Layout, Readonly Structs, and Ref Structs (Span<T>)</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-6" data-chapter="6" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 06</span>
+            <span class="accordion-title-text">6. Structs, Memory Layout, Readonly Structs, and Ref Structs (Span<T>)</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="6-structs-memory-layout-readonly-structs-and-ref-structs-spant" class="accordion-anchor"></a>
+        <a id="6-structs-memory-layout-readonly-structs-and-ref-structs-spant" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
 <li><strong>Struct (<code>struct</code>):</strong> A custom value type encapsulating data and operations, allocated inline in memory.</li>
@@ -2178,7 +2297,25 @@ public ref struct FixMessageParser
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='7-records-record-class-vs-record-struct-value-equality-and-with-expressions'>7. Records: Record Class vs Record Struct, Value Equality, and With-Expressions</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-7" data-chapter="7" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 07</span>
+            <span class="accordion-title-text">7. Records: Record Class vs Record Struct, Value Equality, and With-Expressions</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="7-records-record-class-vs-record-struct-value-equality-and-with-expressions" class="accordion-anchor"></a>
+        <a id="7-records-record-class-vs-record-struct-value-equality-and-with-expressions" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
 <li><strong>Records (<code>record</code>):</strong> A language feature introduced in C# 9 that provides compiler-synthesized boilerplate for value-based equality, non-destructive mutation (<code>with</code>), and concise positional declaration.</li>
@@ -2353,7 +2490,25 @@ public sealed class BillingEngine
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='8-access-modifiers-and-assembly-boundaries'>8. Access Modifiers and Assembly Boundaries</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-8" data-chapter="8" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 08</span>
+            <span class="accordion-title-text">8. Access Modifiers and Assembly Boundaries</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="8-access-modifiers-and-assembly-boundaries" class="accordion-anchor"></a>
+        <a id="8-access-modifiers-and-assembly-boundaries" class="accordion-anchor"></a>
+
 <h3 id='clean-architecture-encasement-assembly-scoping-and-internalsvisibleto'>Clean Architecture Encasement, Assembly Scoping, and InternalsVisibleTo</h3>
 <h3 id='1-definition'>1. Definition</h3>
 <p>Access modifiers are declarative keywords that control the visibility and accessibility of types and type members across scopes and compilation units (assemblies).</p>
@@ -2531,7 +2686,25 @@ internal interface ITenantLedgerRepository
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='9-static-const-and-readonly'>9. Static, Const, and Readonly</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-9" data-chapter="9" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 09</span>
+            <span class="accordion-title-text">9. Static, Const, and Readonly</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="9-static-const-and-readonly" class="accordion-anchor"></a>
+        <a id="9-static-const-and-readonly" class="accordion-anchor"></a>
+
 <h3 id='compile-time-vs-runtime-constants-and-the-static-constructor-deadlock-trap'>Compile-Time vs Runtime Constants, and the Static Constructor Deadlock Trap</h3>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -2699,7 +2872,25 @@ public sealed class PaymentProcessorConfig
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='10-string-and-stringbuilder'>10. String and StringBuilder</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-10" data-chapter="10" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 10</span>
+            <span class="accordion-title-text">10. String and StringBuilder</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="10-string-and-stringbuilder" class="accordion-anchor"></a>
+        <a id="10--string-and-stringbuilder" class="accordion-anchor"></a>
+
 <h3 id='immutability-string-interning-pool-equality-semantics-stringbuilder-capacity-doubling-and-readonlyspanchar'>Immutability, String Interning Pool, Equality Semantics, StringBuilder Capacity Doubling, and ReadOnlySpan<char></h3>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -2915,7 +3106,25 @@ foreach(var order in orders) {
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='11-collections-architecture'>11. Collections Architecture</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-11" data-chapter="11" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 11</span>
+            <span class="accordion-title-text">11. Collections Architecture</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="11-collections-architecture" class="accordion-anchor"></a>
+        <a id="11-collections-architecture" class="accordion-anchor"></a>
+
 <h3 id='array-listt-growth-strategy-dictionarytkeytvalue-buckets-entries-hashsett-and-interface-hierarchies'>Array, List<T> Growth Strategy, Dictionary<TKey,TValue> Buckets & Entries, HashSet<T>, and Interface Hierarchies</h3>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -3127,7 +3336,25 @@ public sealed class LedgerCache
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='12-generics-specialization-constraints-and-variance-covariance-contravariance'>12. Generics: Specialization, Constraints, and Variance (Covariance & Contravariance)</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-12" data-chapter="12" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 12</span>
+            <span class="accordion-title-text">12. Generics: Specialization, Constraints, and Variance (Covariance & Contravariance)</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="12-generics-specialization-constraints-and-variance-covariance-contravariance" class="accordion-anchor"></a>
+        <a id="12-generics-specialization-constraints-and-variance-covariance-contravariance" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
 <li><strong>Generics:</strong> A feature allowing classes, structures, interfaces, and methods to be parameterized by the types of data they store and manipulate.</li>
@@ -3323,7 +3550,25 @@ public sealed class EventProcessingOrchestrator
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='13-delegates-func-action-predicate-and-multicast-chains'>13. Delegates, Func, Action, Predicate, and Multicast Chains</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-13" data-chapter="13" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 13</span>
+            <span class="accordion-title-text">13. Delegates, Func, Action, Predicate, and Multicast Chains</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="13-delegates-func-action-predicate-and-multicast-chains" class="accordion-anchor"></a>
+        <a id="13-delegates-func-action-predicate-and-multicast-chains" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
 <li><strong>Delegate:</strong> A type-safe, object-oriented function pointer managed by the CLR. It encapsulates both a target object reference (<code>_target</code>) and a method pointer (<code>_methodPtr</code>).</li>
@@ -3501,7 +3746,25 @@ public sealed class PaymentAuthorizationPipeline
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='14-events-eventargs-pattern-and-weakevent-handlers'>14. Events, EventArgs Pattern, and WeakEvent Handlers</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-14" data-chapter="14" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 14</span>
+            <span class="accordion-title-text">14. Events, EventArgs Pattern, and WeakEvent Handlers</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="14-events-eventargs-pattern-and-weakevent-handlers" class="accordion-anchor"></a>
+        <a id="14-events-eventargs-pattern-and-weakevent-handlers" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
 <li><strong>Event:</strong> A language construct that wraps a delegate to enforce the <strong>Publish/Subscribe pattern</strong>, restricting external code to only subscribe (<code>+=</code>) or unsubscribe (<code>-=</code>). External code cannot invoke the delegate directly or overwrite it with <code>=</code>.</li>
@@ -3703,7 +3966,25 @@ public sealed class BedsideMonitorWidget : IDisposable
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='15-lambda-expressions-closures-and-compiler-variable-capture-hoisting'>15. Lambda Expressions, Closures, and Compiler Variable Capture Hoisting</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-15" data-chapter="15" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 15</span>
+            <span class="accordion-title-text">15. Lambda Expressions, Closures, and Compiler Variable Capture Hoisting</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="15-lambda-expressions-closures-and-compiler-variable-capture-hoisting" class="accordion-anchor"></a>
+        <a id="15-lambda-expressions-closures-and-compiler-variable-capture-hoisting" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
 <li><strong>Lambda Expression:</strong> An anonymous function syntax (<code>(params) =&gt; expression</code>) used to create delegates or expression trees.</li>
@@ -3905,7 +4186,25 @@ public static class ListExtensions
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='16-linq-deferred-execution-ienumerable-vs-iqueryable-and-performance-traps'>16. LINQ: Deferred Execution, IEnumerable vs IQueryable, and Performance Traps</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-16" data-chapter="16" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 16</span>
+            <span class="accordion-title-text">16. LINQ: Deferred Execution, IEnumerable vs IQueryable, and Performance Traps</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="16-linq-deferred-execution-ienumerable-vs-iqueryable-and-performance-traps" class="accordion-anchor"></a>
+        <a id="16-linq-deferred-execution-ienumerable-vs-iqueryable-and-performance-traps" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
 <li><strong>LINQ (Language Integrated Query):</strong> A uniform query syntax in C# to filter, project, and aggregate data across diverse data sources (in-memory objects, databases, XML, JSON).</li>
@@ -4108,7 +4407,25 @@ if (claims.Count() &gt; 0)
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='17-expression-trees-and-dynamic-sql-generation'>17. Expression Trees and Dynamic SQL Generation</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-17" data-chapter="17" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 17</span>
+            <span class="accordion-title-text">17. Expression Trees and Dynamic SQL Generation</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="17-expression-trees-and-dynamic-sql-generation" class="accordion-anchor"></a>
+        <a id="17-expression-trees-and-dynamic-sql-generation" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
 <li><strong>Expression Tree:</strong> A data structure that represents code as a tree-like hierarchy of immutable objects (nodes), where each node represents an expression (e.g., a method call, binary operator, constant, or parameter).</li>
@@ -4321,7 +4638,25 @@ public static class DynamicQueryBuilder
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='18-reflection-vs-roslyn-source-generators'>18. Reflection vs Roslyn Source Generators</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-18" data-chapter="18" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 18</span>
+            <span class="accordion-title-text">18. Reflection vs Roslyn Source Generators</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="18-reflection-vs-roslyn-source-generators" class="accordion-anchor"></a>
+        <a id="18-reflection-vs-roslyn-source-generators" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
 <li><strong>Reflection (<code>System.Reflection</code>):</strong> A runtime mechanism that enables inspecting metadata, discovering types, reading attributes, and dynamically invoking methods or instantiating objects at runtime.</li>
@@ -4498,7 +4833,25 @@ public sealed class ReflectionSerializerDemo
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='19-attributes-and-metadata'>19. Attributes and Metadata</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-19" data-chapter="19" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 19</span>
+            <span class="accordion-title-text">19. Attributes and Metadata</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="19-attributes-and-metadata" class="accordion-anchor"></a>
+        <a id="19-attributes-and-metadata" class="accordion-anchor"></a>
+
 <h3 id='custom-attributes-attributeusage-il-representation-and-metadata-extraction'>Custom Attributes, AttributeUsage, IL Representation, and Metadata Extraction</h3>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -4688,7 +5041,25 @@ public sealed class AuditPolicyRegistry
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='20-extension-methods-and-compiler-lowering'>20. Extension Methods and Compiler Lowering</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-20" data-chapter="20" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 20</span>
+            <span class="accordion-title-text">20. Extension Methods and Compiler Lowering</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="20-extension-methods-and-compiler-lowering" class="accordion-anchor"></a>
+        <a id="20-extension-methods-and-compiler-lowering" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
 <li><strong>Extension Method:</strong> A static method declared in a static class that can be invoked using instance method syntax on the extended type (<code>instance.ExtensionMethod()</code>).</li>
@@ -4885,7 +5256,25 @@ public sealed class PaymentAuditor
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='21-pattern-matching-evolution'>21. Pattern Matching Evolution</h2>
+</div></details>
+
+<details class="chapter-accordion" id="sec-21" data-chapter="21" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">SEC 21</span>
+            <span class="accordion-title-text">21. Pattern Matching Evolution</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="21-pattern-matching-evolution" class="accordion-anchor"></a>
+        <a id="21-pattern-matching-evolution" class="accordion-anchor"></a>
+
 <h3 id='switch-expressions-property-patterns-positional-patterns-and-list-patterns'>Switch Expressions, Property Patterns, Positional Patterns, and List Patterns</h3>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -5078,6 +5467,7 @@ public static class PaymentRoutingEngine
     <div class="callout-body"><em>Best Answer:</em> The runtime throws a <code>System.Runtime.CompilerServices.SwitchExpressionException</code>. During compilation, if the Roslyn compiler detects that the patterns do not cover all possible domain states (for example, missing an enum value and lacking a discard pattern <code>_</code>), it emits a compiler warning (<code>CS8509: The switch expression does not handle all possible inputs</code>). In enterprise production systems, configuring <code>&lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;</code> turns this warning into a build failure, preventing runtime crashes.</div>
 </div>
 
+</div></details>
             </article>
 
             <nav class="chapter-nav">
@@ -5090,7 +5480,7 @@ public static class PaymentRoutingEngine
                 
     <a href="Volume-3-Advanced-CSharp.html" class="nav-card" style="text-align: right;">
         <span class="nav-card-dir">Next Module →</span>
-        <span class="nav-card-title">Volume 3: Advanced C# & Memory Management</span>
+        <span class="nav-card-title">Volume 3: Advanced C# & Concurrency Encyclopedia</span>
     </a>
     
             </nav>
@@ -5105,13 +5495,8 @@ public static class PaymentRoutingEngine
         </li>
         
 
-        <li class="toc-item level-2">
-            <a href="#master-table-of-contents" class="toc-link">MASTER TABLE OF CONTENTS</a>
-        </li>
-        
-
-        <li class="toc-item level-2">
-            <a href="#1-clr-cts-cls-il-jit-tiered-compilation-native-aot-assembly-metadata-and-namespaces" class="toc-link">1. CLR, CTS, CLS, IL, JIT (Tiered Compilation</a>
+        <li class="toc-item level-1">
+            <a href="#sec-1" class="toc-link">1. CLR, CTS, CLS, IL, JIT (Tiered Compilation</a>
         </li>
         
 
@@ -5175,8 +5560,8 @@ public static class PaymentRoutingEngine
         </li>
         
 
-        <li class="toc-item level-2">
-            <a href="#2-value-types-vs-reference-types" class="toc-link">2. Value Types vs Reference Types</a>
+        <li class="toc-item level-1">
+            <a href="#sec-2" class="toc-link">2. Value Types vs Reference Types</a>
         </li>
         
 
@@ -5245,8 +5630,8 @@ public static class PaymentRoutingEngine
         </li>
         
 
-        <li class="toc-item level-2">
-            <a href="#3-boxing-and-unboxing" class="toc-link">3. Boxing and Unboxing</a>
+        <li class="toc-item level-1">
+            <a href="#sec-3" class="toc-link">3. Boxing and Unboxing</a>
         </li>
         
 
@@ -5299,6 +5684,11 @@ public static class PaymentRoutingEngine
             <a href="#9-performance-cpu-memory-gc" class="toc-link">9. Performance (CPU, Memory, GC)</a>
         </li>
         
+
+        <li class="toc-item level-3">
+            <a href="#10-common-mistakes" class="toc-link">10. Common Mistakes</a>
+        </li>
+        
             </ul>
         </aside>
     </div>
@@ -5336,9 +5726,7 @@ public static class PaymentRoutingEngine
                 securityLevel: 'loose'
             });
 
-            // ==========================================
             // ACCORDION & SINGLE-FOCUS CONTROLS
-            // ==========================================
             const accordions = document.querySelectorAll('.chapter-accordion');
             const singleFocusToggle = document.getElementById('single-focus-toggle');
             const btnExpandAll = document.getElementById('btn-expand-all');
@@ -5393,9 +5781,7 @@ public static class PaymentRoutingEngine
                 });
             });
 
-            // ==========================================
             // DEEP LINKING & TOC NAVIGATION
-            // ==========================================
             function navigateToTarget(targetId) {
                 if (!targetId) return;
                 let target = document.getElementById(targetId);
@@ -5405,7 +5791,8 @@ public static class PaymentRoutingEngine
                     const normalized = targetId.replace(/-+/g, '-');
                     target = document.getElementById(normalized) || 
                              document.querySelector(`[id*="${normalized}"]`) ||
-                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                             document.querySelector(`[id*="${normalized.replace(/^ch-/, '')}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^concept-/, '')}"]`);
                 }
 
                 if (!target) return;

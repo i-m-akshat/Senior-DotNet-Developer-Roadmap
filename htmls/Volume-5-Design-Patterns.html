@@ -324,9 +324,7 @@ body {
     line-height: 1.6;
 }
 
-/* ========================================================
-   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
-   ======================================================== */
+/* FOCUS CONTROLS TOOLBAR */
 .focus-control-bar {
     position: sticky;
     top: 14px;
@@ -428,9 +426,7 @@ input:checked + .slider:before {
     color: var(--heading-color);
 }
 
-/* ========================================================
-   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
-   ======================================================== */
+/* CHAPTER ACCORDION STYLING */
 .chapter-accordion {
     background: var(--bg-surface);
     border: 1px solid var(--border);
@@ -866,7 +862,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-3-Advanced-CSharp.html" class="nav-link ">
                 <span class="nav-icon">🔥</span>
-                <span>Advanced C# & Memory Management</span>
+                <span>Advanced C# & Concurrency Encyclopedia</span>
                 <span class="nav-vol">V3</span>
             </a>
         </li>
@@ -1052,7 +1048,25 @@ li::marker { color: var(--primary); }
 <li><a href="#observer-vs-mediator-vs-events">Observer vs Mediator vs Events — Comparison</a></li>
 </ol>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='creational-patterns'>CREATIONAL PATTERNS</h1>
+</div></details>
+
+<details class="chapter-accordion" id="creational-patterns" data-chapter="1" open>
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">PILLAR</span>
+            <span class="accordion-title-text">CREATIONAL PATTERNS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="creational-patterns" class="accordion-anchor"></a>
+        <a id="creational-patterns" class="accordion-anchor"></a>
+
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
@@ -1679,7 +1693,25 @@ var order = new Order.Builder(&quot;cust_123&quot;, &quot;USD&quot;)
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='structural-patterns'>STRUCTURAL PATTERNS</h1>
+</div></details>
+
+<details class="chapter-accordion" id="structural-patterns" data-chapter="2" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">PILLAR</span>
+            <span class="accordion-title-text">STRUCTURAL PATTERNS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="structural-patterns" class="accordion-anchor"></a>
+        <a id="structural-patterns" class="accordion-anchor"></a>
+
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
@@ -2323,7 +2355,25 @@ public class CheckoutController : ControllerBase
 <li>When it becomes a "God Object" — too many responsibilities (violates SRP)</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='behavioral-patterns'>BEHAVIORAL PATTERNS</h1>
+</div></details>
+
+<details class="chapter-accordion" id="behavioral-patterns" data-chapter="3" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">PILLAR</span>
+            <span class="accordion-title-text">BEHAVIORAL PATTERNS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="behavioral-patterns" class="accordion-anchor"></a>
+        <a id="behavioral-patterns" class="accordion-anchor"></a>
+
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
@@ -3581,9 +3631,7 @@ Kafka/Service Bus:
                 securityLevel: 'loose'
             });
 
-            // ==========================================
             // ACCORDION & SINGLE-FOCUS CONTROLS
-            // ==========================================
             const accordions = document.querySelectorAll('.chapter-accordion');
             const singleFocusToggle = document.getElementById('single-focus-toggle');
             const btnExpandAll = document.getElementById('btn-expand-all');
@@ -3638,9 +3686,7 @@ Kafka/Service Bus:
                 });
             });
 
-            // ==========================================
             // DEEP LINKING & TOC NAVIGATION
-            // ==========================================
             function navigateToTarget(targetId) {
                 if (!targetId) return;
                 let target = document.getElementById(targetId);
@@ -3650,7 +3696,8 @@ Kafka/Service Bus:
                     const normalized = targetId.replace(/-+/g, '-');
                     target = document.getElementById(normalized) || 
                              document.querySelector(`[id*="${normalized}"]`) ||
-                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                             document.querySelector(`[id*="${normalized.replace(/^ch-/, '')}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^concept-/, '')}"]`);
                 }
 
                 if (!target) return;

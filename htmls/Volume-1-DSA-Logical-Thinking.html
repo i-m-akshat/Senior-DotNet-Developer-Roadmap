@@ -324,9 +324,7 @@ body {
     line-height: 1.6;
 }
 
-/* ========================================================
-   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
-   ======================================================== */
+/* FOCUS CONTROLS TOOLBAR */
 .focus-control-bar {
     position: sticky;
     top: 14px;
@@ -428,9 +426,7 @@ input:checked + .slider:before {
     color: var(--heading-color);
 }
 
-/* ========================================================
-   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
-   ======================================================== */
+/* CHAPTER ACCORDION STYLING */
 .chapter-accordion {
     background: var(--bg-surface);
     border: 1px solid var(--border);
@@ -866,7 +862,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-3-Advanced-CSharp.html" class="nav-link ">
                 <span class="nav-icon">🔥</span>
-                <span>Advanced C# & Memory Management</span>
+                <span>Advanced C# & Concurrency Encyclopedia</span>
                 <span class="nav-vol">V3</span>
             </a>
         </li>
@@ -963,7 +959,7 @@ li::marker { color: var(--primary); }
                     <span class="hero-vol">Volume 1</span>
                 </div>
                 <h1>Logical Thinking & Data Structures and Algorithms</h1>
-                <p>10 thinking patterns, arrays, strings, Dictionary bucket hashing, trees, graphs, dynamic programming, and verbatim Infosys interview transcript.</p>
+                <p>10 thinking patterns, arrays, dedicated pure strings chapter, two pointers, sliding window, searching, sorting, trees, graphs, and Infosys interview playbook.</p>
             </div>
 
             <!-- ADHD-FRIENDLY INTERACTIVE FOCUS CONTROLS -->
@@ -6652,9 +6648,7 @@ public static class SingleNumberSolver
                 securityLevel: 'loose'
             });
 
-            // ==========================================
             // ACCORDION & SINGLE-FOCUS CONTROLS
-            // ==========================================
             const accordions = document.querySelectorAll('.chapter-accordion');
             const singleFocusToggle = document.getElementById('single-focus-toggle');
             const btnExpandAll = document.getElementById('btn-expand-all');
@@ -6709,9 +6703,7 @@ public static class SingleNumberSolver
                 });
             });
 
-            // ==========================================
             // DEEP LINKING & TOC NAVIGATION
-            // ==========================================
             function navigateToTarget(targetId) {
                 if (!targetId) return;
                 let target = document.getElementById(targetId);
@@ -6721,7 +6713,8 @@ public static class SingleNumberSolver
                     const normalized = targetId.replace(/-+/g, '-');
                     target = document.getElementById(normalized) || 
                              document.querySelector(`[id*="${normalized}"]`) ||
-                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                             document.querySelector(`[id*="${normalized.replace(/^ch-/, '')}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^concept-/, '')}"]`);
                 }
 
                 if (!target) return;

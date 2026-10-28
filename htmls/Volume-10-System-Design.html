@@ -324,9 +324,7 @@ body {
     line-height: 1.6;
 }
 
-/* ========================================================
-   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
-   ======================================================== */
+/* FOCUS CONTROLS TOOLBAR */
 .focus-control-bar {
     position: sticky;
     top: 14px;
@@ -428,9 +426,7 @@ input:checked + .slider:before {
     color: var(--heading-color);
 }
 
-/* ========================================================
-   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
-   ======================================================== */
+/* CHAPTER ACCORDION STYLING */
 .chapter-accordion {
     background: var(--bg-surface);
     border: 1px solid var(--border);
@@ -866,7 +862,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-3-Advanced-CSharp.html" class="nav-link ">
                 <span class="nav-icon">🔥</span>
-                <span>Advanced C# & Memory Management</span>
+                <span>Advanced C# & Concurrency Encyclopedia</span>
                 <span class="nav-vol">V3</span>
             </a>
         </li>
@@ -3854,9 +3850,7 @@ public class StorageGatewayService
                 securityLevel: 'loose'
             });
 
-            // ==========================================
             // ACCORDION & SINGLE-FOCUS CONTROLS
-            // ==========================================
             const accordions = document.querySelectorAll('.chapter-accordion');
             const singleFocusToggle = document.getElementById('single-focus-toggle');
             const btnExpandAll = document.getElementById('btn-expand-all');
@@ -3911,9 +3905,7 @@ public class StorageGatewayService
                 });
             });
 
-            // ==========================================
             // DEEP LINKING & TOC NAVIGATION
-            // ==========================================
             function navigateToTarget(targetId) {
                 if (!targetId) return;
                 let target = document.getElementById(targetId);
@@ -3923,7 +3915,8 @@ public class StorageGatewayService
                     const normalized = targetId.replace(/-+/g, '-');
                     target = document.getElementById(normalized) || 
                              document.querySelector(`[id*="${normalized}"]`) ||
-                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                             document.querySelector(`[id*="${normalized.replace(/^ch-/, '')}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^concept-/, '')}"]`);
                 }
 
                 if (!target) return;

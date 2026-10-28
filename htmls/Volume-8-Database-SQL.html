@@ -324,9 +324,7 @@ body {
     line-height: 1.6;
 }
 
-/* ========================================================
-   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
-   ======================================================== */
+/* FOCUS CONTROLS TOOLBAR */
 .focus-control-bar {
     position: sticky;
     top: 14px;
@@ -428,9 +426,7 @@ input:checked + .slider:before {
     color: var(--heading-color);
 }
 
-/* ========================================================
-   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
-   ======================================================== */
+/* CHAPTER ACCORDION STYLING */
 .chapter-accordion {
     background: var(--bg-surface);
     border: 1px solid var(--border);
@@ -866,7 +862,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-3-Advanced-CSharp.html" class="nav-link ">
                 <span class="nav-icon">🔥</span>
-                <span>Advanced C# & Memory Management</span>
+                <span>Advanced C# & Concurrency Encyclopedia</span>
                 <span class="nav-vol">V3</span>
             </a>
         </li>
@@ -1095,7 +1091,25 @@ li::marker { color: var(--primary); }
 <li>If data is modified, changes are logged to the Write-Ahead Log (WAL) in memory, flushed to <code>.ldf</code> synchronously on transaction commit, while dirty data pages in RAM are written asynchronously to <code>.mdf</code> during a <strong>Checkpoint</strong>.</li>
 </ol>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='concept-1-sql-fundamentals-three-valued-logic-3vl'>CONCEPT 1: SQL FUNDAMENTALS & THREE-VALUED LOGIC (3VL)</h1>
+</div></details>
+
+<details class="chapter-accordion" id="concept-1" data-chapter="1" open>
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CON 01</span>
+            <span class="accordion-title-text">CONCEPT 1: SQL FUNDAMENTALS & THREE-VALUED LOGIC (3VL)</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="concept-1-sql-fundamentals-three-valued-logic-3vl" class="accordion-anchor"></a>
+        <a id="concept-1-sql-fundamentals-three-valued-logic-3vl" class="accordion-anchor"></a>
+
 <h2 id='1-definition'>1. Definition</h2>
 <p>Three-Valued Logic (3VL) is the foundational predicate logic of ANSI SQL. Unlike standard Boolean logic which evaluates strictly to <code>TRUE</code> or <code>FALSE</code>, SQL introduces a third logical state: <code>UNKNOWN</code>. In SQL, <code>NULL</code> does not represent zero, an empty string, or a specific value; it represents the <strong>absence of a value</strong> or <strong>unknown state</strong>. Any equality or inequality comparison against <code>NULL</code> evaluates to <code>UNKNOWN</code>.</p>
 <h2 id='2-historical-reason'>2. Historical Reason</h2>
@@ -1271,7 +1285,25 @@ var pending = await dbContext.Settlements
 <li><strong>Answer:</strong> In ANSI SQL standard, multiple <code>NULL</code> values are permitted in a unique index because <code>NULL &lt;&gt; NULL</code>. However, in SQL Server, a standard <code>UNIQUE</code> constraint allows <strong>only one single <code>NULL</code></strong>. To achieve standard ANSI behavior in SQL Server, developers must create a <strong>Filtered Unique Index</strong>: <code>CREATE UNIQUE NONCLUSTERED INDEX UX_Col ON Table(Col) WHERE Col IS NOT NULL;</code>.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='concept-2-complete-joins-deep-dive-logical-semantics-physical-operators'>CONCEPT 2: COMPLETE JOINS DEEP-DIVE: LOGICAL SEMANTICS & PHYSICAL OPERATORS</h1>
+</div></details>
+
+<details class="chapter-accordion" id="concept-2" data-chapter="2" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CON 02</span>
+            <span class="accordion-title-text">CONCEPT 2: COMPLETE JOINS DEEP-DIVE: LOGICAL SEMANTICS & PHYSICAL OPERATORS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="concept-2-complete-joins-deep-dive-logical-semantics-physical-operators" class="accordion-anchor"></a>
+        <a id="concept-2-complete-joins-deep-dive-logical-semantics-physical-operators" class="accordion-anchor"></a>
+
 <h2 id='1-definition'>1. Definition</h2>
 <p>A <strong>Join</strong> correlates records across two relations based on a join predicate. Database architecture separates joins into two distinct layers:</p>
 <ol>
@@ -1496,7 +1528,25 @@ Output Stream to Client</code></pre>
 <li><strong>Answer:</strong> Yes. If the join keys contain duplicate values in both tables (a Many-to-Many relationship), the join produces a Cartesian product of those matching keys. For instance, if Table A has 1,000 rows with <code>Key = 1</code> and Table B has 1,000 rows with <code>Key = 1</code>, an <code>INNER JOIN</code> produces $1,000 \times 1,000 = 1,000,000$ rows.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='concept-3-query-constructs-subqueries-ctes-temp-tables-and-table-variables'>CONCEPT 3: QUERY CONSTRUCTS: SUBQUERIES, CTES, TEMP TABLES, AND TABLE VARIABLES</h1>
+</div></details>
+
+<details class="chapter-accordion" id="concept-3" data-chapter="3" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CON 03</span>
+            <span class="accordion-title-text">CONCEPT 3: QUERY CONSTRUCTS: SUBQUERIES, CTES, TEMP TABLES, AND TABLE VARIABLES</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="concept-3-query-constructs-subqueries-ctes-temp-tables-and-table-variables" class="accordion-anchor"></a>
+        <a id="concept-3-query-constructs-subqueries-ctes-temp-tables-and-table-variables" class="accordion-anchor"></a>
+
 <h2 id='1-definition'>1. Definition</h2>
 <p>Modern T-SQL provides four core techniques to decompose complex data transformations into intermediate logical sets:</p>
 <ul>
@@ -1696,7 +1746,25 @@ Massively reduced base table I/O; High concurrency throughput</code></pre>
 <li><strong>Answer:</strong> The rows in the <code>#TempTable</code> are fully rolled back because <code>#TempTable</code> operations participate in the user transaction and write undo records to <code>TempDB</code>'s transaction log. Rows inserted into the <code>@TableVariable</code> are <strong>not</strong> rolled back; they persist in the variable because table variables are memory/variable scoped and insulated from user transaction rollback semantics.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='concept-4-window-functions-analytical-sql'>CONCEPT 4: WINDOW FUNCTIONS & ANALYTICAL SQL</h1>
+</div></details>
+
+<details class="chapter-accordion" id="concept-4" data-chapter="4" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CON 04</span>
+            <span class="accordion-title-text">CONCEPT 4: WINDOW FUNCTIONS & ANALYTICAL SQL</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="concept-4-window-functions-analytical-sql" class="accordion-anchor"></a>
+        <a id="concept-4-window-functions-analytical-sql" class="accordion-anchor"></a>
+
 <h2 id='1-definition'>1. Definition</h2>
 <p>A <strong>Window Function</strong> performs calculations across a set of table rows that are logically related to the current row (a "window"), while <strong>retaining the distinct identity and granularity of each individual row</strong> in the final result set. Unlike an aggregate <code>GROUP BY</code> clause, which collapses multiple rows into a single scalar summary row, a window function calculates aggregate, ranking, or offset values without collapsing the row stream.</p>
 <h2 id='2-historical-reason'>2. Historical Reason</h2>
@@ -1934,7 +2002,25 @@ FROM AccountLedger;</code></pre>
 <li><strong>Answer:</strong> Use the <strong><code>ROW_NUMBER()</code> Difference Technique</strong>. Subtract a dense row number from the sequence or date key: <code>DATEADD(DAY, -ROW_NUMBER() OVER (ORDER BY EventDate), EventDate) AS IslandGroup</code>. Consecutive dates increase at the exact same rate as the row number, so their difference remains constant. You then <code>GROUP BY IslandGroup</code> to find the island's start date, end date, and duration.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='concept-5-index-internals-b-tree-storage-architecture-indexing-strategies'>CONCEPT 5: INDEX INTERNALS: B-TREE STORAGE ARCHITECTURE & INDEXING STRATEGIES</h1>
+</div></details>
+
+<details class="chapter-accordion" id="concept-5" data-chapter="5" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CON 05</span>
+            <span class="accordion-title-text">CONCEPT 5: INDEX INTERNALS: B-TREE STORAGE ARCHITECTURE & INDEXING STRATEGIES</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="concept-5-index-internals-b-tree-storage-architecture-indexing-strategies" class="accordion-anchor"></a>
+        <a id="concept-5-index-internals-b-tree-storage-architecture-indexing-strategies" class="accordion-anchor"></a>
+
 <h2 id='1-definition'>1. Definition</h2>
 <p>An <strong>Index</strong> is an on-disk, sorted data structure (implemented as a Balanced B+ Tree in SQL Server) that enables the storage engine to locate specific rows in $O(\log N)$ I/O operations rather than scanning an entire table in $O(N)$ linear time.</p>
 <ul>
@@ -2158,7 +2244,25 @@ Total I/O: 3 intermediate index reads + 12 contiguous leaf page reads = 15 Logic
 <li><strong>Answer:</strong> Yes, but <strong>only as an Index Scan</strong>, not an Index Seek. Because <code>FirstName</code> is not the leading edge of the composite index, the engine cannot navigate down the B-Tree root and intermediate branches to seek the specific value. However, scanning the non-clustered index leaf pages sequentially may still be cheaper than scanning the entire wide clustered table.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='concept-6-execution-plans-reading-interpreting-and-optimizer-mechanics'>CONCEPT 6: EXECUTION PLANS: READING, INTERPRETING, AND OPTIMIZER MECHANICS</h1>
+</div></details>
+
+<details class="chapter-accordion" id="concept-6" data-chapter="6" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CON 06</span>
+            <span class="accordion-title-text">CONCEPT 6: EXECUTION PLANS: READING, INTERPRETING, AND OPTIMIZER MECHANICS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="concept-6-execution-plans-reading-interpreting-and-optimizer-mechanics" class="accordion-anchor"></a>
+        <a id="concept-6-execution-plans-reading-interpreting-and-optimizer-mechanics" class="accordion-anchor"></a>
+
 <h2 id='1-definition'>1. Definition</h2>
 <p>An <strong>Execution Plan</strong> is the compiled graphical, XML, or text blueprint produced by the SQL Server Cost-Based Optimizer (CBO) that specifies the exact sequence of physical operators (<code>Index Seek</code>, <code>Clustered Index Scan</code>, <code>Nested Loops</code>, <code>Compute Scalar</code>, <code>Sort</code>) the Storage Engine must execute to satisfy a T-SQL query.</p>
 <h2 id='2-historical-reason'>2. Historical Reason</h2>
@@ -2379,7 +2483,25 @@ SELECT ... WHERE TenantId = @LocalTenantId;</code></pre>
 <li><strong>Answer:</strong> A Bitmap Operator in parallel query execution represents an in-flight optimization technique called <strong>Bitmap Filtering</strong>. During the build phase of a hash join, the engine creates a compact in-memory bitmap of the join keys. This bitmap is pushed down directly to the probe input's parallel scan threads, allowing the storage engine to discard non-qualifying probe rows at the storage level <em>before</em> they are transferred across the thread exchange operators (<code>Parallelism (Repartition Streams)</code>), drastically reducing inter-thread CPU and bus communication overhead.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='concept-7-acid-transaction-management-internals'>CONCEPT 7: ACID & TRANSACTION MANAGEMENT INTERNALS</h1>
+</div></details>
+
+<details class="chapter-accordion" id="concept-7" data-chapter="7" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CON 07</span>
+            <span class="accordion-title-text">CONCEPT 7: ACID & TRANSACTION MANAGEMENT INTERNALS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="concept-7-acid-transaction-management-internals" class="accordion-anchor"></a>
+        <a id="concept-7-acid-transaction-management-internals" class="accordion-anchor"></a>
+
 <h2 id='1-definition'>1. Definition</h2>
 <p>A <strong>Database Transaction</strong> is a logical unit of work that encapsulates one or more database operations. To guarantee database integrity under high concurrency and physical hardware failure, transactions must strictly adhere to the four <strong>ACID</strong> properties:</p>
 <ul>
@@ -2652,7 +2774,25 @@ Relational Engine returns &#x27;Command Completed&#x27; TDS packet to .NET clien
 <li><strong>Answer:</strong> When the server restarts, SQL Server runs the ARIES recovery process. During the Analysis and Redo phases, the engine brings all pages up to date using the log. Then, during the <strong>Undo Phase</strong>, SQL Server scans the transaction log backward to locate every modification performed by that active, uncommitted transaction and applies compensating log records to revert the dirty pages in the <code>.mdf</code> file back to their pre-transaction state, enforcing Atomicity.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='concept-8-concurrency-isolation-levels-transaction-phenomena'>CONCEPT 8: CONCURRENCY, ISOLATION LEVELS & TRANSACTION PHENOMENA</h1>
+</div></details>
+
+<details class="chapter-accordion" id="concept-8" data-chapter="8" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CON 08</span>
+            <span class="accordion-title-text">CONCEPT 8: CONCURRENCY, ISOLATION LEVELS & TRANSACTION PHENOMENA</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="concept-8-concurrency-isolation-levels-transaction-phenomena" class="accordion-anchor"></a>
+        <a id="concept-8-concurrency-isolation-levels-transaction-phenomena" class="accordion-anchor"></a>
+
 <h2 id='1-definition'>1. Definition</h2>
 <p><strong>Transaction Isolation Levels</strong> define the degree to which the modifications made by one concurrent transaction are isolated from the reads and writes of other concurrent transactions. The ANSI/ISO SQL-92 standard defines four classical pessimistic isolation levels, while modern database engines (including SQL Server) offer snapshot-based optimistic isolation levels that leverage row versioning.</p>
 <h2 id='2-historical-reason'>2. Historical Reason</h2>
@@ -2870,7 +3010,25 @@ if (account.Balance &gt;= withdrawalAmount)
 <li><strong>Answer:</strong> Under RCSI, if a transaction attempts to update a row currently being modified by another transaction, it behaves pessimistically: it blocks and waits for the writer to commit or roll back, then reads the latest committed value and proceeds. Under pure <code>SNAPSHOT</code> isolation, the engine enforces First-Committer-Wins: if the row was updated and committed by another transaction after the current snapshot transaction began, the current transaction aborts immediately with an Update Conflict exception (Error 3960) upon attempting the write.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='concept-9-lock-internals-granularity-and-escalation'>CONCEPT 9: LOCK INTERNALS, GRANULARITY, AND ESCALATION</h1>
+</div></details>
+
+<details class="chapter-accordion" id="concept-9" data-chapter="9" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CON 09</span>
+            <span class="accordion-title-text">CONCEPT 9: LOCK INTERNALS, GRANULARITY, AND ESCALATION</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="concept-9-lock-internals-granularity-and-escalation" class="accordion-anchor"></a>
+        <a id="concept-9-lock-internals-granularity-and-escalation" class="accordion-anchor"></a>
+
 <h2 id='1-definition'>1. Definition</h2>
 <p><strong>Locking</strong> is the pessimistic mechanism used by the SQL Server Storage Engine to manage concurrent access to shared database resources. The Lock Manager grants and enforces locks across a defined hierarchy of granular resources (Rows, Keys, Pages, Tables) using specific lock modes to maintain ACID isolation guarantees.</p>
 <h2 id='2-historical-reason'>2. Historical Reason</h2>
@@ -3074,7 +3232,25 @@ Lock Manager triggers Escalation Event
 <li><strong>Answer:</strong> An Update (<code>U</code>) lock is acquired during the initial read phase of a data modification statement. While compatible with Shared (<code>S</code>) locks, two transactions cannot hold <code>U</code> locks on the same resource concurrently. In a read-modify-write cycle, if both transactions acquired <code>S</code> locks initially, both would subsequently attempt to convert their <code>S</code> lock to an Exclusive (<code>X</code>) lock, causing a conversion deadlock. The <code>U</code> lock serializes the modification phase up front, preventing the second transaction from reading until the first converts its <code>U</code> lock to <code>X</code> and commits.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='concept-10-deadlocks-in-sql-server-detection-diagnostics-prevention'>CONCEPT 10: DEADLOCKS IN SQL SERVER: DETECTION, DIAGNOSTICS & PREVENTION</h1>
+</div></details>
+
+<details class="chapter-accordion" id="concept-10" data-chapter="10" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CON 10</span>
+            <span class="accordion-title-text">CONCEPT 10: DEADLOCKS IN SQL SERVER: DETECTION, DIAGNOSTICS & PREVENTION</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="concept-10-deadlocks-in-sql-server-detection-diagnostics-prevention" class="accordion-anchor"></a>
+        <a id="concept-10-deadlocks-in-sql-server-detection-diagnostics-prevention" class="accordion-anchor"></a>
+
 <h2 id='1-definition'>1. Definition</h2>
 <p>A <strong>Deadlock</strong> is a mutual blocking condition where two or more independent sessions hold exclusive locks on resources that the other sessions require, forming a <strong>closed cyclic dependency</strong>. Because each session is paused waiting for the other to release its lock, neither session can proceed without external intervention.</p>
 <h2 id='2-historical-reason'>2. Historical Reason</h2>
@@ -3292,7 +3468,25 @@ await retryPolicy.ExecuteAsync(async () =&gt;
 <li>The two transactions lock the same row's two distinct index representations in opposite order, producing a deadlock on a single table and single logical entity.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='concept-11-query-performance-optimization-sargability-keyset-pagination'>CONCEPT 11: QUERY PERFORMANCE OPTIMIZATION, SARGABILITY & KEYSET PAGINATION</h1>
+</div></details>
+
+<details class="chapter-accordion" id="concept-11" data-chapter="11" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CON 11</span>
+            <span class="accordion-title-text">CONCEPT 11: QUERY PERFORMANCE OPTIMIZATION, SARGABILITY & KEYSET PAGINATION</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="concept-11-query-performance-optimization-sargability-keyset-pagination" class="accordion-anchor"></a>
+        <a id="concept-11-query-performance-optimization-sargability-keyset-pagination" class="accordion-anchor"></a>
+
 <h2 id='1-definition'>1. Definition</h2>
 <p><strong>Query Performance Optimization</strong> is the engineering discipline of designing relational queries, predicates, and indexing structures that minimize physical and logical I/O, reduce CPU cycle consumption, eliminate memory grant spills, and avoid lock contention. Two core pillars are:</p>
 <ul>
@@ -3555,7 +3749,25 @@ Returns 20 rows (Total logical reads: 3 pages)</code></pre>
 <li><strong>Answer:</strong> A SQL Server statistic histogram contains a maximum of <strong>200 steps</strong>, regardless of table size. For multi-column statistics or composite indexes, SQL Server builds a full 200-step histogram <strong>only on the first (leading) column</strong>. For subsequent columns in the composite key, SQL Server stores only a <strong>Density Vector</strong> (a single float representing the average uniqueness of the column combinations). Therefore, multi-column correlation and range selectivity on non-leading columns rely on density heuristics rather than detailed distribution intervals, which is why column ordering in composite indexes is so critical.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='concept-12-programmability-stored-procedures-views-and-indexed-views'>CONCEPT 12: PROGRAMMABILITY: STORED PROCEDURES, VIEWS, AND INDEXED VIEWS</h1>
+</div></details>
+
+<details class="chapter-accordion" id="concept-12" data-chapter="12" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CON 12</span>
+            <span class="accordion-title-text">CONCEPT 12: PROGRAMMABILITY: STORED PROCEDURES, VIEWS, AND INDEXED VIEWS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="concept-12-programmability-stored-procedures-views-and-indexed-views" class="accordion-anchor"></a>
+        <a id="concept-12-programmability-stored-procedures-views-and-indexed-views" class="accordion-anchor"></a>
+
 <h2 id='1-definition'>1. Definition</h2>
 <p>Database programmability structures encapsulate T-SQL business logic directly inside the relational engine:</p>
 <ul>
@@ -3768,7 +3980,25 @@ Returns 12 rows (Total logical reads: 3 pages; zero base table scans!)</code></p
 <li><strong>Answer:</strong> SQL Server requires <code>COUNT_BIG(<em>)</code> (which returns <code>BIGINT</code>) because when base rows are inserted or deleted, the internal maintenance engine updates the pre-aggregated metrics. It uses the <code>COUNT_BIG(</em>)</code> value to determine whether an aggregation group still has active child rows. If <code>COUNT_BIG(*)</code> decrements to zero following a base row deletion, SQL Server deletes the corresponding summary row from the indexed view's clustered index. <code>BIGINT</code> is required to eliminate any mathematical possibility of integer overflow on high-volume tables.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='concept-13-database-normalization-1nf3nf-strategic-denormalization-guid-vs-identity-vs-ulid'>CONCEPT 13: DATABASE NORMALIZATION (1NF–3NF) & STRATEGIC DENORMALIZATION (GUID VS IDENTITY VS ULID)</h1>
+</div></details>
+
+<details class="chapter-accordion" id="concept-13" data-chapter="13" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CON 13</span>
+            <span class="accordion-title-text">CONCEPT 13: DATABASE NORMALIZATION (1NF–3NF) & STRATEGIC DENORMALIZATION (GUID VS IDENTITY VS ULID)</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="concept-13-database-normalization-1nf3nf-strategic-denormalization-guid-vs-identity-vs-ulid" class="accordion-anchor"></a>
+        <a id="concept-13-database-normalization-1nf3nf-strategic-denormalization-guid-vs-identity-vs-ulid" class="accordion-anchor"></a>
+
 <h2 id='1-definition'>1. Definition</h2>
 <ul>
 <li><strong>Database Normalization:</strong> The formal mathematical process (based on relational algebra) of organizing schema relations to minimize data redundancy and eliminate insert, update, and deletion anomalies while maintaining data dependency integrity.</li>
@@ -3993,7 +4223,25 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
 </ol>
 <p>This satisfies all external API contracts and public lookups while eliminating page splits and internal fragmentation at the physical storage layer.</p>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h1 id='concept-14-comprehensive-interview-question-bank'>CONCEPT 14: COMPREHENSIVE INTERVIEW QUESTION BANK</h1>
+</div></details>
+
+<details class="chapter-accordion" id="concept-14" data-chapter="14" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CON 14</span>
+            <span class="accordion-title-text">CONCEPT 14: COMPREHENSIVE INTERVIEW QUESTION BANK</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="concept-14-comprehensive-interview-question-bank" class="accordion-anchor"></a>
+        <a id="concept-14-comprehensive-interview-question-bank" class="accordion-anchor"></a>
+
 <h2 id='50-battle-tested-database-sql-questions-for-net-developers-infosys-l2senior-enterprise-product-roles'>50 Battle-Tested Database & SQL Questions for .NET Developers (Infosys L2/Senior & Enterprise Product Roles)</h2>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='part-1-core-sql-3vl-joins-subqueries-questions-112'>PART 1: CORE SQL, 3VL, JOINS & SUBQUERIES (Questions 1–12)</h3>
@@ -4307,7 +4555,7 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
         
 
         <li class="toc-item level-1">
-            <a href="#concept-1-sql-fundamentals-three-valued-logic-3vl" class="toc-link">CONCEPT 1: SQL FUNDAMENTALS &amp; THREE-VALUED LO</a>
+            <a href="#concept-1" class="toc-link">CONCEPT 1: SQL FUNDAMENTALS &amp; THREE-VALUED LO</a>
         </li>
         
 
@@ -4372,7 +4620,7 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
         
 
         <li class="toc-item level-1">
-            <a href="#concept-2-complete-joins-deep-dive-logical-semantics-physical-operators" class="toc-link">CONCEPT 2: COMPLETE JOINS DEEP-DIVE: LOGICAL </a>
+            <a href="#concept-2" class="toc-link">CONCEPT 2: COMPLETE JOINS DEEP-DIVE: LOGICAL </a>
         </li>
         
 
@@ -4452,7 +4700,7 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
         
 
         <li class="toc-item level-1">
-            <a href="#concept-3-query-constructs-subqueries-ctes-temp-tables-and-table-variables" class="toc-link">CONCEPT 3: QUERY CONSTRUCTS: SUBQUERIES, CTES</a>
+            <a href="#concept-3" class="toc-link">CONCEPT 3: QUERY CONSTRUCTS: SUBQUERIES, CTES</a>
         </li>
         
 
@@ -4532,9 +4780,7 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
                 securityLevel: 'loose'
             });
 
-            // ==========================================
             // ACCORDION & SINGLE-FOCUS CONTROLS
-            // ==========================================
             const accordions = document.querySelectorAll('.chapter-accordion');
             const singleFocusToggle = document.getElementById('single-focus-toggle');
             const btnExpandAll = document.getElementById('btn-expand-all');
@@ -4589,9 +4835,7 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
                 });
             });
 
-            // ==========================================
             // DEEP LINKING & TOC NAVIGATION
-            // ==========================================
             function navigateToTarget(targetId) {
                 if (!targetId) return;
                 let target = document.getElementById(targetId);
@@ -4601,7 +4845,8 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
                     const normalized = targetId.replace(/-+/g, '-');
                     target = document.getElementById(normalized) || 
                              document.querySelector(`[id*="${normalized}"]`) ||
-                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                             document.querySelector(`[id*="${normalized.replace(/^ch-/, '')}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^concept-/, '')}"]`);
                 }
 
                 if (!target) return;

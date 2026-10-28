@@ -317,9 +317,7 @@ body {
     line-height: 1.6;
 }
 
-/* ========================================================
-   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
-   ======================================================== */
+/* FOCUS CONTROLS TOOLBAR */
 .focus-control-bar {
     position: sticky;
     top: 14px;
@@ -421,9 +419,7 @@ input:checked + .slider:before {
     color: var(--heading-color);
 }
 
-/* ========================================================
-   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
-   ======================================================== */
+/* CHAPTER ACCORDION STYLING */
 .chapter-accordion {
     background: var(--bg-surface);
     border: 1px solid var(--border);
@@ -996,12 +992,13 @@ li::marker { color: var(--primary); }
             <div class="quick-action-bar">
                 <a href="Volume-0-Software-Engineering-Fundamentals.html" class="btn-action-primary">🚀 Start Learning (Volume 0)</a>
                 <a href="Volume-1-DSA-Logical-Thinking.html" class="btn-action-sec">⚡ Open DSA & Strings (Volume 1)</a>
+                <a href="Volume-3-Advanced-CSharp.html" class="btn-action-sec">🔥 Open Concurrency (Volume 3)</a>
                 <a href="Volume-12-Interview-Question-Bank.html" class="btn-action-sec">🎯 Open 155+ Question Bank</a>
             </div>
         </div>
 
         <div class="search-box">
-            <input type="text" id="filterInput" class="search-input" placeholder="🔍 Search any module by title or topic (e.g. strings, two pointers, sliding window, async, GC)..." onkeyup="filterCards()">
+            <input type="text" id="filterInput" class="search-input" placeholder="🔍 Search any module by title or topic (e.g. concurrency, async, threadpool, channels, deadlocks)..." onkeyup="filterCards()">
         </div>
 
         <div class="portal-grid" id="portalGrid">
@@ -1035,7 +1032,7 @@ li::marker { color: var(--primary); }
         </div>
         <div class="portal-vol">Volume 1</div>
         <h3 class="portal-title"><a href="Volume-1-DSA-Logical-Thinking.html">Logical Thinking & Data Structures and Algorithms</a></h3>
-        <p class="portal-desc">10 thinking patterns, arrays, strings, Dictionary bucket hashing, trees, graphs, dynamic programming, and verbatim Infosys interview transcript.</p>
+        <p class="portal-desc">10 thinking patterns, arrays, dedicated pure strings chapter, two pointers, sliding window, searching, sorting, trees, graphs, and Infosys interview playbook.</p>
         <a href="Volume-1-DSA-Logical-Thinking.html" class="portal-cta">Launch Chapter →</a>
     </div>
     
@@ -1053,11 +1050,11 @@ li::marker { color: var(--primary); }
     <div class="portal-card">
         <div class="portal-card-top">
             <span class="portal-icon">🔥</span>
-            <span class="portal-badge">High Performance</span>
+            <span class="portal-badge">High Performance & Concurrency</span>
         </div>
         <div class="portal-vol">Volume 3</div>
-        <h3 class="portal-title"><a href="Volume-3-Advanced-CSharp.html">Advanced C# & Memory Management</a></h3>
-        <p class="portal-desc">GC generational hypothesis, LOH/POH, Dispose pattern, Span/Memory zero-alloc, async state machine lowering, ThreadPool starvation, Channels.</p>
+        <h3 class="portal-title"><a href="Volume-3-Advanced-CSharp.html">Advanced C# & Concurrency Encyclopedia</a></h3>
+        <p class="portal-desc">GC generational internals, Span/Memory, Concurrency foundations with Kitchen analogy, Async/Await state machine, ThreadPool work-stealing, Channels, and Deadlocks.</p>
         <a href="Volume-3-Advanced-CSharp.html" class="portal-cta">Launch Chapter →</a>
     </div>
     
