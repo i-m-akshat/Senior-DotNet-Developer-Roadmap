@@ -24,9 +24,11 @@
     --bg-page: #0b0f19;
     --bg-surface: #111827;
     --bg-surface-elevated: #1f2937;
+    --bg-surface-hover: #283548;
     --bg-code: #030712;
     --border: #374151;
     --border-light: #4b5563;
+    --border-highlight: #60a5fa;
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
     --text-dim: #6b7280;
@@ -34,6 +36,7 @@
     --primary: #3b82f6;
     --primary-hover: #60a5fa;
     --primary-glow: rgba(59, 130, 246, 0.15);
+    --primary-glow-strong: rgba(59, 130, 246, 0.3);
     --accent: #8b5cf6;
     --success: #10b981;
     --warning: #f59e0b;
@@ -48,15 +51,20 @@
     --code-color: #f87171;
     --hero-bg: linear-gradient(135deg, rgba(31, 41, 55, 0.75) 0%, rgba(17, 24, 39, 0.95) 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --accordion-header-bg: #151e2e;
+    --accordion-header-hover: #1c273c;
+    --accordion-active-border: #3b82f6;
 }
 
 [data-theme="light"] {
     --bg-page: #f8fafc;
     --bg-surface: #ffffff;
     --bg-surface-elevated: #f1f5f9;
+    --bg-surface-hover: #e2e8f0;
     --bg-code: #0f172a;
     --border: #e2e8f0;
     --border-light: #cbd5e1;
+    --border-highlight: #2563eb;
     --text-main: #0f172a;
     --text-muted: #475569;
     --text-dim: #64748b;
@@ -64,6 +72,7 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-glow: rgba(37, 99, 235, 0.1);
+    --primary-glow-strong: rgba(37, 99, 235, 0.22);
     --accent: #7c3aed;
     --success: #059669;
     --warning: #b45309;
@@ -78,6 +87,9 @@
     --code-color: #b91c1c;
     --hero-bg: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --accordion-header-bg: #f8fafc;
+    --accordion-header-hover: #eef2f6;
+    --accordion-active-border: #2563eb;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -93,7 +105,7 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* SIDEBAR */
+/* SIDEBAR - STRICT FIXED 300px (NEVER OVERLAPS CONTENT) */
 #sidebar {
     width: 300px;
     background-color: var(--bg-surface);
@@ -206,33 +218,35 @@ body {
 .nav-vol { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
 .nav-link.active .nav-vol { color: var(--primary); }
 
-/* CONTENT AREA */
+/* CONTENT WRAPPER - PROPER MARGIN LEFT TO PREVENT OVERLAP */
 #content-wrapper {
     margin-left: 300px;
     flex: 1;
     display: flex;
     justify-content: center;
     padding: 40px 30px;
+    min-width: 0;
 }
 
 #main-content {
-    max-width: 880px;
+    max-width: 900px;
     width: 100%;
+    min-width: 0;
 }
 
 /* RIGHT TABLE OF CONTENTS */
 #toc-sidebar {
-    width: 250px;
+    width: 260px;
     position: sticky;
     top: 40px;
     height: calc(100vh - 80px);
     overflow-y: auto;
-    padding-left: 28px;
-    margin-left: 20px;
+    padding-left: 24px;
+    margin-left: 24px;
     display: none;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1320px) {
     #toc-sidebar { display: block; }
 }
 
@@ -258,7 +272,8 @@ body {
 }
 
 .toc-link:hover { color: var(--primary); }
-.toc-item.level-3 { padding-left: 10px; }
+.toc-item.level-2 { padding-left: 10px; }
+.toc-item.level-3 { padding-left: 18px; font-size: 0.74rem; color: var(--text-dim); }
 
 /* CHAPTER HERO */
 .chapter-hero {
@@ -266,7 +281,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 32px 36px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     box-shadow: var(--card-shadow);
 }
 
@@ -296,7 +311,7 @@ body {
 }
 
 .chapter-hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 800;
     color: var(--heading-color);
     margin-bottom: 12px;
@@ -309,32 +324,264 @@ body {
     line-height: 1.6;
 }
 
+/* ========================================================
+   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
+   ======================================================== */
+.focus-control-bar {
+    position: sticky;
+    top: 14px;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.focus-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.focus-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.focus-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    color: var(--primary-hover);
+}
+
+.focus-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border-light);
+    transition: .25s ease;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s ease;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+.toggle-label-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+/* ========================================================
+   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
+   ======================================================== */
+.chapter-accordion {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chapter-accordion:hover {
+    border-color: var(--border-light);
+}
+
+.chapter-accordion[open] {
+    border-color: var(--accordion-active-border);
+    box-shadow: 0 6px 26px var(--primary-glow-strong);
+}
+
+.chapter-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--accordion-header-bg);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-accordion-header::-webkit-details-marker {
+    display: none;
+}
+
+.chapter-accordion-header:hover {
+    background: var(--accordion-header-hover);
+}
+
+.chapter-accordion[open] > .chapter-accordion-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface-elevated);
+}
+
+.accordion-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.accordion-badge {
+    background: var(--primary-glow);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.accordion-title-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1.35;
+}
+
+.accordion-status-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+.accordion-status-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.accordion-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-page);
+    color: var(--text-muted);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, color 0.2s;
+}
+
+.chapter-accordion[open] > .chapter-accordion-header .accordion-chevron {
+    transform: rotate(180deg);
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.chapter-accordion-body {
+    padding: 28px 30px;
+    animation: accordionFadeIn 0.25s ease-out;
+}
+
+@keyframes accordionFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HIGHLIGHT ON TARGET JUMP */
+.flash-highlight {
+    outline: 2px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow-strong);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+}
+
 /* TYPOGRAPHY */
 h1, h2, h3, h4, h5 { color: var(--heading-color); font-weight: 700; line-height: 1.3; }
 
 h1 {
     font-size: 1.85rem;
-    margin: 44px 0 18px 0;
+    margin: 40px 0 16px 0;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
     color: var(--primary);
 }
 
 h2 {
-    font-size: 1.4rem;
-    margin: 36px 0 14px 0;
+    font-size: 1.35rem;
+    margin: 32px 0 14px 0;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
+    color: var(--heading-color);
 }
 
 h3 {
-    font-size: 1.15rem;
-    margin: 26px 0 10px 0;
+    font-size: 1.1rem;
+    margin: 22px 0 10px 0;
+    color: var(--heading-color);
 }
 
 h4 {
-    font-size: 0.98rem;
-    margin: 18px 0 8px 0;
+    font-size: 0.95rem;
+    margin: 16px 0 8px 0;
     color: var(--warning);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -351,7 +598,7 @@ a:hover { text-decoration: underline; }
     background: var(--bg-code);
     border: 1px solid var(--border);
     border-radius: 10px;
-    margin: 22px 0;
+    margin: 20px 0;
     overflow: hidden;
     box-shadow: var(--card-shadow);
 }
@@ -664,7 +911,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-8-Database-SQL.html" class="nav-link ">
                 <span class="nav-icon">💾</span>
-                <span>Database Engine Internals & SQL Server</span>
+                <span>Database Systems & High-Performance SQL</span>
                 <span class="nav-vol">V8</span>
             </a>
         </li>
@@ -672,7 +919,7 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-9-Microservices.html" class="nav-link ">
-                <span class="nav-icon">📡</span>
+                <span class="nav-icon">☁️</span>
                 <span>Microservices & Distributed Systems</span>
                 <span class="nav-vol">V9</span>
             </a>
@@ -681,8 +928,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-10-System-Design.html" class="nav-link ">
-                <span class="nav-icon">🏗️</span>
-                <span>Enterprise System Design</span>
+                <span class="nav-icon">📐</span>
+                <span>System Design: Enterprise Case Studies</span>
                 <span class="nav-vol">V10</span>
             </a>
         </li>
@@ -690,8 +937,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-11-Project-Interview-Mastery.html" class="nav-link ">
-                <span class="nav-icon">🎯</span>
-                <span>Project Interview Mastery & Walkthroughs</span>
+                <span class="nav-icon">💼</span>
+                <span>Project Interview Mastery & Technical Narrative</span>
                 <span class="nav-vol">V11</span>
             </a>
         </li>
@@ -699,8 +946,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-12-Interview-Question-Bank.html" class="nav-link ">
-                <span class="nav-icon">🏆</span>
-                <span>The Master Interview Question Bank</span>
+                <span class="nav-icon">🎯</span>
+                <span>Master Interview Question Bank & Verbatim Transcripts</span>
                 <span class="nav-vol">V12</span>
             </a>
         </li>
@@ -719,9 +966,29 @@ li::marker { color: var(--primary); }
                 <p>Evolution (.NET Framework to .NET 10), CoreCLR execution pipeline, RyuJIT, AssemblyLoadContext, Generic Host, Kestrel, DI engine internals.</p>
             </div>
 
+            <!-- ADHD-FRIENDLY INTERACTIVE FOCUS CONTROLS -->
+            <div class="focus-control-bar">
+                <div class="focus-actions">
+                    <button class="focus-btn" id="btn-expand-all" title="Open all chapters for full scroll">
+                        <span>📂</span> Expand All
+                    </button>
+                    <button class="focus-btn" id="btn-collapse-all" title="Collapse all chapters to section headers">
+                        <span>📁</span> Collapse All
+                    </button>
+                </div>
+                <div class="focus-toggle-wrap">
+                    <label class="focus-mode-toggle" title="When active, opening one section automatically closes previous sections to minimize cognitive load and visual clutter.">
+                        <span class="toggle-switch">
+                            <input type="checkbox" id="single-focus-toggle" checked>
+                            <span class="slider"></span>
+                        </span>
+                        <span class="toggle-label-text">🎯 Single-Chapter Focus (Auto-close others)</span>
+                    </label>
+                </div>
+            </div>
+
             <article class="doc-body">
-                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
-<h1 id='volume-x-net-platform-net-core-runtime-architecture-basic-to-advanced'>Volume X: .NET Platform & .NET Core Runtime Architecture (Basic to Advanced)</h1>
+                <h1 id='volume-x-net-platform-net-core-runtime-architecture-basic-to-advanced'>Volume X: .NET Platform & .NET Core Runtime Architecture (Basic to Advanced)</h1>
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
@@ -746,7 +1013,7 @@ li::marker { color: var(--primary); }
     <div class="callout-body"><strong>Enterprise Production Contexts:</strong> High-Volume Payment Gateways, Core Banking Ledgers, Distributed Order Orchestration Engines, Multi-Tenant B2B SaaS, and Real-Time Settlement Platforms.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='table-of-contents'>TABLE OF CONTENTS</h2>
 <ol>
 <li><a href="#1-the-evolution--ecosystem-historical-context--architecture">The Evolution & Ecosystem (Historical Context & Architecture)</a></li>
@@ -873,8 +1140,25 @@ li::marker { color: var(--primary); }
 <li>13.1 Conceptual Matrix: Basic to Senior Follow-up to Trap</li>
 <li>13.2 Real-World Incident Troubleshooting Playbooks (High CPU, Memory Leaks, Socket Depletion)</li>
 </ul>
-<p>---</p>
-<h1 id='1-the-evolution-ecosystem-historical-context-architecture'>1. THE EVOLUTION & ECOSYSTEM (Historical Context & Architecture)</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+
+<details class="chapter-accordion" id="ch-1" data-chapter="1" open>
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 01</span>
+            <span class="accordion-title-text">1. THE EVOLUTION & ECOSYSTEM (Historical Context & Architecture)</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="1-the-evolution-ecosystem-historical-context-architecture" class="accordion-anchor"></a>
+        <a id="1-the-evolution-ecosystem-historical-context-architecture" class="accordion-anchor"></a>
+
 <h3 id='11-the-legacy-net-framework-landscape'>1.1 The Legacy .NET Framework Landscape</h3>
 <p>To appreciate modern .NET Core and .NET 8+, an architect must first analyze the fundamental engineering constraints that bound the classic <strong>.NET Framework (versions 1.0 through 4.8.1)</strong>. Released in 2002 as Microsoft's flagship response to Java, the legacy .NET Framework was tightly coupled to the Windows operating system at both the compilation and execution layers.</p>
 
@@ -911,7 +1195,7 @@ li::marker { color: var(--primary); }
 <li><strong><code>System.Web.dll</code> & Native IIS Coupling:</strong></li>
 </ol>
 <p>ASP.NET was inextricably bound to <code>System.Web.dll</code>, which was directly tied to the native Internet Information Services (<strong>IIS</strong>) process (<code>w3wp.exe</code>) via ISAPI filters. The legacy <code>HttpContext</code> contained hundreds of properties wrapping COM objects and native Windows handles. A single dummy request allocated several kilobytes of memory before user code even executed. Furthermore, the pipeline was constrained to synchronous OS thread execution across dozens of legacy event stages (<code>BeginRequest</code>, <code>AuthenticateRequest</code>, <code>ResolveRequestCache</code>), causing rapid thread-pool starvation under high concurrent traffic.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='12-the-genesis-of-net-core'>1.2 The Genesis of .NET Core</h3>
 <p>Around 2013-2014, cloud computing (Microsoft Azure, AWS), Linux microservices, and Docker containers fundamentally altered software infrastructure. Running lightweight, containerized microservices on high-density Linux virtual machines rendered Windows Server licensing, massive image sizes (Windows Server Core images exceeded 10 GB), and monolithic architectures economically and technically non-viable.</p>
 <p>Microsoft initiated internal skunkworks projects (Project "Helios" to run lightweight web services without <code>System.Web</code>, followed by Project "K" / ASP.NET vNext / ASP.NET 5). This culminated in the complete ground-up rewrite known as <strong>.NET Core 1.0</strong> (released June 2016).</p>
@@ -923,7 +1207,7 @@ li::marker { color: var(--primary); }
 <li><strong>Cloud-Native & Container Optimization:</strong> Sub-100MB base images, tiny memory footprint (<30 MB baseline resident set size), and fast startup times.</li>
 <li><strong>Uncompromising Performance:</strong> Stripping legacy abstraction layers enabled hardware-level vectorization (SIMD), zero-allocation memory paradigms (<code>Span&lt;T&gt;</code>, <code>Memory&lt;T&gt;</code>), and modern asynchronous non-blocking I/O.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='13-net-standard-the-bridge-and-its-obsolescence'>1.3 .NET Standard: The Bridge and Its Obsolescence</h3>
 <p>During the transition era (2016-2020), developers faced a fragmented runtime ecosystem:</p>
 <ol>
@@ -959,7 +1243,7 @@ li::marker { color: var(--primary); }
 <li><strong>Developer Cognitive Load:</strong> Developers struggled with the complex matrix of which .NET Standard version mapped to which runtime version.</li>
 <li><strong>Redundancy Post-Unification:</strong> Once Microsoft unified the runtimes into a single modern code base (.NET 5), a separate specification layer became redundant. Today, libraries simply target <code>net8.0</code> or <code>net9.0</code>.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='14-the-great-unification-net-5-architecture'>1.4 The Great Unification: .NET 5+ Architecture</h3>
 <p>In November 2020, Microsoft launched <strong>.NET 5</strong>, intentionally skipping the number "4" to eliminate confusion with .NET Framework 4.8. This marked the <strong>Great Unification</strong>: merging the separate branches (.NET Core, Mono, Xamarin) into a single, cohesive product, SDK, and BCL.</p>
 
@@ -993,7 +1277,7 @@ li::marker { color: var(--primary); }
 <li><code>net8.0-windows</code>: Cross-platform base + Windows-specific OS APIs (WPF, WinForms, Windows Registry).</li>
 <li><code>net8.0-android</code> / <code>net8.0-ios</code>: Cross-platform base + native mobile platform bindings.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='15-yearly-release-cadence-lts-vs-sts-governance-strategy'>1.5 Yearly Release Cadence: LTS vs STS Governance Strategy</h3>
 <p>Enterprise IT leaders and financial institutions require predictable upgrade cycles. Microsoft established a formalized, yearly release heartbeat:</p>
 
@@ -1016,7 +1300,7 @@ Support:   Enterprise Gold  Fast Innovation  Enterprise Gold  Fast Innovation  E
 <tr><td><strong>Patching Policy</strong></td><td>Critical security, bug fixes, zero breaking API changes</td><td>Security patches, cutting-edge language features</td></tr>
 <tr><td><strong>Enterprise Strategy</strong></td><td>Adopt LTS-to-LTS (e.g., migrate from .NET 6 directly to .NET 8)</td><td>Adopt continuously or evaluate in experimental branches</td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='16-the-open-source-revolution-governance'>1.6 The Open-Source Revolution & Governance</h3>
 <p>The modernization of .NET was underpinned by a radical cultural and technical shift: open-sourcing the entire stack.</p>
 <ul>
@@ -1025,7 +1309,7 @@ Support:   Enterprise Gold  Fast Innovation  Enterprise Gold  Fast Innovation  E
 <li><strong>The .NET Foundation:</strong> An independent non-profit organization established to foster open-source collaboration, commercial neutrality, and intellectual property health for the ecosystem.</li>
 <li><strong>Open Engineering Model:</strong> Every commit, architectural design review, issue triage, and PR occurs in public repositories (<code>github.com/dotnet/runtime</code>, <code>github.com/dotnet/aspnetcore</code>). Any enterprise architect can review the exact commit and assembly instructions generated for PRs in CoreCLR.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='17-techempower-benchmark-revolution-performance-metrics'>1.7 TechEmpower Benchmark Revolution & Performance Metrics</h3>
 <p>In the early days of .NET Framework, ASP.NET consistently ranked near the bottom of the globally recognized <strong>TechEmpower Web Framework Benchmarks</strong> (often in the 200–300 range), lagging far behind lightweight C++, Go, and Java runtimes.</p>
 <p>Through the engineering work in .NET Core 2.1 through .NET 8:</p>
@@ -1040,8 +1324,26 @@ Support:   Enterprise Gold  Fast Innovation  Enterprise Gold  Fast Innovation  E
 <li>Vectorization and SIMD hardware intrinsics (AVX-512, ARM Neon).</li>
 <li>Dynamic Profile-Guided Optimization (Dynamic PGO) in the JIT compiler.</li>
 </ol>
-<p>---</p>
-<h1 id='2-net-internal-architecture-runtime-pipeline'>2. .NET INTERNAL ARCHITECTURE & RUNTIME PIPELINE</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-2" data-chapter="2" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 02</span>
+            <span class="accordion-title-text">2. .NET INTERNAL ARCHITECTURE & RUNTIME PIPELINE</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="2-net-internal-architecture-runtime-pipeline" class="accordion-anchor"></a>
+        <a id="2-net-internal-architecture-runtime-pipeline" class="accordion-anchor"></a>
+
 <h3 id='21-runtime-spectrum-clr-vs-coreclr-vs-mono-vs-native-aot'>2.1 Runtime Spectrum: CLR vs CoreCLR vs Mono vs Native AOT</h3>
 <p>Modern .NET provides multiple execution engines optimized for distinct computational envelopes:</p>
 
@@ -1070,7 +1372,7 @@ Support:   Enterprise Gold  Fast Innovation  Enterprise Gold  Fast Innovation  E
 +------------------+-----------------------+-----------------------+------------------------------------+</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='22-end-to-end-execution-pipeline-roslyn-to-cpu'>2.2 End-to-End Execution Pipeline (Roslyn to CPU)</h3>
 <p>Every line of C# code undergoes a sophisticated multi-stage compilation and execution journey before physical CPU transistors execute it:</p>
 
@@ -1133,7 +1435,7 @@ Support:   Enterprise Gold  Fast Innovation  Enterprise Gold  Fast Innovation  E
 +--------------------+</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='23-managed-vs-unmanaged-execution-interop-mechanics'>2.3 Managed vs Unmanaged Execution & Interop Mechanics</h3>
 <h4 id='managed-code'>Managed Code:</h4>
 <p>Code executed under the direct supervision of the CoreCLR execution engine. CoreCLR provides:</p>
@@ -1186,7 +1488,7 @@ public static partial class NativeHsmSecurityEngine
 +-----------------------------------------------------------------------------+</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='24-coreclr-type-system-metadata-tables-ecma-335'>2.4 CoreCLR Type System & Metadata Tables (ECMA-335)</h3>
 <p>Under the ECMA-335 standard, a compiled .NET binary contains structured metadata tables that completely describe every type, method, parameter, and reference.</p>
 <h4 id='essential-metadata-tables'>Essential Metadata Tables:</h4>
@@ -1226,7 +1528,7 @@ public static partial class NativeHsmSecurityEngine
 <li><strong>MethodTable Pointer (8 bytes on 64-bit):</strong> Points to the type's <code>MethodTable</code> in native process memory. This enables runtime polymorphism, virtual dispatch (VTables), interface mapping, and runtime type inspection (<code>is</code>, <code>as</code>, <code>GetType()</code>).</li>
 <li><strong>Instance Fields:</strong> Packed efficiently according to CLR alignment rules (padding added to satisfy 8-byte word alignment).</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='25-assembly-loading-architecture-assemblyloadcontext-alc'>2.5 Assembly Loading Architecture & AssemblyLoadContext (ALC)</h3>
 <p>In legacy .NET Framework, isolating conflicting assemblies or executing untrusted plugins required creating a separate <strong><code>AppDomain</code></strong>. In modern .NET Core / .NET 8+, <code>AppDomain</code> boundaries were removed due to heavy cross-domain remoting serialization costs. They are replaced by <strong><code>AssemblyLoadContext</code> (ALC)</strong>.</p>
 <h4 id='the-three-core-alc-variants'>The Three Core ALC Variants:</h4>
@@ -1299,7 +1601,7 @@ public class PluginManager
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='26-ryujit-compilation-engine-deep-dive'>2.6 RyuJIT Compilation Engine Deep Dive</h3>
 <p>Modern .NET uses <strong>RyuJIT</strong>, an optimizing compiler that translates CIL into native x86-64 or ARM64 instructions.</p>
 <h4 id='1-tiered-compilation'>1. Tiered Compilation</h4>
@@ -1347,8 +1649,26 @@ else
 <li><strong>Restricted Reflection:</strong> Reflection on unreferenced private types fails unless preserved via <code>TrimmerRootDescriptor</code> or <code>[DynamicallyAccessedMembers]</code>.</li>
 <li><strong>Instant Startup:</strong> Zero JIT overhead produces startup times below 10 milliseconds, making it ideal for scale-to-zero serverless containers (AWS Lambda, Azure Container Apps).</li>
 </ul>
-<p>---</p>
-<h1 id='3-project-structure-anatomy'>3. PROJECT STRUCTURE & ANATOMY</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-3" data-chapter="3" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 03</span>
+            <span class="accordion-title-text">3. PROJECT STRUCTURE & ANATOMY</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="3-project-structure-anatomy" class="accordion-anchor"></a>
+        <a id="3-project-structure-anatomy" class="accordion-anchor"></a>
+
 <h3 id='31-solution-topology-sln-vs-modern-xml-slnx'>3.1 Solution Topology: <code>.sln</code> vs Modern XML <code>.slnx</code></h3>
 <p>For over two decades, Visual Studio and the .NET CLI relied on legacy <code>.sln</code> files. These files were notoriously difficult to parse, mixed GUIDs (<code>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</code>), and suffered from frequent Git merge conflicts when multiple developers added projects simultaneously.</p>
 <h4 id='the-modern-slnx-visual-studio-2022-v1710-net-9'>The Modern <code>.slnx</code> (Visual Studio 2022 v17.10+ / .NET 9+):</h4>
@@ -1373,7 +1693,7 @@ else
 &lt;/Solution&gt;</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='32-modern-sdk-style-project-system-csproj-internals'>3.2 Modern SDK-Style Project System (<code>.csproj</code>) Internals</h3>
 <p>Legacy <code>.csproj</code> files explicitly listed every individual <code>.cs</code> file on disk. Modern SDK-style projects use automatic wildcard globbing (<code>*<em>/</em>.cs</code> is automatically compiled) and modular properties:</p>
 
@@ -1417,7 +1737,7 @@ else
 <li><strong><code>&lt;Nullable&gt;enable&lt;/Nullable&gt;</code>:</strong> Activates the C# Nullable Reference Types (NRT) analysis engine. The compiler treats reference types as non-nullable by default (<code>string</code> cannot be null; <code>string?</code> explicitly permits null), eliminating <code>NullReferenceException</code> at compile time.</li>
 <li><strong><code>&lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;</code>:</strong> Automatically imports standard root namespaces based on the project SDK (<code>Microsoft.NET.Sdk.Web</code> imports <code>System</code>, <code>System.Threading.Tasks</code>, <code>Microsoft.AspNetCore.Builder</code>, <code>Microsoft.Extensions.DependencyInjection</code>, etc.) into an auto-generated file (<code>obj/Debug/net8.0/PaymentGateway.Api.GlobalUsings.g.cs</code>).</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='33-development-profiles-launchsettingsjson'>3.3 Development Profiles: <code>launchSettings.json</code></h3>
 <p>Located strictly under the <code>Properties/</code> folder, <code>launchSettings.json</code> configures local execution behavior for development tooling (Visual Studio, VS Code, <code>dotnet run</code>).</p>
 
@@ -1462,7 +1782,7 @@ else
     <div class="callout-body"><strong>Enterprise Production Rule:</strong> <code>launchSettings.json</code> is <strong>never deployed to production environments</strong>. It is ignored when running compiled binaries via <code>dotnet PaymentGateway.Api.dll</code> or inside Docker containers. Production environment variables must be supplied via Kubernetes ConfigMaps, Docker environments, or host environment variables.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='34-entry-point-evolution-top-level-statements-vs-classic-startupcs'>3.4 Entry Point Evolution: Top-Level Statements vs Classic <code>Startup.cs</code></h3>
 <p>Prior to .NET 6, ASP.NET Core applications split boot responsibilities across two files: <code>Program.cs</code> (process creation and host configuration) and <code>Startup.cs</code> (<code>ConfigureServices</code> for DI and <code>Configure</code> for the middleware pipeline).</p>
 <h4 id='modern-top-level-statements-net-6789'>Modern Top-Level Statements (.NET 6/7/8/9):</h4>
@@ -1520,7 +1840,7 @@ app.Run();</code></pre>
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='35-configuration-layering-environment-hierarchy'>3.5 Configuration Layering & Environment Hierarchy</h3>
 <p>ASP.NET Core implements a layered configuration system where each subsequent provider overrides keys defined by earlier providers.</p>
 
@@ -1566,14 +1886,14 @@ app.Run();</code></pre>
     <pre><code class="language-bash">export PaymentEngine__SettlementTimeoutSeconds=90</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='36-nuget-dependency-resolution-package-lock-files'>3.6 NuGet Dependency Resolution & Package Lock Files</h3>
 <p>Modern package restore uses transitive dependency resolution. When Project A references Package B (v1.0), and Package B depends on Package C (v2.0), the build system automatically pulls Package C.</p>
 <h4 id='diamond-dependency-conflict'>Diamond Dependency Conflict:</h4>
 <p>If Project A references Package X (which requires <code>Newtonsoft.Json 12.0.1</code>) and Package Y (which requires <code>Newtonsoft.Json 13.0.1</code>), NuGet applies the <strong>Nearest Wins Rule</strong>. If the package is declared directly in <code>.csproj</code>, that version takes absolute priority over transitive versions.</p>
 <h4 id='deterministic-builds-with-packageslockjson'>Deterministic Builds with <code>packages.lock.json</code>:</h4>
 <p>In corporate banking pipelines, allowing arbitrary transitive package updates during CI/CD can introduce breaking changes or supply chain vulnerabilities. By enabling <code>&lt;RestorePackagesWithLockFile&gt;true&lt;/RestorePackagesWithLockFile&gt;</code>, NuGet writes an exact dependency hash map to <code>packages.lock.json</code>. In CI pipelines, running <code>dotnet restore --locked-mode</code> forces the build to fail if any dependency differs by even a single patch version from the lock file.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='37-execution-lifecycle-of-dotnet-run-native-host-activation'>3.7 Execution Lifecycle of <code>dotnet run</code> / Native Host Activation</h3>
 <p>When a developer executes <code>dotnet run</code> or invokes <code>PaymentGateway.exe</code> on a production host, the following exact steps occur:</p>
 <ol>
@@ -1597,8 +1917,26 @@ app.Run();</code></pre>
 <ol>
 <li><strong>Entry Point Invocation:</strong> Identifies <code>&lt;Program&gt;$.&lt;Main&gt;$</code> from assembly metadata, compiles it via Tier 0 JIT, and executes the first CPU instruction.</li>
 </ol>
-<p>---</p>
-<h1 id='4-hosting-model-application-startup-lifecycle'>4. HOSTING MODEL & APPLICATION STARTUP LIFECYCLE</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-4" data-chapter="4" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 04</span>
+            <span class="accordion-title-text">4. HOSTING MODEL & APPLICATION STARTUP LIFECYCLE</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="4-hosting-model-application-startup-lifecycle" class="accordion-anchor"></a>
+        <a id="4-hosting-model-application-startup-lifecycle" class="accordion-anchor"></a>
+
 <h3 id='41-hosting-evolution-legacy-webhost-to-ihostbuilder-to-webapplicationbuilder'>4.1 Hosting Evolution: Legacy <code>WebHost</code> to <code>IHostBuilder</code> to <code>WebApplicationBuilder</code></h3>
 <p>The hosting abstraction governs dependency injection, configuration, logging, and server execution.</p>
 
@@ -1621,7 +1959,7 @@ app.Run();</code></pre>
 <h4 id='why-webapplicationbuilder-is-architecturally-superior'>Why <code>WebApplicationBuilder</code> Is Architecturally Superior:</h4>
 <p>In the older <code>IHostBuilder</code> model, configuration and services were configured via nested lambda delegates (<code>builder.ConfigureServices((ctx, services) =&gt; ...)</code>). This required building multiple intermediate service containers and hindered performance.</p>
 <p><code>WebApplicationBuilder</code> simplifies this into a flat, readable API where <code>builder.Services</code> and <code>builder.Configuration</code> are exposed as direct properties, avoiding redundant allocations.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='42-kestrel-web-server-architecture-socket-transport-systemiopipelines'>4.2 Kestrel Web Server Architecture & Socket Transport (<code>System.IO.Pipelines</code>)</h3>
 <p><strong>Kestrel</strong> is ASP.NET Core’s cross-platform, asynchronous, high-throughput HTTP server.</p>
 
@@ -1672,7 +2010,7 @@ app.Run();</code></pre>
 <li><strong>HTTP/2:</strong> Single TCP connection multiplexing thousands of concurrent bidirectional streams using binary framing and HPACK header compression.</li>
 <li><strong>HTTP/3 (QUIC):</strong> Operates over <strong>UDP</strong>. Solves Head-of-Line (HoL) blocking inherent in TCP packet loss and enables seamless client connection migration (e.g., mobile device switching from Wi-Fi to 5G without dropping active requests).</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='43-hosting-topologies-kestrel-direct-iis-and-linux-reverse-proxies'>4.3 Hosting Topologies: Kestrel Direct, IIS, and Linux Reverse Proxies</h3>
 
 <div class="code-container">
@@ -1699,7 +2037,7 @@ Topology C: IIS In-Process Hosting (Windows Enterprise)
 <li><strong>In-Process (<code>InProcess</code>):</strong> The .NET Core runtime (<code>coreclr.dll</code>) and Kestrel execute directly inside the native IIS worker process (<code>w3wp.exe</code>). Requests arriving via HTTP.sys are dispatched directly to the managed pipeline through native pointers without an intermediate loopback HTTP network hop. <strong>This delivers 3x-4x higher throughput.</strong></li>
 <li><strong>Out-of-Process (<code>OutOfProcess</code>):</strong> IIS acts merely as an external reverse proxy. It listens on port 80/443 and forwards the HTTP request over a loopback TCP socket (or named pipe) to a separate <code>dotnet.exe</code> process running Kestrel. This incurs process context switching and network serialization overhead.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='44-the-complete-startup-graceful-shutdown-lifecycle'>4.4 The Complete Startup & Graceful Shutdown Lifecycle</h3>
 <p>Understanding the exact sequence of lifecycle events is critical for zero-downtime rolling deployments in Kubernetes.</p>
 
@@ -1778,8 +2116,26 @@ public class PodLifecycleService : IHostedService
 }</code></pre>
 </div>
 
-<p>---</p>
-<h1 id='5-dependency-injection-deep-internal-mechanics'>5. DEPENDENCY INJECTION (DEEP INTERNAL MECHANICS)</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-5" data-chapter="5" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 05</span>
+            <span class="accordion-title-text">5. DEPENDENCY INJECTION (DEEP INTERNAL MECHANICS)</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="5-dependency-injection-deep-internal-mechanics" class="accordion-anchor"></a>
+        <a id="5-dependency-injection-deep-internal-mechanics" class="accordion-anchor"></a>
+
 <h3 id='51-inversion-of-control-microsoftextensionsdependencyinjection-medi'>5.1 Inversion of Control & Microsoft.Extensions.DependencyInjection (MEDI)</h3>
 <p><strong>Inversion of Control (IoC)</strong> is a fundamental architectural principle in which the control flow of a program is inverted: instead of a component instantiating its own dependencies directly, external infrastructure injects those dependencies at runtime.</p>
 <p><strong>Dependency Injection (DI)</strong> is the concrete design pattern used to realize IoC. In modern .NET, the DI engine is not an afterthought or a third-party plugin—it is baked into the foundation via the <code>Microsoft.Extensions.DependencyInjection</code> (MEDI) library. Every ASP.NET Core subsystem (Kestrel, Logging, Routing, Entity Framework Core) relies entirely on MEDI.</p>
@@ -1811,7 +2167,7 @@ public class PodLifecycleService : IHostedService
 +---------------------------------------------------------------------------------+</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='52-service-lifetimes-transient-scoped-singleton'>5.2 Service Lifetimes: Transient, Scoped, Singleton</h3>
 <p>The DI container manages the lifecycle, caching, and disposal of all registered services across three distinct lifetimes:</p>
 
@@ -1871,7 +2227,7 @@ public class PodLifecycleService : IHostedService
 <li><strong>Appropriate Scenarios:</strong> Thread-safe in-memory caches, connection pools, configuration option monitors, telemetry clients.</li>
 <li><strong>Concurreny Prerequisite:</strong> Singleton services <strong>must be 100% thread-safe</strong>. Any mutable state must be guarded by locks, <code>ConcurrentDictionary</code>, or atomic <code>Interlocked</code> operations.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='53-the-captive-dependency-anti-pattern'>5.3 The Captive Dependency Anti-Pattern</h3>
 <p>A <strong>Captive Dependency</strong> occurs when a service with a longer lifetime captures and retains a service with a shorter lifetime.</p>
 
@@ -1983,7 +2339,7 @@ var app = builder.Build(); // Throws InvalidOperationException at startup in Dev
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='54-why-ef-core-dbcontext-must-be-scoped'>5.4 Why EF Core <code>DbContext</code> Must Be Scoped</h3>
 <p>Interviewers at top product companies and tier-1 IT firms frequently test candidates on why Entity Framework Core's <code>DbContext</code> is registered as <strong>Scoped</strong> by default:</p>
 
@@ -2010,7 +2366,7 @@ builder.Services.AddDbContext&lt;BankingDbContext&gt;(options =&gt; ...); // Def
 <li><strong>Breaks the Unit of Work Pattern:</strong> If <code>DbContext</code> were Transient, two services invoked during the same HTTP request (e.g., <code>OrderService</code> and <code>InventoryService</code>) would each receive a separate instance of <code>DbContext</code>. They would operate on separate transactions, making atomic <code>SaveChangesAsync()</code> calls across both components impossible!</li>
 <li><strong>Resource Waste:</strong> Spawning multiple <code>DbContext</code> instances within a single request causes redundant database connection openings and connection pool exhaustion.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='55-internal-resolution-mechanics-callsite-generation-dynamicmethod-compilation'>5.5 Internal Resolution Mechanics: CallSite Generation & DynamicMethod Compilation</h3>
 <p>How does <code>IServiceProvider.GetRequiredService&lt;T&gt;()</code> achieve near-zero resolution overhead in high-throughput production?</p>
 <p>In early .NET versions, DI engines relied on runtime reflection via <code>Activator.CreateInstance()</code>, which was painfully slow due to repeated metadata lookups.</p>
@@ -2044,7 +2400,7 @@ builder.Services.AddDbContext&lt;BankingDbContext&gt;(options =&gt; ...); // Def
             () =&gt; new PaymentRepository(scope.DbContext))));</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='56-keyed-services-net-8'>5.6 Keyed Services (.NET 8+)</h3>
 <p>Prior to .NET 8, registering multiple implementations of the same interface (e.g., different payment processors: Stripe, PayPal, Adyen) required complex Factory patterns or custom dictionary resolvers.</p>
 <p>.NET 8 introduced <strong>Keyed Services</strong> natively into the core DI container:</p>
@@ -2101,8 +2457,26 @@ public class CheckoutController : ControllerBase
 }</code></pre>
 </div>
 
-<p>---</p>
-<h1 id='6-configuration-system-options-pattern'>6. CONFIGURATION SYSTEM & OPTIONS PATTERN</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-6" data-chapter="6" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 06</span>
+            <span class="accordion-title-text">6. CONFIGURATION SYSTEM & OPTIONS PATTERN</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="6-configuration-system-options-pattern" class="accordion-anchor"></a>
+        <a id="6-configuration-system-options-pattern" class="accordion-anchor"></a>
+
 <h3 id='61-layered-configuration-provider-chain-precedence-rules'>6.1 Layered Configuration Provider Chain & Precedence Rules</h3>
 <p>Configuration in modern .NET is decoupled from physical files. It is represented as a unified in-memory key-value dictionary built by chaining ordered <strong>Configuration Providers</strong>.</p>
 
@@ -2143,7 +2517,7 @@ if (builder.Environment.IsProduction())
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='62-the-options-pattern-triad-ioptionst-vs-ioptionssnapshott-vs-ioptionsmonitort'>6.2 The Options Pattern Triad: <code>IOptions&lt;T&gt;</code> vs <code>IOptionsSnapshot&lt;T&gt;</code> vs <code>IOptionsMonitor&lt;T&gt;</code></h3>
 <p>The <strong>Options Pattern</strong> binds structured configuration sections to strongly-typed C# POCO classes. Choosing the incorrect interface can cause critical memory leaks, concurrency locks, or failure to read updated runtime configurations.</p>
 
@@ -2191,7 +2565,7 @@ if (builder.Environment.IsProduction())
 <ol>
 <li><strong><code>IOptionsMonitor&lt;T&gt;</code>:</strong> Registered as a <strong>Singleton</strong>. It maintains real-time synchronization with configuration providers via <code>CurrentValue</code>. It exposes an <code>OnChange(Action&lt;T, string&gt;)</code> notification stream, allowing background services and singletons to react instantly to configuration updates without restarting the host.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='63-reload-mechanics-file-watchers-and-memory-implications'>6.3 Reload Mechanics, File Watchers, and Memory Implications</h3>
 <p>When you configure:</p>
 
@@ -2215,7 +2589,7 @@ if (builder.Environment.IsProduction())
 <li><strong>Docker CIFS / NFS Mounts:</strong> Network file shares often fail to emit OS-level file notifications, causing <code>reloadOnChange</code> to fail silently.</li>
 <li><strong>High File I/O & Allocations:</strong> Constantly triggering reloads on large configuration files forces repetitive heap allocations and Gen 1/2 garbage collection cycles.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='64-strongly-typed-options-validation-validateonstart'>6.4 Strongly-Typed Options Validation & <code>ValidateOnStart()</code></h3>
 <p>A classic enterprise anti-pattern is allowing an application with invalid configuration (e.g., missing API keys or out-of-range timeout values) to boot successfully, only to fail in production hours later when a customer triggers an execution path.</p>
 <p>Modern .NET enforces the <strong>Fail-Fast Principle</strong> using <code>ValidateDataAnnotations()</code> and <code>ValidateOnStart()</code>:</p>
@@ -2265,12 +2639,30 @@ builder.Services.AddOptions&lt;PaymentGatewayOptions&gt;()
 var app = builder.Build(); // Throws OptionsValidationException immediately if invalid!</code></pre>
 </div>
 
-<p>---</p>
-<h1 id='7-logging-observability'>7. LOGGING & OBSERVABILITY</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-7" data-chapter="7" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 07</span>
+            <span class="accordion-title-text">7. LOGGING & OBSERVABILITY</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="7-logging-observability" class="accordion-anchor"></a>
+        <a id="7-logging-observability" class="accordion-anchor"></a>
+
 <h3 id='71-the-iloggert-abstraction-high-performance-structured-logging'>7.1 The <code>ILogger&lt;T&gt;</code> Abstraction & High-Performance Structured Logging</h3>
 <p>In enterprise architectures, logging must not be treated as arbitrary console text. Modern distributed systems require <strong>Structured Logging</strong>, where log events consist of structured, queryable key-value properties.</p>
 <p>The <code>Microsoft.Extensions.Logging</code> abstraction decouples application code from concrete logging destinations (Sinks) such as Elasticsearch, Seq, or OpenTelemetry collectors.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='72-message-template-anti-patterns-vs-zero-allocation-loggermessage'>7.2 Message Template Anti-Patterns vs Zero-Allocation <code>[LoggerMessage]</code></h3>
 <h4 id='the-string-interpolation-anti-pattern'>The String Interpolation Anti-Pattern:</h4>
 
@@ -2334,7 +2726,7 @@ _logger.LogInformation($&quot;Payment {paymentId} failed for customer {customerI
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='73-enterprise-serilog-pipeline-architecture'>7.3 Enterprise Serilog Pipeline Architecture</h3>
 
 <div class="code-container">
@@ -2383,7 +2775,7 @@ finally
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='74-distributed-tracing-w3c-tracecontext-and-opentelemetry'>7.4 Distributed Tracing, W3C TraceContext, and OpenTelemetry</h3>
 <div class='flow-step-box'>⚡ In a distributed banking architecture, a single checkout operation may touch 10 independent microservices (API Gateway -&gt; Order Service -&gt; Payment Service -&gt; Fraud Check -&gt; Ledger Service).</div>
 <h4 id='w3c-trace-context-standard'>W3C Trace Context Standard:</h4>
@@ -2461,8 +2853,26 @@ public class PaymentExecutor
 }</code></pre>
 </div>
 
-<p>---</p>
-<h1 id='8-middleware-pipeline-request-flow'>8. MIDDLEWARE PIPELINE & REQUEST FLOW</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-8" data-chapter="8" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 08</span>
+            <span class="accordion-title-text">8. MIDDLEWARE PIPELINE & REQUEST FLOW</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="8-middleware-pipeline-request-flow" class="accordion-anchor"></a>
+        <a id="8-middleware-pipeline-request-flow" class="accordion-anchor"></a>
+
 <h3 id='81-the-russian-doll-pipeline-composed-requestdelegate-architecture'>8.1 The Russian-Doll Pipeline: Composed <code>RequestDelegate</code> Architecture</h3>
 <p>An ASP.NET Core middleware component is a callable component that forms a bi-directional processing chain. Each middleware executes logic <strong>before</strong> calling the next delegate and <strong>after</strong> the downstream components complete.</p>
 
@@ -2502,7 +2912,7 @@ public class PaymentExecutor
 
 <p>The entire pipeline compiles down to a single root <code>RequestDelegate</code>. Each middleware wraps the next:</p>
 <p><code>Func&lt;RequestDelegate, RequestDelegate&gt;</code>.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='82-critical-middleware-ordering-rules-security-vulnerabilities'>8.2 Critical Middleware Ordering Rules & Security Vulnerabilities</h3>
 <p>The sequence in which middleware is registered in <code>Program.cs</code> is <strong>strictly ordinal</strong>. Reversing the registration order of security middleware can introduce catastrophic vulnerabilities:</p>
 
@@ -2550,7 +2960,7 @@ public class PaymentExecutor
     <div class="callout-body">Similarly, placing <code>app.UseRouting()</code> after <code>app.UseAuthentication()</code> prevents endpoint authorization metadata (<code>[Authorize]</code>) from being read during authentication!</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='83-short-circuiting-mechanics'>8.3 Short-Circuiting Mechanics</h3>
 <p>A middleware <strong>short-circuits</strong> the pipeline when it intentionally chooses <strong>not</strong> to invoke <code>await next(context)</code>. It writes directly to <code>HttpResponse</code> and returns, causing the request to immediately unwind back up the pipeline:</p>
 
@@ -2576,7 +2986,7 @@ app.Use(async (context, next) =&gt;
 });</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='84-writing-custom-middleware-inline-conventional-and-factory-based-imiddleware'>8.4 Writing Custom Middleware: Inline, Conventional, and Factory-Based (<code>IMiddleware</code>)</h3>
 <p>ASP.NET Core supports three distinct middleware authoring patterns:</p>
 <h4 id='1-inline-middleware-lambda'>1. Inline Middleware (Lambda):</h4>
@@ -2671,7 +3081,7 @@ public static class CorrelationMiddlewareExtensions
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='85-end-to-end-request-journey-flow'>8.5 End-to-End Request Journey Flow</h3>
 
 <div class="code-container">
@@ -2720,8 +3130,26 @@ public static class CorrelationMiddlewareExtensions
 [Client receives 200 OK with JSON response]</code></pre>
 </div>
 
-<p>---</p>
-<h1 id='9-aspnet-core-core-building-blocks'>9. ASP.NET CORE CORE BUILDING BLOCKS</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-9" data-chapter="9" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 09</span>
+            <span class="accordion-title-text">9. ASP.NET CORE CORE BUILDING BLOCKS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="9-aspnet-core-core-building-blocks" class="accordion-anchor"></a>
+        <a id="9-aspnet-core-core-building-blocks" class="accordion-anchor"></a>
+
 <h3 id='91-controllers-vs-minimal-apis-architectural-performance-trade-offs'>9.1 Controllers vs Minimal APIs: Architectural & Performance Trade-offs</h3>
 <p>ASP.NET Core offers two development paradigms for exposing HTTP endpoints:</p>
 
@@ -2805,7 +3233,7 @@ public record TransferRequest(string SourceAccount, string TargetAccount, decima
 public record TransferReceipt(Guid TransactionId, DateTime ProcessedAtUtc);</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='92-advanced-parameter-binding-custom-parsing-iparsablet'>9.2 Advanced Parameter Binding & Custom Parsing (<code>IParsable&lt;T&gt;</code>)</h3>
 <p>ASP.NET Core binds HTTP request data from multiple sources:</p>
 <ul>
@@ -2855,7 +3283,7 @@ app.MapGet(&quot;/api/accounts/{account}&quot;, (BankAccountNumber account) =&gt
     TypedResults.Ok(new { Account = account.Value }));</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='93-validation-architectures-modelstate-vs-fluentvalidation'>9.3 Validation Architectures: <code>ModelState</code> vs <code>FluentValidation</code></h3>
 <p>While MVC Controllers utilize <code>ModelState.IsValid</code> and Data Annotations (<code>[Required]</code>, <code>[Range]</code>), enterprise software standardizes on <strong>FluentValidation</strong> to achieve separation of concerns, testability, and complex domain rule verification.</p>
 
@@ -2883,7 +3311,7 @@ public class PaymentOrderValidator : AbstractValidator&lt;PaymentOrderDto&gt;
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='94-action-results-iactionresult-vs-actionresultt-vs-typedresults'>9.4 Action Results: <code>IActionResult</code> vs <code>ActionResult&lt;T&gt;</code> vs <code>TypedResults</code></h3>
 
 <div class="code-container">
@@ -2929,8 +3357,26 @@ public class PaymentOrderValidator : AbstractValidator&lt;PaymentOrderDto&gt;
 });</code></pre>
 </div>
 
-<p>---</p>
-<h1 id='10-background-processing-queues'>10. BACKGROUND PROCESSING & QUEUES</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-10" data-chapter="10" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 10</span>
+            <span class="accordion-title-text">10. BACKGROUND PROCESSING & QUEUES</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="10-background-processing-queues" class="accordion-anchor"></a>
+        <a id="10-background-processing-queues" class="accordion-anchor"></a>
+
 <h3 id='101-ihostedservice-vs-backgroundservice-architecture'>10.1 <code>IHostedService</code> vs <code>BackgroundService</code> Architecture</h3>
 <p>Enterprise backend services frequently require asynchronous background computation: processing asynchronous payment settlements, polling external banking clearing networks, draining queues, or flushing audit buffers.</p>
 
@@ -2980,7 +3426,7 @@ public class PaymentOrderValidator : AbstractValidator&lt;PaymentOrderDto&gt;
     <div class="callout-body"><code>BackgroundService</code> solves this by automatically starting <code>ExecuteAsync</code> in an unawaited background task.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='102-safe-scoped-service-resolution-in-singleton-workers'>10.2 Safe Scoped Service Resolution in Singleton Workers</h3>
 <p><code>IHostedService</code> and <code>BackgroundService</code> instances are registered as <strong>Singletons</strong> in the DI container. Because Entity Framework Core <code>DbContext</code> and business repositories are <strong>Scoped</strong>, injecting them into the constructor of a <code>BackgroundService</code> causes an immediate <strong>Captive Dependency</strong> failure or leads to concurrent access crashes.</p>
 <h4 id='the-correct-enterprise-pattern-iservicescopefactory'>The Correct Enterprise Pattern: <code>IServiceScopeFactory</code>:</h4>
@@ -3046,7 +3492,7 @@ public class PaymentOrderValidator : AbstractValidator&lt;PaymentOrderDto&gt;
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='103-high-throughput-in-memory-messaging-via-systemthreadingchannels'>10.3 High-Throughput In-Memory Messaging via <code>System.Threading.Channels</code></h3>
 <p>When building high-performance decoupled pipelines (such as ingesting 100,000 credit card transaction webhooks per second and processing them in the background), relying on naive thread synchronization (<code>lock</code>, <code>Monitor</code>) or thread-blocking collections (<code>BlockingCollection&lt;T&gt;</code>) causes extreme CPU contention and thread pool exhaustion.</p>
 <p><strong><code>System.Threading.Channels&lt;T&gt;</code></strong> provides a lock-free, zero-allocation asynchronous producer-consumer channel based on hardware memory barriers and interlocked operations.</p>
@@ -3172,7 +3618,7 @@ public class ChannelPaymentConsumerWorker : BackgroundService
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='104-modern-asynchronous-polling-periodictimer-vs-legacy-timers'>10.4 Modern Asynchronous Polling: <code>PeriodicTimer</code> vs Legacy Timers</h3>
 <div class='table-wrapper'><table>
 <tr><th>Dimension</th><th><code>System.Threading.Timer</code></th><th><code>System.Timers.Timer</code></th><th><code>PeriodicTimer</code> (.NET 6+)</th></tr>
@@ -3182,8 +3628,26 @@ public class ChannelPaymentConsumerWorker : BackgroundService
 <tr><td><strong>Exception Handling</strong></td><td>Unhandled exception terminates process</td><td>Swallowed or crashes worker</td><td>Standard <code>try/catch</code> wrapping the loop</td></tr>
 <tr><td><strong>Memory Allocation</strong></td><td>Callback allocations</td><td>Event registration allocations</td><td>Zero allocations per tick</td></tr>
 </table></div>
-<p>---</p>
-<h1 id='11-testing-strategy'>11. TESTING STRATEGY</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-11" data-chapter="11" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 11</span>
+            <span class="accordion-title-text">11. TESTING STRATEGY</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="11-testing-strategy" class="accordion-anchor"></a>
+        <a id="11-testing-strategy" class="accordion-anchor"></a>
+
 <h3 id='111-isolated-unit-testing-with-xunit-and-mocking-frameworks'>11.1 Isolated Unit Testing with xUnit and Mocking Frameworks</h3>
 <p>Unit tests verify business logic in isolation without touching physical network sockets, file systems, or databases.</p>
 
@@ -3288,7 +3752,7 @@ public class PaymentTransferServiceTests
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='112-in-memory-integration-testing-with-webapplicationfactorytprogram'>11.2 In-Memory Integration Testing with <code>WebApplicationFactory&lt;TProgram&gt;</code></h3>
 <p><code>WebApplicationFactory&lt;TProgram&gt;</code> bootstraps the entire ASP.NET Core application in-memory using an internal <code>TestServer</code>. This allows testing the complete HTTP stack (Routing, Model Binding, Middleware, Authorization, Filters) without opening physical TCP network ports.</p>
 
@@ -3356,7 +3820,7 @@ public class PaymentApiIntegrationTests : IClassFixture&lt;CustomBankingApiFacto
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='113-ephemeral-integration-testing-using-testcontainers'>11.3 Ephemeral Integration Testing using Testcontainers</h3>
 <p>In-memory database providers (like EF Core In-Memory) fail to catch SQL-specific errors, transaction locking bugs, foreign key violations, or stored procedure behavior. <strong>Testcontainers for .NET</strong> spins up real Docker containers (SQL Server, PostgreSQL, Redis) on-the-fly during test execution and tears them down immediately afterward.</p>
 
@@ -3405,8 +3869,26 @@ public class RealDatabaseBankingTests : IAsyncLifetime
 }</code></pre>
 </div>
 
-<p>---</p>
-<h1 id='12-packaging-deployment-modern-runtime'>12. PACKAGING, DEPLOYMENT & MODERN RUNTIME</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-12" data-chapter="12" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 12</span>
+            <span class="accordion-title-text">12. PACKAGING, DEPLOYMENT & MODERN RUNTIME</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="12-packaging-deployment-modern-runtime" class="accordion-anchor"></a>
+        <a id="12-packaging-deployment-modern-runtime" class="accordion-anchor"></a>
+
 <h3 id='121-publishing-topologies-framework-dependent-vs-self-contained'>12.1 Publishing Topologies: Framework-Dependent vs Self-Contained</h3>
 
 <div class="code-container">
@@ -3432,7 +3914,7 @@ public class RealDatabaseBankingTests : IAsyncLifetime
 +---------------------+---------------------------------------+-------------------------------------+</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='122-single-file-executables-publishsinglefiletrue'>12.2 Single-File Executables (<code>PublishSingleFile=true</code>)</h3>
 <p>Modern .NET allows packaging the entire application, its dependencies, and native runtime libraries into a single executable binary.</p>
 
@@ -3460,7 +3942,7 @@ public class RealDatabaseBankingTests : IAsyncLifetime
     <pre><code class="language-bash">dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true --self-contained true -o ./publish</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='123-hardened-cloud-native-containerization-chiseled-distroless-non-root'>12.3 Hardened Cloud-Native Containerization (Chiseled Distroless & Non-Root)</h3>
 <p>In production Kubernetes clusters, enterprise security standards dictate:</p>
 <ol>
@@ -3516,7 +3998,7 @@ COPY --from=build-env /app/publish .
 ENTRYPOINT [&quot;dotnet&quot;, &quot;PaymentGateway.Api.dll&quot;]</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='124-native-aot-deployment-for-microservices'>12.4 Native AOT Deployment for Microservices</h3>
 <p>For extreme low-latency and scale-to-zero serverless scenarios, Native AOT produces a standalone C++-like binary.</p>
 
@@ -3545,12 +4027,30 @@ ENTRYPOINT [&quot;dotnet&quot;, &quot;PaymentGateway.Api.dll&quot;]</code></pre>
 </div>
 
 <p>The resulting executable is ~12 MB, requires no external dependencies, and launches in <strong>under 8 milliseconds</strong>.</p>
-<p>---</p>
-<h1 id='13-master-interview-section-for-net-core-platform'>13. MASTER INTERVIEW SECTION FOR .NET CORE / PLATFORM</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-13" data-chapter="13" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 13</span>
+            <span class="accordion-title-text">13. MASTER INTERVIEW SECTION FOR .NET CORE / PLATFORM</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="13-master-interview-section-for-net-core-platform" class="accordion-anchor"></a>
+        <a id="13-master-interview-section-for-net-core-platform" class="accordion-anchor"></a>
+
 <p>This section simulates a grueling multi-tier technical interview at top tier-1 IT consultancies (Infosys, TCS) and high-bar product engineering firms.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='131-conceptual-matrix-basic-to-senior-follow-up-to-trap'>13.1 Conceptual Matrix: Basic to Senior Follow-up to Trap</h3>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h4 id='topic-1-execution-pipeline-jit-internals'>Topic 1: Execution Pipeline & JIT Internals</h4>
 <ul>
 <li><strong>Basic Question:</strong> What is the difference between IL and Native Machine Code?</li>
@@ -3573,7 +4073,7 @@ ENTRYPOINT [&quot;dotnet&quot;, &quot;PaymentGateway.Api.dll&quot;]</code></pre>
 <li>Execute warmup routines at application boot using <code>RuntimeHelpers.PrepareMethod(method.MethodHandle)</code> to force Tier 1 JIT compilation before traffic is routed to the node.</li>
 <li>Use <strong>Native AOT</strong> to pre-compile the entire application ahead-of-time.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h4 id='topic-2-dependency-injection-lifetimes'>Topic 2: Dependency Injection & Lifetimes</h4>
 <ul>
 <li><strong>Basic Question:</strong> What are the three service lifetimes in ASP.NET Core?</li>
@@ -3591,7 +4091,7 @@ ENTRYPOINT [&quot;dotnet&quot;, &quot;PaymentGateway.Api.dll&quot;]</code></pre>
 <li><strong>Interviewer Trap:</strong> "Can a Transient service cause a memory leak if it implements <code>IDisposable</code>? Why?"</li>
 <li><strong>Master Trap Answer:</strong> <strong>Yes, absolutely.</strong> If a Transient service implements <code>IDisposable</code> and is resolved from the <strong>Root ServiceProvider</strong> (outside an active <code>IServiceScope</code>), the root container maintains a reference to that instance in its internal disposal tracking list (<code>_disposables</code>). Because the root container lives for the entire duration of the process, those Transient instances cannot be garbage-collected, creating a continuous memory leak.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h4 id='topic-3-configuration-options-system'>Topic 3: Configuration & Options System</h4>
 <ul>
 <li><strong>Basic Question:</strong> How does ASP.NET Core read configuration from different sources?</li>
@@ -3604,7 +4104,7 @@ ENTRYPOINT [&quot;dotnet&quot;, &quot;PaymentGateway.Api.dll&quot;]</code></pre>
 <li><strong>Interviewer Trap:</strong> "What happens if you inject <code>IOptionsSnapshot&lt;T&gt;</code> into a Singleton service?"</li>
 <li><strong>Master Trap Answer:</strong> If scope validation is enabled (<code>ValidateScopes = true</code>), the application crashes at startup with an <code>InvalidOperationException</code> because a Singleton cannot capture a Scoped service. If scope validation is disabled, it will throw a runtime exception upon the first resolution attempt because no active <code>IServiceScope</code> exists on the root container.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h4 id='topic-4-middleware-pipeline-architecture'>Topic 4: Middleware Pipeline Architecture</h4>
 <ul>
 <li><strong>Basic Question:</strong> What is middleware and how do you add it to the request pipeline?</li>
@@ -3614,9 +4114,9 @@ ENTRYPOINT [&quot;dotnet&quot;, &quot;PaymentGateway.Api.dll&quot;]</code></pre>
 <li><strong>Interviewer Trap:</strong> "What is the difference between conventional middleware and factory-based <code>IMiddleware</code> regarding service injection?"</li>
 <li><strong>Master Trap Answer:</strong> Conventional middleware is instantiated as a <strong>Singleton</strong> when the pipeline builds. Therefore, you <strong>cannot inject Scoped services into its constructor</strong> without creating a Captive Dependency; Scoped services must be passed as method arguments to <code>InvokeAsync</code>. Conversely, factory-based middleware implements <code>IMiddleware</code>, is registered in DI, and is resolved on every request via <code>IMiddlewareFactory</code>. This allows <code>IMiddleware</code> to be registered as <strong>Scoped</strong>, enabling safe constructor injection of Scoped services.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='132-real-world-incident-troubleshooting-playbooks'>13.2 Real-World Incident Troubleshooting Playbooks</h3>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h4 id='incident-playbook-1-threadpool-starvation-high-cpu-under-load'>Incident Playbook 1: ThreadPool Starvation & High CPU Under Load</h4>
 <p><strong>Symptoms:</strong> Under high concurrent traffic, API latency spikes from 15ms to 8,000ms. CPU utilization reaches 100%, and incoming HTTP requests time out with 504 Gateway Timeout.</p>
 
@@ -3675,7 +4175,7 @@ ENTRYPOINT [&quot;dotnet&quot;, &quot;PaymentGateway.Api.dll&quot;]</code></pre>
 <li>Look for multiple threads sitting in <code>System.Threading.Tasks.Task.Wait()</code> or <code>Monitor.Wait()</code>.</li>
 <li><strong>Remediation:</strong> Eradicate all <code>.Result</code> and <code>.GetAwaiter().GetResult()</code> calls. Ensure pure, unbroken <code>async/await</code> chaining from the controller down to database queries.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h4 id='incident-playbook-2-memory-leak-via-captive-scopes-and-unmanaged-handles'>Incident Playbook 2: Memory Leak via Captive Scopes and Unmanaged Handles</h4>
 <p><strong>Symptoms:</strong> Application memory (Resident Set Size - RSS) continuously climbs over 48 hours from 200 MB to 4 GB until the Kubernetes pod is killed by the OS (OOMKilled - Exit Code 137).</p>
 <p><strong>Diagnostic Procedure:</strong></p>
@@ -3706,7 +4206,7 @@ ENTRYPOINT [&quot;dotnet&quot;, &quot;PaymentGateway.Api.dll&quot;]</code></pre>
 <li>Thousands of <code>EntityEntry</code> instances retained because a <code>DbContext</code> was accidentally injected into a Singleton background worker.</li>
 <li><code>HttpClient</code> instances repeatedly instantiated via <code>new HttpClient()</code> instead of <code>IHttpClientFactory</code>.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h4 id='incident-playbook-3-socket-exhaustion-port-depletion'>Incident Playbook 3: Socket Exhaustion & Port Depletion</h4>
 <p><strong>Symptoms:</strong> Backend service throwing <code>System.Net.Sockets.SocketException: Only one usage of each socket address (protocol/network address/port) is normally permitted</code>.</p>
 <p><strong>Root Cause:</strong> Instantiating <code>new HttpClient()</code> inside a loop or scoped request. Even when <code>HttpClient</code> is wrapped in a <code>using</code> block, the underlying OS socket is not immediately released upon disposal; it lingers in the <strong><code>TIME_WAIT</code></strong> state for 120–240 seconds to ensure trailing TCP packets arrive safely. Under high traffic, all available outbound ephemeral ports (typically ~16,000) are exhausted.</p>
@@ -3751,7 +4251,7 @@ builder.Services.AddHttpClient(&quot;BankingClearingClient&quot;, client =&gt;
 });</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='master-reference-rapid-fire-matrix'>MASTER REFERENCE & RAPID-FIRE MATRIX</h2>
 <div class='table-wrapper'><table>
 <tr><th>Concept</th><th>What It Is</th><th>Why It Matters</th><th>Fatal Trap / Interview Gotcha</th></tr>
@@ -3766,7 +4266,8 @@ builder.Services.AddHttpClient(&quot;BankingClearingClient&quot;, client =&gt;
 <tr><td><strong>PeriodicTimer</strong></td><td>Asynchronous timer (.NET 6+)</td><td>Prevents overlapping ticks; clean async/await loop integration</td><td>Must pass <code>CancellationToken</code> to avoid infinite worker hangs</td></tr>
 <tr><td><strong>System.Threading.Channels</strong></td><td>In-memory producer-consumer queue</td><td>Lock-free high-throughput messaging with native backpressure</td><td>Unbounded channels can cause OOM under heavy producer spikes</td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
             </article>
 
             <nav class="chapter-nav">
@@ -3790,11 +4291,6 @@ builder.Services.AddHttpClient(&quot;BankingClearingClient&quot;, client =&gt;
             <ul class="toc-list">
                 
         <li class="toc-item level-1">
-            <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
-        </li>
-        
-
-        <li class="toc-item level-1">
             <a href="#volume-x-net-platform-net-core-runtime-architecture-basic-to-advanced" class="toc-link">Volume X: .NET Platform &amp; .NET Core Runtime A</a>
         </li>
         
@@ -3805,7 +4301,7 @@ builder.Services.AddHttpClient(&quot;BankingClearingClient&quot;, client =&gt;
         
 
         <li class="toc-item level-1">
-            <a href="#1-the-evolution-ecosystem-historical-context-architecture" class="toc-link">1. THE EVOLUTION &amp; ECOSYSTEM (Historical Cont</a>
+            <a href="#ch-1" class="toc-link">1. THE EVOLUTION &amp; ECOSYSTEM (Historical Cont</a>
         </li>
         
 
@@ -3845,7 +4341,7 @@ builder.Services.AddHttpClient(&quot;BankingClearingClient&quot;, client =&gt;
         
 
         <li class="toc-item level-1">
-            <a href="#2-net-internal-architecture-runtime-pipeline" class="toc-link">2. .NET INTERNAL ARCHITECTURE &amp; RUNTIME PIPEL</a>
+            <a href="#ch-2" class="toc-link">2. .NET INTERNAL ARCHITECTURE &amp; RUNTIME PIPEL</a>
         </li>
         
 
@@ -3880,7 +4376,7 @@ builder.Services.AddHttpClient(&quot;BankingClearingClient&quot;, client =&gt;
         
 
         <li class="toc-item level-1">
-            <a href="#3-project-structure-anatomy" class="toc-link">3. PROJECT STRUCTURE &amp; ANATOMY</a>
+            <a href="#ch-3" class="toc-link">3. PROJECT STRUCTURE &amp; ANATOMY</a>
         </li>
         
 
@@ -3920,7 +4416,7 @@ builder.Services.AddHttpClient(&quot;BankingClearingClient&quot;, client =&gt;
         
 
         <li class="toc-item level-1">
-            <a href="#4-hosting-model-application-startup-lifecycle" class="toc-link">4. HOSTING MODEL &amp; APPLICATION STARTUP LIFECY</a>
+            <a href="#ch-4" class="toc-link">4. HOSTING MODEL &amp; APPLICATION STARTUP LIFECY</a>
         </li>
         
 
@@ -3936,6 +4432,61 @@ builder.Services.AddHttpClient(&quot;BankingClearingClient&quot;, client =&gt;
 
         <li class="toc-item level-3">
             <a href="#43-hosting-topologies-kestrel-direct-iis-and-linux-reverse-proxies" class="toc-link">4.3 Hosting Topologies: Kestrel Direct, IIS, </a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#44-the-complete-startup-graceful-shutdown-lifecycle" class="toc-link">4.4 The Complete Startup &amp; Graceful Shutdown </a>
+        </li>
+        
+
+        <li class="toc-item level-1">
+            <a href="#ch-5" class="toc-link">5. DEPENDENCY INJECTION (DEEP INTERNAL MECHAN</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#51-inversion-of-control-microsoftextensionsdependencyinjection-medi" class="toc-link">5.1 Inversion of Control &amp; Microsoft.Extensio</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#52-service-lifetimes-transient-scoped-singleton" class="toc-link">5.2 Service Lifetimes: Transient, Scoped, Sin</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#53-the-captive-dependency-anti-pattern" class="toc-link">5.3 The Captive Dependency Anti-Pattern</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#54-why-ef-core-dbcontext-must-be-scoped" class="toc-link">5.4 Why EF Core DbContext Must Be Scoped</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#55-internal-resolution-mechanics-callsite-generation-dynamicmethod-compilation" class="toc-link">5.5 Internal Resolution Mechanics: CallSite G</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#56-keyed-services-net-8" class="toc-link">5.6 Keyed Services (.NET 8+)</a>
+        </li>
+        
+
+        <li class="toc-item level-1">
+            <a href="#ch-6" class="toc-link">6. CONFIGURATION SYSTEM &amp; OPTIONS PATTERN</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#61-layered-configuration-provider-chain-precedence-rules" class="toc-link">6.1 Layered Configuration Provider Chain &amp; Pr</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#62-the-options-pattern-triad-ioptionst-vs-ioptionssnapshott-vs-ioptionsmonitort" class="toc-link">6.2 The Options Pattern Triad: IOptions&lt;T&gt; vs</a>
         </li>
         
             </ul>
@@ -3968,11 +4519,137 @@ builder.Services.AddHttpClient(&quot;BankingClearingClient&quot;, client =&gt;
             // Highlight syntax
             hljs.highlightAll();
 
-            // Mermaid diagrams
+            // Mermaid diagrams initialization
             mermaid.initialize({
                 startOnLoad: true,
                 theme: currentTheme === 'dark' ? 'dark' : 'neutral',
                 securityLevel: 'loose'
+            });
+
+            // ==========================================
+            // ACCORDION & SINGLE-FOCUS CONTROLS
+            // ==========================================
+            const accordions = document.querySelectorAll('.chapter-accordion');
+            const singleFocusToggle = document.getElementById('single-focus-toggle');
+            const btnExpandAll = document.getElementById('btn-expand-all');
+            const btnCollapseAll = document.getElementById('btn-collapse-all');
+
+            function renderMermaidIn(element) {
+                if (window.mermaid) {
+                    const unrendered = element.querySelectorAll('.mermaid:not([data-processed])');
+                    if (unrendered.length > 0) {
+                        try { mermaid.run({ nodes: unrendered }); } catch(e) {}
+                    }
+                }
+            }
+
+            // Expand All
+            if (btnExpandAll) {
+                btnExpandAll.addEventListener('click', () => {
+                    if (singleFocusToggle) singleFocusToggle.checked = false;
+                    accordions.forEach(acc => {
+                        acc.open = true;
+                        renderMermaidIn(acc);
+                    });
+                });
+            }
+
+            // Collapse All
+            if (btnCollapseAll) {
+                btnCollapseAll.addEventListener('click', () => {
+                    accordions.forEach(acc => {
+                        acc.open = false;
+                    });
+                });
+            }
+
+            // Single focus auto-closing logic
+            accordions.forEach(acc => {
+                acc.addEventListener('toggle', () => {
+                    const statusText = acc.querySelector('.accordion-status-text');
+                    if (statusText) {
+                        statusText.innerText = acc.open ? 'Click to collapse' : 'Click to expand';
+                    }
+                    if (acc.open) {
+                        renderMermaidIn(acc);
+                        if (singleFocusToggle && singleFocusToggle.checked) {
+                            accordions.forEach(other => {
+                                if (other !== acc && other.open) {
+                                    other.open = false;
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            // ==========================================
+            // DEEP LINKING & TOC NAVIGATION
+            // ==========================================
+            function navigateToTarget(targetId) {
+                if (!targetId) return;
+                let target = document.getElementById(targetId);
+                
+                // Fallback for slug variations (e.g. hyphens)
+                if (!target) {
+                    const normalized = targetId.replace(/-+/g, '-');
+                    target = document.getElementById(normalized) || 
+                             document.querySelector(`[id*="${normalized}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                }
+
+                if (!target) return;
+
+                // If target is inside an accordion, open that accordion
+                const parentAcc = target.closest('.chapter-accordion');
+                if (parentAcc) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== parentAcc) a.open = false;
+                        });
+                    }
+                    parentAcc.open = true;
+                    renderMermaidIn(parentAcc);
+                } else if (target.classList.contains('chapter-accordion')) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== target) a.open = false;
+                        });
+                    }
+                    target.open = true;
+                    renderMermaidIn(target);
+                }
+
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.classList.add('flash-highlight');
+                    setTimeout(() => target.classList.remove('flash-highlight'), 1600);
+                }, 100);
+            }
+
+            // Check URL hash on page load
+            if (window.location.hash) {
+                setTimeout(() => {
+                    navigateToTarget(window.location.hash.substring(1));
+                }, 250);
+            }
+
+            // Listen for hash changes
+            window.addEventListener('hashchange', () => {
+                navigateToTarget(window.location.hash.substring(1));
+            });
+
+            // Intercept internal page anchor clicks
+            document.addEventListener('click', (e) => {
+                const anchor = e.target.closest('a[href^="#"]');
+                if (!anchor) return;
+                const href = anchor.getAttribute('href');
+                if (href && href.length > 1) {
+                    e.preventDefault();
+                    const id = href.substring(1);
+                    history.pushState(null, null, href);
+                    navigateToTarget(id);
+                }
             });
         });
     </script>

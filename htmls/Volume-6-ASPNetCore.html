@@ -24,9 +24,11 @@
     --bg-page: #0b0f19;
     --bg-surface: #111827;
     --bg-surface-elevated: #1f2937;
+    --bg-surface-hover: #283548;
     --bg-code: #030712;
     --border: #374151;
     --border-light: #4b5563;
+    --border-highlight: #60a5fa;
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
     --text-dim: #6b7280;
@@ -34,6 +36,7 @@
     --primary: #3b82f6;
     --primary-hover: #60a5fa;
     --primary-glow: rgba(59, 130, 246, 0.15);
+    --primary-glow-strong: rgba(59, 130, 246, 0.3);
     --accent: #8b5cf6;
     --success: #10b981;
     --warning: #f59e0b;
@@ -48,15 +51,20 @@
     --code-color: #f87171;
     --hero-bg: linear-gradient(135deg, rgba(31, 41, 55, 0.75) 0%, rgba(17, 24, 39, 0.95) 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --accordion-header-bg: #151e2e;
+    --accordion-header-hover: #1c273c;
+    --accordion-active-border: #3b82f6;
 }
 
 [data-theme="light"] {
     --bg-page: #f8fafc;
     --bg-surface: #ffffff;
     --bg-surface-elevated: #f1f5f9;
+    --bg-surface-hover: #e2e8f0;
     --bg-code: #0f172a;
     --border: #e2e8f0;
     --border-light: #cbd5e1;
+    --border-highlight: #2563eb;
     --text-main: #0f172a;
     --text-muted: #475569;
     --text-dim: #64748b;
@@ -64,6 +72,7 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-glow: rgba(37, 99, 235, 0.1);
+    --primary-glow-strong: rgba(37, 99, 235, 0.22);
     --accent: #7c3aed;
     --success: #059669;
     --warning: #b45309;
@@ -78,6 +87,9 @@
     --code-color: #b91c1c;
     --hero-bg: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --accordion-header-bg: #f8fafc;
+    --accordion-header-hover: #eef2f6;
+    --accordion-active-border: #2563eb;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -93,7 +105,7 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* SIDEBAR */
+/* SIDEBAR - STRICT FIXED 300px (NEVER OVERLAPS CONTENT) */
 #sidebar {
     width: 300px;
     background-color: var(--bg-surface);
@@ -206,33 +218,35 @@ body {
 .nav-vol { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
 .nav-link.active .nav-vol { color: var(--primary); }
 
-/* CONTENT AREA */
+/* CONTENT WRAPPER - PROPER MARGIN LEFT TO PREVENT OVERLAP */
 #content-wrapper {
     margin-left: 300px;
     flex: 1;
     display: flex;
     justify-content: center;
     padding: 40px 30px;
+    min-width: 0;
 }
 
 #main-content {
-    max-width: 880px;
+    max-width: 900px;
     width: 100%;
+    min-width: 0;
 }
 
 /* RIGHT TABLE OF CONTENTS */
 #toc-sidebar {
-    width: 250px;
+    width: 260px;
     position: sticky;
     top: 40px;
     height: calc(100vh - 80px);
     overflow-y: auto;
-    padding-left: 28px;
-    margin-left: 20px;
+    padding-left: 24px;
+    margin-left: 24px;
     display: none;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1320px) {
     #toc-sidebar { display: block; }
 }
 
@@ -258,7 +272,8 @@ body {
 }
 
 .toc-link:hover { color: var(--primary); }
-.toc-item.level-3 { padding-left: 10px; }
+.toc-item.level-2 { padding-left: 10px; }
+.toc-item.level-3 { padding-left: 18px; font-size: 0.74rem; color: var(--text-dim); }
 
 /* CHAPTER HERO */
 .chapter-hero {
@@ -266,7 +281,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 32px 36px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     box-shadow: var(--card-shadow);
 }
 
@@ -296,7 +311,7 @@ body {
 }
 
 .chapter-hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 800;
     color: var(--heading-color);
     margin-bottom: 12px;
@@ -309,32 +324,264 @@ body {
     line-height: 1.6;
 }
 
+/* ========================================================
+   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
+   ======================================================== */
+.focus-control-bar {
+    position: sticky;
+    top: 14px;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.focus-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.focus-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.focus-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    color: var(--primary-hover);
+}
+
+.focus-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border-light);
+    transition: .25s ease;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s ease;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+.toggle-label-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+/* ========================================================
+   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
+   ======================================================== */
+.chapter-accordion {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chapter-accordion:hover {
+    border-color: var(--border-light);
+}
+
+.chapter-accordion[open] {
+    border-color: var(--accordion-active-border);
+    box-shadow: 0 6px 26px var(--primary-glow-strong);
+}
+
+.chapter-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--accordion-header-bg);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-accordion-header::-webkit-details-marker {
+    display: none;
+}
+
+.chapter-accordion-header:hover {
+    background: var(--accordion-header-hover);
+}
+
+.chapter-accordion[open] > .chapter-accordion-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface-elevated);
+}
+
+.accordion-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.accordion-badge {
+    background: var(--primary-glow);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.accordion-title-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1.35;
+}
+
+.accordion-status-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+.accordion-status-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.accordion-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-page);
+    color: var(--text-muted);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, color 0.2s;
+}
+
+.chapter-accordion[open] > .chapter-accordion-header .accordion-chevron {
+    transform: rotate(180deg);
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.chapter-accordion-body {
+    padding: 28px 30px;
+    animation: accordionFadeIn 0.25s ease-out;
+}
+
+@keyframes accordionFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HIGHLIGHT ON TARGET JUMP */
+.flash-highlight {
+    outline: 2px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow-strong);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+}
+
 /* TYPOGRAPHY */
 h1, h2, h3, h4, h5 { color: var(--heading-color); font-weight: 700; line-height: 1.3; }
 
 h1 {
     font-size: 1.85rem;
-    margin: 44px 0 18px 0;
+    margin: 40px 0 16px 0;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
     color: var(--primary);
 }
 
 h2 {
-    font-size: 1.4rem;
-    margin: 36px 0 14px 0;
+    font-size: 1.35rem;
+    margin: 32px 0 14px 0;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
+    color: var(--heading-color);
 }
 
 h3 {
-    font-size: 1.15rem;
-    margin: 26px 0 10px 0;
+    font-size: 1.1rem;
+    margin: 22px 0 10px 0;
+    color: var(--heading-color);
 }
 
 h4 {
-    font-size: 0.98rem;
-    margin: 18px 0 8px 0;
+    font-size: 0.95rem;
+    margin: 16px 0 8px 0;
     color: var(--warning);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -351,7 +598,7 @@ a:hover { text-decoration: underline; }
     background: var(--bg-code);
     border: 1px solid var(--border);
     border-radius: 10px;
-    margin: 22px 0;
+    margin: 20px 0;
     overflow: hidden;
     box-shadow: var(--card-shadow);
 }
@@ -664,7 +911,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-8-Database-SQL.html" class="nav-link ">
                 <span class="nav-icon">💾</span>
-                <span>Database Engine Internals & SQL Server</span>
+                <span>Database Systems & High-Performance SQL</span>
                 <span class="nav-vol">V8</span>
             </a>
         </li>
@@ -672,7 +919,7 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-9-Microservices.html" class="nav-link ">
-                <span class="nav-icon">📡</span>
+                <span class="nav-icon">☁️</span>
                 <span>Microservices & Distributed Systems</span>
                 <span class="nav-vol">V9</span>
             </a>
@@ -681,8 +928,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-10-System-Design.html" class="nav-link ">
-                <span class="nav-icon">🏗️</span>
-                <span>Enterprise System Design</span>
+                <span class="nav-icon">📐</span>
+                <span>System Design: Enterprise Case Studies</span>
                 <span class="nav-vol">V10</span>
             </a>
         </li>
@@ -690,8 +937,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-11-Project-Interview-Mastery.html" class="nav-link ">
-                <span class="nav-icon">🎯</span>
-                <span>Project Interview Mastery & Walkthroughs</span>
+                <span class="nav-icon">💼</span>
+                <span>Project Interview Mastery & Technical Narrative</span>
                 <span class="nav-vol">V11</span>
             </a>
         </li>
@@ -699,8 +946,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-12-Interview-Question-Bank.html" class="nav-link ">
-                <span class="nav-icon">🏆</span>
-                <span>The Master Interview Question Bank</span>
+                <span class="nav-icon">🎯</span>
+                <span>Master Interview Question Bank & Verbatim Transcripts</span>
                 <span class="nav-vol">V12</span>
             </a>
         </li>
@@ -719,9 +966,29 @@ li::marker { color: var(--primary); }
                 <p>Kestrel socket transport, Middleware Russian-doll pipeline, Routing DFA, DI captive dependencies, JWT security, Output caching, Rate limiting.</p>
             </div>
 
+            <!-- ADHD-FRIENDLY INTERACTIVE FOCUS CONTROLS -->
+            <div class="focus-control-bar">
+                <div class="focus-actions">
+                    <button class="focus-btn" id="btn-expand-all" title="Open all chapters for full scroll">
+                        <span>📂</span> Expand All
+                    </button>
+                    <button class="focus-btn" id="btn-collapse-all" title="Collapse all chapters to section headers">
+                        <span>📁</span> Collapse All
+                    </button>
+                </div>
+                <div class="focus-toggle-wrap">
+                    <label class="focus-mode-toggle" title="When active, opening one section automatically closes previous sections to minimize cognitive load and visual clutter.">
+                        <span class="toggle-switch">
+                            <input type="checkbox" id="single-focus-toggle" checked>
+                            <span class="slider"></span>
+                        </span>
+                        <span class="toggle-label-text">🎯 Single-Chapter Focus (Auto-close others)</span>
+                    </label>
+                </div>
+            </div>
+
             <article class="doc-body">
-                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
-<h1 id='volume-6-aspnet-core-complete-architecture-interview-mastery'>Volume 6: ASP.NET Core Complete Architecture & Interview Mastery</h1>
+                <h1 id='volume-6-aspnet-core-complete-architecture-interview-mastery'>Volume 6: ASP.NET Core Complete Architecture & Interview Mastery</h1>
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
@@ -746,7 +1013,7 @@ li::marker { color: var(--primary); }
     <div class="callout-body"><strong>Production Contexts:</strong> Banking Transactions, Payment Gateways, Healthcare Record Systems, Multi-Tenant SaaS, and High-Throughput E-Commerce.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='table-of-contents'>TABLE OF CONTENTS</h2>
 <ol>
 <li><a href="#1-request-lifecycle--kestrel-server-architecture">Request Lifecycle & Kestrel Server Architecture</a></li>
@@ -769,8 +1036,25 @@ li::marker { color: var(--primary); }
 <li><a href="#18-aspnet-core-enterprise-security-hardening">ASP.NET Core Enterprise Security Hardening</a></li>
 <li><a href="#19-architectural-master-reference--infosys-rapid-fire-matrix">Architectural Master Reference & Infosys Rapid-Fire Matrix</a></li>
 </ol>
-<p>---</p>
-<h1 id='1-request-lifecycle-kestrel-server-architecture'>1. Request Lifecycle & Kestrel Server Architecture</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+
+<details class="chapter-accordion" id="ch-1" data-chapter="1" open>
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 01</span>
+            <span class="accordion-title-text">1. Request Lifecycle & Kestrel Server Architecture</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="1-request-lifecycle-kestrel-server-architecture" class="accordion-anchor"></a>
+        <a id="1-request-lifecycle-kestrel-server-architecture" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p>The <strong>ASP.NET Core Request Lifecycle</strong> is the end-to-end processing pipeline through which an incoming raw TCP byte stream arrives at the operating system network stack, is accepted by the cross-platform <strong>Kestrel</strong> web server, is parsed into managed abstractions (<code>HttpContext</code>, <code>HttpRequest</code>, <code>HttpResponse</code>), traverses a bi-directional middleware pipeline, executes an application endpoint (Minimal API or Controller action with filters), and serializes a binary response back over the physical socket.</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -981,8 +1265,26 @@ app.Run();</code></pre>
 <li><strong>Tricky Question:</strong> <em>If Kestrel is so fast, why do we still put Nginx, Envoy, or YARP in front of it in enterprise production?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> While Kestrel can be edge-facing, reverse proxies (like Nginx, Envoy, AWS ALB, or YARP) provide vital perimeter capabilities: edge SSL/TLS offloading, DDoS filtering, IP whitelisting/geo-blocking, static file caching at scale, seamless multi-service path routing, blue-green deployment routing, and graceful container restarts without dropping external TCP connections.</p>
-<p>---</p>
-<h1 id='2-middleware-pipeline-architecture'>2. Middleware Pipeline Architecture</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-2" data-chapter="2" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 02</span>
+            <span class="accordion-title-text">2. Middleware Pipeline Architecture</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="2-middleware-pipeline-architecture" class="accordion-anchor"></a>
+        <a id="2-middleware-pipeline-architecture" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p>The <strong>ASP.NET Core Middleware Pipeline</strong> is an architectural pattern composed of a sequence of bidirectional software components (delegates) that assemble an HTTP processing pipeline. Each middleware component has the opportunity to inspect, modify, short-circuit, or pass the <code>HttpContext</code> down the pipeline to the next component via a <code>RequestDelegate</code> (<code>Func&lt;HttpContext, Task&gt;</code>).</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -1272,8 +1574,26 @@ HTTP Response Flushed to Kestrel &amp; Client</code></pre>
 <li><strong>Tricky Question:</strong> <em>What happens if you place <code>app.UseAuthorization()</code> before <code>app.UseRouting()</code> in ASP.NET Core 8?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> In .NET 6+, the framework detects this misconfiguration and either throws an <code>InvalidOperationException</code> or automatically attempts to correct it. Conceptually, <code>UseRouting</code> runs the route matching algorithm to select the target <code>Endpoint</code> and attach its metadata (such as <code>[Authorize]</code> or policies) to <code>HttpContext</code>. If <code>UseAuthorization</code> runs before <code>UseRouting</code>, it has no endpoint metadata to inspect and cannot enforce endpoint-level security policies, rendering policy-based endpoint authorization completely ineffective.</p>
-<p>---</p>
-<h1 id='3-routing-architecture-endpoint-metadata'>3. Routing Architecture & Endpoint Metadata</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-3" data-chapter="3" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 03</span>
+            <span class="accordion-title-text">3. Routing Architecture & Endpoint Metadata</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="3-routing-architecture-endpoint-metadata" class="accordion-anchor"></a>
+        <a id="3-routing-architecture-endpoint-metadata" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>Routing</strong> in ASP.NET Core is the system that inspects incoming HTTP requests (URL path, HTTP verb, headers) and maps them to an executable <strong>Endpoint</strong>. Since ASP.NET Core 3.0+, routing is powered by <strong>Endpoint Routing</strong>, which decouples the routing decision (<code>UseRouting</code>) from the endpoint execution (<code>UseEndpoints</code> or terminal map methods) and represents endpoints as first-class runtime objects containing execution delegates and arbitrary metadata.</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -1487,8 +1807,26 @@ public class SkuRouteConstraint : IRouteConstraint
 <li><strong>Tricky Question:</strong> <em>What happens if both <code>/api/orders/{id:int}</code> and <code>/api/orders/{id:min(1)}</code> match an incoming request? How does ASP.NET Core decide which one wins?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> ASP.NET Core uses a route template precedence algorithm. Specificity wins: literal segments have highest priority, followed by constrained parameters, unconstrained parameters, and catch-all (<code>{*slug}</code>) segments. If two routes have identical precedence and constraints, ASP.NET Core refuses to guess and throws an <code>AmbiguousMatchException</code> at runtime to prevent subtle security or data bugs.</p>
-<p>---</p>
-<h1 id='4-controllers-vs-minimal-apis-deep-dive'>4. Controllers vs Minimal APIs Deep Dive</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-4" data-chapter="4" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 04</span>
+            <span class="accordion-title-text">4. Controllers vs Minimal APIs Deep Dive</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="4-controllers-vs-minimal-apis-deep-dive" class="accordion-anchor"></a>
+        <a id="4-controllers-vs-minimal-apis-deep-dive" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>Controllers</strong> represent the traditional, class-based Model-View-Controller/Web API architecture inheriting from <code>ControllerBase</code>, utilizing reflection, action invokers, and multi-stage filter pipelines.</p>
 <p><strong>Minimal APIs</strong> (introduced in .NET 6 and expanded in .NET 7/8) provide a lightweight, high-performance, lambda-based approach to defining HTTP endpoints directly using extension methods on <code>WebApplication</code> or <code>RouteGroupBuilder</code> with minimal boilerplate and near-zero ceremony.</p>
@@ -1731,8 +2069,26 @@ TypedResults Serializer ──► Response Flushed</code></pre>
 <li><strong>Tricky Question:</strong> <em>Can Minimal APIs support Native AOT (Ahead-of-Time compilation) in .NET 8? Why can't traditional Controllers support it easily?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> Yes, .NET 8 Minimal APIs fully support Native AOT via the <code>RequestDelegateGenerator</code> (RDG) source generator, which analyzes endpoints at compile-time and generates direct C# code for parameter binding and JSON serialization. Controllers cannot easily support Native AOT because they fundamentally rely on runtime reflection, dynamic code generation, and runtime type scanning across assemblies to instantiate controllers, bind models, and invoke actions.</p>
-<p>---</p>
-<h1 id='5-model-binding-validation-architecture'>5. Model Binding & Validation Architecture</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-5" data-chapter="5" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 05</span>
+            <span class="accordion-title-text">5. Model Binding & Validation Architecture</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="5-model-binding-validation-architecture" class="accordion-anchor"></a>
+        <a id="5-model-binding-validation-architecture" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>Model Binding</strong> is the mechanism in ASP.NET Core that extracts data from HTTP requests (route parameters, query strings, headers, form fields, and JSON request bodies) and converts it into strongly-typed C# objects and parameters.</p>
 <p><strong>Validation</strong> is the process of evaluating business invariants and schema rules on the bound model before endpoint execution, using either declarative <strong>DataAnnotations</strong> or expressive <strong>FluentValidation</strong> rules.</p>
@@ -1974,8 +2330,26 @@ RFC 7807 ProblemDetails</code></pre>
 <li><strong>Tricky Question:</strong> <em>How do you enable multiple reads of the <code>HttpRequest.Body</code> stream if both a custom audit middleware and the model binder need to read the JSON payload?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> By default, <code>HttpRequest.Body</code> is a forward-only, non-seekable stream. To allow multiple reads, you must call <code>context.Request.EnableBuffering()</code> in middleware before reading. This buffers the request body into a temporary memory or disk stream backing store. After reading, you must explicitly reset the stream position: <code>context.Request.Body.Position = 0;</code> so downstream model binders or middleware can read it from the beginning.</p>
-<p>---</p>
-<h1 id='6-dependency-injection-lifetime-architecture'>6. Dependency Injection & Lifetime Architecture</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-6" data-chapter="6" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 06</span>
+            <span class="accordion-title-text">6. Dependency Injection & Lifetime Architecture</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="6-dependency-injection-lifetime-architecture" class="accordion-anchor"></a>
+        <a id="6-dependency-injection-lifetime-architecture" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>Dependency Injection (DI)</strong> in ASP.NET Core is a built-in Inversion of Control (IoC) container that manages the registration, lifetime, instantiation, resolution, and disposal of software dependencies across an application. It provides three primary service lifetimes: <strong>Transient</strong>, <strong>Scoped</strong>, and <strong>Singleton</strong>, and provides explicit scope control via <code>IServiceScopeFactory</code>, along with compile-time or runtime resolution of <strong>Keyed Services</strong> in .NET 8.</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -2213,8 +2587,26 @@ public class PaymentGatewayOptions
 <li><strong>Tricky Question:</strong> <em>How do Keyed Services in .NET 8 work under the hood, and how do they replace manual Factory patterns?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> Prior to .NET 8, resolving different implementations of the same interface (e.g., Stripe vs. PayPal for <code>IPaymentGateway</code>) required writing custom Factory classes or resolving <code>IEnumerable&lt;IPaymentGateway&gt;</code>. .NET 8 introduced native Keyed Services via <code>AddKeyedSingleton/Scoped/Transient(serviceKey)</code>. The <code>ServiceDescriptor</code> now contains an optional <code>ServiceKey</code> object. The container indexes descriptors by both <code>(Type, Key)</code>. At resolution sites, callers use the <code>[FromKeyedServices(&quot;key&quot;)]</code> attribute, allowing the container to directly resolve the exact variant without boilerplate factory classes.</p>
-<p>---</p>
-<h1 id='7-the-filter-pipeline-architecture'>7. The Filter Pipeline Architecture</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-7" data-chapter="7" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 07</span>
+            <span class="accordion-title-text">7. The Filter Pipeline Architecture</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="7-the-filter-pipeline-architecture" class="accordion-anchor"></a>
+        <a id="7-the-filter-pipeline-architecture" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p>The <strong>ASP.NET Core Filter Pipeline</strong> is a specialized interception pipeline that runs within the MVC <code>ActionInvoker</code> infrastructure. Filters run after routing has selected an action and allow executing cross-cutting code before and after specific stages of the action execution lifecycle. The pipeline consists of five distinct filter stages: <strong>Authorization</strong>, <strong>Resource</strong>, <strong>Action</strong>, <strong>Exception</strong>, and <strong>Result</strong> filters.</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -2475,8 +2867,26 @@ Response Sent Back to Kestrel Pipeline</code></pre>
 <li><strong>Tricky Question:</strong> <em>Can an <code>IExceptionFilter</code> catch exceptions thrown inside an <code>IResultFilter</code> or inside a custom middleware?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> <strong>No.</strong> An <code>IExceptionFilter</code> only catches exceptions that originate during the execution of controller actions, action filters, and model binding. If an exception occurs in an <code>IResultFilter</code> (such as JSON serialization errors when streaming to the client) or in any upstream middleware, the Exception Filter is completely bypassed. For comprehensive error capture, always use <code>UseExceptionHandler()</code> middleware.</p>
-<p>---</p>
-<h1 id='8-configuration-system-secret-management'>8. Configuration System & Secret Management</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-8" data-chapter="8" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 08</span>
+            <span class="accordion-title-text">8. Configuration System & Secret Management</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="8-configuration-system-secret-management" class="accordion-anchor"></a>
+        <a id="8-configuration-system-secret-management" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p>The <strong>ASP.NET Core Configuration System</strong> is a unified, extensible, key-value configuration framework that aggregates configuration settings from multiple hierarchical sources (JSON files, environment variables, command-line arguments, user secrets, and cloud key vaults) into a single unified <code>IConfigurationRoot</code>. It provides strongly-typed configuration binding through the <strong>Options Pattern</strong> (<code>IOptions&lt;T&gt;</code>, <code>IOptionsSnapshot&lt;T&gt;</code>, <code>IOptionsMonitor&lt;T&gt;</code>).</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -2676,8 +3086,26 @@ public class CacheOptions
 <li><strong>Tricky Question:</strong> <em>Why can't you inject <code>IOptionsSnapshot&lt;T&gt;</code> into a Singleton service or BackgroundService? What should you use instead?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> <code>IOptionsSnapshot&lt;T&gt;</code> is registered with a <strong>Scoped</strong> lifetime because it is designed to recompute configuration values per HTTP request. Injecting it into a Singleton causes a Captive Dependency error (<code>InvalidOperationException</code>). To monitor dynamic configuration changes inside a Singleton or background worker, you must inject <code>IOptionsMonitor&lt;T&gt;</code>, which is a Singleton and provides live updates via its <code>CurrentValue</code> property and <code>OnChange</code> event listener.</p>
-<p>---</p>
-<h1 id='9-logging-structured-telemetry-distributed-observability'>9. Logging, Structured Telemetry & Distributed Observability</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-9" data-chapter="9" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 09</span>
+            <span class="accordion-title-text">9. Logging, Structured Telemetry & Distributed Observability</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="9-logging-structured-telemetry-distributed-observability" class="accordion-anchor"></a>
+        <a id="9-logging-structured-telemetry-distributed-observability" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>Logging and Observability</strong> in ASP.NET Core is the architectural discipline of generating, enriching, and exporting structured runtime telemetry—encompassing <strong>Structured Logging</strong> (<code>ILogger</code>), <strong>Distributed Tracing</strong> (<code>ActivitySource</code>, OpenTelemetry, W3C TraceContext), and <strong>Metrics</strong> (<code>Meter</code>)—to monitor application health, trace requests across distributed microservice boundaries, and enable instant root-cause analysis in centralized log aggregation systems (Seq, Elasticsearch, Datadog).</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -2894,8 +3322,26 @@ Headers: X-Correlation-ID: 7b050c3f...
 <li><strong>Tricky Question:</strong> <em>How does ASP.NET Core support the W3C Trace Context standard for distributed tracing?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> ASP.NET Core implements distributed tracing natively through <code>System.Diagnostics.Activity</code>. When an incoming HTTP request contains the standard <code>traceparent</code> header (<code>version-traceId-spanId-traceFlags</code>), the runtime automatically parses it and assigns the <code>TraceId</code> to <code>Activity.Current</code>. If outgoing HTTP requests are made using <code>HttpClient</code>, the framework automatically injects the corresponding <code>traceparent</code> header with the current <code>TraceId</code> and a newly generated child <code>SpanId</code>, enabling seamless end-to-end distributed tracing across microservices.</p>
-<p>---</p>
-<h1 id='10-global-exception-handling-rfc-7807-problemdetails'>10. Global Exception Handling & RFC 7807 ProblemDetails</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-10" data-chapter="10" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 10</span>
+            <span class="accordion-title-text">10. Global Exception Handling & RFC 7807 ProblemDetails</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="10-global-exception-handling-rfc-7807-problemdetails" class="accordion-anchor"></a>
+        <a id="10-global-exception-handling-rfc-7807-problemdetails" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>Global Exception Handling</strong> in ASP.NET Core is the centralized architectural pattern of capturing, logging, and translating unhandled runtime errors into standardized, secure HTTP error responses without leaking internal infrastructure details. In modern .NET 8, this is implemented using the <strong><code>IExceptionHandler</code></strong> interface combined with <strong><code>UseExceptionHandler</code></strong> middleware and the <strong>RFC 7807 Problem Details</strong> specification.</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -3159,8 +3605,26 @@ Client Receives RFC 7807 JSON Response (HTTP 422 / 500)</code></pre>
 <li><strong>Tricky Question:</strong> <em>What happens if an unhandled exception is thrown after the response body has already started streaming to the client? Can <code>IExceptionHandler</code> handle it?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> <strong>No.</strong> Once the HTTP response has started streaming (<code>context.Response.HasStarted == true</code>), the HTTP status code (e.g., 200 OK) and initial headers have already been transmitted over the physical TCP socket. The <code>ExceptionHandlerMiddleware</code> cannot reset the status code to 500 or serialize a <code>ProblemDetails</code> object because doing so would violate the HTTP protocol specification. In this scenario, ASP.NET Core immediately aborts the underlying connection to signal to the client that the transmission was truncated.</p>
-<p>---</p>
-<h1 id='11-authentication-authorization-engine'>11. Authentication & Authorization Engine</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-11" data-chapter="11" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 11</span>
+            <span class="accordion-title-text">11. Authentication & Authorization Engine</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="11-authentication-authorization-engine" class="accordion-anchor"></a>
+        <a id="11-authentication-authorization-engine" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>Authentication (AuthN)</strong> is the security process of verifying <em>who</em> a client is (establishing an identity and building a <code>ClaimsPrincipal</code>).</p>
 <p><strong>Authorization (AuthZ)</strong> is the security process of verifying <em>what</em> an authenticated identity is permitted to do (evaluating Roles, Claims, Policies, and Resource-specific permissions).</p>
@@ -3455,8 +3919,26 @@ Header: Authorization: Bearer eyJhbGciOi...
 <li><strong>Tricky Question:</strong> <em>How do you handle JWT revocation in a distributed microservices architecture without introducing a database bottleneck on every HTTP request?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> Truly stateless JWTs cannot be revoked natively until they expire. The industry-standard architecture combines: (1) <strong>Short-Lived Access Tokens</strong> (5 to 15 minutes) paired with stateful Refresh Tokens rotated in Redis, minimizing the exposure window of a compromised token; (2) An <strong>Event-Driven Blacklist</strong> in Redis: when a user is revoked or logs out, their <code>TokenId</code> (<code>jti</code>) or <code>UserId</code> is published to a high-speed Redis cluster with a TTL equal to the remaining access token duration; (3) High-performance middleware checks Redis (or a local in-memory Bloom filter synchronized via Redis pub/sub) only for critical operations.</p>
-<p>---</p>
-<h1 id='12-high-performance-caching-cache-aside-architecture'>12. High-Performance Caching & Cache-Aside Architecture</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-12" data-chapter="12" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 12</span>
+            <span class="accordion-title-text">12. High-Performance Caching & Cache-Aside Architecture</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="12-high-performance-caching-cache-aside-architecture" class="accordion-anchor"></a>
+        <a id="12-high-performance-caching-cache-aside-architecture" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>Caching</strong> in ASP.NET Core is the technique of storing expensive-to-compute data or serialized responses in a high-speed memory layer to accelerate read operations, minimize latency, and protect downstream databases from high traffic. ASP.NET Core supports three caching tiers: <strong>In-Memory Caching</strong> (<code>IMemoryCache</code>), <strong>Distributed Caching</strong> (<code>IDistributedCache</code>), and pipeline-level <strong>Output Caching</strong> introduced in .NET 8.</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -3729,8 +4211,26 @@ Return Data       [ Acquire Key Lock (SemaphoreSlim) ]
 <li><strong>Tricky Question:</strong> <em>Why does <code>IDistributedCache</code> only accept <code>byte[]</code> and <code>string</code> instead of strongly-typed C# objects?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> Because distributed caches reside out-of-process (e.g., across a network in Redis or Memcached), objects cannot be shared by CLR memory reference. They must be serialized across the network boundary. ASP.NET Core leaves the serialization format intentionally unconstrained in <code>IDistributedCache</code> so developers can choose the optimal serializer for their throughput and CPU requirements (e.g., <code>System.Text.Json</code>, <code>MessagePack</code>, or Google <code>Protobuf</code>) rather than forcing a heavy, fixed serializer.</p>
-<p>---</p>
-<h1 id='13-background-services-hosted-service-architecture'>13. Background Services & Hosted Service Architecture</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-13" data-chapter="13" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 13</span>
+            <span class="accordion-title-text">13. Background Services & Hosted Service Architecture</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="13-background-services-hosted-service-architecture" class="accordion-anchor"></a>
+        <a id="13-background-services-hosted-service-architecture" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>Background Services</strong> in ASP.NET Core are long-running, out-of-band asynchronous worker processes hosted directly inside the web application process using the <strong>Generic Host</strong> lifecycle (<code>IHostedService</code> and the <code>BackgroundService</code> base class). They execute tasks such as scheduled maintenance, queue processing, outbox event dispatching, and cache warming independently of incoming HTTP requests.</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -3984,8 +4484,26 @@ public class OutboxEvent { public string Topic { get; set; } = &quot;&quot;; pub
 <li><strong>Tricky Question:</strong> <em>How does graceful shutdown work when a Kubernetes pod running an ASP.NET Core <code>BackgroundService</code> receives a SIGTERM signal?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> When Kubernetes signals SIGTERM, the generic host cancels the <code>CancellationToken</code> (<code>stoppingToken</code>) passed to <code>ExecuteAsync()</code> and calls <code>IHostedService.StopAsync()</code>. The host gives background workers up to <code>HostOptions.ShutdownTimeout</code> (default 30 seconds) to wrap up their in-flight work and exit their execution loops. If the tasks do not complete before this timeout expires, the host forcibly aborts them, and Kubernetes issues a SIGKILL.</p>
-<p>---</p>
-<h1 id='14-signalr-real-time-distributed-architecture'>14. SignalR & Real-Time Distributed Architecture</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-14" data-chapter="14" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 14</span>
+            <span class="accordion-title-text">14. SignalR & Real-Time Distributed Architecture</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="14-signalr-real-time-distributed-architecture" class="accordion-anchor"></a>
+        <a id="14-signalr-real-time-distributed-architecture" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>ASP.NET Core SignalR</strong> is an enterprise-grade real-time bidirectional communication framework that enables server-side code to push instantaneous content updates to connected clients (browsers, mobile apps, desktop apps) without requiring clients to poll. SignalR abstracts the underlying transport protocol—automatically negotiating between <strong>WebSockets</strong>, <strong>Server-Sent Events (SSE)</strong>, and <strong>Long Polling</strong>—and scales out horizontally across multi-server web farms using a <strong>Redis Backplane</strong> or the <strong>Azure SignalR Service</strong>.</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -4199,8 +4717,26 @@ public record TradeAlert(string Symbol, string Action, decimal Price);</code></p
 <li><strong>Tricky Question:</strong> <em>How does using MessagePack instead of JSON affect SignalR performance and client compatibility?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> MessagePack is a compact binary serialization format. It drastically reduces network payload size (by 50-70%) and reduces CPU serialization/deserialization time compared to textual JSON, dramatically increasing throughput. However, because it is a binary protocol, clients cannot view raw messages in standard browser network tabs as plain text, and non-browser clients must include the MessagePack client SDK to deserialize the binary frames.</p>
-<p>---</p>
-<h1 id='15-grpc-high-throughput-remote-procedure-calls'>15. gRPC & High-Throughput Remote Procedure Calls</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-15" data-chapter="15" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 15</span>
+            <span class="accordion-title-text">15. gRPC & High-Throughput Remote Procedure Calls</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="15-grpc-high-throughput-remote-procedure-calls" class="accordion-anchor"></a>
+        <a id="15-grpc-high-throughput-remote-procedure-calls" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>gRPC (Google Remote Procedure Call)</strong> is a language-agnostic, high-performance, contract-first remote procedure call framework developed by Google and deeply integrated into ASP.NET Core. It operates exclusively over <strong>HTTP/2</strong> (and HTTP/3), uses <strong>Protocol Buffers (Protobuf)</strong> as its Interface Definition Language (IDL) and compact binary serialization format, and supports four invocation modes: <strong>Unary</strong>, <strong>Server Streaming</strong>, <strong>Client Streaming</strong>, and <strong>Bi-directional Streaming</strong>.</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -4477,8 +5013,26 @@ Client                                                    Server
 <li><strong>Tricky Question:</strong> <em>How do you ensure backward and forward compatibility when updating a <code>.proto</code> file in a live enterprise production environment?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> In Protocol Buffers, the serialized wire format identifies fields solely by their <strong>unique tag number</strong>, never by field name. To preserve compatibility: (1) <strong>Never change the tag number</strong> of an existing field; (2) <strong>Never reuse a tag number</strong> from a deleted field (use the <code>reserved</code> keyword to reserve removed tags and names); (3) Any new fields added must be optional (the default in proto3), allowing old clients to ignore unknown new fields and new clients to read old payloads with default values.</p>
-<p>---</p>
-<h1 id='16-api-versioning-strategies'>16. API Versioning Strategies</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-16" data-chapter="16" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 16</span>
+            <span class="accordion-title-text">16. API Versioning Strategies</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="16-api-versioning-strategies" class="accordion-anchor"></a>
+        <a id="16-api-versioning-strategies" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>API Versioning</strong> in ASP.NET Core is the architectural discipline of evolving RESTful API contracts, data models, and behaviors over time without breaking existing client integrations (mobile apps, third-party consumers, legacy frontends). It is officially implemented using the <strong><code>Asp.Versioning.Http</code></strong> and <strong><code>Asp.Versioning.Mvc</code></strong> packages, supporting four primary strategies: <strong>URI Path</strong>, <strong>Query String</strong>, <strong>HTTP Header</strong>, and <strong>Accept/Media-Type</strong> versioning.</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -4692,8 +5246,26 @@ Client Receives Version 2.0 JSON Payload</code></pre>
 <li><strong>Tricky Question:</strong> <em>What happens when a client makes a request without specifying an API version?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> By default, ASP.NET Core returns an HTTP 400 Bad Request with an error stating that an API version is required. However, if you configure <code>options.AssumeDefaultVersionWhenUnspecified = true</code>, the runtime will automatically route the request to the version specified in <code>options.DefaultApiVersion</code> (typically 1.0). In public enterprise APIs, enabling this setting ensures backward compatibility for older, un-versioned clients.</p>
-<p>---</p>
-<h1 id='17-distributed-rate-limiting-traffic-shaping-net-7'>17. Distributed Rate Limiting & Traffic Shaping (.NET 7+)</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-17" data-chapter="17" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 17</span>
+            <span class="accordion-title-text">17. Distributed Rate Limiting & Traffic Shaping (.NET 7+)</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="17-distributed-rate-limiting-traffic-shaping-net-7" class="accordion-anchor"></a>
+        <a id="17-distributed-rate-limiting-traffic-shaping-net-7" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>Rate Limiting</strong> in ASP.NET Core is a built-in traffic shaping and defensive mechanism (introduced in .NET 7 via <code>System.Threading.RateLimiting</code> and <code>Microsoft.AspNetCore.RateLimiting</code>) that controls the rate at which incoming HTTP requests are processed. It protects applications from Denial of Service (DoS) attacks, brute-force password cracking, API scraping, and cascading resource exhaustion by throttling clients with <strong>HTTP 429 Too Many Requests</strong>.</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -4913,8 +5485,26 @@ app.Run();</code></pre>
 <li><strong>Tricky Question:</strong> <em>Why is <code>UseForwardedHeaders</code> mandatory when implementing IP-based rate limiting in a containerized Kubernetes or AWS environment?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> In cloud environments, container pods run behind reverse proxies, ingresses, or load balancers (such as Nginx, Traefik, or AWS ALB). The direct TCP connection to Kestrel originates from the load balancer, not the end user. Consequently, <code>Connection.RemoteIpAddress</code> will reflect the load balancer's private IP. Without <code>app.UseForwardedHeaders()</code>, all users worldwide share the exact same load balancer IP address, causing the rate limiter to aggregate everyone's traffic together and immediately lock out all users globally.</p>
-<p>---</p>
-<h1 id='18-aspnet-core-enterprise-security-hardening'>18. ASP.NET Core Enterprise Security Hardening</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-18" data-chapter="18" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 18</span>
+            <span class="accordion-title-text">18. ASP.NET Core Enterprise Security Hardening</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="18-aspnet-core-enterprise-security-hardening" class="accordion-anchor"></a>
+        <a id="18-aspnet-core-enterprise-security-hardening" class="accordion-anchor"></a>
+
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>Enterprise Security Hardening</strong> in ASP.NET Core is the systematic implementation of defense-in-depth security controls to protect web applications against the <strong>OWASP Top 10</strong> vulnerabilities. This includes <strong>Cross-Origin Resource Sharing (CORS)</strong> management, <strong>Cross-Site Request Forgery (CSRF/XSRF)</strong> defense via Anti-Forgery tokens, <strong>Security Headers Injection</strong> (CSP, HSTS, X-Content-Type-Options), and strict prevention of <strong>SQL Injection</strong> when using Entity Framework Core.</p>
 <h3 id='2-historical-reason'>2. Historical Reason</h3>
@@ -5187,8 +5777,26 @@ Secure HTTP Response Delivered to Browser</code></pre>
 <li><strong>Tricky Question:</strong> <em>What happens if you configure <code>policy.AllowAnyOrigin().AllowCredentials()</code> in ASP.NET Core?</em></li>
 </ul>
 <p><strong>Best Answer:</strong> ASP.NET Core will throw an <code>InvalidOperationException</code> at startup or runtime when the policy is evaluated. The W3C CORS specification explicitly dictates that a server cannot return <code>Access-Control-Allow-Origin: *</code> when <code>Access-Control-Allow-Credentials: true</code> is set. Combining both would allow any malicious website on the internet to make authenticated cross-origin requests using a victim's active cookies and read the response. ASP.NET Core actively blocks this insecure configuration.</p>
-<p>---</p>
-<h1 id='19-architectural-master-reference-infosys-rapid-fire-matrix'>19. Architectural Master Reference & Infosys Rapid-Fire Matrix</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-19" data-chapter="19" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 19</span>
+            <span class="accordion-title-text">19. Architectural Master Reference & Infosys Rapid-Fire Matrix</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="19-architectural-master-reference-infosys-rapid-fire-matrix" class="accordion-anchor"></a>
+        <a id="19-architectural-master-reference-infosys-rapid-fire-matrix" class="accordion-anchor"></a>
+
 <h3 id='enterprise-middleware-pipeline-ordering-reference'>Enterprise Middleware Pipeline Ordering Reference</h3>
 <p>To avoid subtle production bugs, security holes, and runtime exceptions, the ASP.NET Core middleware pipeline <strong>MUST</strong> strictly adhere to the following sequence:</p>
 
@@ -5212,7 +5820,7 @@ Secure HTTP Response Delivered to Browser</code></pre>
 13. EndpointExecutionMiddleware        (app.MapControllers() / app.MapEndpoints())</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='rapid-fire-interview-review-matrix-for-senior-candidates'>Rapid-Fire Interview Review Matrix for Senior Candidates</h3>
 <div class='table-wrapper'><table>
 <tr><th>Concept</th><th>Key Architectural Mechanism</th><th>Primary Production Risk / Failure Mode</th><th>Recommended Enterprise Solution</th></tr>
@@ -5235,6 +5843,7 @@ Secure HTTP Response Delivered to Browser</code></pre>
 <tr><td><strong>Rate Limiting</strong></td><td><code>System.Threading.RateLimiting</code> algorithms</td><td>Blocking entire corporate network behind NAT IP</td><td>Use <code>ForwardedHeaders</code> and partition by <code>TenantId</code></td></tr>
 <tr><td><strong>Security</strong></td><td>CORS + Antiforgery + Security Headers</td><td>SQL injection via raw SQL string concatenation</td><td>Use <code>FromSqlInterpolated</code> with parameterized SQL</td></tr>
 </table></div>
+</div></details>
             </article>
 
             <nav class="chapter-nav">
@@ -5258,11 +5867,6 @@ Secure HTTP Response Delivered to Browser</code></pre>
             <ul class="toc-list">
                 
         <li class="toc-item level-1">
-            <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
-        </li>
-        
-
-        <li class="toc-item level-1">
             <a href="#volume-6-aspnet-core-complete-architecture-interview-mastery" class="toc-link">Volume 6: ASP.NET Core Complete Architecture </a>
         </li>
         
@@ -5273,7 +5877,7 @@ Secure HTTP Response Delivered to Browser</code></pre>
         
 
         <li class="toc-item level-1">
-            <a href="#1-request-lifecycle-kestrel-server-architecture" class="toc-link">1. Request Lifecycle &amp; Kestrel Server Archite</a>
+            <a href="#ch-1" class="toc-link">1. Request Lifecycle &amp; Kestrel Server Archite</a>
         </li>
         
 
@@ -5338,7 +5942,7 @@ Secure HTTP Response Delivered to Browser</code></pre>
         
 
         <li class="toc-item level-1">
-            <a href="#2-middleware-pipeline-architecture" class="toc-link">2. Middleware Pipeline Architecture</a>
+            <a href="#ch-2" class="toc-link">2. Middleware Pipeline Architecture</a>
         </li>
         
 
@@ -5403,7 +6007,62 @@ Secure HTTP Response Delivered to Browser</code></pre>
         
 
         <li class="toc-item level-1">
-            <a href="#3-routing-architecture-endpoint-metadata" class="toc-link">3. Routing Architecture &amp; Endpoint Metadata</a>
+            <a href="#ch-3" class="toc-link">3. Routing Architecture &amp; Endpoint Metadata</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#1-definition" class="toc-link">1. Definition</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#2-historical-reason" class="toc-link">2. Historical Reason</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#3-problem-it-solves" class="toc-link">3. Problem It Solves</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#4-internal-working" class="toc-link">4. Internal Working</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#5-real-production-example-order-processing-platform" class="toc-link">5. Real Production Example: Order Processing </a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#6-production-c-code-advanced-routing-custom-route-constraint" class="toc-link">6. Production C# Code: Advanced Routing &amp; Cus</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#7-execution-flow-diagram" class="toc-link">7. Execution Flow Diagram</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#8-design-reasoning" class="toc-link">8. Design Reasoning</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#9-performance-metrics" class="toc-link">9. Performance Metrics</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#10-common-mistakes" class="toc-link">10. Common Mistakes</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#11-real-world-production-problem-production-ambiguous-match-outage" class="toc-link">11. Real-World Production Problem: Production</a>
         </li>
         
             </ul>
@@ -5436,11 +6095,137 @@ Secure HTTP Response Delivered to Browser</code></pre>
             // Highlight syntax
             hljs.highlightAll();
 
-            // Mermaid diagrams
+            // Mermaid diagrams initialization
             mermaid.initialize({
                 startOnLoad: true,
                 theme: currentTheme === 'dark' ? 'dark' : 'neutral',
                 securityLevel: 'loose'
+            });
+
+            // ==========================================
+            // ACCORDION & SINGLE-FOCUS CONTROLS
+            // ==========================================
+            const accordions = document.querySelectorAll('.chapter-accordion');
+            const singleFocusToggle = document.getElementById('single-focus-toggle');
+            const btnExpandAll = document.getElementById('btn-expand-all');
+            const btnCollapseAll = document.getElementById('btn-collapse-all');
+
+            function renderMermaidIn(element) {
+                if (window.mermaid) {
+                    const unrendered = element.querySelectorAll('.mermaid:not([data-processed])');
+                    if (unrendered.length > 0) {
+                        try { mermaid.run({ nodes: unrendered }); } catch(e) {}
+                    }
+                }
+            }
+
+            // Expand All
+            if (btnExpandAll) {
+                btnExpandAll.addEventListener('click', () => {
+                    if (singleFocusToggle) singleFocusToggle.checked = false;
+                    accordions.forEach(acc => {
+                        acc.open = true;
+                        renderMermaidIn(acc);
+                    });
+                });
+            }
+
+            // Collapse All
+            if (btnCollapseAll) {
+                btnCollapseAll.addEventListener('click', () => {
+                    accordions.forEach(acc => {
+                        acc.open = false;
+                    });
+                });
+            }
+
+            // Single focus auto-closing logic
+            accordions.forEach(acc => {
+                acc.addEventListener('toggle', () => {
+                    const statusText = acc.querySelector('.accordion-status-text');
+                    if (statusText) {
+                        statusText.innerText = acc.open ? 'Click to collapse' : 'Click to expand';
+                    }
+                    if (acc.open) {
+                        renderMermaidIn(acc);
+                        if (singleFocusToggle && singleFocusToggle.checked) {
+                            accordions.forEach(other => {
+                                if (other !== acc && other.open) {
+                                    other.open = false;
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            // ==========================================
+            // DEEP LINKING & TOC NAVIGATION
+            // ==========================================
+            function navigateToTarget(targetId) {
+                if (!targetId) return;
+                let target = document.getElementById(targetId);
+                
+                // Fallback for slug variations (e.g. hyphens)
+                if (!target) {
+                    const normalized = targetId.replace(/-+/g, '-');
+                    target = document.getElementById(normalized) || 
+                             document.querySelector(`[id*="${normalized}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                }
+
+                if (!target) return;
+
+                // If target is inside an accordion, open that accordion
+                const parentAcc = target.closest('.chapter-accordion');
+                if (parentAcc) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== parentAcc) a.open = false;
+                        });
+                    }
+                    parentAcc.open = true;
+                    renderMermaidIn(parentAcc);
+                } else if (target.classList.contains('chapter-accordion')) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== target) a.open = false;
+                        });
+                    }
+                    target.open = true;
+                    renderMermaidIn(target);
+                }
+
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.classList.add('flash-highlight');
+                    setTimeout(() => target.classList.remove('flash-highlight'), 1600);
+                }, 100);
+            }
+
+            // Check URL hash on page load
+            if (window.location.hash) {
+                setTimeout(() => {
+                    navigateToTarget(window.location.hash.substring(1));
+                }, 250);
+            }
+
+            // Listen for hash changes
+            window.addEventListener('hashchange', () => {
+                navigateToTarget(window.location.hash.substring(1));
+            });
+
+            // Intercept internal page anchor clicks
+            document.addEventListener('click', (e) => {
+                const anchor = e.target.closest('a[href^="#"]');
+                if (!anchor) return;
+                const href = anchor.getAttribute('href');
+                if (href && href.length > 1) {
+                    e.preventDefault();
+                    const id = href.substring(1);
+                    history.pushState(null, null, href);
+                    navigateToTarget(id);
+                }
             });
         });
     </script>

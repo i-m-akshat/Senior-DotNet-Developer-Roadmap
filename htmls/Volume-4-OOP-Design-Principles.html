@@ -24,9 +24,11 @@
     --bg-page: #0b0f19;
     --bg-surface: #111827;
     --bg-surface-elevated: #1f2937;
+    --bg-surface-hover: #283548;
     --bg-code: #030712;
     --border: #374151;
     --border-light: #4b5563;
+    --border-highlight: #60a5fa;
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
     --text-dim: #6b7280;
@@ -34,6 +36,7 @@
     --primary: #3b82f6;
     --primary-hover: #60a5fa;
     --primary-glow: rgba(59, 130, 246, 0.15);
+    --primary-glow-strong: rgba(59, 130, 246, 0.3);
     --accent: #8b5cf6;
     --success: #10b981;
     --warning: #f59e0b;
@@ -48,15 +51,20 @@
     --code-color: #f87171;
     --hero-bg: linear-gradient(135deg, rgba(31, 41, 55, 0.75) 0%, rgba(17, 24, 39, 0.95) 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --accordion-header-bg: #151e2e;
+    --accordion-header-hover: #1c273c;
+    --accordion-active-border: #3b82f6;
 }
 
 [data-theme="light"] {
     --bg-page: #f8fafc;
     --bg-surface: #ffffff;
     --bg-surface-elevated: #f1f5f9;
+    --bg-surface-hover: #e2e8f0;
     --bg-code: #0f172a;
     --border: #e2e8f0;
     --border-light: #cbd5e1;
+    --border-highlight: #2563eb;
     --text-main: #0f172a;
     --text-muted: #475569;
     --text-dim: #64748b;
@@ -64,6 +72,7 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-glow: rgba(37, 99, 235, 0.1);
+    --primary-glow-strong: rgba(37, 99, 235, 0.22);
     --accent: #7c3aed;
     --success: #059669;
     --warning: #b45309;
@@ -78,6 +87,9 @@
     --code-color: #b91c1c;
     --hero-bg: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --accordion-header-bg: #f8fafc;
+    --accordion-header-hover: #eef2f6;
+    --accordion-active-border: #2563eb;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -93,7 +105,7 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* SIDEBAR */
+/* SIDEBAR - STRICT FIXED 300px (NEVER OVERLAPS CONTENT) */
 #sidebar {
     width: 300px;
     background-color: var(--bg-surface);
@@ -206,33 +218,35 @@ body {
 .nav-vol { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
 .nav-link.active .nav-vol { color: var(--primary); }
 
-/* CONTENT AREA */
+/* CONTENT WRAPPER - PROPER MARGIN LEFT TO PREVENT OVERLAP */
 #content-wrapper {
     margin-left: 300px;
     flex: 1;
     display: flex;
     justify-content: center;
     padding: 40px 30px;
+    min-width: 0;
 }
 
 #main-content {
-    max-width: 880px;
+    max-width: 900px;
     width: 100%;
+    min-width: 0;
 }
 
 /* RIGHT TABLE OF CONTENTS */
 #toc-sidebar {
-    width: 250px;
+    width: 260px;
     position: sticky;
     top: 40px;
     height: calc(100vh - 80px);
     overflow-y: auto;
-    padding-left: 28px;
-    margin-left: 20px;
+    padding-left: 24px;
+    margin-left: 24px;
     display: none;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1320px) {
     #toc-sidebar { display: block; }
 }
 
@@ -258,7 +272,8 @@ body {
 }
 
 .toc-link:hover { color: var(--primary); }
-.toc-item.level-3 { padding-left: 10px; }
+.toc-item.level-2 { padding-left: 10px; }
+.toc-item.level-3 { padding-left: 18px; font-size: 0.74rem; color: var(--text-dim); }
 
 /* CHAPTER HERO */
 .chapter-hero {
@@ -266,7 +281,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 32px 36px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     box-shadow: var(--card-shadow);
 }
 
@@ -296,7 +311,7 @@ body {
 }
 
 .chapter-hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 800;
     color: var(--heading-color);
     margin-bottom: 12px;
@@ -309,32 +324,264 @@ body {
     line-height: 1.6;
 }
 
+/* ========================================================
+   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
+   ======================================================== */
+.focus-control-bar {
+    position: sticky;
+    top: 14px;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.focus-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.focus-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.focus-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    color: var(--primary-hover);
+}
+
+.focus-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border-light);
+    transition: .25s ease;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s ease;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+.toggle-label-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+/* ========================================================
+   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
+   ======================================================== */
+.chapter-accordion {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chapter-accordion:hover {
+    border-color: var(--border-light);
+}
+
+.chapter-accordion[open] {
+    border-color: var(--accordion-active-border);
+    box-shadow: 0 6px 26px var(--primary-glow-strong);
+}
+
+.chapter-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--accordion-header-bg);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-accordion-header::-webkit-details-marker {
+    display: none;
+}
+
+.chapter-accordion-header:hover {
+    background: var(--accordion-header-hover);
+}
+
+.chapter-accordion[open] > .chapter-accordion-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface-elevated);
+}
+
+.accordion-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.accordion-badge {
+    background: var(--primary-glow);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.accordion-title-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1.35;
+}
+
+.accordion-status-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+.accordion-status-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.accordion-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-page);
+    color: var(--text-muted);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, color 0.2s;
+}
+
+.chapter-accordion[open] > .chapter-accordion-header .accordion-chevron {
+    transform: rotate(180deg);
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.chapter-accordion-body {
+    padding: 28px 30px;
+    animation: accordionFadeIn 0.25s ease-out;
+}
+
+@keyframes accordionFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HIGHLIGHT ON TARGET JUMP */
+.flash-highlight {
+    outline: 2px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow-strong);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+}
+
 /* TYPOGRAPHY */
 h1, h2, h3, h4, h5 { color: var(--heading-color); font-weight: 700; line-height: 1.3; }
 
 h1 {
     font-size: 1.85rem;
-    margin: 44px 0 18px 0;
+    margin: 40px 0 16px 0;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
     color: var(--primary);
 }
 
 h2 {
-    font-size: 1.4rem;
-    margin: 36px 0 14px 0;
+    font-size: 1.35rem;
+    margin: 32px 0 14px 0;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
+    color: var(--heading-color);
 }
 
 h3 {
-    font-size: 1.15rem;
-    margin: 26px 0 10px 0;
+    font-size: 1.1rem;
+    margin: 22px 0 10px 0;
+    color: var(--heading-color);
 }
 
 h4 {
-    font-size: 0.98rem;
-    margin: 18px 0 8px 0;
+    font-size: 0.95rem;
+    margin: 16px 0 8px 0;
     color: var(--warning);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -351,7 +598,7 @@ a:hover { text-decoration: underline; }
     background: var(--bg-code);
     border: 1px solid var(--border);
     border-radius: 10px;
-    margin: 22px 0;
+    margin: 20px 0;
     overflow: hidden;
     box-shadow: var(--card-shadow);
 }
@@ -664,7 +911,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-8-Database-SQL.html" class="nav-link ">
                 <span class="nav-icon">💾</span>
-                <span>Database Engine Internals & SQL Server</span>
+                <span>Database Systems & High-Performance SQL</span>
                 <span class="nav-vol">V8</span>
             </a>
         </li>
@@ -672,7 +919,7 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-9-Microservices.html" class="nav-link ">
-                <span class="nav-icon">📡</span>
+                <span class="nav-icon">☁️</span>
                 <span>Microservices & Distributed Systems</span>
                 <span class="nav-vol">V9</span>
             </a>
@@ -681,8 +928,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-10-System-Design.html" class="nav-link ">
-                <span class="nav-icon">🏗️</span>
-                <span>Enterprise System Design</span>
+                <span class="nav-icon">📐</span>
+                <span>System Design: Enterprise Case Studies</span>
                 <span class="nav-vol">V10</span>
             </a>
         </li>
@@ -690,8 +937,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-11-Project-Interview-Mastery.html" class="nav-link ">
-                <span class="nav-icon">🎯</span>
-                <span>Project Interview Mastery & Walkthroughs</span>
+                <span class="nav-icon">💼</span>
+                <span>Project Interview Mastery & Technical Narrative</span>
                 <span class="nav-vol">V11</span>
             </a>
         </li>
@@ -699,8 +946,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-12-Interview-Question-Bank.html" class="nav-link ">
-                <span class="nav-icon">🏆</span>
-                <span>The Master Interview Question Bank</span>
+                <span class="nav-icon">🎯</span>
+                <span>Master Interview Question Bank & Verbatim Transcripts</span>
                 <span class="nav-vol">V12</span>
             </a>
         </li>
@@ -719,9 +966,29 @@ li::marker { color: var(--primary); }
                 <p>Encapsulation, VTable runtime polymorphism, Interface vs Abstract class, Pragmatic SOLID violations, and Dependency Injection container mechanics.</p>
             </div>
 
+            <!-- ADHD-FRIENDLY INTERACTIVE FOCUS CONTROLS -->
+            <div class="focus-control-bar">
+                <div class="focus-actions">
+                    <button class="focus-btn" id="btn-expand-all" title="Open all chapters for full scroll">
+                        <span>📂</span> Expand All
+                    </button>
+                    <button class="focus-btn" id="btn-collapse-all" title="Collapse all chapters to section headers">
+                        <span>📁</span> Collapse All
+                    </button>
+                </div>
+                <div class="focus-toggle-wrap">
+                    <label class="focus-mode-toggle" title="When active, opening one section automatically closes previous sections to minimize cognitive load and visual clutter.">
+                        <span class="toggle-switch">
+                            <input type="checkbox" id="single-focus-toggle" checked>
+                            <span class="slider"></span>
+                        </span>
+                        <span class="toggle-label-text">🎯 Single-Chapter Focus (Auto-close others)</span>
+                    </label>
+                </div>
+            </div>
+
             <article class="doc-body">
-                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
-<h1 id='volume-4-oop-design-principles'>Volume 4: OOP + Design Principles</h1>
+                <h1 id='volume-4-oop-design-principles'>Volume 4: OOP + Design Principles</h1>
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
@@ -734,8 +1001,23 @@ li::marker { color: var(--primary); }
     <div class="callout-body"><strong>Goal:</strong> Master OOP not as definitions, but as <em>design decisions</em> made under real engineering constraints.</div>
 </div>
 
-<p>---</p>
-<h1 id='table-of-contents'>TABLE OF CONTENTS</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+
+<details class="chapter-accordion toc-section-accordion" id="table-of-contents" open>
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">NAVIGATION</span>
+            <span class="accordion-title-text">Table of Contents & Quick Jump Matrix</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+
 <ol>
 <li><a href="#the-four-pillars">The Four Pillars of OOP</a></li>
 </ol>
@@ -751,7 +1033,7 @@ li::marker { color: var(--primary); }
 <li><a href="#solid-principles">SOLID Principles — Full Treatment</a></li>
 <li><a href="#dependency-injection">Dependency Injection — Complete</a></li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='the-four-pillars-of-oop'>THE FOUR PILLARS OF OOP</h1>
 <h2 id='encapsulation'>Encapsulation</h2>
 <h3 id='1-definition'>1. Definition</h3>
@@ -973,7 +1255,7 @@ public Address ShippingAddress { get; private set; } // Address is a class, muta
     <div class="callout-body">Yes. Closures in functional languages encapsulate state. Modules in non-OOP languages can encapsulate. OOP formalizes it with classes, but the concept is architectural, not language-specific.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='inheritance'>Inheritance</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <p>Inheritance is a mechanism where a <strong>derived class (child)</strong> acquires the properties and behaviors of a <strong>base class (parent)</strong>. It creates an <strong>IS-A relationship</strong>.</p>
@@ -1180,7 +1462,7 @@ public sealed class RazorpayPaymentProcessor : PaymentProcessor
     <div class="callout-body">Because object construction in C# is bottom-up: base constructor runs before the derived class constructor. When the base constructor calls a virtual method, the derived class's override runs — but the derived class fields haven't been initialized yet. This leads to NullReferenceExceptions or corrupted state.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='polymorphism'>Polymorphism</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <p>Polymorphism means "many forms" — the ability of a single interface/method to work with objects of different types. In C#: compile-time (overloading) and runtime (overriding).</p>
@@ -1376,7 +1658,7 @@ public class PaymentService
     <div class="callout-body">Yes — through interfaces. Interface-based polymorphism is preferred over class inheritance for behavioral substitution (SOLID: DIP). Also, C# generics with constraints provide compile-time polymorphism. Duck typing (via dynamic) is another form.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='abstraction'>Abstraction</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <p>Abstraction means exposing <strong>what</strong> an object does (its interface/capabilities) while hiding <strong>how</strong> it does it (its implementation). It's about managing complexity by showing only relevant details.</p>
@@ -1478,7 +1760,7 @@ public class SalesReportGenerator : ReportGenerator
     <div class="callout-body">Both. Abstraction reduces cognitive load (you interact with <code>IPaymentGateway.ProcessAsync</code>, not Stripe's REST API internals). And it hides implementation so it can change without affecting clients. These are two sides of the same coin.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='interface-vs-abstract-class-complete-treatment'>INTERFACE vs ABSTRACT CLASS — COMPLETE TREATMENT</h1>
 
 <div class="callout note">
@@ -1768,7 +2050,7 @@ public abstract class BaseService
     <div class="callout-body">Because some patterns genuinely need protected state, constructors, and the template method pattern. Also, single inheritance of classes (vs. multiple interfaces) can be a feature — it means there's one authoritative place for shared implementation, making inheritance trees easier to understand. Abstract classes say "these things ARE the same kind of thing." Interfaces say "these things CAN DO the same things."</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='composition-vs-inheritance'>COMPOSITION vs INHERITANCE</h1>
 <h2 id='favor-composition-over-inheritance-why'>"Favor Composition Over Inheritance" — Why</h2>
 <p><strong>Gang of Four, Design Patterns (1994):</strong> <em>"Favor object composition over class inheritance."</em> This was a reaction to abuse of deep inheritance hierarchies.</p>
@@ -1863,7 +2145,7 @@ public class CachingOrderRepository : IOrderRepository
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='solid-principles'>SOLID PRINCIPLES</h1>
 <h2 id='s-single-responsibility-principle'>S — Single Responsibility Principle</h2>
 <h3 id='1-definition'>1. Definition</h3>
@@ -2018,7 +2300,7 @@ public class OrderService : IOrderService
     <div class="callout-body">These sound similar but are different. "One responsibility" is ambiguous — what counts as one? "One reason to change" is precise — it means one <em>actor</em> (business stakeholder) who can demand changes. A <code>ReportGenerator</code> has one reason to change: the reporting requirements. When you hear "one responsibility," think: who would ask you to change this? If the answer is "my DBA AND my marketing team," SRP is violated.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='o-openclosed-principle'>O — Open/Closed Principle</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>"Software entities should be open for extension, closed for modification."</strong> — Bertrand Meyer, Robert C. Martin</p>
@@ -2144,7 +2426,7 @@ public decimal CalculateShipping(string method) =&gt; method switch
     <div class="callout-body">When the variation is already complete and bounded. If I have a <code>TaxCalculator</code> that handles exactly two known tax zones and business has confirmed there will never be a third, adding a strategy pattern for OCP adds indirection without benefit. OCP is most valuable at architectural seams — payment gateways, notification channels, report formats — where extensions are expected and frequent.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='l-liskov-substitution-principle'>L — Liskov Substitution Principle</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>"Subtypes must be substitutable for their base types without altering the correctness of the program."</strong> — Barbara Liskov, 1987</p>
@@ -2269,7 +2551,7 @@ void ProcessBonuses(IEnumerable&lt;PermanentEmployee&gt; employees)
     <div class="callout-body">Great answer: "We had a <code>DataExporter</code> base class with a <code>Export(DataSet data)</code> method. A <code>LargeDataExporter</code> subclass added a restriction that DataSet must have fewer than 100,000 rows — throwing an exception otherwise. This strengthened the precondition and violated LSP. Client code that worked fine with <code>DataExporter</code> broke when given <code>LargeDataExporter</code>. We fixed it by having <code>LargeDataExporter</code> implement a different interface <code>IBatchedExporter</code> with explicit batching semantics."</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='i-interface-segregation-principle'>I — Interface Segregation Principle</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>"No client should be forced to depend on methods it does not use."</strong> — Robert C. Martin</p>
@@ -2383,7 +2665,7 @@ public class WarehouseIntegrationService
     <div class="callout-body">There's no fixed number. The guidance is: as many methods as a single CLIENT ROLE needs, no more. A <code>IOrderReader</code> might have 5 methods if all 5 are needed by every read client. The rule isn't "one method per interface" (that leads to interface explosion). It's "don't force clients to depend on methods they don't use." In practice, I design interfaces from the consumer's perspective: what does this client actually need?</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='d-dependency-inversion-principle'>D — Dependency Inversion Principle</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>"High-level modules should not depend on low-level modules. Both should depend on abstractions."</strong> — Robert C. Martin</p>
@@ -2459,7 +2741,7 @@ builder.Services.AddScoped&lt;IEmailSender, SendGridEmailSender&gt;();       // 
 builder.Services.AddScoped&lt;IOrderService, OrderService&gt;();             // High-level</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='dependency-injection-complete'>DEPENDENCY INJECTION — COMPLETE</h1>
 <h2 id='what-di-really-is'>What DI Really Is</h2>
 <p>Dependency Injection is the technique of providing an object's dependencies from <em>outside</em> rather than letting the object create them. It implements the Dependency Inversion Principle and the Inversion of Control principle.</p>
@@ -2633,7 +2915,7 @@ var service = scope.ServiceProvider.GetRequiredService&lt;IOrderService&gt;();</
     <div class="callout-body">DI is one implementation of IoC. IoC is the broader principle: control of something (object creation, program flow) is inverted from your code to the framework. DI specifically inverts control of dependency creation. Other IoC examples: event systems (framework calls your handlers), template method (framework calls your override), iterator pattern.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='summary-solid-in-one-table'>SUMMARY: SOLID IN ONE TABLE</h1>
 <div class='table-wrapper'><table>
 <tr><th>Principle</th><th>Core Question</th><th>Symptom of Violation</th><th>Key Solution</th></tr>
@@ -2643,8 +2925,9 @@ var service = scope.ServiceProvider.GetRequiredService&lt;IOrderService&gt;();</
 <tr><td>ISP</td><td>"Do clients use all methods?"</td><td>Fat interfaces, forced implementations</td><td>Role-based interfaces</td></tr>
 <tr><td>DIP</td><td>"Who controls dependencies?"</td><td><code>new</code> in business logic, concrete coupling</td><td>Interfaces + DI</td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <p><em>Volume 4 Complete — Proceed to Volume 5: Design Patterns</em></p>
+</div></details>
             </article>
 
             <nav class="chapter-nav">
@@ -2668,17 +2951,7 @@ var service = scope.ServiceProvider.GetRequiredService&lt;IOrderService&gt;();</
             <ul class="toc-list">
                 
         <li class="toc-item level-1">
-            <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
-        </li>
-        
-
-        <li class="toc-item level-1">
             <a href="#volume-4-oop-design-principles" class="toc-link">Volume 4: OOP + Design Principles</a>
-        </li>
-        
-
-        <li class="toc-item level-1">
-            <a href="#table-of-contents" class="toc-link">TABLE OF CONTENTS</a>
         </li>
         
 
@@ -2816,6 +3089,66 @@ var service = scope.ServiceProvider.GetRequiredService&lt;IOrderService&gt;();</
             <a href="#3-runtime-polymorphism-virtual-override-new" class="toc-link">3. Runtime Polymorphism — virtual / override </a>
         </li>
         
+
+        <li class="toc-item level-3">
+            <a href="#4-how-vtable-works-in-clr" class="toc-link">4. How vtable Works in CLR</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#5-abstract-methods" class="toc-link">5. Abstract Methods</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#6-production-multiple-payment-gateway-implementations" class="toc-link">6. Production: Multiple Payment Gateway Imple</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#7-interview-prep" class="toc-link">7. Interview Prep</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#abstraction" class="toc-link">Abstraction</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#1-definition" class="toc-link">1. Definition</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#2-how-interfaces-provide-abstraction" class="toc-link">2. How Interfaces Provide Abstraction</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#3-how-abstract-classes-provide-abstraction" class="toc-link">3. How Abstract Classes Provide Abstraction</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#4-interface-vs-abstract-class-for-abstraction" class="toc-link">4. Interface vs Abstract Class for Abstractio</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#5-interview-prep" class="toc-link">5. Interview Prep</a>
+        </li>
+        
+
+        <li class="toc-item level-1">
+            <a href="#interface-vs-abstract-class-complete-treatment" class="toc-link">INTERFACE vs ABSTRACT CLASS — COMPLETE TREATM</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#the-full-comparison-table" class="toc-link">The Full Comparison Table</a>
+        </li>
+        
             </ul>
         </aside>
     </div>
@@ -2846,11 +3179,137 @@ var service = scope.ServiceProvider.GetRequiredService&lt;IOrderService&gt;();</
             // Highlight syntax
             hljs.highlightAll();
 
-            // Mermaid diagrams
+            // Mermaid diagrams initialization
             mermaid.initialize({
                 startOnLoad: true,
                 theme: currentTheme === 'dark' ? 'dark' : 'neutral',
                 securityLevel: 'loose'
+            });
+
+            // ==========================================
+            // ACCORDION & SINGLE-FOCUS CONTROLS
+            // ==========================================
+            const accordions = document.querySelectorAll('.chapter-accordion');
+            const singleFocusToggle = document.getElementById('single-focus-toggle');
+            const btnExpandAll = document.getElementById('btn-expand-all');
+            const btnCollapseAll = document.getElementById('btn-collapse-all');
+
+            function renderMermaidIn(element) {
+                if (window.mermaid) {
+                    const unrendered = element.querySelectorAll('.mermaid:not([data-processed])');
+                    if (unrendered.length > 0) {
+                        try { mermaid.run({ nodes: unrendered }); } catch(e) {}
+                    }
+                }
+            }
+
+            // Expand All
+            if (btnExpandAll) {
+                btnExpandAll.addEventListener('click', () => {
+                    if (singleFocusToggle) singleFocusToggle.checked = false;
+                    accordions.forEach(acc => {
+                        acc.open = true;
+                        renderMermaidIn(acc);
+                    });
+                });
+            }
+
+            // Collapse All
+            if (btnCollapseAll) {
+                btnCollapseAll.addEventListener('click', () => {
+                    accordions.forEach(acc => {
+                        acc.open = false;
+                    });
+                });
+            }
+
+            // Single focus auto-closing logic
+            accordions.forEach(acc => {
+                acc.addEventListener('toggle', () => {
+                    const statusText = acc.querySelector('.accordion-status-text');
+                    if (statusText) {
+                        statusText.innerText = acc.open ? 'Click to collapse' : 'Click to expand';
+                    }
+                    if (acc.open) {
+                        renderMermaidIn(acc);
+                        if (singleFocusToggle && singleFocusToggle.checked) {
+                            accordions.forEach(other => {
+                                if (other !== acc && other.open) {
+                                    other.open = false;
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            // ==========================================
+            // DEEP LINKING & TOC NAVIGATION
+            // ==========================================
+            function navigateToTarget(targetId) {
+                if (!targetId) return;
+                let target = document.getElementById(targetId);
+                
+                // Fallback for slug variations (e.g. hyphens)
+                if (!target) {
+                    const normalized = targetId.replace(/-+/g, '-');
+                    target = document.getElementById(normalized) || 
+                             document.querySelector(`[id*="${normalized}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                }
+
+                if (!target) return;
+
+                // If target is inside an accordion, open that accordion
+                const parentAcc = target.closest('.chapter-accordion');
+                if (parentAcc) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== parentAcc) a.open = false;
+                        });
+                    }
+                    parentAcc.open = true;
+                    renderMermaidIn(parentAcc);
+                } else if (target.classList.contains('chapter-accordion')) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== target) a.open = false;
+                        });
+                    }
+                    target.open = true;
+                    renderMermaidIn(target);
+                }
+
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.classList.add('flash-highlight');
+                    setTimeout(() => target.classList.remove('flash-highlight'), 1600);
+                }, 100);
+            }
+
+            // Check URL hash on page load
+            if (window.location.hash) {
+                setTimeout(() => {
+                    navigateToTarget(window.location.hash.substring(1));
+                }, 250);
+            }
+
+            // Listen for hash changes
+            window.addEventListener('hashchange', () => {
+                navigateToTarget(window.location.hash.substring(1));
+            });
+
+            // Intercept internal page anchor clicks
+            document.addEventListener('click', (e) => {
+                const anchor = e.target.closest('a[href^="#"]');
+                if (!anchor) return;
+                const href = anchor.getAttribute('href');
+                if (href && href.length > 1) {
+                    e.preventDefault();
+                    const id = href.substring(1);
+                    history.pushState(null, null, href);
+                    navigateToTarget(id);
+                }
             });
         });
     </script>

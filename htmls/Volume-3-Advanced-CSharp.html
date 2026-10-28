@@ -24,9 +24,11 @@
     --bg-page: #0b0f19;
     --bg-surface: #111827;
     --bg-surface-elevated: #1f2937;
+    --bg-surface-hover: #283548;
     --bg-code: #030712;
     --border: #374151;
     --border-light: #4b5563;
+    --border-highlight: #60a5fa;
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
     --text-dim: #6b7280;
@@ -34,6 +36,7 @@
     --primary: #3b82f6;
     --primary-hover: #60a5fa;
     --primary-glow: rgba(59, 130, 246, 0.15);
+    --primary-glow-strong: rgba(59, 130, 246, 0.3);
     --accent: #8b5cf6;
     --success: #10b981;
     --warning: #f59e0b;
@@ -48,15 +51,20 @@
     --code-color: #f87171;
     --hero-bg: linear-gradient(135deg, rgba(31, 41, 55, 0.75) 0%, rgba(17, 24, 39, 0.95) 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --accordion-header-bg: #151e2e;
+    --accordion-header-hover: #1c273c;
+    --accordion-active-border: #3b82f6;
 }
 
 [data-theme="light"] {
     --bg-page: #f8fafc;
     --bg-surface: #ffffff;
     --bg-surface-elevated: #f1f5f9;
+    --bg-surface-hover: #e2e8f0;
     --bg-code: #0f172a;
     --border: #e2e8f0;
     --border-light: #cbd5e1;
+    --border-highlight: #2563eb;
     --text-main: #0f172a;
     --text-muted: #475569;
     --text-dim: #64748b;
@@ -64,6 +72,7 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-glow: rgba(37, 99, 235, 0.1);
+    --primary-glow-strong: rgba(37, 99, 235, 0.22);
     --accent: #7c3aed;
     --success: #059669;
     --warning: #b45309;
@@ -78,6 +87,9 @@
     --code-color: #b91c1c;
     --hero-bg: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --accordion-header-bg: #f8fafc;
+    --accordion-header-hover: #eef2f6;
+    --accordion-active-border: #2563eb;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -93,7 +105,7 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* SIDEBAR */
+/* SIDEBAR - STRICT FIXED 300px (NEVER OVERLAPS CONTENT) */
 #sidebar {
     width: 300px;
     background-color: var(--bg-surface);
@@ -206,33 +218,35 @@ body {
 .nav-vol { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
 .nav-link.active .nav-vol { color: var(--primary); }
 
-/* CONTENT AREA */
+/* CONTENT WRAPPER - PROPER MARGIN LEFT TO PREVENT OVERLAP */
 #content-wrapper {
     margin-left: 300px;
     flex: 1;
     display: flex;
     justify-content: center;
     padding: 40px 30px;
+    min-width: 0;
 }
 
 #main-content {
-    max-width: 880px;
+    max-width: 900px;
     width: 100%;
+    min-width: 0;
 }
 
 /* RIGHT TABLE OF CONTENTS */
 #toc-sidebar {
-    width: 250px;
+    width: 260px;
     position: sticky;
     top: 40px;
     height: calc(100vh - 80px);
     overflow-y: auto;
-    padding-left: 28px;
-    margin-left: 20px;
+    padding-left: 24px;
+    margin-left: 24px;
     display: none;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1320px) {
     #toc-sidebar { display: block; }
 }
 
@@ -258,7 +272,8 @@ body {
 }
 
 .toc-link:hover { color: var(--primary); }
-.toc-item.level-3 { padding-left: 10px; }
+.toc-item.level-2 { padding-left: 10px; }
+.toc-item.level-3 { padding-left: 18px; font-size: 0.74rem; color: var(--text-dim); }
 
 /* CHAPTER HERO */
 .chapter-hero {
@@ -266,7 +281,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 32px 36px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     box-shadow: var(--card-shadow);
 }
 
@@ -296,7 +311,7 @@ body {
 }
 
 .chapter-hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 800;
     color: var(--heading-color);
     margin-bottom: 12px;
@@ -309,32 +324,264 @@ body {
     line-height: 1.6;
 }
 
+/* ========================================================
+   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
+   ======================================================== */
+.focus-control-bar {
+    position: sticky;
+    top: 14px;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.focus-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.focus-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.focus-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    color: var(--primary-hover);
+}
+
+.focus-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border-light);
+    transition: .25s ease;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s ease;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+.toggle-label-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+/* ========================================================
+   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
+   ======================================================== */
+.chapter-accordion {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chapter-accordion:hover {
+    border-color: var(--border-light);
+}
+
+.chapter-accordion[open] {
+    border-color: var(--accordion-active-border);
+    box-shadow: 0 6px 26px var(--primary-glow-strong);
+}
+
+.chapter-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--accordion-header-bg);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-accordion-header::-webkit-details-marker {
+    display: none;
+}
+
+.chapter-accordion-header:hover {
+    background: var(--accordion-header-hover);
+}
+
+.chapter-accordion[open] > .chapter-accordion-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface-elevated);
+}
+
+.accordion-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.accordion-badge {
+    background: var(--primary-glow);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.accordion-title-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1.35;
+}
+
+.accordion-status-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+.accordion-status-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.accordion-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-page);
+    color: var(--text-muted);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, color 0.2s;
+}
+
+.chapter-accordion[open] > .chapter-accordion-header .accordion-chevron {
+    transform: rotate(180deg);
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.chapter-accordion-body {
+    padding: 28px 30px;
+    animation: accordionFadeIn 0.25s ease-out;
+}
+
+@keyframes accordionFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HIGHLIGHT ON TARGET JUMP */
+.flash-highlight {
+    outline: 2px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow-strong);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+}
+
 /* TYPOGRAPHY */
 h1, h2, h3, h4, h5 { color: var(--heading-color); font-weight: 700; line-height: 1.3; }
 
 h1 {
     font-size: 1.85rem;
-    margin: 44px 0 18px 0;
+    margin: 40px 0 16px 0;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
     color: var(--primary);
 }
 
 h2 {
-    font-size: 1.4rem;
-    margin: 36px 0 14px 0;
+    font-size: 1.35rem;
+    margin: 32px 0 14px 0;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
+    color: var(--heading-color);
 }
 
 h3 {
-    font-size: 1.15rem;
-    margin: 26px 0 10px 0;
+    font-size: 1.1rem;
+    margin: 22px 0 10px 0;
+    color: var(--heading-color);
 }
 
 h4 {
-    font-size: 0.98rem;
-    margin: 18px 0 8px 0;
+    font-size: 0.95rem;
+    margin: 16px 0 8px 0;
     color: var(--warning);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -351,7 +598,7 @@ a:hover { text-decoration: underline; }
     background: var(--bg-code);
     border: 1px solid var(--border);
     border-radius: 10px;
-    margin: 22px 0;
+    margin: 20px 0;
     overflow: hidden;
     box-shadow: var(--card-shadow);
 }
@@ -664,7 +911,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-8-Database-SQL.html" class="nav-link ">
                 <span class="nav-icon">💾</span>
-                <span>Database Engine Internals & SQL Server</span>
+                <span>Database Systems & High-Performance SQL</span>
                 <span class="nav-vol">V8</span>
             </a>
         </li>
@@ -672,7 +919,7 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-9-Microservices.html" class="nav-link ">
-                <span class="nav-icon">📡</span>
+                <span class="nav-icon">☁️</span>
                 <span>Microservices & Distributed Systems</span>
                 <span class="nav-vol">V9</span>
             </a>
@@ -681,8 +928,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-10-System-Design.html" class="nav-link ">
-                <span class="nav-icon">🏗️</span>
-                <span>Enterprise System Design</span>
+                <span class="nav-icon">📐</span>
+                <span>System Design: Enterprise Case Studies</span>
                 <span class="nav-vol">V10</span>
             </a>
         </li>
@@ -690,8 +937,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-11-Project-Interview-Mastery.html" class="nav-link ">
-                <span class="nav-icon">🎯</span>
-                <span>Project Interview Mastery & Walkthroughs</span>
+                <span class="nav-icon">💼</span>
+                <span>Project Interview Mastery & Technical Narrative</span>
                 <span class="nav-vol">V11</span>
             </a>
         </li>
@@ -699,8 +946,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-12-Interview-Question-Bank.html" class="nav-link ">
-                <span class="nav-icon">🏆</span>
-                <span>The Master Interview Question Bank</span>
+                <span class="nav-icon">🎯</span>
+                <span>Master Interview Question Bank & Verbatim Transcripts</span>
                 <span class="nav-vol">V12</span>
             </a>
         </li>
@@ -719,9 +966,29 @@ li::marker { color: var(--primary); }
                 <p>GC generational hypothesis, LOH/POH, Dispose pattern, Span/Memory zero-alloc, async state machine lowering, ThreadPool starvation, Channels.</p>
             </div>
 
+            <!-- ADHD-FRIENDLY INTERACTIVE FOCUS CONTROLS -->
+            <div class="focus-control-bar">
+                <div class="focus-actions">
+                    <button class="focus-btn" id="btn-expand-all" title="Open all chapters for full scroll">
+                        <span>📂</span> Expand All
+                    </button>
+                    <button class="focus-btn" id="btn-collapse-all" title="Collapse all chapters to section headers">
+                        <span>📁</span> Collapse All
+                    </button>
+                </div>
+                <div class="focus-toggle-wrap">
+                    <label class="focus-mode-toggle" title="When active, opening one section automatically closes previous sections to minimize cognitive load and visual clutter.">
+                        <span class="toggle-switch">
+                            <input type="checkbox" id="single-focus-toggle" checked>
+                            <span class="slider"></span>
+                        </span>
+                        <span class="toggle-label-text">🎯 Single-Chapter Focus (Auto-close others)</span>
+                    </label>
+                </div>
+            </div>
+
             <article class="doc-body">
-                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
-<h1 id='volume-3-advanced-c-clr-internals-memory-management-concurrency'>Volume 3: Advanced C# — CLR Internals, Memory Management & Concurrency</h1>
+                <h1 id='volume-3-advanced-c-clr-internals-memory-management-concurrency'>Volume 3: Advanced C# — CLR Internals, Memory Management & Concurrency</h1>
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
@@ -740,8 +1007,23 @@ li::marker { color: var(--primary); }
     <div class="callout-body"><strong>Standard:</strong> Microsoft Reference Source / CoreCLR Engineering Specs + Real-world Mission-Critical Production Engineering.</div>
 </div>
 
-<p>---</p>
-<h1 id='table-of-contents'>TABLE OF CONTENTS</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+
+<details class="chapter-accordion toc-section-accordion" id="table-of-contents" open>
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">NAVIGATION</span>
+            <span class="accordion-title-text">Table of Contents & Quick Jump Matrix</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+
 <ol>
 <li><a href="#concept-1-garbage-collector-internals">Concept 1: Garbage Collector Internals</a></li>
 </ol>
@@ -863,7 +1145,7 @@ li::marker { color: var(--primary); }
 <li><code>Task.WhenAll</code> vs. <code>Task.WhenAny</code> Exception Aggregation Pitfalls</li>
 <li>TPL Dataflow Mesh: Stateful Streaming Pipelines with Inherent Backpressure</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-1-garbage-collector-internals'>CONCEPT 1: GARBAGE COLLECTOR INTERNALS</h1>
 <h3 id='1-definition'>1. Definition</h3>
 <p>The .NET Garbage Collector (GC) is an automatic, generational, tracing, mark-sweep-compact memory manager. It abstractly tracks reference graphs originating from root pointers (CPU registers, active thread execution stacks, static fields, and the runtime handle table) to reclaim heap memory occupied by unreachable objects, mitigate fragmentation through heap compaction, and dynamically adjust heap boundaries based on allocation pressures and operating system memory constraints.</p>
@@ -1134,7 +1416,7 @@ public byte[] SerializeTransaction(Transaction tx)
 <li>In low-frequency background batch jobs processing millions of records, after finishing the job and before entering an extended idle state.</li>
 <li>When running micro-benchmarks or deterministic profiling harnesses.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-2-idisposable-finalizer-dispose-pattern'>CONCEPT 2: IDISPOSABLE, FINALIZER & DISPOSE PATTERN</h1>
 <h3 id='1-definition'>1. Definition</h3>
 <p>The <strong>Dispose Pattern</strong> is a deterministic resource lifecycle management pattern in .NET. It enforces the explicit release of scarce unmanaged resources (operating system file handles, database connections, sockets, native memory pointers) via <code>IDisposable</code> or <code>IAsyncDisposable</code>, while providing a non-deterministic fallback mechanism via the <strong>Finalizer</strong> (<code>~ClassName()</code>) in the event a consumer neglects deterministic invocation.</p>
@@ -1422,7 +1704,7 @@ public void ProcessData()
 <li><strong>Tricky</strong>: "What is the danger of using C# 8 <code>using var</code> declarations inside an ASP.NET Core controller action or background job?"</li>
 <li><em>Answer</em>: <code>using var</code> scopes the lifetime of the resource to the <em>end of the enclosing lexical block</em> (the entire method). If a developer uses <code>using var stream = ...</code> at the top of a method followed by long-running HTTP calls or complex processing, the underlying unmanaged resource (such as a database connection or file lock) is held for the entire method duration rather than being released immediately after use, leading to connection pool starvation.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-3-memory-optimization-spant-readonlyspant-memoryt-memorypoolt'>CONCEPT 3: MEMORY OPTIMIZATION: SPAN<T>, READONLYSPAN<T>, MEMORY<T>, MEMORYPOOL<T></h1>
 <h3 id='1-definition'>1. Definition</h3>
 <p><code>Span&lt;T&gt;</code> and <code>ReadOnlySpan&lt;T&gt;</code> are stack-only <code>ref struct</code> representations of contiguous, arbitrary memory (managed heap arrays, stack-allocated buffers, or unmanaged native pointers). They enable zero-allocation type-safe slicing, indexing, and memory transformation without allocating intermediate heap objects or copying memory blocks. <code>Memory&lt;T&gt;</code> and <code>ReadOnlyMemory&lt;T&gt;</code> represent heap-allocatable, async-safe equivalents of contiguous memory capable of outliving the current stack frame.</p>
@@ -1698,7 +1980,7 @@ ArrayPool&lt;byte&gt;.Shared.Return(buffer); // Returned back to pool!</code></p
 <li><strong>Tricky</strong>: "What is the difference between <code>ReadOnlySpan&lt;byte&gt;</code> initialized from a string literal with the <code>u8</code> suffix versus encoding with <code>Encoding.UTF8.GetBytes()</code>?"</li>
 <li><em>Answer</em>: <code>Encoding.UTF8.GetBytes(&quot;text&quot;)</code> allocates a new <code>byte[]</code> on the managed heap at runtime and copies the encoded bytes. Using <code>&quot;text&quot;u8</code> is a C# 11 compiler feature that compiles the UTF-8 bytes directly into the assembly's PE file <code>.rdata</code> read-only data section. The runtime returns a <code>ReadOnlySpan&lt;byte&gt;</code> pointing directly to the PE file memory mapped in RAM—yielding absolute zero heap allocation, zero copying, and zero initialization cost.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-4-value-semantics-references-ref-out-in-ref-readonly-and-ref-return'>CONCEPT 4: VALUE SEMANTICS & REFERENCES: REF, OUT, IN, REF READONLY, AND REF RETURN</h1>
 <h3 id='1-definition'>1. Definition</h3>
 <p>C# parameter modifiers (<code>ref</code>, <code>out</code>, <code>in</code>) and reference returns (<code>ref return</code>, <code>ref readonly return</code>) allow code to pass and return aliases to storage locations rather than copying values. This provides the execution speed of pointer manipulation while maintaining managed type safety and memory safety.</p>
@@ -1974,7 +2256,7 @@ public bool TryParseData(string input, out CustomerDto dto) {
 <li><strong>Tricky</strong>: "Why does struct field ordering matter for performance and memory footprint?"</li>
 <li><em>Answer</em>: The CLR aligns primitive fields to memory boundaries matching their size (e.g., an 8-byte <code>long</code> must be aligned on an address divisible by 8). If an alternating pattern of 1-byte <code>byte</code> and 8-byte <code>long</code> fields is defined, the runtime injects 7 bytes of dead padding after each byte. Reordering fields from largest to smallest eliminates padding, reduces the struct's cache footprint, and prevents cache-line bouncing across multi-core architectures.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-5-asyncawait-deep-internals-state-machine'>CONCEPT 5: ASYNC/AWAIT DEEP INTERNALS & STATE MACHINE</h1>
 <h3 id='1-definition'>1. Definition</h3>
 <p><code>async</code>/<code>await</code> is a compiler-transformed language abstraction that enables asynchronous, non-blocking execution using synchronous-like control flow. Instead of spawning operating system threads, the Roslyn compiler rewrites async methods into state machines implementing the <code>IAsyncStateMachine</code> interface. This releases OS threads back to the CLR <code>ThreadPool</code> during non-blocking asynchronous I/O waits and schedules continuations upon completion.</p>
@@ -2309,7 +2591,7 @@ public Task&lt;string&gt; ReadFileAsync(string path)
 <li><strong>Tricky</strong>: "Why does ASP.NET Core not have a <code>SynchronizationContext</code>, and what does this mean for <code>ConfigureAwait(false)</code>?"</li>
 <li><em>Answer</em>: Legacy ASP.NET utilized <code>AspNetSynchronizationContext</code> to preserve <code>HttpContext.Current</code> thread-affinity across calls, which was a notorious source of deadlocks when combined with blocking <code>.Result</code>. ASP.NET Core eliminated <code>SynchronizationContext</code> completely; continuations are scheduled directly onto ThreadPool worker threads. Consequently, <code>ConfigureAwait(false)</code> has no operational effect inside an ASP.NET Core web request pipeline. However, it remains mandatory in class libraries to ensure safety when referenced by UI apps or legacy systems that do maintain a synchronization context.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-6-threading-threadpool-architecture'>CONCEPT 6: THREADING & THREADPOOL ARCHITECTURE</h1>
 <h3 id='1-definition'>1. Definition</h3>
 <p>The CLR <strong>ThreadPool</strong> is an adaptive, managed pool of pre-allocated operating system worker threads that executes tasks, asynchronous continuations, timer callbacks, and I/O completion routines. It optimizes CPU utilization through <strong>per-core local work-stealing queues</strong> and dynamically adjusts thread counts using the <strong>Hill-Climbing algorithm</strong> to maximize throughput while minimizing context-switching overhead.</p>
@@ -2545,7 +2827,7 @@ Task.Factory.StartNew(() =&gt; DoWork());
 <li><strong>Tricky</strong>: "When is it appropriate to bypass the ThreadPool and instantiate a dedicated <code>new Thread()</code>?"</li>
 <li><em>Answer</em>: When the work is a <strong>long-running, continuous background loop</strong> that will live for the entire lifetime of the process (e.g., listening to an unmanaged hardware serial port or a continuous polling thread). Running a permanent blocking loop on a ThreadPool thread permanently removes that worker from servicing general tasks, distorting Hill-Climbing heuristics.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-7-synchronization-primitives'>CONCEPT 7: SYNCHRONIZATION PRIMITIVES</h1>
 <h3 id='1-definition'>1. Definition</h3>
 <p>Synchronization primitives are runtime and operating system mechanisms designed to coordinate concurrent thread access to shared memory, prevent data corruption (race conditions), and enforce thread safety. They range from low-level hardware atomic instructions (<code>Interlocked</code>) and user-mode spin locks to hybrid managed monitors (<code>lock</code> / <code>Monitor</code>), async-friendly throttles (<code>SemaphoreSlim</code>), and kernel-level OS primitives (<code>Mutex</code>).</p>
@@ -2830,7 +3112,7 @@ _semaphore.Release(); // NEVER REACHED! Leads to permanent pipeline stall!</code
 <li><strong>Tricky</strong>: "What is a Memory Barrier (Fence), and how does <code>Interlocked</code> enforce it?"</li>
 <li><em>Answer</em>: A memory barrier is a hardware instruction that prevents the CPU and compiler from reordering read and write memory operations across the barrier boundary. Modern processors use out-of-order execution and store buffers, meaning writes may not become immediately visible to other cores. <code>Interlocked</code> instructions emit hardware-locked operations (like <code>LOCK CMPXCHG</code>) that act as full bidirectional memory barriers: all pending store-buffer writes are committed to cache, and stale cache lines are invalidated, guaranteeing sequential consistency across cores.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-8-deadlocks-race-conditions-sync-over-async'>CONCEPT 8: DEADLOCKS, RACE CONDITIONS & SYNC-OVER-ASYNC</h1>
 <h3 id='1-definition'>1. Definition</h3>
 <p>A <strong>deadlock</strong> is a runtime condition in which two or more concurrent execution threads are permanently blocked, each waiting for a resource held by another, preventing any forward progress. A <strong>race condition</strong> occurs when the correctness of a program depends on the non-deterministic relative timing or interleaving of threads. <strong>Sync-Over-Async</strong> is an anti-pattern where synchronous blocking primitives (<code>.Result</code>, <code>.Wait()</code>, <code>.GetAwaiter().GetResult()</code>) are invoked on asynchronous operations, inducing thread-pool starvation or cyclic dependency deadlocks.</p>
@@ -3106,7 +3388,7 @@ lock (_lockB) {
 <li><strong>Tricky</strong>: "How would you diagnose a live production deadlock in a Linux Docker container using .NET CLI tools?"</li>
 <li><em>Answer</em>: Use <code>dotnet-dump collect -p &lt;pid&gt;</code> to generate a core memory dump of the running process without stopping it. Then analyze it with <code>dotnet-dump analyze &lt;dump_path&gt;</code>. Execute <code>clrstack -all</code> to inspect the call stacks of all managed threads, and execute <code>!syncblk</code> to inspect the CLR SyncBlock table. Look for threads waiting in <code>Monitor.Enter</code> or <code>WaitHandle.WaitOne</code> and identify the thread IDs holding the corresponding SyncBlocks to map out the circular dependency chain.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-9-concurrent-collections'>CONCEPT 9: CONCURRENT COLLECTIONS</h1>
 <h3 id='1-definition'>1. Definition</h3>
 <p>Concurrent collections (<code>System.Collections.Concurrent</code>) are high-performance, thread-safe data structures designed specifically for multi-threaded and parallel access. They eliminate coarse global locking by utilizing fine-grained locking (lock striping), lock-free atomic CAS (<code>Interlocked</code>) operations, and segmented circular arrays to maximize concurrent throughput.</p>
@@ -3344,7 +3626,7 @@ if (dict.TryGetValue(key, out var val)) { }</code></pre>
 <li><strong>Tricky</strong>: "What is the internal design of <code>ConcurrentQueue&lt;T&gt;</code> and how does it avoid thread contention?"</li>
 <li><em>Answer</em>: <code>ConcurrentQueue&lt;T&gt;</code> is implemented as a singly-linked list of 32-element array segments. Each segment acts as a circular ring buffer with local Head and Tail pointers. Enqueue and dequeue operations update these pointers using <code>Interlocked.CompareExchange</code> without acquiring locks. When a segment is filled, a new segment is atomically linked to the chain.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-10-systemthreadingchannels-high-throughput-streaming'>CONCEPT 10: SYSTEM.THREADING.CHANNELS & HIGH-THROUGHPUT STREAMING</h1>
 <h3 id='1-definition'>1. Definition</h3>
 <p><code>System.Threading.Channels</code> is a high-performance, low-allocation asynchronous messaging library providing producer-consumer primitives. It acts as an in-memory queue optimized for streaming workflows, supporting non-blocking backpressure, zero-allocation <code>ValueTask</code> operations, and single-reader/single-writer lock-free execution paths.</p>
@@ -3613,7 +3895,7 @@ var options = new BoundedChannelOptions(100) { SingleWriter = true }; // DANGERO
 <li><strong>Tricky</strong>: "Why should you prefer <code>System.Threading.Channels</code> over <code>BlockingCollection&lt;T&gt;</code> in modern ASP.NET Core applications?"</li>
 <li><em>Answer</em>: <code>BlockingCollection&lt;T&gt;</code> relies on synchronous, blocking thread synchronization (<code>Take()</code> blocks the calling thread). In ASP.NET Core, blocking worker threads causes ThreadPool starvation and degrades throughput. <code>Channels</code> provides non-blocking asynchronous APIs (<code>ReadAsync</code>, <code>WriteAsync</code>) returning <code>ValueTask</code>, allowing threads to return to the pool while waiting for data, maintaining high scalability.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-11-parallel-programming-plinq-tpl-dataflow'>CONCEPT 11: PARALLEL PROGRAMMING, PLINQ & TPL DATAFLOW</h1>
 <h3 id='1-definition'>1. Definition</h3>
 <p><strong>Parallel Programming</strong> in .NET executes computationally intensive (CPU-bound) workloads concurrently across multiple CPU cores to minimize total execution time. It encompasses the <strong>Task Parallel Library (TPL)</strong> (<code>Parallel.For</code>, <code>Parallel.ForEach</code>, <code>Parallel.ForEachAsync</code>), <strong>Parallel LINQ (PLINQ)</strong>, and <strong>TPL Dataflow</strong> actor-based pipeline blocks.</p>
@@ -3909,7 +4191,7 @@ await Parallel.ForEachAsync(orders, async (o, ct) =&gt; await CallExternalBankAs
 <li><strong>Tricky</strong>: "Explain the internal differences between Range Partitioning and Chunk Partitioning in PLINQ."</li>
 <li><em>Answer</em>: Range Partitioning is used when the data source implements <code>IList&lt;T&gt;</code> (known length and random access). PLINQ divides the total count into equal static index ranges per worker thread, eliminating synchronization overhead during iteration. Chunk Partitioning is used for generic <code>IEnumerable&lt;T&gt;</code> sources where the count is unknown; threads dynamically take small chunks of items from a shared enumerator using synchronization. Chunk partitioning introduces slight synchronization overhead but provides superior load balancing if processing time per item is unpredictable.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='architectural-cheat-sheet-senior-decision-matrix'>ARCHITECTURAL CHEAT SHEET & SENIOR DECISION MATRIX</h1>
 <div class='table-wrapper'><table>
 <tr><th>Architectural Scenario</th><th>Recommended Primitive / API</th><th>Anti-Pattern / What to Avoid</th><th>Primary Architectural Justification</th></tr>
@@ -3925,6 +4207,7 @@ await Parallel.ForEachAsync(orders, async (o, ct) =&gt; await CallExternalBankAs
 <tr><td><strong>Consuming Async in Sync API</strong></td><td>Refactor endpoint to <code>async Task</code></td><td><code>.Result</code>, <code>.Wait()</code>, <code>.GetAwaiter().GetResult()</code></td><td>Prevents single-thread context deadlocks and ThreadPool starvation.</td></tr>
 <tr><td><strong>High-Performance Memory Leasing</strong></td><td><code>ArrayPool&lt;T&gt;.Shared</code> / <code>MemoryPool&lt;T&gt;</code></td><td>Allocating large byte arrays ($\ge 85\text{ KB}$)</td><td>Prevents Large Object Heap (LOH) fragmentation and frequent Gen 2 GCs.</td></tr>
 </table></div>
+</div></details>
             </article>
 
             <nav class="chapter-nav">
@@ -3948,17 +4231,7 @@ await Parallel.ForEachAsync(orders, async (o, ct) =&gt; await CallExternalBankAs
             <ul class="toc-list">
                 
         <li class="toc-item level-1">
-            <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
-        </li>
-        
-
-        <li class="toc-item level-1">
             <a href="#volume-3-advanced-c-clr-internals-memory-management-concurrency" class="toc-link">Volume 3: Advanced C# — CLR Internals, Memory</a>
-        </li>
-        
-
-        <li class="toc-item level-1">
-            <a href="#table-of-contents" class="toc-link">TABLE OF CONTENTS</a>
         </li>
         
 
@@ -4096,6 +4369,66 @@ await Parallel.ForEachAsync(orders, async (o, ct) =&gt; await CallExternalBankAs
             <a href="#concept-3-memory-optimization-spant-readonlyspant-memoryt-memorypoolt" class="toc-link">CONCEPT 3: MEMORY OPTIMIZATION: SPAN&lt;T&gt;, READ</a>
         </li>
         
+
+        <li class="toc-item level-3">
+            <a href="#1-definition" class="toc-link">1. Definition</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#2-historical-reason" class="toc-link">2. Historical Reason</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#3-problem-it-solves" class="toc-link">3. Problem It Solves</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#4-internal-working-clr-runtime-memory-compiler" class="toc-link">4. Internal Working (CLR, Runtime, Memory, Co</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#5-real-production-example-high-throughput-fix-financial-protocol-engine" class="toc-link">5. Real Production Example: High-Throughput F</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#6-code-example-zero-allocation-high-speed-fixcsv-message-parser" class="toc-link">6. Code Example: Zero-Allocation High-Speed F</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#7-execution-flow-zero-copy-pointer-slicing" class="toc-link">7. Execution Flow: Zero-Copy Pointer Slicing</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#8-design-reasoning" class="toc-link">8. Design Reasoning</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#9-performance-benchmark-comparison" class="toc-link">9. Performance Benchmark Comparison</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#10-common-mistakes" class="toc-link">10. Common Mistakes</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#11-production-problems-use-after-free-in-pooled-buffers" class="toc-link">11. Production Problems: Use-After-Free in Po</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#12-interview-prep" class="toc-link">12. Interview Prep</a>
+        </li>
+        
             </ul>
         </aside>
     </div>
@@ -4126,11 +4459,137 @@ await Parallel.ForEachAsync(orders, async (o, ct) =&gt; await CallExternalBankAs
             // Highlight syntax
             hljs.highlightAll();
 
-            // Mermaid diagrams
+            // Mermaid diagrams initialization
             mermaid.initialize({
                 startOnLoad: true,
                 theme: currentTheme === 'dark' ? 'dark' : 'neutral',
                 securityLevel: 'loose'
+            });
+
+            // ==========================================
+            // ACCORDION & SINGLE-FOCUS CONTROLS
+            // ==========================================
+            const accordions = document.querySelectorAll('.chapter-accordion');
+            const singleFocusToggle = document.getElementById('single-focus-toggle');
+            const btnExpandAll = document.getElementById('btn-expand-all');
+            const btnCollapseAll = document.getElementById('btn-collapse-all');
+
+            function renderMermaidIn(element) {
+                if (window.mermaid) {
+                    const unrendered = element.querySelectorAll('.mermaid:not([data-processed])');
+                    if (unrendered.length > 0) {
+                        try { mermaid.run({ nodes: unrendered }); } catch(e) {}
+                    }
+                }
+            }
+
+            // Expand All
+            if (btnExpandAll) {
+                btnExpandAll.addEventListener('click', () => {
+                    if (singleFocusToggle) singleFocusToggle.checked = false;
+                    accordions.forEach(acc => {
+                        acc.open = true;
+                        renderMermaidIn(acc);
+                    });
+                });
+            }
+
+            // Collapse All
+            if (btnCollapseAll) {
+                btnCollapseAll.addEventListener('click', () => {
+                    accordions.forEach(acc => {
+                        acc.open = false;
+                    });
+                });
+            }
+
+            // Single focus auto-closing logic
+            accordions.forEach(acc => {
+                acc.addEventListener('toggle', () => {
+                    const statusText = acc.querySelector('.accordion-status-text');
+                    if (statusText) {
+                        statusText.innerText = acc.open ? 'Click to collapse' : 'Click to expand';
+                    }
+                    if (acc.open) {
+                        renderMermaidIn(acc);
+                        if (singleFocusToggle && singleFocusToggle.checked) {
+                            accordions.forEach(other => {
+                                if (other !== acc && other.open) {
+                                    other.open = false;
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            // ==========================================
+            // DEEP LINKING & TOC NAVIGATION
+            // ==========================================
+            function navigateToTarget(targetId) {
+                if (!targetId) return;
+                let target = document.getElementById(targetId);
+                
+                // Fallback for slug variations (e.g. hyphens)
+                if (!target) {
+                    const normalized = targetId.replace(/-+/g, '-');
+                    target = document.getElementById(normalized) || 
+                             document.querySelector(`[id*="${normalized}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                }
+
+                if (!target) return;
+
+                // If target is inside an accordion, open that accordion
+                const parentAcc = target.closest('.chapter-accordion');
+                if (parentAcc) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== parentAcc) a.open = false;
+                        });
+                    }
+                    parentAcc.open = true;
+                    renderMermaidIn(parentAcc);
+                } else if (target.classList.contains('chapter-accordion')) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== target) a.open = false;
+                        });
+                    }
+                    target.open = true;
+                    renderMermaidIn(target);
+                }
+
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.classList.add('flash-highlight');
+                    setTimeout(() => target.classList.remove('flash-highlight'), 1600);
+                }, 100);
+            }
+
+            // Check URL hash on page load
+            if (window.location.hash) {
+                setTimeout(() => {
+                    navigateToTarget(window.location.hash.substring(1));
+                }, 250);
+            }
+
+            // Listen for hash changes
+            window.addEventListener('hashchange', () => {
+                navigateToTarget(window.location.hash.substring(1));
+            });
+
+            // Intercept internal page anchor clicks
+            document.addEventListener('click', (e) => {
+                const anchor = e.target.closest('a[href^="#"]');
+                if (!anchor) return;
+                const href = anchor.getAttribute('href');
+                if (href && href.length > 1) {
+                    e.preventDefault();
+                    const id = href.substring(1);
+                    history.pushState(null, null, href);
+                    navigateToTarget(id);
+                }
             });
         });
     </script>

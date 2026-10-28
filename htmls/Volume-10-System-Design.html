@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Volume 10: Enterprise System Design | .NET Backend Encyclopedia</title>
+    <title>Volume 10: System Design: Enterprise Case Studies | .NET Backend Encyclopedia</title>
     <!-- Prevent theme flash -->
     <script>
         (function() {
@@ -24,9 +24,11 @@
     --bg-page: #0b0f19;
     --bg-surface: #111827;
     --bg-surface-elevated: #1f2937;
+    --bg-surface-hover: #283548;
     --bg-code: #030712;
     --border: #374151;
     --border-light: #4b5563;
+    --border-highlight: #60a5fa;
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
     --text-dim: #6b7280;
@@ -34,6 +36,7 @@
     --primary: #3b82f6;
     --primary-hover: #60a5fa;
     --primary-glow: rgba(59, 130, 246, 0.15);
+    --primary-glow-strong: rgba(59, 130, 246, 0.3);
     --accent: #8b5cf6;
     --success: #10b981;
     --warning: #f59e0b;
@@ -48,15 +51,20 @@
     --code-color: #f87171;
     --hero-bg: linear-gradient(135deg, rgba(31, 41, 55, 0.75) 0%, rgba(17, 24, 39, 0.95) 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --accordion-header-bg: #151e2e;
+    --accordion-header-hover: #1c273c;
+    --accordion-active-border: #3b82f6;
 }
 
 [data-theme="light"] {
     --bg-page: #f8fafc;
     --bg-surface: #ffffff;
     --bg-surface-elevated: #f1f5f9;
+    --bg-surface-hover: #e2e8f0;
     --bg-code: #0f172a;
     --border: #e2e8f0;
     --border-light: #cbd5e1;
+    --border-highlight: #2563eb;
     --text-main: #0f172a;
     --text-muted: #475569;
     --text-dim: #64748b;
@@ -64,6 +72,7 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-glow: rgba(37, 99, 235, 0.1);
+    --primary-glow-strong: rgba(37, 99, 235, 0.22);
     --accent: #7c3aed;
     --success: #059669;
     --warning: #b45309;
@@ -78,6 +87,9 @@
     --code-color: #b91c1c;
     --hero-bg: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --accordion-header-bg: #f8fafc;
+    --accordion-header-hover: #eef2f6;
+    --accordion-active-border: #2563eb;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -93,7 +105,7 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* SIDEBAR */
+/* SIDEBAR - STRICT FIXED 300px (NEVER OVERLAPS CONTENT) */
 #sidebar {
     width: 300px;
     background-color: var(--bg-surface);
@@ -206,33 +218,35 @@ body {
 .nav-vol { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
 .nav-link.active .nav-vol { color: var(--primary); }
 
-/* CONTENT AREA */
+/* CONTENT WRAPPER - PROPER MARGIN LEFT TO PREVENT OVERLAP */
 #content-wrapper {
     margin-left: 300px;
     flex: 1;
     display: flex;
     justify-content: center;
     padding: 40px 30px;
+    min-width: 0;
 }
 
 #main-content {
-    max-width: 880px;
+    max-width: 900px;
     width: 100%;
+    min-width: 0;
 }
 
 /* RIGHT TABLE OF CONTENTS */
 #toc-sidebar {
-    width: 250px;
+    width: 260px;
     position: sticky;
     top: 40px;
     height: calc(100vh - 80px);
     overflow-y: auto;
-    padding-left: 28px;
-    margin-left: 20px;
+    padding-left: 24px;
+    margin-left: 24px;
     display: none;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1320px) {
     #toc-sidebar { display: block; }
 }
 
@@ -258,7 +272,8 @@ body {
 }
 
 .toc-link:hover { color: var(--primary); }
-.toc-item.level-3 { padding-left: 10px; }
+.toc-item.level-2 { padding-left: 10px; }
+.toc-item.level-3 { padding-left: 18px; font-size: 0.74rem; color: var(--text-dim); }
 
 /* CHAPTER HERO */
 .chapter-hero {
@@ -266,7 +281,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 32px 36px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     box-shadow: var(--card-shadow);
 }
 
@@ -296,7 +311,7 @@ body {
 }
 
 .chapter-hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 800;
     color: var(--heading-color);
     margin-bottom: 12px;
@@ -309,32 +324,264 @@ body {
     line-height: 1.6;
 }
 
+/* ========================================================
+   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
+   ======================================================== */
+.focus-control-bar {
+    position: sticky;
+    top: 14px;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.focus-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.focus-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.focus-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    color: var(--primary-hover);
+}
+
+.focus-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border-light);
+    transition: .25s ease;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s ease;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+.toggle-label-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+/* ========================================================
+   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
+   ======================================================== */
+.chapter-accordion {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chapter-accordion:hover {
+    border-color: var(--border-light);
+}
+
+.chapter-accordion[open] {
+    border-color: var(--accordion-active-border);
+    box-shadow: 0 6px 26px var(--primary-glow-strong);
+}
+
+.chapter-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--accordion-header-bg);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-accordion-header::-webkit-details-marker {
+    display: none;
+}
+
+.chapter-accordion-header:hover {
+    background: var(--accordion-header-hover);
+}
+
+.chapter-accordion[open] > .chapter-accordion-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface-elevated);
+}
+
+.accordion-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.accordion-badge {
+    background: var(--primary-glow);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.accordion-title-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1.35;
+}
+
+.accordion-status-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+.accordion-status-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.accordion-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-page);
+    color: var(--text-muted);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, color 0.2s;
+}
+
+.chapter-accordion[open] > .chapter-accordion-header .accordion-chevron {
+    transform: rotate(180deg);
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.chapter-accordion-body {
+    padding: 28px 30px;
+    animation: accordionFadeIn 0.25s ease-out;
+}
+
+@keyframes accordionFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HIGHLIGHT ON TARGET JUMP */
+.flash-highlight {
+    outline: 2px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow-strong);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+}
+
 /* TYPOGRAPHY */
 h1, h2, h3, h4, h5 { color: var(--heading-color); font-weight: 700; line-height: 1.3; }
 
 h1 {
     font-size: 1.85rem;
-    margin: 44px 0 18px 0;
+    margin: 40px 0 16px 0;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
     color: var(--primary);
 }
 
 h2 {
-    font-size: 1.4rem;
-    margin: 36px 0 14px 0;
+    font-size: 1.35rem;
+    margin: 32px 0 14px 0;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
+    color: var(--heading-color);
 }
 
 h3 {
-    font-size: 1.15rem;
-    margin: 26px 0 10px 0;
+    font-size: 1.1rem;
+    margin: 22px 0 10px 0;
+    color: var(--heading-color);
 }
 
 h4 {
-    font-size: 0.98rem;
-    margin: 18px 0 8px 0;
+    font-size: 0.95rem;
+    margin: 16px 0 8px 0;
     color: var(--warning);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -351,7 +598,7 @@ a:hover { text-decoration: underline; }
     background: var(--bg-code);
     border: 1px solid var(--border);
     border-radius: 10px;
-    margin: 22px 0;
+    margin: 20px 0;
     overflow: hidden;
     box-shadow: var(--card-shadow);
 }
@@ -664,7 +911,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-8-Database-SQL.html" class="nav-link ">
                 <span class="nav-icon">💾</span>
-                <span>Database Engine Internals & SQL Server</span>
+                <span>Database Systems & High-Performance SQL</span>
                 <span class="nav-vol">V8</span>
             </a>
         </li>
@@ -672,7 +919,7 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-9-Microservices.html" class="nav-link ">
-                <span class="nav-icon">📡</span>
+                <span class="nav-icon">☁️</span>
                 <span>Microservices & Distributed Systems</span>
                 <span class="nav-vol">V9</span>
             </a>
@@ -681,8 +928,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-10-System-Design.html" class="nav-link active">
-                <span class="nav-icon">🏗️</span>
-                <span>Enterprise System Design</span>
+                <span class="nav-icon">📐</span>
+                <span>System Design: Enterprise Case Studies</span>
                 <span class="nav-vol">V10</span>
             </a>
         </li>
@@ -690,8 +937,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-11-Project-Interview-Mastery.html" class="nav-link ">
-                <span class="nav-icon">🎯</span>
-                <span>Project Interview Mastery & Walkthroughs</span>
+                <span class="nav-icon">💼</span>
+                <span>Project Interview Mastery & Technical Narrative</span>
                 <span class="nav-vol">V11</span>
             </a>
         </li>
@@ -699,8 +946,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-12-Interview-Question-Bank.html" class="nav-link ">
-                <span class="nav-icon">🏆</span>
-                <span>The Master Interview Question Bank</span>
+                <span class="nav-icon">🎯</span>
+                <span>Master Interview Question Bank & Verbatim Transcripts</span>
                 <span class="nav-vol">V12</span>
             </a>
         </li>
@@ -712,16 +959,36 @@ li::marker { color: var(--primary); }
         <main id="main-content">
             <div class="chapter-hero">
                 <div class="hero-meta">
-                    <span class="hero-badge">Scale & Architecture</span>
+                    <span class="hero-badge">Large-Scale Architecture</span>
                     <span class="hero-vol">Volume 10</span>
                 </div>
-                <h1>Enterprise System Design</h1>
-                <p>5-step framework, CAP/PACELC, URL shortener, Notification system, 10k TPS Payment system, E-commerce OMS, Real-time chat, File storage.</p>
+                <h1>System Design: Enterprise Case Studies</h1>
+                <p>Complete architectures for Payment Gateway (Idempotency, 2PC), Notification Hub (SignalR/WebSockets), Distributed Rate Limiter & URL Shortener.</p>
+            </div>
+
+            <!-- ADHD-FRIENDLY INTERACTIVE FOCUS CONTROLS -->
+            <div class="focus-control-bar">
+                <div class="focus-actions">
+                    <button class="focus-btn" id="btn-expand-all" title="Open all chapters for full scroll">
+                        <span>📂</span> Expand All
+                    </button>
+                    <button class="focus-btn" id="btn-collapse-all" title="Collapse all chapters to section headers">
+                        <span>📁</span> Collapse All
+                    </button>
+                </div>
+                <div class="focus-toggle-wrap">
+                    <label class="focus-mode-toggle" title="When active, opening one section automatically closes previous sections to minimize cognitive load and visual clutter.">
+                        <span class="toggle-switch">
+                            <input type="checkbox" id="single-focus-toggle" checked>
+                            <span class="slider"></span>
+                        </span>
+                        <span class="toggle-label-text">🎯 Single-Chapter Focus (Auto-close others)</span>
+                    </label>
+                </div>
             </div>
 
             <article class="doc-body">
-                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
-<h1 id='volume-10-system-design'>VOLUME 10: SYSTEM DESIGN</h1>
+                <h1 id='volume-10-system-design'>VOLUME 10: SYSTEM DESIGN</h1>
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
@@ -734,7 +1001,7 @@ li::marker { color: var(--primary); }
     <div class="callout-body"><strong>Scope:</strong> High-concurrency architectures, enterprise reliability, distributed consensus, failure modes, data modeling, and end-to-end system designs for tier-1 tech and enterprise product interviews (Infosys lateral technical rounds, product engineering firms, and global enterprise architects).</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='table-of-contents'>TABLE OF CONTENTS</h2>
 <ol>
 <li><a href="#1-system-design-interview-framework">System Design Interview Framework (The 5-Step Blueprint)</a></li>
@@ -809,7 +1076,7 @@ li::marker { color: var(--primary); }
 <li><a href="#12-full-design-distributed-file-storage">Full Design: Distributed Object & File Storage (S3 / Drive Clone)</a></li>
 <li><a href="#13-senior-engineer-interview-rubric">Senior Engineer Interview Evaluation Rubric</a></li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='1-system-design-interview-framework-1-system-design-interview-framework'>1. SYSTEM DESIGN INTERVIEW FRAMEWORK {#1-system-design-interview-framework}</h2>
 <h3 id='11-why-candidates-fail-system-design-rounds'>1.1 Why Candidates Fail System Design Rounds</h3>
 <p>In senior developer interviews (e.g., Infosys Specialist Programmer, Senior Systems Engineer, Technical Architect), system design rounds carry the highest rejection rate. Over 70% of candidate failures stem from structural mistakes rather than lack of technical knowledge:</p>
@@ -820,7 +1087,7 @@ li::marker { color: var(--primary); }
 <li><strong>Ignoring Failure Modes:</strong> Designing the "happy path" exclusively, assuming networks never partition, disks never fill up, third-party APIs never timeout, and distributed locks never expire prematurely.</li>
 <li><strong>Lack of Back-of-the-Envelope Math:</strong> Inability to calculate storage requirements, network bandwidth, or queries per second (QPS), resulting in wildly over-provisioned or architecturally flawed systems.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='12-step-1-requirements-clarification-scope-bounding-duration-57-mins'>1.2 Step 1: Requirements Clarification & Scope Bounding (Duration: 5–7 mins)</h3>
 <p>Never assume anything. System design interview prompts are intentionally ambiguous (e.g., <em>"Design bit.ly"</em> or <em>"Design WhatsApp"</em>). Your immediate responsibility is to establish boundaries.</p>
 <p>Divide requirements into <strong>Functional</strong> and <strong>Non-Functional</strong>:</p>
@@ -852,7 +1119,7 @@ li::marker { color: var(--primary); }
 <li><strong>Consistency vs Availability:</strong> <em>"In case of network partition, do we prioritize absolute consistency (financial ledgers) or maximum availability with eventual consistency (social media feeds)?"</em></li>
 <li><strong>Data Retention & Lifecycle:</strong> <em>"How long do we store this data? Indefinitely, 5 years for legal compliance, or 30 days with automated TTL eviction?"</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='13-step-2-back-of-the-envelope-capacity-estimations-duration-58-mins'>1.3 Step 2: Back-of-the-Envelope Capacity Estimations (Duration: 5–8 mins)</h3>
 <p>Numbers dictate architecture. A system handling 100 requests per second can run on a single ASP.NET Core process backed by Azure SQL. A system handling 500,000 requests per second requires consistent hashing, distributed caches, sharded write buffers, and asynchronous message brokers.</p>
 <h4 id='the-core-estimation-flow'>The Core Estimation Flow:</h4>
@@ -880,7 +1147,7 @@ li::marker { color: var(--primary); }
 <li>Cache memory needed:</li>
 </ul>
 <p>$$\text{RAM Required} = \text{Daily Read Volume} \times 0.20 \times \text{Payload Size}$$</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='14-step-3-high-level-architecture-api-contracts-duration-1012-mins'>1.4 Step 3: High-Level Architecture & API Contracts (Duration: 10–12 mins)</h3>
 <p>Establish the high-level structural blueprint before diving into individual components:</p>
 <ul>
@@ -914,7 +1181,7 @@ li::marker { color: var(--primary); }
                                                                                    +--------------------+</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='15-step-4-component-deep-dive-concurrency-bottlenecks-duration-1215-mins'>1.5 Step 4: Component Deep Dive & Concurrency Bottlenecks (Duration: 12–15 mins)</h3>
 <p>This is where senior engineers distinguish themselves from juniors. Pick the 2–3 hardest architectural bottlenecks and demonstrate deep engineering mastery:</p>
 <ul>
@@ -923,7 +1190,7 @@ li::marker { color: var(--primary); }
 <li>How to partition data so that no single "hot partition" degrades the cluster (Virtual nodes, composite partition keys).</li>
 <li>How to handle cross-service transactions without two-phase locking (2PC) bottlenecks (Saga orchestration with transactional outbox).</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='16-step-5-failure-modes-spof-production-resiliency-duration-58-mins'>1.6 Step 5: Failure Modes, SPOF & Production Resiliency (Duration: 5–8 mins)</h3>
 <p>System design does not end when the system works; it ends when you prove it survives when components crash:</p>
 <ul>
@@ -935,7 +1202,7 @@ li::marker { color: var(--primary); }
 <li><strong>Recovery Time Objective (RTO):</strong> Maximum acceptable duration of downtime.</li>
 <li><strong>Recovery Point Objective (RPO):</strong> Maximum acceptable data loss period (e.g., zero loss for payments, 5 mins for chat history).</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='17-latency-numbers-every-distributed-systems-engineer-must-know'>1.7 Latency Numbers Every Distributed Systems Engineer Must Know</h3>
 <p>These numbers, originally compiled by Jeff Dean, govern every trade-off in distributed system design:</p>
 <div class='table-wrapper'><table>
@@ -953,7 +1220,7 @@ li::marker { color: var(--primary); }
 <tr><td>Send packet US East to US West</td><td>30,000,000 ns = 30 ms (11.4 months)</td><td>Cross-region traffic dictates strict multi-region caching.</td></tr>
 <tr><td>Round-trip trans-Atlantic (US to Europe)</td><td>150,000,000 ns = 150 ms (5 years)</td><td>Speed of light in fiber cannot be optimized; cache at edge!</td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='18-powers-of-two-storage-unit-cheat-sheet'>1.8 Powers of Two & Storage Unit Cheat Sheet</h3>
 <p>Mental math speed during system design interviews builds instant credibility:</p>
 <div class='table-wrapper'><table>
@@ -970,7 +1237,7 @@ li::marker { color: var(--primary); }
 <li>1 Million requests per day $\approx 12 \text{ requests/second}$.</li>
 <li>1 Billion requests per month $\approx 400 \text{ requests/second}$.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='2-scalability-fundamentals-2-scalability-fundamentals'>2. SCALABILITY FUNDAMENTALS {#2-scalability-fundamentals}</h2>
 <h3 id='21-vertical-scaling-vs-horizontal-scaling'>2.1 Vertical Scaling vs Horizontal Scaling</h3>
 
@@ -996,7 +1263,7 @@ li::marker { color: var(--primary); }
 <tr><td><strong>Resilience & SPOF</strong></td><td>Catastrophic. Single hardware fault terminates entire service.</td><td>High. Any single node failure is automatically routed around.</td></tr>
 <tr><td><strong>Cost Curve</strong></td><td>Hyper-exponential at the high end (specialized hardware).</td><td>Linear cost progression using commodity cloud instances.</td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='22-stateless-services-externalized-state'>2.2 Stateless Services & Externalized State</h3>
 <p>To scale an ASP.NET Core web tier horizontally behind a load balancer, instances must be strictly <strong>stateless</strong>. If Node A crashes, Node B must process subsequent requests from the same user without discrepancy.</p>
 
@@ -1029,7 +1296,7 @@ li::marker { color: var(--primary); }
 <li><strong>External Session Stores:</strong> If session persistence is non-negotiable (e.g., incomplete wizard forms, shopping carts), store state in a Redis cluster using <code>AddStackExchangeRedisCache</code>.</li>
 <li><strong>No Local File System Reliance:</strong> File uploads must stream directly to cloud object storage (S3/Azure Blob Storage) rather than saving to local container storage <code>C:\Uploads</code> or <code>/var/data</code>.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='23-read-replicas-replication-lag-read-your-own-writes-consistency'>2.3 Read Replicas, Replication Lag & Read-Your-Own-Writes Consistency</h3>
 <p>Most applications are read-heavy (e.g., 90% reads, 10% writes). Single databases choke under read pressure. We introduce <strong>Master-Replica Replication</strong>.</p>
 
@@ -1069,7 +1336,7 @@ li::marker { color: var(--primary); }
 <li><strong>User-Action Stickiness (Time-Window Routing):</strong> If a user performs a write, route all subsequent read requests from that specific user to the Primary database for $T$ seconds (e.g., 5 seconds), before resuming replica routing.</li>
 <li><strong>Replication Watermark / LSN Tracking:</strong> Primary returns the Log Sequence Number (LSN) or transaction version header in the write response. Read queries supply this LSN; if the replica has not caught up to that LSN, the read either waits (with timeout) or forwards to the Primary.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='24-database-sharding-partitioning-strategies'>2.4 Database Sharding & Partitioning Strategies</h3>
 <p>When a relational table surpasses tens of millions of rows or hundreds of gigabytes, single-instance indexing and disk throughput degrade. <strong>Sharding</strong> breaks large tables into smaller, independent databases across physical hardware.</p>
 
@@ -1120,7 +1387,7 @@ li::marker { color: var(--primary); }
 <li><strong>Cross-Shard Transactions:</strong> Requires distributed 2PC or Saga patterns.</li>
 <li><strong>Resharding Complexity:</strong> Doubling shards in production requires zero-downtime dual-writing and background sync engines.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='25-consistent-hashing-with-virtual-nodes'>2.5 Consistent Hashing with Virtual Nodes</h3>
 <p>In traditional modulo hashing ($\text{Hash}(\text{Key}) \pmod N$), adding or removing a single node invalidates almost every key-to-node mapping. If you scale from 9 to 10 cache servers, approximately $\frac{9}{10}$ (90%) of keys are remapped, instantly causing a catastrophic <strong>cache stampede</strong> that incinerates your primary database.</p>
 <p><strong>Consistent Hashing</strong> bounds key relocation so that when a node is added or removed, only $\frac{K}{N}$ keys are moved on average (where $K$ is total keys and $N$ is total nodes).</p>
@@ -1218,7 +1485,7 @@ public class ConsistentHashRing&lt;TNode&gt;
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='3-caching-strategies-redis-internals-3-caching-strategies-and-redis-internals'>3. CACHING STRATEGIES & REDIS INTERNALS {#3-caching-strategies-and-redis-internals}</h2>
 <h3 id='31-caching-topologies'>3.1 Caching Topologies</h3>
 
@@ -1240,7 +1507,7 @@ public class ConsistentHashRing&lt;TNode&gt;
 <tr><td><strong>Write-Behind (Write-Back)</strong></td><td>Application queries cache.</td><td>Application writes to cache; cache returns immediately, then asynchronously flushes to DB.</td><td>Ultra-low write latency. Absorb massive write spikes (write coalescing).</td><td>High data loss risk if cache crashes before dirty buffer flushes to persistent DB.</td><td>Click tracking, analytics counters, real-time gaming state.</td></tr>
 <tr><td><strong>Refresh-Ahead</strong></td><td>Cache automatically reloads frequently accessed keys prior to TTL expiry.</td><td>Standard write-through or cache-aside.</td><td>Eliminates read latency on hot keys; prevents cold cache misses.</td><td>Hard to predict access patterns accurately; wasted DB load on false predictions.</td><td>Hot news feeds, stock ticker homepages.</td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='32-cache-invalidation-stampede-solutions'>3.2 Cache Invalidation, Stampede & Solutions</h3>
 
 <div class="callout note">
@@ -1285,7 +1552,7 @@ public class ConsistentHashRing&lt;TNode&gt;
 <ol>
 <li><strong>Soft TTL with Background Refresh:</strong> Store a JSON payload containing <code>{ data, softExpiry, hardExpiry }</code>. When <code>softExpiry</code> passes, the current caller receives stale data immediately, while a background <code>Task.Run</code> fires to refresh the DB and update the cache.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='33-redis-deep-dive-internal-threading-model-memory-eviction'>3.3 Redis Deep Dive: Internal Threading Model & Memory Eviction</h3>
 <p>Many candidates incorrectly answer: <em>"Redis is purely single-threaded."</em> As a senior engineer, state the exact architecture:</p>
 <ul>
@@ -1302,7 +1569,7 @@ public class ConsistentHashRing&lt;TNode&gt;
 <li><code>volatile-ttl</code>: Evict keys with the shortest remaining time-to-live.</li>
 <li><code>noeviction</code>: Return an Out-Of-Memory (OOM) error on any incoming write operation.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='34-production-redis-data-types-for-system-designers'>3.4 Production Redis Data Types for System Designers</h3>
 
 <div class="code-container">
@@ -1321,7 +1588,7 @@ public class ConsistentHashRing&lt;TNode&gt;
 └── Streams      -&gt; Distributed append-only message log, consumer groups, event streaming (XADD, XREADGROUP)</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='35-distributed-locking-with-redis-atomic-lua-script-in-c'>3.5 Distributed Locking with Redis (Atomic Lua Script in C#)</h3>
 <p>Using a plain <code>SETNX</code> without atomic release tokens results in dangerous race conditions: Process A acquires the lock, experiences a long garbage collection (GC) pause, the TTL expires, Process B acquires the lock, and then Process A wakes up and blindly deletes Process B's lock!</p>
 <h4 id='production-c-distributed-lock-manager'>Production C# Distributed Lock Manager:</h4>
@@ -1383,7 +1650,7 @@ public sealed class RedisDistributedLock
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='4-load-balancing-reverse-proxies-4-load-balancing-and-reverse-proxies'>4. LOAD BALANCING & REVERSE PROXIES {#4-load-balancing-and-reverse-proxies}</h2>
 <h3 id='41-layer-4-vs-layer-7-load-balancing'>4.1 Layer 4 vs Layer 7 Load Balancing</h3>
 
@@ -1410,7 +1677,7 @@ Client ──[TLS Terminate]──&gt; L7 Proxy (Inspect Headers, Path, JWT) ─
 <tr><td><strong>Routing Capability</strong></td><td>IP hash, round robin, least TCP connections.</td><td>Path-based routing (<code>/api/v1/orders</code>), header routing, blue-green canary routing.</td></tr>
 <tr><td><strong>Performance / Overhead</strong></td><td>Microsecond latency; hundreds of thousands of RPS per node.</td><td>Millisecond latency overhead due to buffer parsing and TLS decryptions.</td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='42-load-balancing-algorithms'>4.2 Load Balancing Algorithms</h3>
 <ol>
 <li><strong>Round Robin & Weighted Round Robin:</strong> Distributes requests sequentially. Weights allow beefier hardware to process proportionally higher traffic.</li>
@@ -1418,7 +1685,7 @@ Client ──[TLS Terminate]──&gt; L7 Proxy (Inspect Headers, Path, JWT) ─
 <li><strong>IP / Consistent Hash:</strong> Hashes the client's source IP address or a cookie header. Guarantees that requests from the same client route to the identical upstream server (useful for caching locality, but problematic behind corporate NAT gateways).</li>
 <li><strong>Least Response Time:</strong> Dynamic routing targeting the server combining lowest active connections with fastest recent latency.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='43-reverse-proxies-nginx-envoy-vs-microsoft-yarp-net'>4.3 Reverse Proxies: Nginx, Envoy vs Microsoft YARP (.NET)</h3>
 <p>In modern .NET enterprise ecosystems, <strong>YARP (Yet Another Reverse Proxy)</strong> has emerged as a premier L7 reverse proxy. Built natively on ASP.NET Core primitives (<code>Kestrel</code>, <code>SocketsHttpHandler</code>), YARP matches or exceeds Nginx performance for .NET workloads, while offering 100% C# extensibility:</p>
 
@@ -1496,7 +1763,7 @@ Client ──[TLS Terminate]──&gt; L7 Proxy (Inspect Headers, Path, JWT) ─
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='5-cap-pacelc-theorems-in-practice-5-cap-and-pacelc-theorems'>5. CAP & PACELC THEOREMS IN PRACTICE {#5-cap-and-pacelc-theorems}</h2>
 <h3 id='51-deconstructing-cap-why-pick-2-is-a-myth'>5.1 Deconstructing CAP: Why "Pick 2" is a Myth</h3>
 <p>Formulated by Eric Brewer and proved by Seth Gilbert and Nancy Lynch, the CAP theorem states that a distributed data store can simultaneously provide at most two out of three guarantees:</p>
@@ -1531,7 +1798,7 @@ Client ──[TLS Terminate]──&gt; L7 Proxy (Inspect Headers, Path, JWT) ─
     <div class="callout-body"><strong>Interview Pro-Tip:</strong> State unequivocally: <em>"You cannot choose CA. Network cables get cut, switches fail, and cloud hypervisors drop packets. Partition Tolerance ($P$) is mandatory in distributed networks. Therefore, your only real choice is: When a network partition occurs, do you choose Consistency ($CP$) or Availability ($AP$)?"</em></div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='52-pacelc-theorem-accounting-for-normal-operations'>5.2 PACELC Theorem: Accounting for Normal Operations</h3>
 <p>The CAP theorem only describes behavior <strong>during rare network partitions</strong>. Daniel Abadi formulated the <strong>PACELC theorem</strong> to describe distributed trade-offs during the 99.99% of time when the network is healthy:</p>
 <p>$$\mathbf{If\ P\ (Partition):}\ \text{Choose between } \mathbf{A} \text{ (Availability) and } \mathbf{C} \text{ (Consistency);}$$</p>
@@ -1544,7 +1811,7 @@ Client ──[TLS Terminate]──&gt; L7 Proxy (Inspect Headers, Path, JWT) ─
 <tr><td><strong>PostgreSQL (Sync Repl)</strong></td><td><strong>PC / EC</strong></td><td>Chooses Consistency (blocks writes if synchronous replica does not ACK).</td><td>Chooses Consistency (waits for replica ACK, paying latency penalty on every commit).</td><td>Absolute data integrity for enterprise accounting.</td></tr>
 <tr><td><strong>Azure Cosmos DB</strong></td><td><strong>Configurable</strong></td><td>Tunable from Strong ($PC/EC$) to Eventual ($PA/EL$) with Bounded Staleness and Session Consistency options.</td><td>Configurable per account and read request.</td><td>Allows tailoring latency and consistency SLA to specific microservice bounded contexts.</td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='6-database-selection-matrix-6-database-selection-matrix'>6. DATABASE SELECTION MATRIX {#6-database-selection-matrix}</h2>
 <p>Choosing the wrong database engine is an architectural failure that can sink an enterprise project. A senior engineer matches the storage engine's physical disk layout and memory architecture to the application's query access patterns.</p>
 
@@ -1606,7 +1873,7 @@ Client ──[TLS Terminate]──&gt; L7 Proxy (Inspect Headers, Path, JWT) ─
 <li><em>Access Pattern:</em> High-throughput writes across distributed masterless clusters.</li>
 <li><em>Weakness:</em> No relational joins, no ad-hoc querying. Queries must strictly match the pre-defined partition key and clustering column sequence.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='62-unified-database-decision-matrix'>6.2 Unified Database Decision Matrix</h3>
 <div class='table-wrapper'><table>
 <tr><th>Requirement</th><th>Recommended Database</th><th>Second Best</th><th>Why?</th></tr>
@@ -1617,7 +1884,7 @@ Client ──[TLS Terminate]──&gt; L7 Proxy (Inspect Headers, Path, JWT) ─
 <tr><td><strong>IoT Sensor Telemetry (1M points/sec)</strong></td><td>TimescaleDB / InfluxDB</td><td>Cassandra</td><td>Time-partitioned chunks, automated downsampling, delta-of-delta timestamp compression.</td></tr>
 <tr><td><strong>Global User Session Store</strong></td><td>Redis Cluster</td><td>DynamoDB</td><td>Sub-millisecond latency, configurable key TTLs, lightweight memory footprints.</td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='7-full-design-scalable-url-shortener-bitly-clone-7-full-design-url-shortener'>7. FULL DESIGN: SCALABLE URL SHORTENER (BIT.LY CLONE) {#7-full-design-url-shortener}</h2>
 <p>A URL Shortener generates compact alias links for long URLs (e.g., transforming <code>https://www.enterprise-corp.com/products/catalog/electronics/2026/sku-89218903</code> into <code>https://sho.rt/aZ81kQ</code>). When users navigate to the alias, the service redirects them to the original address.</p>
 <h3 id='71-requirements-scope-bounding'>7.1 Requirements & Scope Bounding</h3>
@@ -1636,7 +1903,7 @@ Client ──[TLS Terminate]──&gt; L7 Proxy (Inspect Headers, Path, JWT) ─
 <li><strong>Low Latency:</strong> Redirection must execute in $< 20\text{ms}$ at the application layer.</li>
 <li><strong>Unpredictability:</strong> Short tokens must be non-sequential to prevent scrapers from enumerating customer URLs.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='72-capacity-estimations-back-of-the-envelope-math'>7.2 Capacity Estimations & Back-of-the-Envelope Math</h3>
 <h4 id='traffic-throughput'>Traffic & Throughput:</h4>
 <ul>
@@ -1668,7 +1935,7 @@ Client ──[TLS Terminate]──&gt; L7 Proxy (Inspect Headers, Path, JWT) ─
 <p>$$\text{Daily Read Volume} = 137 \text{ Million} \times 550 \text{ bytes} \approx 75.35 \text{ GB}$$</p>
 <p>$$\text{Memory Required (20\%)} = 75.35 \text{ GB} \times 0.20 \approx 15 \text{ GB RAM}$$</p>
 <p><em>A standard two-node Redis replica cluster with 32 GB RAM can effortlessly hold all hot URLs.</em></p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='73-high-level-architecture-diagram'>7.3 High-Level Architecture Diagram</h3>
 
 <div class="code-container">
@@ -1725,7 +1992,7 @@ Client ──[TLS Terminate]──&gt; L7 Proxy (Inspect Headers, Path, JWT) ─
                                                              +─────────────────+</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='74-data-flow-step-by-step'>7.4 Data Flow Step-by-Step</h3>
 <h4 id='write-path-url-creation'>Write Path (URL Creation):</h4>
 <ol>
@@ -1757,7 +2024,7 @@ Client ──[TLS Terminate]──&gt; L7 Proxy (Inspect Headers, Path, JWT) ─
 <li><strong>Telemetry Dispatch:</strong> Redirection service pushes click metadata (timestamp, user-agent, IP, referer) to a Kafka topic <code>url-clicks</code>.</li>
 <li><strong>Redirect Header:</strong> Return <code>HTTP 302 Found</code> with <code>Location: https://example.com/long-page</code>.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='75-database-schema-design'>7.5 Database Schema Design</h3>
 <h4 id='relational-schema-postgresql'>Relational Schema (PostgreSQL):</h4>
 
@@ -1793,7 +2060,7 @@ CREATE TABLE url_analytics_daily (
 <p>When the table exceeds 100M rows, shard horizontally across multiple PostgreSQL nodes using a <strong>Hash-based sharding key on <code>short_token</code></strong>:</p>
 <p>$$\text{ShardId} = \text{Murmur3}(\text{short\_token}) \pmod{\text{NumberOfShards}}$$</p>
 <p>Because all read lookups query strictly by <code>short_token</code>, every query routes directly to a single shard, eliminating cross-shard joins.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='76-component-deep-dive'>7.6 Component Deep Dive</h3>
 <h4 id='761-encoding-strategy-base62-vs-hash-truncation'>7.6.1 Encoding Strategy: Base62 vs Hash Truncation</h4>
 <p>Why not use MD5 or SHA-256?</p>
@@ -1887,14 +2154,14 @@ CREATE TABLE url_analytics_daily (
 <tr><td><strong>301 Moved Permanently</strong></td><td>Permanent redirection.</td><td>Browser permanently caches the target URL in local browser storage.</td><td><strong>Catastrophic for Analytics.</strong> Future clicks never reach the server; click counts and geolocation metrics stop working.</td><td>Use only if infrastructure cost is critical and you do not care about analytics.</td></tr>
 <tr><td><strong>302 Found (Temporary)</strong></td><td>Temporary redirection.</td><td>Browser does NOT cache target URL. Every redirect hits the server.</td><td><strong>Full Analytics Preserved.</strong> Every click can be logged, validated, rate-limited, and inspected.</td><td><strong>Industry Standard (bit.ly, t.co).</strong></td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='77-scalability-caching-strategy'>7.7 Scalability & Caching Strategy</h3>
 <ol>
 <li><strong>Edge Caching via CDN:</strong> Standard CDN caches responses using <code>Cache-Control: private, max-age=0, no-cache</code> to ensure every click routes to the server for analytics while leveraging CDN POPs for TLS termination.</li>
 <li><strong>Redis Eviction:</strong> Configure Redis cluster with <code>allkeys-lru</code>. Frequently clicked links stay in memory; dead links are pruned automatically.</li>
 <li><strong>Bloom Filters:</strong> Place a Redis Bloom Filter in front of the cache. If malicious bots blast your cluster with random non-existent URLs (<code>sho.rt/fake99</code>), the Bloom Filter drops them before they query the primary database.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='78-production-trade-offs-failure-scenarios'>7.8 Production Trade-offs & Failure Scenarios</h3>
 <ul>
 <li><strong>Scenario A: KGS Database Outage:</strong></li>
@@ -1904,7 +2171,7 @@ CREATE TABLE url_analytics_daily (
 <li><strong>Scenario C: Malicious Phishing Redirects:</strong></li>
 <li><em>Mitigation:</em> Asynchronous Kafka worker scans <code>original_url</code> against Google Safe Browsing and Microsoft Defender APIs. If flagged, sets <code>is_active = FALSE</code> in DB and purges the key from Redis, displaying a warning landing page to visitors.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='8-full-design-distributed-multi-channel-notification-system-8-full-design-notification-system'>8. FULL DESIGN: DISTRIBUTED MULTI-CHANNEL NOTIFICATION SYSTEM {#8-full-design-notification-system}</h2>
 <p>Enterprise notification platforms deliver billions of messages daily across <strong>Push Notifications (APNs, FCM)</strong>, <strong>SMS (Twilio, Infobip)</strong>, and <strong>Email (SendGrid, AWS SES)</strong>. They must guarantee high deliverability, prevent spamming, respect user preferences, and survive upstream third-party outages.</p>
 <h3 id='81-requirements-scope-bounding'>8.1 Requirements & Scope Bounding</h3>
@@ -1923,7 +2190,7 @@ CREATE TABLE url_analytics_daily (
 <li><strong>Reliability & Zero Loss:</strong> High-priority transactional notifications must never be dropped.</li>
 <li><strong>Third-Party Fault Isolation:</strong> If Twilio is down, email and push notifications must continue unimpeded.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='82-capacity-estimations'>8.2 Capacity Estimations</h3>
 <ul>
 <li><strong>Total Volume:</strong> 100 Million notifications per day.</li>
@@ -1939,7 +2206,7 @@ CREATE TABLE url_analytics_daily (
 </ul>
 <p>$$\text{Daily Storage} = 100 \times 10^6 \times 1 \text{ KB} \approx 100 \text{ GB/day}$$</p>
 <p>$$\text{3-Year Log Retention} = 100 \text{ GB} \times 365 \times 3 \approx 109.5 \text{ TB}$$</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='83-high-level-architecture-diagram'>8.3 High-Level Architecture Diagram</h3>
 
 <div class="code-container">
@@ -1999,7 +2266,7 @@ CREATE TABLE url_analytics_daily (
                                +--------------+</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='84-data-flow-step-by-step'>8.4 Data Flow Step-by-Step</h3>
 <ol>
 <li><strong>Ingestion:</strong> Producer issues <code>POST /api/v1/notifications</code> with payload:</li>
@@ -2044,7 +2311,7 @@ CREATE TABLE url_analytics_daily (
 <li>If Twilio returns <code>200 OK</code>: Write success record to Cassandra/Postgres log.</li>
 <li>If Twilio returns <code>429 Too Many Requests</code> or <code>500 Internal Error</code>: Worker retries 3 times with exponential backoff and jitter. If retries exhaust, route to <code>notifications.sms.dlq</code> for operator investigation.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='85-database-schema-design'>8.5 Database Schema Design</h3>
 <h4 id='relational-core-postgresql'>Relational Core (PostgreSQL):</h4>
 
@@ -2103,7 +2370,7 @@ CREATE TABLE notification_logs.deliveries (
 </div>
 
 <p><em>Partitioning by <code>user_id</code> allows instant retrieval of a user's recent notification history on a single cluster node.</em></p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='86-component-deep-dive'>8.6 Component Deep Dive</h3>
 <h4 id='861-priority-ingestion-queue-isolation'>8.6.1 Priority Ingestion & Queue Isolation</h4>
 <p>A critical failure mode of naive notification systems is mixing bulk marketing campaigns with transactional OTP codes. If marketing launches a 5,000,000-user blast, single-queue architectures cause login OTP codes to sit behind 4 million marketing emails!</p>
@@ -2156,14 +2423,14 @@ CREATE TABLE notification_logs.deliveries (
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='87-scalability-caching-strategy'>8.7 Scalability & Caching Strategy</h3>
 <ol>
 <li><strong>User Preference Cache:</strong> Cache preference profiles in Redis under key <code>pref:{user_id}</code> with a 24-hour TTL. Invalidate on profile update via pub/sub.</li>
 <li><strong>Template Caching:</strong> Cache compiled Liquid/Handlebars templates in application memory (<code>IMemoryCache</code>). Templates rarely change; reload via configuration hot-reload or distributed cache bus.</li>
 <li><strong>Batching:</strong> Workers dispatch push notifications to APNs/FCM in bulk batches of 500 tokens per HTTP/2 request to maximize network pipe efficiency.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='88-production-trade-offs-failure-scenarios'>8.8 Production Trade-offs & Failure Scenarios</h3>
 <ul>
 <li><strong>Scenario A: Primary SMS Provider (Twilio) Experiences Outage:</strong></li>
@@ -2173,7 +2440,7 @@ CREATE TABLE notification_logs.deliveries (
 <li><strong>Scenario C: Worker Process Crashes Mid-Transmission:</strong></li>
 <li><em>Mitigation:</em> Kafka consumer offsets are committed <strong>only after</strong> receiving an acknowledgement from the provider API. If worker dies, partition rebalances to a live worker, ensuring at-least-once delivery. Idempotency keys prevent double sending.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='9-full-design-high-throughput-idempotent-payment-system-9-full-design-payment-system'>9. FULL DESIGN: HIGH-THROUGHPUT IDEMPOTENT PAYMENT SYSTEM {#9-full-design-payment-system}</h2>
 <p>A payment platform processes money transfers between buyers, merchants, and banking networks. Unlike social networks where eventual consistency is acceptable, financial payment systems require <strong>strict consistency, zero data loss, exact-once processing semantics (idempotency), and regulatory compliance (PCI-DSS)</strong>.</p>
 <h3 id='91-requirements-scope-bounding'>9.1 Requirements & Scope Bounding</h3>
@@ -2192,7 +2459,7 @@ CREATE TABLE notification_logs.deliveries (
 <li><strong>Throughput:</strong> Support 5,000 TPS baseline, peaking at 15,000 TPS during global sales events.</li>
 <li><strong>Sub-Second Latency:</strong> P99 payment authorization $< 800\text{ms}$ (bounded by upstream card network latency).</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='92-capacity-estimations'>9.2 Capacity Estimations</h3>
 <ul>
 <li><strong>Transaction Volume:</strong> 100 Million payment transactions per day.</li>
@@ -2211,7 +2478,7 @@ CREATE TABLE notification_logs.deliveries (
 <li>Active transaction idempotency keys cached for 24 hours:</li>
 </ul>
 <p>$$\text{RAM for Idempotency Keys} = 100 \times 10^6 \times 128 \text{ bytes} \approx 12.8 \text{ GB RAM}$$</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='93-high-level-architecture-diagram'>9.3 High-Level Architecture Diagram</h3>
 
 <div class="code-container">
@@ -2264,7 +2531,7 @@ CREATE TABLE notification_logs.deliveries (
 +-------------------------------+</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='94-data-flow-step-by-step'>9.4 Data Flow Step-by-Step</h3>
 <h4 id='phase-1-payment-authorization-flow'>Phase 1: Payment Authorization Flow:</h4>
 <ol>
@@ -2299,7 +2566,7 @@ CREATE TABLE notification_logs.deliveries (
 <li>Issuing bank settles funds to merchant acquiring bank.</li>
 <li>Double-entry ledger records Debit to Settlement Clearing Account and Credit to Merchant Revenue Account.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='95-database-schema-double-entry-ledger-design'>9.5 Database Schema & Double-Entry Ledger Design</h3>
 <h4 id='double-entry-accounting-rule'>Double-Entry Accounting Rule:</h4>
 <p>$$\sum \text{Debits} = \sum \text{Credits}$$</p>
@@ -2359,7 +2626,7 @@ CREATE TABLE ledger_entries (
 CREATE INDEX ix_ledger_payment_id ON ledger_entries (payment_id);</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='96-component-deep-dive'>9.6 Component Deep Dive</h3>
 <h4 id='961-idempotency-key-handling-in-net'>9.6.1 Idempotency Key Handling in .NET</h4>
 <p>To guarantee exactly-once processing, build an enterprise-grade ASP.NET Core Action Filter that intercepts requests carrying <code>Idempotency-Key</code> headers:</p>
@@ -2476,14 +2743,14 @@ CREATE INDEX ix_ledger_payment_id ON ledger_entries (payment_id);</code></pre>
                +───────────────────────────────────+</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='97-scalability-caching-strategy'>9.7 Scalability & Caching Strategy</h3>
 <ol>
 <li><strong>PostgreSQL Connection Pooling with PgBouncer:</strong> Payment databases experience massive concurrent spikes. Placing <strong>PgBouncer</strong> in transaction pooling mode prevents PostgreSQL connection exhaustion.</li>
 <li><strong>Zero In-Memory Caching of Balances:</strong> Never cache customer account balances or ledger totals in Redis. Balances must be queried strictly from the relational database using pessimistic locking (<code>SELECT ... FOR UPDATE</code>) or calculated from ledger sums to prevent dirty reads.</li>
 <li><strong>Partitioning Ledger Entries:</strong> Range-partition <code>ledger_entries</code> by <code>created_at</code> (monthly partitions). Old partitions are detached and archived to cold S3 Parquet tables for long-term historical analysis.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='98-production-trade-offs-failure-scenarios'>9.8 Production Trade-offs & Failure Scenarios</h3>
 <ul>
 <li><strong>Scenario A: Network Timeout During Gateway Call (Did the card get charged?):</strong></li>
@@ -2494,7 +2761,7 @@ CREATE INDEX ix_ledger_payment_id ON ledger_entries (payment_id);</code></pre>
 <li><strong>Scenario C: Database Primary Node Hard Crash Mid-Transaction:</strong></li>
 <li><em>Mitigation:</em> Deploy PostgreSQL with synchronous replication across three Availability Zones (Quorum Commit). A commit is acknowledged to the application only after being written to the WAL of at least two AZs, guaranteeing zero financial data loss.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='10-full-design-e-commerce-order-management-system-oms-10-full-design-order-management-system'>10. FULL DESIGN: E-COMMERCE ORDER MANAGEMENT SYSTEM (OMS) {#10-full-design-order-management-system}</h2>
 <p>An Order Management System (OMS) orchestrates the lifecycle of customer orders from checkout to delivery. During high-concurrency flash sales (e.g., 50,000 units of a flagship smartphone sold in 10 seconds), the OMS must prevent <strong>overselling</strong>, maintain <strong>deterministic order state</strong>, and guarantee <strong>eventual consistency across decoupled microservices</strong> using the Transactional Outbox pattern.</p>
 <h3 id='101-requirements-scope-bounding'>10.1 Requirements & Scope Bounding</h3>
@@ -2511,7 +2778,7 @@ CREATE INDEX ix_ledger_payment_id ON ledger_entries (payment_id);</code></pre>
 <li><strong>Throughput:</strong> Sustain 50,000 reservation requests per second during peak flash sales.</li>
 <li><strong>Auditability:</strong> Complete historical traceability of all state transitions.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='102-capacity-estimations'>10.2 Capacity Estimations</h3>
 <ul>
 <li><strong>Flash Sale Concurrency:</strong> 100,000 active shoppers competing for 10,000 available items.</li>
@@ -2523,7 +2790,7 @@ CREATE INDEX ix_ledger_payment_id ON ledger_entries (payment_id);</code></pre>
 </ul>
 <p>$$\text{Daily Order Storage} = 5 \times 10^6 \times 2 \text{ KB} \approx 10 \text{ GB/day}$$</p>
 <p>$$\text{5-Year Order Storage} = 10 \text{ GB} \times 365 \times 5 \approx 18.25 \text{ TB}$$</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='103-high-level-architecture-diagram'>10.3 High-Level Architecture Diagram</h3>
 
 <div class="code-container">
@@ -2583,7 +2850,7 @@ CREATE INDEX ix_ledger_payment_id ON ledger_entries (payment_id);</code></pre>
 +──────────────────────────────+  +───────────────────────────+</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='104-data-flow-step-by-step'>10.4 Data Flow Step-by-Step</h3>
 <ol>
 <li><strong>Checkout Submission:</strong> Shopper submits cart: <code>{ &quot;customer_id&quot;: &quot;u1&quot;, &quot;sku&quot;: &quot;IPHONE_16&quot;, &quot;quantity&quot;: 1 }</code>.</li>
@@ -2619,7 +2886,7 @@ CREATE INDEX ix_ledger_payment_id ON ledger_entries (payment_id);</code></pre>
 <li><strong>Payment Succeeded:</strong> Emits <code>PaymentCapturedEvent</code>. OMS updates status to <code>PAID</code>.</li>
 <li><strong>Payment Failed / Timed Out:</strong> Emits <code>PaymentFailedEvent</code>. OMS updates status to <code>CANCELLED</code> and executes compensating Lua script on Redis to return reserved stock back to the pool.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='105-database-schema-outbox-design'>10.5 Database Schema & Outbox Design</h3>
 
 <div class="code-container">
@@ -2666,7 +2933,7 @@ CREATE INDEX ix_outbox_unprocessed ON outbox_messages (created_at)
 WHERE processed_at IS NULL;</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='106-component-deep-dive'>10.6 Component Deep Dive</h3>
 <h4 id='1061-flash-sale-inventory-reservation-redis-lua-script'>10.6.1 Flash Sale Inventory Reservation (Redis Lua Script)</h4>
 <p>Relational <code>SELECT FOR UPDATE</code> locks rows and kills DB connection pools under 50,000 QPS. Execute inventory deduction in Redis atomically using Lua:</p>
@@ -2773,14 +3040,14 @@ WHERE processed_at IS NULL;</code></pre>
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='107-scalability-caching-strategy'>10.7 Scalability & Caching Strategy</h3>
 <ol>
 <li><strong>Redis Master-Replica with Sentinel:</strong> Inventory reservations run strictly against the Redis Master node (in-memory atomic Lua operations).</li>
 <li><strong>Order Read Query Caching:</strong> Orders in <code>PROCESSING</code>, <code>SHIPPED</code>, or <code>DELIVERED</code> status are immutable. Cache them aggressively in Redis with a 7-day TTL; invalidate only on customer return/refund events.</li>
 <li><strong>Database Sharding on <code>customer_id</code>:</strong> Shard order databases across PostgreSQL nodes using <code>customer_id</code>. This guarantees all orders for a specific user reside on a single shard, making "My Orders" listing queries sub-millisecond without cross-shard joins.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='108-production-trade-offs-failure-scenarios'>10.8 Production Trade-offs & Failure Scenarios</h3>
 <ul>
 <li><strong>Scenario A: Customer Abandons Cart (Reserved Stock Left Hanging):</strong></li>
@@ -2788,7 +3055,7 @@ WHERE processed_at IS NULL;</code></pre>
 <li><strong>Scenario B: Kafka Broker Outage:</strong></li>
 <li><em>Mitigation:</em> Because the Transactional Outbox stores events inside PostgreSQL tables as part of the ACID checkout transaction, <strong>zero events are lost</strong>. When Kafka recovers, the <code>OutboxPublisherWorker</code> resumes publishing from the exact point it paused.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='11-full-design-real-time-chat-collaboration-system-11-full-design-real-time-chat-system'>11. FULL DESIGN: REAL-TIME CHAT & COLLABORATION SYSTEM {#11-full-design-real-time-chat-system}</h2>
 <p>Modern real-time communication platforms (Slack, WhatsApp, Microsoft Teams) support billions of instant messages daily across 1:1 direct conversations and high-concurrency group channels. The system must maintain persistent duplex network connections, provide sub-100ms message delivery, track online presence, handle offline push notifications, and persist message histories at planetary scale.</p>
 <h3 id='111-requirements-scope-bounding'>11.1 Requirements & Scope Bounding</h3>
@@ -2807,7 +3074,7 @@ WHERE processed_at IS NULL;</code></pre>
 <li><strong>Message Ordering:</strong> Strict temporal ordering within a single conversation channel.</li>
 <li><strong>Durability:</strong> Zero dropped messages once acknowledged by the ingestion gateway.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='112-capacity-estimations'>11.2 Capacity Estimations</h3>
 <ul>
 <li><strong>Active User Connections:</strong></li>
@@ -2828,7 +3095,7 @@ WHERE processed_at IS NULL;</code></pre>
 </ul>
 <p>$$\text{Daily Message Storage} = 2 \times 10^9 \times 200 \text{ bytes} \approx 400 \text{ GB/day}$$</p>
 <p>$$\text{5-Year Storage} = 400 \text{ GB} \times 365 \times 5 \approx 730 \text{ TB}$$</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='113-high-level-architecture-diagram'>11.3 High-Level Architecture Diagram</h3>
 
 <div class="code-container">
@@ -2872,7 +3139,7 @@ WHERE processed_at IS NULL;</code></pre>
                          +─────────────────────+</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='114-data-flow-step-by-step'>11.4 Data Flow Step-by-Step</h3>
 <h4 id='11-direct-message-flow'>1:1 Direct Message Flow:</h4>
 <ol>
@@ -2905,7 +3172,7 @@ WHERE processed_at IS NULL;</code></pre>
 <li><strong>Persistence:</strong> The message payload is asynchronously written to the <strong>Apache Cassandra</strong> cluster.</li>
 <li><strong>Delivery Acknowledgment:</strong> Node A sends an immediate ACK back to Alice: <code>{ &quot;client_msg_id&quot;: &quot;c-9812-a1&quot;, &quot;server_msg_id&quot;: 182947192847192, &quot;status&quot;: &quot;SENT&quot; }</code>.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='115-database-schema-design'>11.5 Database Schema Design</h3>
 <h4 id='message-persistence-store-apache-cassandra-scylladb'>Message Persistence Store (Apache Cassandra / ScyllaDB):</h4>
 <p>Relational databases collapse when handling 70,000 writes/sec and billions of chat messages. Wide-column stores are built for sequential write-heavy append logs:</p>
@@ -2937,7 +3204,7 @@ CREATE TABLE enterprise_chat.messages (
 <li><strong>Partition Key (<code>conversation_id</code>):</strong> Guarantees that all messages within a single chat channel live on the same physical Cassandra partition.</li>
 <li><strong>Clustering Key (<code>message_id DESC</code>):</strong> Messages are physically sorted on disk in reverse chronological order. Fetching the last 50 messages (<code>SELECT * FROM messages WHERE conversation_id = ? LIMIT 50</code>) is a single sequential disk scan with zero in-memory sorting.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='116-component-deep-dive'>11.6 Component Deep Dive</h3>
 <h4 id='1161-real-time-online-presence-engine'>11.6.1 Real-Time Online Presence Engine</h4>
 <p>Tracking online presence for 50M users cannot use persistent database writes. Use <strong>Redis Key TTL Heartbeats</strong>:</p>
@@ -3029,14 +3296,14 @@ CREATE TABLE enterprise_chat.messages (
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='117-scalability-caching-strategy'>11.7 Scalability & Caching Strategy</h3>
 <ol>
 <li><strong>L4 Load Balancing (AWS NLB):</strong> WebSockets are long-lived TCP connections. Use Layer 4 load balancers with TCP connection termination and cross-zone balancing to distribute connection load evenly.</li>
 <li><strong>Recent Message Caching:</strong> Cache the most recent 100 messages of active conversations in a Redis <strong>List</strong> (<code>LPUSH</code> / <code>LTRIM</code> to 100). 95% of user chat reads hit the active conversation cache without touching Cassandra.</li>
 <li><strong>Read Receipts Watermarking:</strong> Do not emit a database update per message read! Instead, maintain a single watermark integer: <code>last_read_message_id</code>. If Bob reads 50 messages, client sends <code>{ &quot;conversation_id&quot;: &quot;c1&quot;, &quot;last_read_message_id&quot;: 1092819 }</code>. All messages with $\text{id} \le 1092819$ are marked read in a single update.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='118-production-trade-offs-failure-scenarios'>11.8 Production Trade-offs & Failure Scenarios</h3>
 <ul>
 <li><strong>Scenario A: Chat Gateway Server Crashes (Dropping 100,000 WebSocket Sockets):</strong></li>
@@ -3044,7 +3311,7 @@ CREATE TABLE enterprise_chat.messages (
 <li><strong>Scenario B: Out-of-Order Message Delivery (Mobile Network Switching):</strong></li>
 <li><em>Mitigation:</em> Never rely on client timestamps. The gateway generates 64-bit Snowflake IDs upon server receipt. Clients render chat feeds strictly ordered by <code>message_id</code>, guaranteeing deterministic chronological order across all participant devices.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='12-full-design-distributed-object-file-storage-s3-google-drive-clone-12-full-design-distributed-file-storage'>12. FULL DESIGN: DISTRIBUTED OBJECT & FILE STORAGE (S3 / GOOGLE DRIVE CLONE) {#12-full-design-distributed-file-storage}</h2>
 <p>A distributed object storage system stores and retrieves unstructured binary data (video, images, disk images, backups) of arbitrary sizes (from 1 KB to 5 TB). The system must separate <strong>Metadata Management</strong> from <strong>Binary Chunk Storage</strong>, provide <strong>Content-Addressable Deduplication</strong>, and allow direct client-to-storage streaming via <strong>Presigned URLs</strong>.</p>
 <h3 id='121-requirements-scope-bounding'>12.1 Requirements & Scope Bounding</h3>
@@ -3063,7 +3330,7 @@ CREATE TABLE enterprise_chat.messages (
 <li><strong>Availability:</strong> 99.99% service availability.</li>
 <li><strong>Strong Consistency for Metadata:</strong> Renaming or deleting a file must be immediately visible to all user sessions.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='122-capacity-estimations'>12.2 Capacity Estimations</h3>
 <ul>
 <li><strong>Storage Footprint:</strong></li>
@@ -3083,7 +3350,7 @@ CREATE TABLE enterprise_chat.messages (
 <li>10 Million file uploads/downloads per day.</li>
 </ul>
 <p>$$\text{Average Data Transfer Rate} = \frac{10 \times 10^6 \times 5 \text{ MB}}{86,400} \approx 578 \text{ MB/second} \approx 4.6 \text{ Gbps}$$</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='123-high-level-architecture-diagram'>12.3 High-Level Architecture Diagram</h3>
 
 <div class="code-container">
@@ -3126,7 +3393,7 @@ CREATE TABLE enterprise_chat.messages (
 +──────────────────────────────────────────────────────────+</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='124-data-flow-step-by-step'>12.4 Data Flow Step-by-Step</h3>
 <h4 id='multipart-resumable-upload-with-chunk-deduplication'>Multipart Resumable Upload with Chunk Deduplication:</h4>
 <ol>
@@ -3172,7 +3439,7 @@ CREATE TABLE enterprise_chat.messages (
 <li>Client calls <code>POST /api/v1/files/complete-upload</code>.</li>
 <li>The Metadata Service creates the <code>file_version</code> and links all 5 chunk pointers to the new file entity.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='125-database-schema-design'>12.5 Database Schema Design</h3>
 
 <div class="code-container">
@@ -3222,7 +3489,7 @@ CREATE TABLE version_chunks (
 );</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='126-component-deep-dive'>12.6 Component Deep Dive</h3>
 <h4 id='1261-generating-presigned-streaming-urls-in-net'>12.6.1 Generating Presigned Streaming URLs in .NET</h4>
 <p>Offloading binary I/O from Kestrel worker processes is essential for multi-gigabit throughput:</p>
@@ -3273,14 +3540,14 @@ public class StorageGatewayService
 </ul>
 <p>$$\text{Storage Overhead} = \frac{K + M}{K} = \frac{8 + 4}{8} = 1.5\times \text{ (Only 50\% overhead!)}$$</p>
 <p><em>Saves tens of millions of dollars compared to traditional 3-way replication ($3.0\times$ overhead).</em></p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='127-scalability-caching-strategy'>12.7 Scalability & Caching Strategy</h3>
 <ol>
 <li><strong>Metadata In-Memory Caching:</strong> Cache directory tree listings in Redis using Hashes. Navigating folders does not query PostgreSQL.</li>
 <li><strong>CDN Edge Caching for Popular Files:</strong> Frequently accessed public files are cached at Cloudflare/CloudFront edge nodes with HTTP headers <code>Cache-Control: public, max-age=86400</code>.</li>
 <li><strong>Chunk Garbage Collection:</strong> When files are deleted, decrement <code>reference_count</code> in <code>storage_chunks</code>. An asynchronous background worker scans for chunks with <code>reference_count == 0</code> and purges raw disk blocks from physical storage.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='128-production-trade-offs-failure-scenarios'>12.8 Production Trade-offs & Failure Scenarios</h3>
 <ul>
 <li><strong>Scenario A: Client Network Drops at Chunk 99 of 100:</strong></li>
@@ -3288,7 +3555,7 @@ public class StorageGatewayService
 <li><strong>Scenario B: Bit Rot & Silent Disk Corruption:</strong></li>
 <li><em>Mitigation:</em> A background <strong>Data Scrubbing Worker</strong> continuously reads random chunks from disk, re-computes their SHA-256 checksums, and compares against the canonical database hash. If corruption is detected, Erasure Coding automatically reconstructs the corrupted block from parity and writes it to healthy sectors.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='13-senior-engineer-interview-evaluation-rubric-13-senior-engineer-interview-rubric'>13. SENIOR ENGINEER INTERVIEW EVALUATION RUBRIC {#13-senior-engineer-interview-rubric}</h2>
 <p>When interviewing for Senior, Specialist Programmer, or Lead Architect roles, hiring managers evaluate your responses across five core competency dimensions:</p>
 
@@ -3327,7 +3594,7 @@ public class StorageGatewayService
 <tr><td><strong>Real-Time Chat</strong></td><td>Cassandra / ScyllaDB</td><td>Redis (Presence & Pub/Sub)</td><td>Kafka (Fanout Worker)</td><td>WebSockets (WSS) + Snowflake Monotonic IDs</td></tr>
 <tr><td><strong>Distributed Storage</strong></td><td>PostgreSQL (CockroachDB)</td><td>Redis (Folder Tree)</td><td>Kafka (Thumbnail / AV)</td><td>Reed-Solomon Erasure Coding + Presigned URLs</td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <p><em>End of Volume 10: System Design. Continue to Volume 11: Project Interview Mastery.</em></p>
             </article>
 
@@ -3341,7 +3608,7 @@ public class StorageGatewayService
                 
     <a href="Volume-11-Project-Interview-Mastery.html" class="nav-card" style="text-align: right;">
         <span class="nav-card-dir">Next Module →</span>
-        <span class="nav-card-title">Volume 11: Project Interview Mastery & Walkthroughs</span>
+        <span class="nav-card-title">Volume 11: Project Interview Mastery & Technical Narrative</span>
     </a>
     
             </nav>
@@ -3351,11 +3618,6 @@ public class StorageGatewayService
             <div class="toc-title">On This Page</div>
             <ul class="toc-list">
                 
-        <li class="toc-item level-1">
-            <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
-        </li>
-        
-
         <li class="toc-item level-1">
             <a href="#volume-10-system-design" class="toc-link">VOLUME 10: SYSTEM DESIGN</a>
         </li>
@@ -3500,6 +3762,61 @@ public class StorageGatewayService
             <a href="#51-deconstructing-cap-why-pick-2-is-a-myth" class="toc-link">5.1 Deconstructing CAP: Why &quot;Pick 2&quot; is a Myt</a>
         </li>
         
+
+        <li class="toc-item level-3">
+            <a href="#52-pacelc-theorem-accounting-for-normal-operations" class="toc-link">5.2 PACELC Theorem: Accounting for Normal Ope</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#6-database-selection-matrix-6-database-selection-matrix" class="toc-link">6. DATABASE SELECTION MATRIX {#6-database-sel</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#61-database-archetypes-internal-storage-engines" class="toc-link">6.1 Database Archetypes &amp; Internal Storage En</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#62-unified-database-decision-matrix" class="toc-link">6.2 Unified Database Decision Matrix</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#7-full-design-scalable-url-shortener-bitly-clone-7-full-design-url-shortener" class="toc-link">7. FULL DESIGN: SCALABLE URL SHORTENER (BIT.L</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#71-requirements-scope-bounding" class="toc-link">7.1 Requirements &amp; Scope Bounding</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#72-capacity-estimations-back-of-the-envelope-math" class="toc-link">7.2 Capacity Estimations &amp; Back-of-the-Envelo</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#73-high-level-architecture-diagram" class="toc-link">7.3 High-Level Architecture Diagram</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#74-data-flow-step-by-step" class="toc-link">7.4 Data Flow Step-by-Step</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#75-database-schema-design" class="toc-link">7.5 Database Schema Design</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#76-component-deep-dive" class="toc-link">7.6 Component Deep Dive</a>
+        </li>
+        
             </ul>
         </aside>
     </div>
@@ -3530,11 +3847,137 @@ public class StorageGatewayService
             // Highlight syntax
             hljs.highlightAll();
 
-            // Mermaid diagrams
+            // Mermaid diagrams initialization
             mermaid.initialize({
                 startOnLoad: true,
                 theme: currentTheme === 'dark' ? 'dark' : 'neutral',
                 securityLevel: 'loose'
+            });
+
+            // ==========================================
+            // ACCORDION & SINGLE-FOCUS CONTROLS
+            // ==========================================
+            const accordions = document.querySelectorAll('.chapter-accordion');
+            const singleFocusToggle = document.getElementById('single-focus-toggle');
+            const btnExpandAll = document.getElementById('btn-expand-all');
+            const btnCollapseAll = document.getElementById('btn-collapse-all');
+
+            function renderMermaidIn(element) {
+                if (window.mermaid) {
+                    const unrendered = element.querySelectorAll('.mermaid:not([data-processed])');
+                    if (unrendered.length > 0) {
+                        try { mermaid.run({ nodes: unrendered }); } catch(e) {}
+                    }
+                }
+            }
+
+            // Expand All
+            if (btnExpandAll) {
+                btnExpandAll.addEventListener('click', () => {
+                    if (singleFocusToggle) singleFocusToggle.checked = false;
+                    accordions.forEach(acc => {
+                        acc.open = true;
+                        renderMermaidIn(acc);
+                    });
+                });
+            }
+
+            // Collapse All
+            if (btnCollapseAll) {
+                btnCollapseAll.addEventListener('click', () => {
+                    accordions.forEach(acc => {
+                        acc.open = false;
+                    });
+                });
+            }
+
+            // Single focus auto-closing logic
+            accordions.forEach(acc => {
+                acc.addEventListener('toggle', () => {
+                    const statusText = acc.querySelector('.accordion-status-text');
+                    if (statusText) {
+                        statusText.innerText = acc.open ? 'Click to collapse' : 'Click to expand';
+                    }
+                    if (acc.open) {
+                        renderMermaidIn(acc);
+                        if (singleFocusToggle && singleFocusToggle.checked) {
+                            accordions.forEach(other => {
+                                if (other !== acc && other.open) {
+                                    other.open = false;
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            // ==========================================
+            // DEEP LINKING & TOC NAVIGATION
+            // ==========================================
+            function navigateToTarget(targetId) {
+                if (!targetId) return;
+                let target = document.getElementById(targetId);
+                
+                // Fallback for slug variations (e.g. hyphens)
+                if (!target) {
+                    const normalized = targetId.replace(/-+/g, '-');
+                    target = document.getElementById(normalized) || 
+                             document.querySelector(`[id*="${normalized}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                }
+
+                if (!target) return;
+
+                // If target is inside an accordion, open that accordion
+                const parentAcc = target.closest('.chapter-accordion');
+                if (parentAcc) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== parentAcc) a.open = false;
+                        });
+                    }
+                    parentAcc.open = true;
+                    renderMermaidIn(parentAcc);
+                } else if (target.classList.contains('chapter-accordion')) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== target) a.open = false;
+                        });
+                    }
+                    target.open = true;
+                    renderMermaidIn(target);
+                }
+
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.classList.add('flash-highlight');
+                    setTimeout(() => target.classList.remove('flash-highlight'), 1600);
+                }, 100);
+            }
+
+            // Check URL hash on page load
+            if (window.location.hash) {
+                setTimeout(() => {
+                    navigateToTarget(window.location.hash.substring(1));
+                }, 250);
+            }
+
+            // Listen for hash changes
+            window.addEventListener('hashchange', () => {
+                navigateToTarget(window.location.hash.substring(1));
+            });
+
+            // Intercept internal page anchor clicks
+            document.addEventListener('click', (e) => {
+                const anchor = e.target.closest('a[href^="#"]');
+                if (!anchor) return;
+                const href = anchor.getAttribute('href');
+                if (href && href.length > 1) {
+                    e.preventDefault();
+                    const id = href.substring(1);
+                    history.pushState(null, null, href);
+                    navigateToTarget(id);
+                }
             });
         });
     </script>

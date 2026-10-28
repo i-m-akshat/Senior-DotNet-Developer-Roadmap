@@ -24,9 +24,11 @@
     --bg-page: #0b0f19;
     --bg-surface: #111827;
     --bg-surface-elevated: #1f2937;
+    --bg-surface-hover: #283548;
     --bg-code: #030712;
     --border: #374151;
     --border-light: #4b5563;
+    --border-highlight: #60a5fa;
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
     --text-dim: #6b7280;
@@ -34,6 +36,7 @@
     --primary: #3b82f6;
     --primary-hover: #60a5fa;
     --primary-glow: rgba(59, 130, 246, 0.15);
+    --primary-glow-strong: rgba(59, 130, 246, 0.3);
     --accent: #8b5cf6;
     --success: #10b981;
     --warning: #f59e0b;
@@ -48,15 +51,20 @@
     --code-color: #f87171;
     --hero-bg: linear-gradient(135deg, rgba(31, 41, 55, 0.75) 0%, rgba(17, 24, 39, 0.95) 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --accordion-header-bg: #151e2e;
+    --accordion-header-hover: #1c273c;
+    --accordion-active-border: #3b82f6;
 }
 
 [data-theme="light"] {
     --bg-page: #f8fafc;
     --bg-surface: #ffffff;
     --bg-surface-elevated: #f1f5f9;
+    --bg-surface-hover: #e2e8f0;
     --bg-code: #0f172a;
     --border: #e2e8f0;
     --border-light: #cbd5e1;
+    --border-highlight: #2563eb;
     --text-main: #0f172a;
     --text-muted: #475569;
     --text-dim: #64748b;
@@ -64,6 +72,7 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-glow: rgba(37, 99, 235, 0.1);
+    --primary-glow-strong: rgba(37, 99, 235, 0.22);
     --accent: #7c3aed;
     --success: #059669;
     --warning: #b45309;
@@ -78,6 +87,9 @@
     --code-color: #b91c1c;
     --hero-bg: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --accordion-header-bg: #f8fafc;
+    --accordion-header-hover: #eef2f6;
+    --accordion-active-border: #2563eb;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -93,7 +105,7 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* SIDEBAR */
+/* SIDEBAR - STRICT FIXED 300px (NEVER OVERLAPS CONTENT) */
 #sidebar {
     width: 300px;
     background-color: var(--bg-surface);
@@ -206,33 +218,35 @@ body {
 .nav-vol { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
 .nav-link.active .nav-vol { color: var(--primary); }
 
-/* CONTENT AREA */
+/* CONTENT WRAPPER - PROPER MARGIN LEFT TO PREVENT OVERLAP */
 #content-wrapper {
     margin-left: 300px;
     flex: 1;
     display: flex;
     justify-content: center;
     padding: 40px 30px;
+    min-width: 0;
 }
 
 #main-content {
-    max-width: 880px;
+    max-width: 900px;
     width: 100%;
+    min-width: 0;
 }
 
 /* RIGHT TABLE OF CONTENTS */
 #toc-sidebar {
-    width: 250px;
+    width: 260px;
     position: sticky;
     top: 40px;
     height: calc(100vh - 80px);
     overflow-y: auto;
-    padding-left: 28px;
-    margin-left: 20px;
+    padding-left: 24px;
+    margin-left: 24px;
     display: none;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1320px) {
     #toc-sidebar { display: block; }
 }
 
@@ -258,7 +272,8 @@ body {
 }
 
 .toc-link:hover { color: var(--primary); }
-.toc-item.level-3 { padding-left: 10px; }
+.toc-item.level-2 { padding-left: 10px; }
+.toc-item.level-3 { padding-left: 18px; font-size: 0.74rem; color: var(--text-dim); }
 
 /* CHAPTER HERO */
 .chapter-hero {
@@ -266,7 +281,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 32px 36px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     box-shadow: var(--card-shadow);
 }
 
@@ -296,7 +311,7 @@ body {
 }
 
 .chapter-hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 800;
     color: var(--heading-color);
     margin-bottom: 12px;
@@ -309,32 +324,264 @@ body {
     line-height: 1.6;
 }
 
+/* ========================================================
+   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
+   ======================================================== */
+.focus-control-bar {
+    position: sticky;
+    top: 14px;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.focus-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.focus-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.focus-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    color: var(--primary-hover);
+}
+
+.focus-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border-light);
+    transition: .25s ease;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s ease;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+.toggle-label-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+/* ========================================================
+   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
+   ======================================================== */
+.chapter-accordion {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chapter-accordion:hover {
+    border-color: var(--border-light);
+}
+
+.chapter-accordion[open] {
+    border-color: var(--accordion-active-border);
+    box-shadow: 0 6px 26px var(--primary-glow-strong);
+}
+
+.chapter-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--accordion-header-bg);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-accordion-header::-webkit-details-marker {
+    display: none;
+}
+
+.chapter-accordion-header:hover {
+    background: var(--accordion-header-hover);
+}
+
+.chapter-accordion[open] > .chapter-accordion-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface-elevated);
+}
+
+.accordion-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.accordion-badge {
+    background: var(--primary-glow);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.accordion-title-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1.35;
+}
+
+.accordion-status-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+.accordion-status-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.accordion-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-page);
+    color: var(--text-muted);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, color 0.2s;
+}
+
+.chapter-accordion[open] > .chapter-accordion-header .accordion-chevron {
+    transform: rotate(180deg);
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.chapter-accordion-body {
+    padding: 28px 30px;
+    animation: accordionFadeIn 0.25s ease-out;
+}
+
+@keyframes accordionFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HIGHLIGHT ON TARGET JUMP */
+.flash-highlight {
+    outline: 2px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow-strong);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+}
+
 /* TYPOGRAPHY */
 h1, h2, h3, h4, h5 { color: var(--heading-color); font-weight: 700; line-height: 1.3; }
 
 h1 {
     font-size: 1.85rem;
-    margin: 44px 0 18px 0;
+    margin: 40px 0 16px 0;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
     color: var(--primary);
 }
 
 h2 {
-    font-size: 1.4rem;
-    margin: 36px 0 14px 0;
+    font-size: 1.35rem;
+    margin: 32px 0 14px 0;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
+    color: var(--heading-color);
 }
 
 h3 {
-    font-size: 1.15rem;
-    margin: 26px 0 10px 0;
+    font-size: 1.1rem;
+    margin: 22px 0 10px 0;
+    color: var(--heading-color);
 }
 
 h4 {
-    font-size: 0.98rem;
-    margin: 18px 0 8px 0;
+    font-size: 0.95rem;
+    margin: 16px 0 8px 0;
     color: var(--warning);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -351,7 +598,7 @@ a:hover { text-decoration: underline; }
     background: var(--bg-code);
     border: 1px solid var(--border);
     border-radius: 10px;
-    margin: 22px 0;
+    margin: 20px 0;
     overflow: hidden;
     box-shadow: var(--card-shadow);
 }
@@ -664,7 +911,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-8-Database-SQL.html" class="nav-link ">
                 <span class="nav-icon">💾</span>
-                <span>Database Engine Internals & SQL Server</span>
+                <span>Database Systems & High-Performance SQL</span>
                 <span class="nav-vol">V8</span>
             </a>
         </li>
@@ -672,7 +919,7 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-9-Microservices.html" class="nav-link ">
-                <span class="nav-icon">📡</span>
+                <span class="nav-icon">☁️</span>
                 <span>Microservices & Distributed Systems</span>
                 <span class="nav-vol">V9</span>
             </a>
@@ -681,8 +928,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-10-System-Design.html" class="nav-link ">
-                <span class="nav-icon">🏗️</span>
-                <span>Enterprise System Design</span>
+                <span class="nav-icon">📐</span>
+                <span>System Design: Enterprise Case Studies</span>
                 <span class="nav-vol">V10</span>
             </a>
         </li>
@@ -690,8 +937,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-11-Project-Interview-Mastery.html" class="nav-link ">
-                <span class="nav-icon">🎯</span>
-                <span>Project Interview Mastery & Walkthroughs</span>
+                <span class="nav-icon">💼</span>
+                <span>Project Interview Mastery & Technical Narrative</span>
                 <span class="nav-vol">V11</span>
             </a>
         </li>
@@ -699,8 +946,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-12-Interview-Question-Bank.html" class="nav-link ">
-                <span class="nav-icon">🏆</span>
-                <span>The Master Interview Question Bank</span>
+                <span class="nav-icon">🎯</span>
+                <span>Master Interview Question Bank & Verbatim Transcripts</span>
                 <span class="nav-vol">V12</span>
             </a>
         </li>
@@ -719,9 +966,29 @@ li::marker { color: var(--primary); }
                 <p>10 thinking patterns, arrays, strings, Dictionary bucket hashing, trees, graphs, dynamic programming, and verbatim Infosys interview transcript.</p>
             </div>
 
+            <!-- ADHD-FRIENDLY INTERACTIVE FOCUS CONTROLS -->
+            <div class="focus-control-bar">
+                <div class="focus-actions">
+                    <button class="focus-btn" id="btn-expand-all" title="Open all chapters for full scroll">
+                        <span>📂</span> Expand All
+                    </button>
+                    <button class="focus-btn" id="btn-collapse-all" title="Collapse all chapters to section headers">
+                        <span>📁</span> Collapse All
+                    </button>
+                </div>
+                <div class="focus-toggle-wrap">
+                    <label class="focus-mode-toggle" title="When active, opening one section automatically closes previous sections to minimize cognitive load and visual clutter.">
+                        <span class="toggle-switch">
+                            <input type="checkbox" id="single-focus-toggle" checked>
+                            <span class="slider"></span>
+                        </span>
+                        <span class="toggle-label-text">🎯 Single-Chapter Focus (Auto-close others)</span>
+                    </label>
+                </div>
+            </div>
+
             <article class="doc-body">
-                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
-<h2 id='volume-1-logical-thinking-data-structures-and-algorithms'>Volume 1: Logical Thinking & Data Structures and Algorithms</h2>
+                <h2 id='volume-1-logical-thinking-data-structures-and-algorithms'>Volume 1: Logical Thinking & Data Structures and Algorithms</h2>
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
@@ -746,8 +1013,23 @@ li::marker { color: var(--primary); }
     <div class="callout-body"><strong>Language & Runtime:</strong> C# 12 / .NET 8 LTS (featuring <code>Span&lt;T&gt;</code>, <code>ReadOnlySpan&lt;T&gt;</code>, <code>PriorityQueue&lt;TElement, TPriority&gt;</code>, Memory-efficient Collections, and CLR Heap layout insights).</div>
 </div>
 
-<p>---</p>
-<h1 id='table-of-contents'>TABLE OF CONTENTS</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+
+<details class="chapter-accordion toc-section-accordion" id="table-of-contents" open>
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">NAVIGATION</span>
+            <span class="accordion-title-text">Table of Contents & Quick Jump Matrix</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+
 <ol>
 <li><a href="#1-the-engineers-mindset-from-struggling-with-dsa-to-architectural-problem-solver">The Engineer's Mindset: From "Struggling with DSA" to "Architectural Problem Solver"</a></li>
 </ol>
@@ -778,162 +1060,192 @@ li::marker { color: var(--primary); }
 <li>3.8 Problem 7: Rotate Array (In-Place 3-Step Reversal)</li>
 </ul>
 <ol>
-<li><a href="#4-pattern-2-two-pointers">Pattern 2: Two Pointers</a></li>
+<li><a href="#4-pattern-2-strings--string-algorithms">Pattern 2: Strings & String Algorithms</a></li>
 </ol>
 <ul>
-<li>4.1 The Two Pointers Mental Model & Archetypes</li>
-<li>4.2 Problem 1: Two Sum II (Input Array Is Sorted)</li>
-<li>4.3 Problem 2: Valid Palindrome</li>
-<li>4.4 Problem 3: Container With Most Water (LeetCode 11)</li>
-<li>4.5 Problem 4: 3Sum (Zero-Sum Triplets - LeetCode 15)</li>
-<li>4.6 Problem 5: Trapping Rain Water (LeetCode 42)</li>
-<li>4.7 Problem 6: Sort Colors / Dutch National Flag (LeetCode 75)</li>
-<li>4.8 Problem 7: Remove Duplicates from Sorted Array</li>
-<li>4.9 Problem 8: Move Zeroes</li>
+<li>4.1 CLR Internals: String Layout, Interning Pool, UTF-16, and GC Pressures</li>
+<li>4.2 Problem 1: Reverse Words in a Sentence (LeetCode 151)</li>
+<li>4.3 Problem 2: String Compression / Run-Length Encoding (LeetCode 443)</li>
+<li>4.4 Problem 3: Longest Palindromic Substring (LeetCode 5)</li>
+<li>4.5 Problem 4: Valid Palindrome II (Delete at Most 1 Character - LeetCode 680)</li>
+<li>4.6 Problem 5: Longest Common Prefix (LeetCode 14)</li>
+<li>4.7 Problem 6: Isomorphic Strings (LeetCode 205)</li>
 </ul>
 <ol>
-<li><a href="#5-pattern-3-sliding-window">Pattern 3: Sliding Window</a></li>
+<li><a href="#5-pattern-3-two-pointers">Pattern 3: Two Pointers</a></li>
 </ol>
 <ul>
-<li>5.1 Universal Sliding Window Architecture & Flowchart</li>
-<li>5.2 Problem 1: Maximum Sum Subarray of Size K (Fixed Window)</li>
-<li>5.3 Problem 2: Longest Substring Without Repeating Characters (LeetCode 3)</li>
-<li>5.4 Problem 3: Minimum Size Subarray Sum (LeetCode 209)</li>
-<li>5.5 Problem 4: Longest Repeating Character Replacement (LeetCode 424)</li>
-<li>5.6 Problem 5: Longest Substring with At Most K Distinct Characters</li>
-<li>5.7 Problem 6: Minimum Window Substring (LeetCode 76 - Hard)</li>
+<li>5.1 The Two Pointers Mental Model & Archetypes</li>
+<li>5.2 Problem 1: Two Sum II (Input Array Is Sorted)</li>
+<li>5.3 Problem 2: Valid Palindrome</li>
+<li>5.4 Problem 3: Container With Most Water (LeetCode 11)</li>
+<li>5.5 Problem 4: 3Sum (Zero-Sum Triplets - LeetCode 15)</li>
+<li>5.6 Problem 5: Trapping Rain Water (LeetCode 42)</li>
+<li>5.7 Problem 6: Sort Colors / Dutch National Flag (LeetCode 75)</li>
+<li>5.8 Problem 7: Remove Duplicates from Sorted Array</li>
+<li>5.9 Problem 8: Move Zeroes</li>
 </ul>
 <ol>
-<li><a href="#6-pattern-4-fast--slow-pointers-tortoise--hare">Pattern 4: Fast & Slow Pointers (Tortoise & Hare)</a></li>
+<li><a href="#6-pattern-4-sliding-window">Pattern 4: Sliding Window</a></li>
 </ol>
 <ul>
-<li>6.1 The Mathematical Principle of Floyd's Algorithm</li>
-<li>6.2 Problem 1: Linked List Cycle Detection (LeetCode 141)</li>
-<li>6.3 Problem 2: Middle of the Linked List (LeetCode 876)</li>
-<li>6.4 Problem 3: Find the Duplicate Number in an Array (LeetCode 287)</li>
+<li>6.1 Universal Sliding Window Architecture & Flowchart</li>
+<li>6.2 Problem 1: Maximum Sum Subarray of Size K (Fixed Window)</li>
+<li>6.3 Problem 2: Longest Substring Without Repeating Characters (LeetCode 3)</li>
+<li>6.4 Problem 3: Minimum Size Subarray Sum (LeetCode 209)</li>
+<li>6.5 Problem 4: Longest Repeating Character Replacement (LeetCode 424)</li>
+<li>6.6 Problem 5: Longest Substring with At Most K Distinct Characters</li>
+<li>6.7 Problem 6: Minimum Window Substring (LeetCode 76 - Hard)</li>
 </ul>
 <ol>
-<li><a href="#7-pattern-5-searching-algorithms-encyclopedia">Pattern 5: Searching Algorithms Encyclopedia</a></li>
+<li><a href="#7-pattern-5-fast--slow-pointers-tortoise--hare">Pattern 5: Fast & Slow Pointers (Tortoise & Hare)</a></li>
 </ol>
 <ul>
-<li>7.1 The Searching Taxonomy & Mechanical Sympathy Decision Matrix</li>
-<li>7.2 Linear Search & The Sentinel Optimization (Eliminating Boundary Checks)</li>
-<li>7.3 Classic Binary Search (The Monotonic Mindset)</li>
-<li>7.4 Search in Rotated Sorted Array (Shifted Ledger Partitions)</li>
-<li>7.5 Find First and Last Position in Sorted Array (Lower & Upper Bounds)</li>
-<li>7.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages Within D Days)</li>
-<li>7.7 Interpolation Search (Uniformly Distributed Probing Engine)</li>
-<li>7.8 Exponential Search (Unbounded Ledger Streams & Fast Galloping)</li>
-<li>7.9 Ternary Search (Finding Extrema in Unimodal Functions)</li>
+<li>7.1 The Mathematical Principle of Floyd's Algorithm</li>
+<li>7.2 Problem 1: Linked List Cycle Detection (LeetCode 141)</li>
+<li>7.3 Problem 2: Middle of the Linked List (LeetCode 876)</li>
+<li>7.4 Problem 3: Find the Duplicate Number in an Array (LeetCode 287)</li>
 </ul>
 <ol>
-<li><a href="#8-pattern-6-sorting-algorithms-encyclopedia">Pattern 6: Sorting Algorithms Encyclopedia</a></li>
+<li><a href="#8-pattern-6-searching-algorithms-encyclopedia">Pattern 6: Searching Algorithms Encyclopedia</a></li>
 </ol>
 <ul>
-<li>8.1 The Sorting Taxonomy & Complexity Matrix</li>
-<li>8.2 Bubble Sort (Standard & Early-Exit Optimization)</li>
-<li>8.3 Selection Sort (Minimum-Scan & Minimal Memory Writes)</li>
-<li>8.4 Insertion Sort (Adaptive Shifting & Small Partition Powerhouse)</li>
-<li>8.5 Merge Sort (Divide & Conquer, In-Depth Memory Mechanics & Stability)</li>
-<li>8.6 Quick Sort (Lomuto vs. Hoare Partitioning & Median-of-3 Pivot)</li>
-<li>8.7 Heap Sort (In-Place Array-Based Max-Heapify)</li>
-<li>8.8 Counting Sort (Non-Comparison O(N + K) Integer Sorting)</li>
-<li>8.9 Radix Sort (LSD Base-10 / 256 Distribution Engine)</li>
-<li>8.10 Under the Hood: .NET 8 IntroSort & ArraySortHelper<T></li>
+<li>8.1 The Searching Taxonomy & Mechanical Sympathy Decision Matrix</li>
+<li>8.2 Linear Search & The Sentinel Optimization (Eliminating Boundary Checks)</li>
+<li>8.3 Classic Binary Search (The Monotonic Mindset)</li>
+<li>8.4 Search in Rotated Sorted Array (Shifted Ledger Partitions)</li>
+<li>8.5 Find First and Last Position in Sorted Array (Lower & Upper Bounds)</li>
+<li>8.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages Within D Days)</li>
+<li>8.7 Interpolation Search (Uniformly Distributed Probing Engine)</li>
+<li>8.8 Exponential Search (Unbounded Ledger Streams & Fast Galloping)</li>
+<li>8.9 Ternary Search (Finding Extrema in Unimodal Functions)</li>
 </ul>
 <ol>
-<li><a href="#9-pattern-7-stack--queue">Pattern 7: Stack & Queue</a></li>
+<li><a href="#9-pattern-7-sorting-algorithms-encyclopedia">Pattern 7: Sorting Algorithms Encyclopedia</a></li>
 </ol>
 <ul>
-<li>9.1 Memory Models: Array-Backed vs. Node-Backed Queues</li>
-<li>9.2 Problem 1: Valid Parentheses (Syntax Validation for Config Tokens)</li>
-<li>9.3 Problem 2: Min Stack (O(1) Retrieval via Companion State)</li>
-<li>9.4 Problem 3: Evaluate Reverse Polish Notation (Financial Math Engine)</li>
-<li>9.5 Problem 4: Implement Queue Using Stacks (Amortized Cost Transfer)</li>
-<li>9.6 Problem 5: Moving Average from Data Stream (Circular Queue Buffer)</li>
+<li>9.1 The Sorting Taxonomy & Complexity Matrix</li>
+<li>9.2 Bubble Sort (Standard & Early-Exit Optimization)</li>
+<li>9.3 Selection Sort (Minimum-Scan & Minimal Memory Writes)</li>
+<li>9.4 Insertion Sort (Adaptive Shifting & Small Partition Powerhouse)</li>
+<li>9.5 Merge Sort (Divide & Conquer, In-Depth Memory Mechanics & Stability)</li>
+<li>9.6 Quick Sort (Lomuto vs. Hoare Partitioning & Median-of-3 Pivot)</li>
+<li>9.7 Heap Sort (In-Place Array-Based Max-Heapify)</li>
+<li>9.8 Counting Sort (Non-Comparison O(N + K) Integer Sorting)</li>
+<li>9.9 Radix Sort (LSD Base-10 / 256 Distribution Engine)</li>
+<li>9.10 Under the Hood: .NET 8 IntroSort & ArraySortHelper<T></li>
 </ul>
 <ol>
-<li><a href="#10-pattern-8-linked-lists">Pattern 8: Linked Lists</a></li>
+<li><a href="#10-pattern-8-stack--queue">Pattern 8: Stack & Queue</a></li>
 </ol>
 <ul>
-<li>10.1 Linked List Memory Architecture & Cache Miss Penalty</li>
-<li>10.2 Problem 1: Reverse Linked List (Iterative Pointer Rewiring)</li>
-<li>10.3 Problem 2: Merge Two Sorted Lists (Splice Nodes with Sentinel Head)</li>
+<li>10.1 Memory Models: Array-Backed vs. Node-Backed Queues</li>
+<li>10.2 Problem 1: Valid Parentheses (Syntax Validation for Config Tokens)</li>
+<li>10.3 Problem 2: Min Stack (O(1) Retrieval via Companion State)</li>
+<li>10.4 Problem 3: Evaluate Reverse Polish Notation (Financial Math Engine)</li>
+<li>10.5 Problem 4: Implement Queue Using Stacks (Amortized Cost Transfer)</li>
+<li>10.6 Problem 5: Moving Average from Data Stream (Circular Queue Buffer)</li>
 </ul>
 <ol>
-<li><a href="#11-pattern-9-trees--binary-search-trees">Pattern 9: Trees & Binary Search Trees</a></li>
+<li><a href="#11-pattern-9-linked-lists">Pattern 9: Linked Lists</a></li>
 </ol>
 <ul>
-<li>11.1 Tree Representations & Stack Frame Traversal Mechanics</li>
-<li>11.2 Problem 1: Maximum Depth of Binary Tree (DFS vs. BFS)</li>
-<li>11.3 Problem 2: Binary Tree Level Order Traversal (Batch Queue Sizing)</li>
-<li>11.4 Problem 3: Validate Binary Search Tree (Range Constraint Propagation)</li>
-<li>11.5 Problem 4: Lowest Common Ancestor (Organizational Hierarchy Resolution)</li>
+<li>11.1 Linked List Memory Architecture & Cache Miss Penalty</li>
+<li>11.2 Problem 1: Reverse Linked List (Iterative Pointer Rewiring)</li>
+<li>11.3 Problem 2: Merge Two Sorted Lists (Splice Nodes with Sentinel Head)</li>
 </ul>
 <ol>
-<li><a href="#12-pattern-10-graphs">Pattern 10: Graphs</a></li>
+<li><a href="#12-pattern-10-trees--binary-search-trees">Pattern 10: Trees & Binary Search Trees</a></li>
 </ol>
 <ul>
-<li>12.1 Adjacency List vs. Adjacency Matrix Trade-offs</li>
-<li>12.2 Problem 1: Number of Islands (Grid DFS/BFS Connected Components)</li>
-<li>12.3 Problem 2: Course Schedule (Cycle Detection & Topological Sort via Kahn's Algorithm)</li>
+<li>12.1 Tree Representations & Stack Frame Traversal Mechanics</li>
+<li>12.2 Problem 1: Maximum Depth of Binary Tree (DFS vs. BFS)</li>
+<li>12.3 Problem 2: Binary Tree Level Order Traversal (Batch Queue Sizing)</li>
+<li>12.4 Problem 3: Validate Binary Search Tree (Range Constraint Propagation)</li>
+<li>12.5 Problem 4: Lowest Common Ancestor (Organizational Hierarchy Resolution)</li>
 </ul>
 <ol>
-<li><a href="#13-pattern-11-heap--priorityqueue-net-6">Pattern 11: Heap & PriorityQueue (.NET 6+)</a></li>
+<li><a href="#13-pattern-11-graphs">Pattern 11: Graphs</a></li>
 </ol>
 <ul>
-<li>13.1 Binary Heap Mechanics on Contiguous Arrays</li>
-<li>13.2 Problem 1: Kth Largest Element in an Array (Min-Heap of Size K)</li>
-<li>13.3 Problem 2: Merge K Sorted Lists / Telemetry Streams (K-Way Min-Heap Merge)</li>
+<li>13.1 Adjacency List vs. Adjacency Matrix Trade-offs</li>
+<li>13.2 Problem 1: Number of Islands (Grid DFS/BFS Connected Components)</li>
+<li>13.3 Problem 2: Course Schedule (Cycle Detection & Topological Sort via Kahn's Algorithm)</li>
 </ul>
 <ol>
-<li><a href="#14-pattern-12-recursion--backtracking">Pattern 12: Recursion & Backtracking</a></li>
+<li><a href="#14-pattern-12-heap--priorityqueue-net-6">Pattern 12: Heap & PriorityQueue (.NET 6+)</a></li>
 </ol>
 <ul>
-<li>14.1 Backtracking Template: Choose -> Explore -> Unchoose</li>
-<li>14.2 Problem 1: Subsets (Combinatorial Role-Based Access Matrix)</li>
-<li>14.3 Problem 2: Permutations (Distinct Sequencing Generation)</li>
-<li>14.4 Problem 3: Word Search (2D Board Backtracking with Visited Tracking)</li>
+<li>14.1 Binary Heap Mechanics on Contiguous Arrays</li>
+<li>14.2 Problem 1: Kth Largest Element in an Array (Min-Heap of Size K)</li>
+<li>14.3 Problem 2: Merge K Sorted Lists / Telemetry Streams (K-Way Min-Heap Merge)</li>
 </ul>
 <ol>
-<li><a href="#15-pattern-13-dynamic-programming">Pattern 13: Dynamic Programming</a></li>
+<li><a href="#15-pattern-13-recursion--backtracking">Pattern 13: Recursion & Backtracking</a></li>
 </ol>
 <ul>
-<li>15.1 The DP Framework: Optimal Substructure + Overlapping Subproblems</li>
-<li>15.2 Problem 1: Climbing Stairs (Fibonacci State Transitions)</li>
-<li>15.3 Problem 2: Coin Change (Unbounded Knapsack / Minimum Denominations)</li>
-<li>15.4 Problem 3: Longest Common Subsequence (Audit Diff & Reconciliation Engine)</li>
-<li>15.5 Problem 4: 0/1 Knapsack Problem (SaaS Resource Allocation Under Budget)</li>
+<li>15.1 Backtracking Template: Choose -> Explore -> Unchoose</li>
+<li>15.2 Problem 1: Subsets (Combinatorial Role-Based Access Matrix)</li>
+<li>15.3 Problem 2: Permutations (Distinct Sequencing Generation)</li>
+<li>15.4 Problem 3: Word Search (2D Board Backtracking with Visited Tracking)</li>
 </ul>
 <ol>
-<li><a href="#16-pattern-14-greedy-algorithms--intervals">Pattern 14: Greedy Algorithms & Intervals</a></li>
+<li><a href="#16-pattern-14-dynamic-programming">Pattern 14: Dynamic Programming</a></li>
 </ol>
 <ul>
-<li>16.1 The Greedy-Choice Property</li>
-<li>16.2 Problem 1: Best Time to Buy and Sell Stock (Running Valley & Peak)</li>
-<li>16.3 Problem 2: Jump Game (Boundary Horizon Expansion)</li>
-<li>16.4 Problem 3: Merge Intervals (Booking & Calendar Overlap Consolidation)</li>
-<li>16.5 Problem 4: Meeting Rooms I & II (Resource Contention Peaks)</li>
+<li>16.1 The DP Framework: Optimal Substructure + Overlapping Subproblems</li>
+<li>16.2 Problem 1: Climbing Stairs (Fibonacci State Transitions)</li>
+<li>16.3 Problem 2: Coin Change (Unbounded Knapsack / Minimum Denominations)</li>
+<li>16.4 Problem 3: Longest Common Subsequence (Audit Diff & Reconciliation Engine)</li>
+<li>16.5 Problem 4: 0/1 Knapsack Problem (SaaS Resource Allocation Under Budget)</li>
 </ul>
 <ol>
-<li><a href="#17-pattern-15-bit-manipulation">Pattern 15: Bit Manipulation</a></li>
+<li><a href="#17-pattern-15-greedy-algorithms--intervals">Pattern 15: Greedy Algorithms & Intervals</a></li>
 </ol>
 <ul>
-<li>17.1 Bitwise Operators and Bitmask Flags in C#</li>
-<li>17.2 Problem 1: Single Number (XOR Cancellation Property)</li>
-<li>17.3 Problem 2: Number of 1 Bits (Brian Kernighan's Bit Clear)</li>
-<li>17.4 Problem 3: Power of Two (Bitmask Decrement Boundary)</li>
+<li>17.1 The Greedy-Choice Property</li>
+<li>17.2 Problem 1: Best Time to Buy and Sell Stock (Running Valley & Peak)</li>
+<li>17.3 Problem 2: Jump Game (Boundary Horizon Expansion)</li>
+<li>17.4 Problem 3: Merge Intervals (Booking & Calendar Overlap Consolidation)</li>
+<li>17.5 Problem 4: Meeting Rooms I & II (Resource Contention Peaks)</li>
 </ul>
 <ol>
-<li><a href="#18-infosys--technical-interview-survival-playbook">Infosys & Technical Interview Survival Playbook</a></li>
+<li><a href="#18-pattern-16-bit-manipulation">Pattern 16: Bit Manipulation</a></li>
 </ol>
 <ul>
-<li>18.1 How Infosys Evaluates a 3 YOE .NET Developer</li>
-<li>18.2 Real 45-Minute Interview Simulation Transcript</li>
-<li>18.3 The .NET 8 Big-O Time & Space Complexity Reference Matrix</li>
+<li>18.1 Bitwise Operators and Bitmask Flags in C#</li>
+<li>18.2 Problem 1: Single Number (XOR Cancellation Property)</li>
+<li>18.3 Problem 2: Number of 1 Bits (Brian Kernighan's Bit Clear)</li>
+<li>18.4 Problem 3: Power of Two (Bitmask Decrement Boundary)</li>
 </ul>
-<p>---</p>
-<h1 id='1-the-engineers-mindset-from-struggling-with-dsa-to-architectural-problem-solver'>1. THE ENGINEER'S MINDSET: FROM "STRUGGLING WITH DSA" TO "ARCHITECTURAL PROBLEM SOLVER"</h1>
+<ol>
+<li><a href="#19-infosys--technical-interview-survival-playbook">Infosys & Technical Interview Survival Playbook</a></li>
+</ol>
+<ul>
+<li>19.1 How Infosys Evaluates a 3 YOE .NET Developer</li>
+<li>19.2 Real 45-Minute Interview Simulation Transcript</li>
+<li>19.3 The .NET 8 Big-O Time & Space Complexity Reference Matrix</li>
+</ul>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-1" data-chapter="1" open>
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 01</span>
+            <span class="accordion-title-text">1. THE ENGINEER'S MINDSET: FROM "STRUGGLING WITH DSA" TO "ARCHITECTURAL PROBLEM SOLVER"</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="1-the-engineers-mindset-from-struggling-with-dsa-to-architectural-problem-solver" class="accordion-anchor"></a>
+        <a id="1-the-engineers-mindset-from-struggling-with-dsa-to-architectural-problem-solver" class="accordion-anchor"></a>
+
 <h2 id='11-why-net-enterprise-developers-struggle-with-dsa'>1.1 Why .NET Enterprise Developers Struggle with DSA</h2>
 <p>A typical backend .NET developer with 3 years of experience spends 90% of their working day doing the following:</p>
 <ol>
@@ -972,7 +1284,7 @@ Raw Memory / Array  ──&gt;  Pointers / State  ──&gt;  In-Place Mutations
 &quot;CPU, look at index i, compare with index j, swap bytes, increment pointer.&quot;</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='12-the-linq-crutch-vs-mechanical-sympathy'>1.2 The "LINQ Crutch" vs. Mechanical Sympathy</h2>
 <p>Consider a real interview scenario. The interviewer asks:</p>
 
@@ -1029,7 +1341,7 @@ public int RemoveDuplicates(Span&lt;int&gt; nums)
 </div>
 
 <p><strong>Zero allocations ($O(1)$ space), single pass ($O(N)$ time), cache-friendly contiguous memory reads, CPU branch predictor optimal.</strong></p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='13-the-infosys-mnc-interview-philosophy-for-3-yoe'>1.3 The Infosys & MNC Interview Philosophy for 3 YOE</h2>
 <p>Interviews at massive tech consultancies (Infosys, TCS, Cognizant, Wipro) and tier-1 product delivery teams for candidates with ~3 years of experience are standardized. They follow a predictable pattern:</p>
 <div class='table-wrapper'><table>
@@ -1056,7 +1368,7 @@ public int RemoveDuplicates(Span&lt;int&gt; nums)
 <ul>
 <li>Scenario-based problem solving: "How would you deduplicate 10 million transactions using minimal RAM?"</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='14-the-7-step-universal-problem-solving-blueprint'>1.4 The 7-Step Universal Problem-Solving Blueprint</h2>
 <p>Whenever an interviewer presents a DSA problem, <strong>do not touch the keyboard for the first 3 minutes.</strong> Follow this ironclad protocol:</p>
 
@@ -1097,8 +1409,26 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
         └── Conclude with formal Big-O: &quot;Time is O(N), Space is O(1) auxiliary.&quot;</code></pre>
 </div>
 
-<p>---</p>
-<h1 id='2-mastering-the-core-algorithmic-thinking-patterns'>2. MASTERING THE CORE ALGORITHMIC THINKING PATTERNS</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-2" data-chapter="2" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 02</span>
+            <span class="accordion-title-text">2. MASTERING THE CORE ALGORITHMIC THINKING PATTERNS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="2-mastering-the-core-algorithmic-thinking-patterns" class="accordion-anchor"></a>
+        <a id="2-mastering-the-core-algorithmic-thinking-patterns" class="accordion-anchor"></a>
+
 <h2 id='21-the-10-essential-algorithmic-archetypes'>2.1 The 10 Essential Algorithmic Archetypes</h2>
 <p>Every algorithmic problem asked in an interview is an instantiation of one of ten fundamental patterns. Once you learn to recognize the pattern signature, you no longer memorize individual problems.</p>
 
@@ -1177,7 +1507,7 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
 <li><strong>Core Mechanism:</strong> Make the locally optimal choice at each step, proving that it leads to the globally optimal solution.</li>
 <li><strong>Trigger Clues:</strong> "Interval scheduling", "Minimum number of platforms / meeting rooms", "Gas station circuit".</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='22-pattern-recognition-decision-matrix'>2.2 Pattern Recognition Decision Matrix</h2>
 <p>When you read a question prompt in an interview, refer to this mapping:</p>
 <div class='table-wrapper'><table>
@@ -1193,11 +1523,29 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
 <tr><td>"Count total ways", "Longest increasing...", "Choices with weights"</td><td>Integer / Sequence</td><td><strong>Dynamic Programming</strong></td></tr>
 <tr><td>"Schedule meetings", "Non-overlapping intervals", "Stocks"</td><td>Intervals / Values</td><td><strong>Sorting + Greedy Selection</strong></td></tr>
 </table></div>
-<p>---</p>
-<p>---</p>
-<h1 id='3-pattern-1-arrays-hashing'>3. PATTERN 1: ARRAYS & HASHING</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-3" data-chapter="3" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 03</span>
+            <span class="accordion-title-text">3. PATTERN 1: ARRAYS & HASHING</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="3-pattern-1-arrays-hashing" class="accordion-anchor"></a>
+        <a id="3-pattern-1-arrays--hashing" class="accordion-anchor"></a>
+
 <p>Arrays and Hash Maps form the foundation of 80% of backend engineering problems. An array provides $O(1)$ indexed memory access with sequential CPU cache locality, while a Hash Map trades memory space to provide $O(1)$ amortized lookups by key.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='31-clr-internals-array-layout-on-the-managed-heap-cpu-cache-locality'>3.1 CLR Internals: Array Layout on the Managed Heap & CPU Cache Locality</h2>
 <p>In .NET 8, every array is a contiguous block of memory allocated on the Managed Heap:</p>
 <ul>
@@ -1218,7 +1566,7 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
 
 <h3 id='cpu-cache-lines-mechanical-sympathy'>CPU Cache Lines & Mechanical Sympathy</h3>
 <p>Modern CPUs fetch memory in <strong>64-byte Cache Lines</strong> (holding 16 consecutive 32-bit integers). Iterating sequentially through an array allows the hardware prefetcher to stream data into the L1 cache with zero CPU wait cycles.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='32-problem-1-two-sum-unsorted-array'>3.2 Problem 1: Two Sum (Unsorted Array)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>For each number $X$, calculate its required partner $	ext{diff} = 	ext{Target} - X$. If $	ext{diff}$ is already in our map, we found our pair! Otherwise, store $X$ with its index and keep scanning.</p>
@@ -1259,7 +1607,7 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass over the array with $O(1)$ dictionary lookups.</li>
 <li><strong>Space Complexity:</strong> $O(N)$ — Stores up to $N$ elements in the dictionary.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='33-problem-2-valid-anagram'>3.3 Problem 2: Valid Anagram</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Count the character frequencies in both strings. If every character appears the exact same number of times, they are anagrams.</p>
@@ -1295,7 +1643,7 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass over both strings.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — Array size is strictly 26 regardless of input size.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='34-problem-3-group-anagrams'>3.4 Problem 3: Group Anagrams</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Sort the characters of each string to create a "canonical signature" key (e.g. <code>&quot;eat&quot;</code> $	o$ <code>&quot;aet&quot;</code>, <code>&quot;tea&quot;</code> $	o$ <code>&quot;aet&quot;</code>). Group strings that share the exact same sorted key in a Dictionary.</p>
@@ -1334,7 +1682,7 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
 <li><strong>Time Complexity:</strong> $O(N \cdot K \log K)$ where $N$ is word count and $K$ is maximum word length.</li>
 <li><strong>Space Complexity:</strong> $O(N \cdot K)$ to store keys and grouped lists.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='35-problem-4-top-k-frequent-elements'>3.5 Problem 4: Top K Frequent Elements</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Count frequencies with a Dictionary, then use <strong>Bucket Sort</strong> where the array index represents the frequency count, avoiding full $O(N \log N)$ sorting!</p>
@@ -1384,7 +1732,7 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
 <li><strong>Time Complexity:</strong> $O(N)$ — Tallying counts and walking buckets takes linear time.</li>
 <li><strong>Space Complexity:</strong> $O(N)$ — Buckets and frequency dictionary.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='36-problem-5-product-of-array-except-self'>3.6 Problem 5: Product of Array Except Self</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>The product of all numbers except <code>nums[i]</code> is simply the product of all elements to its left ($	ext{prefix}$) multiplied by the product of all elements to its right ($	ext{postfix}$).</p>
@@ -1436,7 +1784,7 @@ Result:  [ 24,  12,   8,   6 ]  (Prefix * Postfix)</code></pre>
 <li><strong>Time Complexity:</strong> $O(N)$ — Two sequential linear passes.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ auxiliary memory (excluding the returned result array).</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='37-problem-6-kadanes-algorithm-maximum-subarray-sum'>3.7 Problem 6: Kadane's Algorithm (Maximum Subarray Sum)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Walk through the array keeping a running streak <code>curSum</code>. If the streak ever drops below zero, reset it to zero because a negative streak will only hurt future subarrays!</p>
@@ -1472,7 +1820,7 @@ Result:  [ 24,  12,   8,   6 ]  (Prefix * Postfix)</code></pre>
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass over the array.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — Only two scalar integers.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='38-problem-7-rotate-array-in-place-3-step-reversal'>3.8 Problem 7: Rotate Array (In-Place 3-Step Reversal)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Rotating an array to the right by $K$ steps can be done in-place in 3 simple reversals: reverse the whole array, reverse the first $K$ items, then reverse the remaining items.</p>
@@ -1524,11 +1872,409 @@ private void Reverse(int[] nums, int l, int r)
 <li><strong>Time Complexity:</strong> $O(N)$ — Every element is swapped twice.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — Zero heap allocation.</li>
 </ul>
-<p>---</p>
-<h1 id='4-pattern-2-two-pointers'>4. PATTERN 2: TWO POINTERS</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-4" data-chapter="4" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 04</span>
+            <span class="accordion-title-text">4. PATTERN 2: STRINGS & STRING ALGORITHMS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="4-pattern-2-strings-string-algorithms" class="accordion-anchor"></a>
+        <a id="4-pattern-2-strings--string-algorithms" class="accordion-anchor"></a>
+
+<p>Strings in C# (.NET 8) are immutable reference types with unique memory and garbage collection characteristics. Mastering string algorithms requires understanding both low-level CLR object layout (interning, UTF-16, GC Gen 0 churn) and classic pointer/sliding window algorithms that operate with zero heap allocations using <code>ReadOnlySpan&lt;char&gt;</code>.</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='41-clr-internals-string-layout-interning-pool-utf-16-and-gc-pressures'>4.1 CLR Internals: String Layout, Interning Pool, UTF-16, and GC Pressures</h2>
+<p>In .NET 8, every <code>System.String</code> is an immutable reference type allocated on the Managed Heap:</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Managed Heap Memory Structure of string s = &quot;Infosys&quot;:
+[SyncBlockIndex: 8 bytes]       (Locking and object hashcode)
+[MethodTable Pointer: 8 bytes]  (Points to System.String Type Descriptor)
+[String Length: 4 bytes]         (7 characters)
+[Character Buffer: 7 * 2 bytes]  (UTF-16 encoding: &#x27;I&#x27;, &#x27;n&#x27;, &#x27;f&#x27;, &#x27;o&#x27;, &#x27;s&#x27;, &#x27;y&#x27;, &#x27;s&#x27; = 14 bytes)
+[Null Terminator: 2 bytes]       (0x0000 for native C/C++ interop compatibility)
+[Padding: 4 bytes]               (64-bit alignment)
+Total Memory = 8 + 8 + 4 + 14 + 2 + 4 = 40 bytes!</code></pre>
+</div>
+
+<h3 id='the-string-immutability-trap-in-loops'>The String Immutability Trap in Loops</h3>
+<p>Because strings are immutable, modifying a string creates a completely new string object on the Managed Heap:</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// NAIVE CONCATENATION (DANGEROUS IN HIGH-THROUGHPUT CODE)
+string result = &quot;&quot;;
+for (int i = 0; i &lt; n; i++)
+{
+    result += i.ToString(); // Allocates a new string on EVERY iteration!
+}
+// Time Complexity: O(N^2) due to repeated memory copying.
+// Generates massive Gen 0 garbage collection pressure.</code></pre>
+</div>
+
+<h3 id='mitigation-strategies-in-net-8'>Mitigation Strategies in .NET 8</h3>
+<ol>
+<li><strong><code>StringBuilder</code>:</strong> Backed by an internal character buffer that dynamically expands, amortizing allocations.</li>
+<li><strong><code>ReadOnlySpan&lt;char&gt;</code>:</strong> Enables zero-allocation parsing, sub-stringing, and character comparison without creating new heap strings.</li>
+<li><strong>String Interning:</strong> The CLR maintains an internal hash table called the <strong>Intern Pool</strong>. Literal strings with identical content share the exact same reference address in memory (<code>string.IsInterned(s)</code>).</li>
+</ol>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='42-problem-1-reverse-words-in-a-sentence-leetcode-151'>4.2 Problem 1: Reverse Words in a Sentence (LeetCode 151)</h2>
+<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
+<p>Trim whitespace, reverse the entire character array, then reverse each individual word within its own boundaries, and finally compact multi-space gaps into single spaces.</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Input:    &quot;the sky is blue&quot;
+Step 1:   &quot;eulb si yks eht&quot;  (Reverse entire string)
+Step 2:   &quot;blue is sky the&quot;  (Reverse each word individually)</code></pre>
+</div>
+
+<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public string ReverseWords(string s)
+{
+    // 1. Split words while removing empty entries
+    string[] words = s.Split(&#x27; &#x27;, StringSplitOptions.RemoveEmptyEntries);
+
+    // 2. Reverse word array using two pointers
+    int l = 0, r = words.Length - 1;
+    while (l &lt; r)
+    {
+        (words[l], words[r]) = (words[r], words[l]);
+        l++;
+        r--;
+    }
+
+    // 3. Join with a single space
+    return string.Join(&quot; &quot;, words);
+}</code></pre>
+</div>
+
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> In zero-allocation .NET pipelines, you can perform this in-place over <code>char[]</code> or <code>Span&lt;char&gt;</code> without allocating a <code>string[]</code> array. For interview whiteboard rounds, <code>string.Split(..., RemoveEmptyEntries)</code> followed by in-place reversal is clean, expressive, and immediately understood.</div>
+</div>
+
+<ul>
+<li><strong>Time Complexity:</strong> $O(N)$ — Linear scan and split.</li>
+<li><strong>Space Complexity:</strong> $O(N)$ — To hold word tokens.</li>
+</ul>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='43-problem-2-string-compression-run-length-encoding-leetcode-443'>4.3 Problem 2: String Compression / Run-Length Encoding (LeetCode 443)</h2>
+<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
+<p>Use a fast read pointer to count contiguous identical characters, and a slow write pointer to write the character followed by the digits of its count if greater than 1.</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Input:  [ &#x27;a&#x27;, &#x27;a&#x27;, &#x27;b&#x27;, &#x27;b&#x27;, &#x27;c&#x27;, &#x27;c&#x27;, &#x27;c&#x27; ]
+Output: [ &#x27;a&#x27;, &#x27;2&#x27;, &#x27;b&#x27;, &#x27;2&#x27;, &#x27;c&#x27;, &#x27;3&#x27; ], returns length 6</code></pre>
+</div>
+
+<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public int Compress(char[] chars)
+{
+    int w = 0; // write pointer
+    int r = 0; // read pointer
+
+    while (r &lt; chars.Length)
+    {
+        char c = chars[r];
+        int count = 0;
+
+        // Count contiguous matching characters
+        while (r &lt; chars.Length &amp;&amp; chars[r] == c)
+        {
+            r++;
+            count++;
+        }
+
+        // Write character
+        chars[w++] = c;
+
+        // Write count digits if &gt; 1
+        if (count &gt; 1)
+        {
+            foreach (char digit in count.ToString())
+            {
+                chars[w++] = digit;
+            }
+        }
+    }
+
+    return w;
+}</code></pre>
+</div>
+
+<ul>
+<li><strong>Time Complexity:</strong> $O(N)$ — Each character is visited once by <code>r</code>.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — In-place array mutation.</li>
+</ul>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='44-problem-3-longest-palindromic-substring-leetcode-5'>4.4 Problem 3: Longest Palindromic Substring (LeetCode 5)</h2>
+<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
+<p>Every palindrome expands symmetrically from its center. Iterate through each index as a center for both <strong>odd-length palindromes</strong> (center is <code>i</code>) and <strong>even-length palindromes</strong> (center is <code>i, i+1</code>), expanding outward as long as characters match.</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Center Expansion:
+Odd:   c  b  [a]  b  c   &amp;rarr; Center is &#x27;a&#x27;, expand left and right
+Even:  c  [b   b]  c     &amp;rarr; Center is between &#x27;b&#x27; and &#x27;b&#x27;</code></pre>
+</div>
+
+<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public string LongestPalindrome(string s)
+{
+    if (string.IsNullOrEmpty(s)) return &quot;&quot;;
+
+    string res = &quot;&quot;;
+    int resLen = 0;
+
+    for (int i = 0; i &lt; s.Length; i++)
+    {
+        // 1. Odd length palindrome (center is i)
+        Expand(i, i);
+
+        // 2. Even length palindrome (center is i, i+1)
+        Expand(i, i + 1);
+    }
+
+    void Expand(int l, int r)
+    {
+        while (l &gt;= 0 &amp;&amp; r &lt; s.Length &amp;&amp; s[l] == s[r])
+        {
+            if ((r - l + 1) &gt; resLen)
+            {
+                res = s.Substring(l, r - l + 1);
+                resLen = r - l + 1;
+            }
+            l--;
+            r++;
+        }
+    }
+
+    return res;
+}</code></pre>
+</div>
+
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> Instead of slicing <code>s.Substring(...)</code> on every expansion, track integer indices <code>bestStart</code> and <code>bestLen</code>, and call <code>s.Substring(bestStart, bestLen)</code> only once at the end to save string allocations.</div>
+</div>
+
+<ul>
+<li><strong>Time Complexity:</strong> $O(N^2)$ — Expanding from $2N - 1$ centers takes $O(N)$ each.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ auxiliary space.</li>
+</ul>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='45-problem-4-valid-palindrome-ii-delete-at-most-1-character-leetcode-680'>4.5 Problem 4: Valid Palindrome II (Delete at Most 1 Character - LeetCode 680)</h2>
+<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
+<p>Use converging two pointers (<code>l</code> and <code>r</code>). If <code>s[l] != s[r]</code>, check if deleting either <code>s[l]</code> (test <code>l+1 .. r</code>) or <code>s[r]</code> (test <code>l .. r-1</code>) forms a valid palindrome.</p>
+<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public bool ValidPalindrome(string s)
+{
+    int l = 0, r = s.Length - 1;
+
+    while (l &lt; r)
+    {
+        if (s[l] != s[r])
+        {
+            // Try skipping left char OR skipping right char
+            return IsSubPalindrome(s, l + 1, r) || IsSubPalindrome(s, l, r - 1);
+        }
+        l++;
+        r--;
+    }
+
+    return true;
+}
+
+private bool IsSubPalindrome(string s, int l, int r)
+{
+    while (l &lt; r)
+    {
+        if (s[l] != s[r]) return false;
+        l++;
+        r--;
+    }
+    return true;
+}</code></pre>
+</div>
+
+<ul>
+<li><strong>Time Complexity:</strong> $O(N)$ — At most two linear scans.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Only pointer comparisons.</li>
+</ul>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='46-problem-5-longest-common-prefix-leetcode-14'>4.6 Problem 5: Longest Common Prefix (LeetCode 14)</h2>
+<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
+<p>Start with the first word as our candidate prefix. Iterate through the rest of the words; while a word does not start with the prefix, shorten the prefix by one character from the end until it matches or becomes empty.</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">strs = [&quot;flower&quot;, &quot;flow&quot;, &quot;flight&quot;]
+Prefix: &quot;flower&quot;
+Compare with &quot;flow&quot;:   &quot;flower&quot; &amp;rarr; &quot;flowe&quot; &amp;rarr; &quot;flow&quot; (matches!)
+Compare with &quot;flight&quot;: &quot;flow&quot; &amp;rarr; &quot;flo&quot; &amp;rarr; &quot;fl&quot; (matches!)
+Result: &quot;fl&quot;</code></pre>
+</div>
+
+<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public string LongestCommonPrefix(string[] strs)
+{
+    if (strs == null || strs.Length == 0) return &quot;&quot;;
+
+    string prefix = strs[0];
+
+    for (int i = 1; i &lt; strs.Length; i++)
+    {
+        // While current word does not start with prefix, trim last character
+        while (!strs[i].StartsWith(prefix))
+        {
+            prefix = prefix.Substring(0, prefix.Length - 1);
+            if (string.IsNullOrEmpty(prefix)) return &quot;&quot;;
+        }
+    }
+
+    return prefix;
+}</code></pre>
+</div>
+
+<ul>
+<li><strong>Time Complexity:</strong> $O(S)$ where $S$ is the sum of all characters in all strings.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ auxiliary memory.</li>
+</ul>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='47-problem-6-isomorphic-strings-leetcode-205'>4.7 Problem 6: Isomorphic Strings (LeetCode 205)</h2>
+<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
+<p>Two strings <code>s</code> and <code>t</code> are isomorphic if there is a bijective (one-to-one and onto) mapping between their characters. Verify that character <code>s[i]</code> maps uniquely to <code>t[i]</code>, and <code>t[i]</code> maps uniquely back to <code>s[i]</code>.</p>
+<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public bool IsIsomorphic(string s, string t)
+{
+    if (s.Length != t.Length) return false;
+
+    var mapST = new Dictionary&lt;char, char&gt;();
+    var mapTS = new Dictionary&lt;char, char&gt;();
+
+    for (int i = 0; i &lt; s.Length; i++)
+    {
+        char c1 = s[i];
+        char c2 = t[i];
+
+        // If c1 was already mapped, it must map to c2
+        if (mapST.ContainsKey(c1) &amp;&amp; mapST[c1] != c2) return false;
+
+        // If c2 was already mapped, it must map back to c1
+        if (mapTS.ContainsKey(c2) &amp;&amp; mapTS[c2] != c1) return false;
+
+        mapST[c1] = c2;
+        mapTS[c2] = c1;
+    }
+
+    return true;
+}</code></pre>
+</div>
+
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> Since characters in ASCII are bounded by 128 or 256, you can replace the two dictionaries with two integer arrays <code>int[256]</code> recording last-seen timestamps, reducing memory to $O(1)$ without hash collisions.</div>
+</div>
+
+<ul>
+<li><strong>Time Complexity:</strong> $O(N)$ — Single linear pass.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — At most 256 unique character mappings.</li>
+</ul>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-5" data-chapter="5" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 05</span>
+            <span class="accordion-title-text">5. PATTERN 3: TWO POINTERS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="5-pattern-3-two-pointers" class="accordion-anchor"></a>
+        <a id="5-pattern-3-two-pointers" class="accordion-anchor"></a>
+
 <p>The <strong>Two Pointers</strong> pattern maintains two index pointers moving across one linear array or string. By taking advantage of sorted data or bilateral constraints, it eliminates nested loops and reduces $O(N^2)$ brute-force solutions to $O(N)$ linear scans with strictly $O(1)$ stack memory.</p>
-<p>---</p>
-<h2 id='41-the-two-pointers-mental-model-archetypes'>4.1 The Two Pointers Mental Model & Archetypes</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='51-the-two-pointers-mental-model-archetypes'>5.1 The Two Pointers Mental Model & Archetypes</h2>
 <div class='mermaid'>flowchart TD
     subgraph Converging ["Archetype 1: Converging Pointers (Inward Squeeze)"]
         A1["Left: Index 0 &rarr;"] --- A2["[ Sorted Array / Palindrome ]"] --- A3["&larr; Right: Index N-1"]
@@ -1543,8 +2289,8 @@ private void Reverse(int[] nums, int l, int r)
     subgraph ThreeWay ["Archetype 3: 3-Way Partitioning (Dutch National Flag)"]
         C1["Low: End of 0s"] --- C2["Mid: Current Scanner"] --- C3["High: Start of 2s"]
     end</div>
-<p>---</p>
-<h2 id='42-problem-1-two-sum-ii-input-array-is-sorted'>4.2 Problem 1: Two Sum II (Input Array Is Sorted)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='52-problem-1-two-sum-ii-input-array-is-sorted'>5.2 Problem 1: Two Sum II (Input Array Is Sorted)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Because the array is sorted, the smallest numbers are on the left and the largest on the right. If the sum of <code>nums[l] + nums[r]</code> is too small, advance <code>l++</code>. If it is too big, decrement <code>r--</code>.</p>
 
@@ -1598,8 +2344,8 @@ l = 0 (val 2), r = 1 (val 7)  &amp;rarr; sum = 9 == target! Found [1, 2]!</code>
 <li><strong>Time Complexity:</strong> $O(N)$ — Each step eliminates one element.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — Zero heap allocation.</li>
 </ul>
-<p>---</p>
-<h2 id='43-problem-2-valid-palindrome'>4.3 Problem 2: Valid Palindrome</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='53-problem-2-valid-palindrome'>5.3 Problem 2: Valid Palindrome</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Compare characters from the outside inward (<code>l</code> from start, <code>r</code> from end), skipping non-alphanumeric characters. If any mismatch occurs, it's not a palindrome.</p>
 <h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
@@ -1637,8 +2383,8 @@ l = 0 (val 2), r = 1 (val 7)  &amp;rarr; sum = 9 == target! Found [1, 2]!</code>
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass over string.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — In-place pointer comparison without creating reversed strings.</li>
 </ul>
-<p>---</p>
-<h2 id='44-problem-3-container-with-most-water-leetcode-11'>4.4 Problem 3: Container With Most Water (LeetCode 11)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='54-problem-3-container-with-most-water-leetcode-11'>5.4 Problem 3: Container With Most Water (LeetCode 11)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>The water volume is bounded by the shorter pillar ($	ext{Area} = (r - l) 	imes \min(h[l], h[r])$). Moving the taller pillar only reduces width without any chance of increasing height, so <strong>always move the shorter pillar inward</strong>!</p>
 
@@ -1689,8 +2435,8 @@ l = 0 (val 2), r = 1 (val 7)  &amp;rarr; sum = 9 == target! Found [1, 2]!</code>
 <li><strong>Time Complexity:</strong> $O(N)$ — Pointers converge in at most $N$ steps.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — Only three integer registers.</li>
 </ul>
-<p>---</p>
-<h2 id='45-problem-4-3sum-leetcode-15'>4.5 Problem 4: 3Sum (LeetCode 15)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='55-problem-4-3sum-leetcode-15'>5.5 Problem 4: 3Sum (LeetCode 15)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Sort the array first. Loop through each number as a fixed pivot, then use converging Two Pointers (<code>l</code> and <code>r</code>) to find the remaining two numbers that sum to zero, while skipping duplicate values to prevent duplicate triplets.</p>
 
@@ -1761,8 +2507,8 @@ l = 0 (val 2), r = 1 (val 7)  &amp;rarr; sum = 9 == target! Found [1, 2]!</code>
 <li><strong>Time Complexity:</strong> $O(N^2)$ — Sorting takes $O(N \log N)$; outer loop runs $N$ times with an $O(N)$ two-pointer scan.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ auxiliary memory (ignoring the output list).</li>
 </ul>
-<p>---</p>
-<h2 id='46-problem-5-trapping-rain-water-leetcode-42'>4.6 Problem 5: Trapping Rain Water (LeetCode 42)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='56-problem-5-trapping-rain-water-leetcode-42'>5.6 Problem 5: Trapping Rain Water (LeetCode 42)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Water trapped at any position is determined by $\min(	ext{leftMax}, 	ext{rightMax}) - 	ext{height}[i]$. By advancing whichever pointer has the smaller maximum (<code>leftMax &lt; rightMax</code>), we can calculate trapped water in $O(1)$ space without precomputing prefix arrays!</p>
 
@@ -1821,8 +2567,8 @@ Index: 0  1  2  3  4  5  6  7  8  9 10 11
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass over the array.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — Only five scalar integer variables on the stack.</li>
 </ul>
-<p>---</p>
-<h2 id='47-problem-6-sort-colors-dutch-national-flag-leetcode-75'>4.7 Problem 6: Sort Colors / Dutch National Flag (LeetCode 75)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='57-problem-6-sort-colors-dutch-national-flag-leetcode-75'>5.7 Problem 6: Sort Colors / Dutch National Flag (LeetCode 75)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Partition the array in-place into 3 regions (0s, 1s, 2s) using 3 pointers: <code>low</code> marks the boundary for 0s, <code>high</code> marks the boundary for 2s, and <code>mid</code> is the active scanner.</p>
 
@@ -1877,8 +2623,8 @@ Index: 0  1  2  3  4  5  6  7  8  9 10 11
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass over array.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — In-place swap without auxiliary buffers.</li>
 </ul>
-<p>---</p>
-<h2 id='48-problem-7-remove-duplicates-from-sorted-array'>4.8 Problem 7: Remove Duplicates from Sorted Array</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='58-problem-7-remove-duplicates-from-sorted-array'>5.8 Problem 7: Remove Duplicates from Sorted Array</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Use a slow write pointer <code>w</code> that only advances when the fast read pointer <code>r</code> finds a new unique value.</p>
 <h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
@@ -1911,8 +2657,8 @@ Index: 0  1  2  3  4  5  6  7  8  9 10 11
 <li><strong>Time Complexity:</strong> $O(N)$ — Single linear scan.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — In-place array modification.</li>
 </ul>
-<p>---</p>
-<h2 id='49-problem-8-move-zeroes'>4.9 Problem 8: Move Zeroes</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='59-problem-8-move-zeroes'>5.9 Problem 8: Move Zeroes</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Shift all non-zero numbers to the front using a slow write pointer <code>w</code>, then fill all remaining slots up to the end with zeros.</p>
 <h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
@@ -1948,11 +2694,29 @@ Index: 0  1  2  3  4  5  6  7  8  9 10 11
 <li><strong>Time Complexity:</strong> $O(N)$ — Two linear passes.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — In-place modification.</li>
 </ul>
-<p>---</p>
-<h1 id='5-pattern-3-sliding-window'>5. PATTERN 3: SLIDING WINDOW</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-6" data-chapter="6" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 06</span>
+            <span class="accordion-title-text">6. PATTERN 4: SLIDING WINDOW</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="6-pattern-4-sliding-window" class="accordion-anchor"></a>
+        <a id="6-pattern-4-sliding-window" class="accordion-anchor"></a>
+
 <p>The <strong>Sliding Window</strong> pattern solves contiguous subarray and substring problems in $O(N)$ linear time by avoiding redundant recalculations. Instead of re-evaluating the entire range from scratch, the window maintains a running state: <strong>adding the incoming element at the right boundary</strong> and <strong>subtracting the outgoing element at the left boundary</strong>.</p>
-<p>---</p>
-<h2 id='51-universal-sliding-window-architecture'>5.1 Universal Sliding Window Architecture</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='61-universal-sliding-window-architecture'>6.1 Universal Sliding Window Architecture</h2>
 <div class='mermaid'>flowchart TD
     Start["Initialize l=0, r=0, windowState = empty"] --> ExpandRight["Expand Window: Add arr[r] to windowState"]
     ExpandRight --> ValidateCondition{"Is Window Constraint Violated?"}
@@ -1965,8 +2729,8 @@ Index: 0  1  2  3  4  5  6  7  8  9 10 11
     CheckEnd -- Yes --> IncRight["r++"]
     IncRight --> ExpandRight
     CheckEnd -- No --> Done["Return Best Result"]</div>
-<p>---</p>
-<h2 id='52-problem-1-maximum-sum-subarray-of-size-k-fixed-window'>5.2 Problem 1: Maximum Sum Subarray of Size K (Fixed Window)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='62-problem-1-maximum-sum-subarray-of-size-k-fixed-window'>6.2 Problem 1: Maximum Sum Subarray of Size K (Fixed Window)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Calculate the sum of the first $K$ numbers. Then slide the window across the rest of the array: add the new element at index $i$ and subtract the old element at index $i - K$ in $O(1)$ time.</p>
 
@@ -2016,8 +2780,8 @@ Index: 0  1  2  3  4  5  6  7  8  9 10 11
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass over array.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — Only running sum variables.</li>
 </ul>
-<p>---</p>
-<h2 id='53-problem-2-longest-substring-without-repeating-characters-leetcode-3'>5.3 Problem 2: Longest Substring Without Repeating Characters (LeetCode 3)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='63-problem-2-longest-substring-without-repeating-characters-leetcode-3'>6.3 Problem 2: Longest Substring Without Repeating Characters (LeetCode 3)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Expand the right pointer to add characters to a <code>HashSet</code>. If a character is already in the set (duplicate!), shrink the window from the left until the duplicate character is removed.</p>
 
@@ -2074,8 +2838,8 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
 <li><strong>Time Complexity:</strong> $O(N)$ — Each character is visited at most twice (<code>l</code> and <code>r</code>).</li>
 <li><strong>Space Complexity:</strong> $O(\min(N, M))$ where $M$ is alphabet size.</li>
 </ul>
-<p>---</p>
-<h2 id='54-problem-3-minimum-size-subarray-sum-leetcode-209'>5.4 Problem 3: Minimum Size Subarray Sum (LeetCode 209)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='64-problem-3-minimum-size-subarray-sum-leetcode-209'>6.4 Problem 3: Minimum Size Subarray Sum (LeetCode 209)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Expand the right pointer until <code>curSum &gt;= target</code>. Once the target is reached, shrink the window from the left greedily to record the smallest possible window length!</p>
 <h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
@@ -2112,8 +2876,8 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
 <li><strong>Time Complexity:</strong> $O(N)$ — Both pointers increment at most $N$ times.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — Zero heap allocation.</li>
 </ul>
-<p>---</p>
-<h2 id='55-problem-4-longest-repeating-character-replacement-leetcode-424'>5.5 Problem 4: Longest Repeating Character Replacement (LeetCode 424)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='65-problem-4-longest-repeating-character-replacement-leetcode-424'>6.5 Problem 4: Longest Repeating Character Replacement (LeetCode 424)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>In any window of length $L = (r - l + 1)$, the number of characters we need to replace is $(L - 	ext{maxFreq})$. As long as $(L - 	ext{maxFreq}) \le k$, the window is valid! If it exceeds $k$, shrink the window from the left.</p>
 <h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
@@ -2153,8 +2917,8 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass over string.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — 26-element array for alphabet counts.</li>
 </ul>
-<p>---</p>
-<h2 id='56-problem-5-longest-substring-with-at-most-k-distinct-characters'>5.6 Problem 5: Longest Substring with At Most K Distinct Characters</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='66-problem-5-longest-substring-with-at-most-k-distinct-characters'>6.6 Problem 5: Longest Substring with At Most K Distinct Characters</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Track distinct characters in a frequency Dictionary. When the number of distinct keys exceeds $K$, advance the left pointer and decrement character counts until a character count hits zero and is removed.</p>
 <h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
@@ -2198,8 +2962,8 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
 <li><strong>Time Complexity:</strong> $O(N)$ — Linear scan.</li>
 <li><strong>Space Complexity:</strong> $O(K)$ — Dictionary stores at most $K+1$ distinct characters.</li>
 </ul>
-<p>---</p>
-<h2 id='57-problem-6-minimum-window-substring-leetcode-76-hard'>5.7 Problem 6: Minimum Window Substring (LeetCode 76 - Hard)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='67-problem-6-minimum-window-substring-leetcode-76-hard'>6.7 Problem 6: Minimum Window Substring (LeetCode 76 - Hard)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Keep frequency maps for target <code>t</code> and the current window. Expand <code>r</code> until the window contains all required characters (<code>have == need</code>). Then greedily shrink <code>l</code> from the left to find the minimum possible substring window length!</p>
 <h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
@@ -2262,11 +3026,29 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
 <li><strong>Time Complexity:</strong> $O(N + M)$ where $N = 	ext{length}(s)$ and $M = 	ext{length}(t)$.</li>
 <li><strong>Space Complexity:</strong> $O(N + M)$ to store character counts.</li>
 </ul>
-<p>---</p>
-<h1 id='6-pattern-4-fast-slow-pointers-tortoise-hare'>6. PATTERN 4: FAST & SLOW POINTERS (TORTOISE & HARE)</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-7" data-chapter="7" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 07</span>
+            <span class="accordion-title-text">7. PATTERN 5: FAST & SLOW POINTERS (TORTOISE & HARE)</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="7-pattern-5-fast-slow-pointers-tortoise-hare" class="accordion-anchor"></a>
+        <a id="7-pattern-5-fast-slow-pointers-tortoise-hare" class="accordion-anchor"></a>
+
 <p>The <strong>Fast & Slow Pointers</strong> pattern (also called Floyd's Cycle Detection Algorithm) uses two pointers that traverse a sequence at different speeds: the slow pointer advances 1 step at a time, while the fast pointer advances 2 steps at a time.</p>
-<p>---</p>
-<h2 id='61-the-mathematical-principle-of-floyds-algorithm'>6.1 The Mathematical Principle of Floyd's Algorithm</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='71-the-mathematical-principle-of-floyds-algorithm'>7.1 The Mathematical Principle of Floyd's Algorithm</h2>
 <div class='mermaid'>flowchart LR
     A["Node 1"] --> B["Node 2"] --> C["Node 3 (Cycle Entrance)"]
     C --> D["Node 4"] --> E["Node 5"] --> F["Node 6"] --> C
@@ -2283,8 +3065,8 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
 <ol>
 <li>Because the gap reduces by exactly 1 step on every iteration, Fast can never "jump over" Slow without colliding. They are mathematically guaranteed to meet in at most $C$ iterations!</li>
 </ol>
-<p>---</p>
-<h2 id='62-problem-1-linked-list-cycle-detection-leetcode-141'>6.2 Problem 1: Linked List Cycle Detection (LeetCode 141)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='72-problem-1-linked-list-cycle-detection-leetcode-141'>7.2 Problem 1: Linked List Cycle Detection (LeetCode 141)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Advance <code>slow</code> by 1 and <code>fast</code> by 2. If <code>fast</code> or <code>fast.next</code> reaches <code>null</code>, there is no cycle. If <code>slow == fast</code>, a cycle exists!</p>
 <h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
@@ -2318,8 +3100,8 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
 <li><strong>Time Complexity:</strong> $O(N)$ — In the worst-case, fast catches up to slow in $O(N)$ steps.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — Only two node pointers.</li>
 </ul>
-<p>---</p>
-<h2 id='63-problem-2-middle-of-the-linked-list-leetcode-876'>6.3 Problem 2: Middle of the Linked List (LeetCode 876)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='73-problem-2-middle-of-the-linked-list-leetcode-876'>7.3 Problem 2: Middle of the Linked List (LeetCode 876)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Because <code>fast</code> travels at double the speed of <code>slow</code>, by the time <code>fast</code> reaches the end of the list, <code>slow</code> is guaranteed to be at the exact middle node!</p>
 
@@ -2360,8 +3142,8 @@ Step 2: S=3, F=5 (Fast at end! Slow is at node 3, the exact middle!)</code></pre
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass through list.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — Zero heap allocation.</li>
 </ul>
-<p>---</p>
-<h2 id='64-problem-3-find-the-duplicate-number-in-an-array-leetcode-287'>6.4 Problem 3: Find the Duplicate Number in an Array (LeetCode 287)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='74-problem-3-find-the-duplicate-number-in-an-array-leetcode-287'>7.4 Problem 3: Find the Duplicate Number in an Array (LeetCode 287)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Because the numbers are in the range $[1..N]$ and the array has length $N+1$, we can treat the array as a linked list where <code>index</code> points to <code>nums[index]</code>. A duplicate number means two indices point to the same value, creating a cycle!</p>
 
@@ -2409,11 +3191,29 @@ Step 2: S=3, F=5 (Fast at end! Slow is at node 3, the exact middle!)</code></pre
 <li><strong>Time Complexity:</strong> $O(N)$ — Two linear phases.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — Solved without modifying the array or using auxiliary memory.</li>
 </ul>
-<p>---</p>
-<h1 id='7-pattern-5-searching-algorithms-encyclopedia'>7. PATTERN 5: SEARCHING ALGORITHMS ENCYCLOPEDIA</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-8" data-chapter="8" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 08</span>
+            <span class="accordion-title-text">8. PATTERN 6: SEARCHING ALGORITHMS ENCYCLOPEDIA</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="8-pattern-6-searching-algorithms-encyclopedia" class="accordion-anchor"></a>
+        <a id="8-pattern-6-searching-algorithms-encyclopedia" class="accordion-anchor"></a>
+
 <p>Searching is the fundamental operation of retrieving a target record from a data space. While novice developers treat searching as a binary choice between $O(N)$ linear scans and $O(\log N)$ binary searches, senior backend engineers evaluate algorithms based on <strong>hardware cache locality, CPU branch prediction, data distribution, and monotonic decision spaces</strong>.</p>
-<p>---</p>
-<h2 id='71-the-searching-taxonomy-mechanical-sympathy-decision-matrix'>7.1 The Searching Taxonomy & Mechanical Sympathy Decision Matrix</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='81-the-searching-taxonomy-mechanical-sympathy-decision-matrix'>8.1 The Searching Taxonomy & Mechanical Sympathy Decision Matrix</h2>
 <div class='mermaid'>flowchart TD
     Start["Search Problem"] --> IsSorted{"Is the Search Space Sorted / Monotonic?"}
     
@@ -2441,8 +3241,8 @@ Step 2: S=3, F=5 (Fast at end! Slow is at node 3, the exact middle!)</code></pre
 <tr><td><strong>Exponential Search</strong></td><td>Sorted + Unbounded / Unknown size</td><td>$O(1)$</td><td>$O(\log i)$</td><td>$O(\log i)$</td><td>$O(1)$</td><td>Moderate</td><td>Network streaming logs, boundless ring buffers</td></tr>
 <tr><td><strong>Ternary Search</strong></td><td>Unimodal Function (Single Peak/Trough)</td><td>$O(1)$</td><td>$O(\log_3 N)$</td><td>$O(\log_3 N)$</td><td>$O(1)$</td><td>Moderate</td><td>Mathematical optimization, server cost curves</td></tr>
 </table></div>
-<p>---</p>
-<h2 id='72-linear-search-the-sentinel-optimization'>7.2 Linear Search & The Sentinel Optimization</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='82-linear-search-the-sentinel-optimization'>8.2 Linear Search & The Sentinel Optimization</h2>
 <h3 id='1-mechanical-sympathy-why-linear-search-wins-on-small-arrays'>1. Mechanical Sympathy: Why Linear Search Wins on Small Arrays</h3>
 <p>Modern CPU architectures load memory into <strong>64-byte L1 Cache Lines</strong>. If you search an array of 32-bit integers, an entire cache line holds:</p>
 <p>$$rac{64 	ext{ bytes}}{4 	ext{ bytes/int}} = 16 	ext{ integers}$$</p>
@@ -2528,8 +3328,8 @@ public static class LinearSearchEngine
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='73-classic-binary-search-the-monotonic-midset'>7.3 Classic Binary Search (The Monotonic Midset)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='83-classic-binary-search-the-monotonic-midset'>8.3 Classic Binary Search (The Monotonic Midset)</h2>
 <h3 id='1-invariants-overflow-protection'>1. Invariants & Overflow Protection</h3>
 <ol>
 <li><strong>Midpoint Overflow Protection:</strong></li>
@@ -2609,8 +3409,8 @@ public static class BinarySearchEngine
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='74-search-in-rotated-sorted-array-shifted-ledger-partitions'>7.4 Search in Rotated Sorted Array (Shifted Ledger Partitions)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='84-search-in-rotated-sorted-array-shifted-ledger-partitions'>8.4 Search in Rotated Sorted Array (Shifted Ledger Partitions)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>An array sorted in ascending order is rotated at an unknown pivot (e.g., <code>[4, 5, 6, 7, 0, 1, 2]</code>). Find <code>target</code> in $O(\log N)$ time.</p>
 <ul>
@@ -2665,8 +3465,8 @@ public static class RotatedArraySearcher
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='75-find-first-and-last-position-in-sorted-array-lower-upper-bounds'>7.5 Find First and Last Position in Sorted Array (Lower & Upper Bounds)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='85-find-first-and-last-position-in-sorted-array-lower-upper-bounds'>8.5 Find First and Last Position in Sorted Array (Lower & Upper Bounds)</h2>
 <h3 id='1-invariants-code'>1. Invariants & Code</h3>
 <p>Find the starting and ending index of a given target value in a sorted array containing duplicates.</p>
 <ul>
@@ -2723,8 +3523,8 @@ public static class RangeFinder
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='76-binary-search-on-monotonic-answer-range-capacity-to-ship-packages-within-d-days-allocation-engine'>7.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages Within D Days / Allocation Engine)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='86-binary-search-on-monotonic-answer-range-capacity-to-ship-packages-within-d-days-allocation-engine'>8.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages Within D Days / Allocation Engine)</h2>
 <h3 id='1-the-architectural-paradigm-search-space-as-solution-domain'>1. The Architectural Paradigm: "Search Space as Solution Domain"</h3>
 <p>In standard binary search, you search indices of an existing array. In <strong>Binary Search on the Answer</strong>, the array is completely unsorted or represents arbitrary items (e.g. package weights, jobs, page counts).</p>
 <ul>
@@ -2812,15 +3612,17 @@ public static class ShippingCapacityOptimizer
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='77-interpolation-search-uniformly-distributed-probing-engine'>7.7 Interpolation Search (Uniformly Distributed Probing Engine)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='87-interpolation-search-uniformly-distributed-probing-engine'>8.7 Interpolation Search (Uniformly Distributed Probing Engine)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>When a human looks up the name "Smith" in a printed phonebook, they do not open the exact middle page (M). They open near the end (S).</p>
 <p><strong>Interpolation Search</strong> mimics this intuition for sorted arrays whose elements are <strong>uniformly distributed</strong> (e.g. sequential IDs, timestamps, linear sensor readings).</p>
 <ul>
 <li>Instead of fixed midpoint splitting ($50\%$), it uses linear interpolation:</li>
 </ul>
-<p>$$	ext{pos} = 	ext{low} + \left\lfloor rac{	ext{target} - 	ext{arr}[	ext{low}]}{	ext{arr}[	ext{high}] - 	ext{arr}[	ext{low}]} 	imes (	ext{high} - 	ext{low}) ightfloor$$</p>
+<p>$$	ext{pos} = 	ext{low} + \left\lfloor rac{	ext{target} - 	ext{arr}[	ext{low}]}{	ext{arr}[	ext{high}] - 	ext{arr}[	ext{low}]} 	imes (	ext{high} - 	ext{low})</p>
+<p>ight</p>
+<p>floor$$</p>
 
 <div class="code-container">
     <div class="code-header">
@@ -2889,8 +3691,8 @@ public static class InterpolationSearchEngine
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='78-exponential-search-unbounded-ledger-streams-fast-galloping'>7.8 Exponential Search (Unbounded Ledger Streams & Fast Galloping)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='88-exponential-search-unbounded-ledger-streams-fast-galloping'>8.8 Exponential Search (Unbounded Ledger Streams & Fast Galloping)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Exponential Search (also known as Galloping Search or Doubling Search) is designed for <strong>unbounded, infinite, or unknown-length streams</strong> (e.g., live append-only transactional logs, continuous telemetry feeds).</p>
 <ul>
@@ -2964,8 +3766,8 @@ public static class ExponentialSearchEngine
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='79-ternary-search-finding-extrema-in-unimodal-functions'>7.9 Ternary Search (Finding Extrema in Unimodal Functions)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='89-ternary-search-finding-extrema-in-unimodal-functions'>8.9 Ternary Search (Finding Extrema in Unimodal Functions)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Ternary Search is a divide-and-conquer algorithm used when a function or array is <strong>unimodal</strong>: it strictly increases to a single peak (maximum) and then strictly decreases, or vice-versa.</p>
 <ul>
@@ -3037,11 +3839,29 @@ public static class TernarySearchEngine
 }</code></pre>
 </div>
 
-<p>---</p>
-<h1 id='8-pattern-6-sorting-algorithms-encyclopedia'>8. PATTERN 6: SORTING ALGORITHMS ENCYCLOPEDIA</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-9" data-chapter="9" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 09</span>
+            <span class="accordion-title-text">9. PATTERN 7: SORTING ALGORITHMS ENCYCLOPEDIA</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="9-pattern-7-sorting-algorithms-encyclopedia" class="accordion-anchor"></a>
+        <a id="9-pattern-7-sorting-algorithms-encyclopedia" class="accordion-anchor"></a>
+
 <p>Sorting is the core foundation of data organization, database indexing, and query execution planning. In enterprise .NET systems, choosing the wrong sorting algorithm or failing to understand stability, memory allocations, and hardware cache efficiency can trigger severe performance bottlenecks, garbage collection spikes, and CPU branch thrashing.</p>
-<p>---</p>
-<h2 id='81-the-sorting-taxonomy-complexity-matrix'>8.1 The Sorting Taxonomy & Complexity Matrix</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='91-the-sorting-taxonomy-complexity-matrix'>9.1 The Sorting Taxonomy & Complexity Matrix</h2>
 <div class='mermaid'>flowchart TD
     AllSorts["Sorting Algorithms Taxonomy"] --> ComparisonSorts["Comparison-Based Sorts<br>(Theoretical Lower Bound: &Omega;(N log N))"]
     AllSorts --> NonComparisonSorts["Non-Comparison Sorts<br>(Linear Time: O(N + K))"]
@@ -3073,8 +3893,8 @@ public static class TernarySearchEngine
 <tr><td><strong>Counting Sort</strong></td><td>$O(N + K)$</td><td>$O(N + K)$</td><td>$O(N + K)$</td><td>$O(N + K)$</td><td><strong>Yes</strong></td><td>No</td><td>Non-comparison; linear time when $K = O(N)$</td></tr>
 <tr><td><strong>Radix Sort</strong></td><td>$O(d(N + b))$</td><td>$O(d(N + b))$</td><td>$O(d(N + b))$</td><td>$O(N + b)$</td><td><strong>Yes</strong></td><td>No</td><td>Non-comparison; fixed-width integers and hashes</td></tr>
 </table></div>
-<p>---</p>
-<h2 id='82-bubble-sort-standard-early-exit-optimization'>8.2 Bubble Sort (Standard & Early-Exit Optimization)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='92-bubble-sort-standard-early-exit-optimization'>9.2 Bubble Sort (Standard & Early-Exit Optimization)</h2>
 <h3 id='1-invariants-mechanics'>1. Invariants & Mechanics</h3>
 <p>Bubble Sort repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order.</p>
 <ul>
@@ -3132,8 +3952,8 @@ public static class BubbleSortEngine
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='83-selection-sort-minimum-scan-minimal-memory-writes'>8.3 Selection Sort (Minimum-Scan & Minimal Memory Writes)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='93-selection-sort-minimum-scan-minimal-memory-writes'>9.3 Selection Sort (Minimum-Scan & Minimal Memory Writes)</h2>
 <h3 id='1-invariants-mechanics'>1. Invariants & Mechanics</h3>
 <p>Selection Sort divides the array into a sorted prefix and an unsorted suffix. In each pass, it scans the unsorted suffix to find the <strong>index of the minimum element</strong>, and performs <strong>one single swap</strong> to place it at the boundary.</p>
 <ul>
@@ -3194,8 +4014,8 @@ public static class SelectionSortEngine
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='84-insertion-sort-adaptive-shifting-small-partition-powerhouse'>8.4 Insertion Sort (Adaptive Shifting & Small Partition Powerhouse)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='94-insertion-sort-adaptive-shifting-small-partition-powerhouse'>9.4 Insertion Sort (Adaptive Shifting & Small Partition Powerhouse)</h2>
 <h3 id='1-mechanical-sympathy-why-all-runtimes-use-insertion-sort'>1. Mechanical Sympathy: Why All Runtimes Use Insertion Sort</h3>
 <p>Insertion Sort works like sorting a hand of playing cards. For element <code>i</code>, it shifts all preceding elements that are greater than <code>key</code> one position to the right, and drops <code>key</code> into its open slot.</p>
 <ul>
@@ -3259,8 +4079,8 @@ public static class InsertionSortEngine
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='85-merge-sort-divide-conquer-in-depth-memory-mechanics-stability'>8.5 Merge Sort (Divide & Conquer, In-Depth Memory Mechanics & Stability)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='95-merge-sort-divide-conquer-in-depth-memory-mechanics-stability'>9.5 Merge Sort (Divide & Conquer, In-Depth Memory Mechanics & Stability)</h2>
 <h3 id='1-invariants-recursion-stability'>1. Invariants, Recursion & Stability</h3>
 <p>Merge Sort is a classic Divide and Conquer algorithm:</p>
 <ol>
@@ -3361,8 +4181,8 @@ public static class MergeSortEngine
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='86-quick-sort-lomuto-vs-hoare-partitioning-median-of-3-pivot'>8.6 Quick Sort (Lomuto vs. Hoare Partitioning & Median-of-3 Pivot)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='96-quick-sort-lomuto-vs-hoare-partitioning-median-of-3-pivot'>9.6 Quick Sort (Lomuto vs. Hoare Partitioning & Median-of-3 Pivot)</h2>
 <h3 id='1-partitioning-mechanics-lomuto-vs-hoare'>1. Partitioning Mechanics: Lomuto vs. Hoare</h3>
 <ul>
 <li><strong>Lomuto Partitioning:</strong> Uses a single scanner pointer and a boundary pointer. Simple to write, but executes <strong>3x more swap instructions</strong> and degrades severely on duplicate elements.</li>
@@ -3454,13 +4274,16 @@ public static class QuickSortEngine
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='87-heap-sort-in-place-array-based-max-heapify'>8.7 Heap Sort (In-Place Array-Based Max-Heapify)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='97-heap-sort-in-place-array-based-max-heapify'>9.7 Heap Sort (In-Place Array-Based Max-Heapify)</h2>
 <h3 id='1-invariants-complete-binary-tree-mapping'>1. Invariants & Complete Binary Tree Mapping</h3>
 <p>Heap Sort is an in-place $O(N \log N)$ algorithm that requires <strong>$O(1)$ auxiliary memory</strong>.</p>
 <p>It models the flat array as a Complete Binary Tree:</p>
 <ul>
-<li><strong>Parent Index:</strong> $	ext{parent}(i) = \lfloor (i - 1) / 2 floor$</li>
+<li><strong>Parent Index:</strong> $	ext{parent}(i) = \lfloor (i - 1) / 2</li>
+</ul>
+<p>floor$</p>
+<ul>
 <li><strong>Left Child:</strong> $	ext{left}(i) = 2i + 1$</li>
 <li><strong>Right Child:</strong> $	ext{right}(i) = 2i + 2$</li>
 </ul>
@@ -3484,7 +4307,10 @@ Index:    0   1   2   3   4   5   6
 <li><strong>Phase 1: Build Max-Heap ($O(N)$ Time):</strong></li>
 </ol>
 <ul>
-<li>Starting from the lowest non-leaf node $\lfloor N/2 floor - 1$ down to index $0$, run <code>SiftDown</code>.</li>
+<li>Starting from the lowest non-leaf node $\lfloor N/2</li>
+</ul>
+<p>floor - 1$ down to index $0$, run <code>SiftDown</code>.</p>
+<ul>
 <li>Amazingly, building the heap is $O(N)$, not $O(N \log N)$, because the majority of nodes reside near the bottom with minimal tree height.</li>
 </ul>
 <ol>
@@ -3556,8 +4382,8 @@ public static class HeapSortEngine
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='88-counting-sort-non-comparison-on-k-integer-sorting'>8.8 Counting Sort (Non-Comparison O(N + K) Integer Sorting)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='98-counting-sort-non-comparison-on-k-integer-sorting'>9.8 Counting Sort (Non-Comparison O(N + K) Integer Sorting)</h2>
 <h3 id='1-the-power-of-direct-index-addressing'>1. The Power of Direct Index Addressing</h3>
 <p>Comparison-based sorting has a mathematical lower bound of $\Omega(N \log N)$.</p>
 <p><strong>Counting Sort</strong> breaks this barrier by avoiding comparisons entirely. It operates by counting the occurrences of each discrete integer value in a predefined range $[0..K]$.</p>
@@ -3630,8 +4456,8 @@ public static class CountingSortEngine
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='89-radix-sort-lsd-base-10-256-distribution-engine'>8.9 Radix Sort (LSD Base-10 / 256 Distribution Engine)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='99-radix-sort-lsd-base-10-256-distribution-engine'>9.9 Radix Sort (LSD Base-10 / 256 Distribution Engine)</h2>
 <h3 id='1-invariants-digit-bucketing'>1. Invariants & Digit Bucketing</h3>
 <p>Radix Sort sorts integers by processing individual digits, from the <strong>Least Significant Digit (LSD)</strong> to the Most Significant Digit (MSD).</p>
 <ul>
@@ -3710,8 +4536,8 @@ public static class RadixSortEngine
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='810-under-the-hood-net-8-introsort-arraysorthelpert'>8.10 Under the Hood: .NET 8 IntroSort & ArraySortHelper<T></h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='910-under-the-hood-net-8-introsort-arraysorthelpert'>9.10 Under the Hood: .NET 8 IntroSort & ArraySortHelper<T></h2>
 <p>When you invoke <code>Array.Sort(arr)</code> or <code>span.Sort()</code> in .NET 8, the CoreCLR runtime uses <strong>Introspective Sort (IntroSort)</strong> inside <code>System.ArraySortHelper&lt;T&gt;</code>:</p>
 <div class='mermaid'>flowchart TD
     Call["Array.Sort(arr) / span.Sort()"] --> CheckLen{"Partition Length <= 16?"}
@@ -3728,7 +4554,10 @@ public static class RadixSortEngine
 <h3 id='the-three-protective-pillars-of-introsort'>The Three Protective Pillars of IntroSort</h3>
 <ol>
 <li><strong>Median-of-3 QuickSort:</strong> Prevents the $O(N^2)$ trap on sorted or reverse-sorted input by picking the median of the first, middle, and last elements.</li>
-<li><strong>HeapSort Fallback Guard:</strong> If the recursion tree exceeds $2 	imes \lfloor \log_2 N floor$ levels (indicating an adversarial input designed to degrade QuickSort), the runtime instantly switches to <strong>HeapSort</strong>. This strictly guarantees an upper bound of $O(N \log N)$ and prevents <code>StackOverflowException</code>.</li>
+<li><strong>HeapSort Fallback Guard:</strong> If the recursion tree exceeds $2 	imes \lfloor \log_2 N</li>
+</ol>
+<p>floor$ levels (indicating an adversarial input designed to degrade QuickSort), the runtime instantly switches to <strong>HeapSort</strong>. This strictly guarantees an upper bound of $O(N \log N)$ and prevents <code>StackOverflowException</code>.</p>
+<ol>
 <li><strong>InsertionSort Leaf Optimization:</strong> When partitions shrink to $\le 16$ elements, the runtime switches to <strong>InsertionSort</strong>. On micro-arrays, InsertionSort out-performs QuickSort by avoiding function prologue/epilogue overhead and exploiting CPU branch prediction.</li>
 </ol>
 
@@ -3743,17 +4572,35 @@ public static class RadixSortEngine
     <div class="callout-body"><strong>Answer:</strong> MergeSort requires allocating an auxiliary array of size $O(N)$ on the Managed Heap, triggering high GC pressure. IntroSort operates completely in-place with $O(\log N)$ stack frames and superior cache line locality. When stability is needed (e.g., LINQ <code>.OrderBy()</code>), .NET uses a stable TimSort-inspired algorithm.</div>
 </div>
 
-<p>---</p>
-<h1 id='9-pattern-7-stack-queue'>9. PATTERN 7: STACK & QUEUE</h1>
-<h2 id='91-memory-models-array-backed-vs-node-backed-queues'>9.1 Memory Models: Array-Backed vs. Node-Backed Queues</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-10" data-chapter="10" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 10</span>
+            <span class="accordion-title-text">10. PATTERN 8: STACK & QUEUE</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="10-pattern-8-stack-queue" class="accordion-anchor"></a>
+        <a id="10-pattern-8-stack-queue" class="accordion-anchor"></a>
+
+<h2 id='101-memory-models-array-backed-vs-node-backed-queues'>10.1 Memory Models: Array-Backed vs. Node-Backed Queues</h2>
 <p>In .NET:</p>
 <ul>
 <li><code>Stack&lt;T&gt;</code> is backed internally by a contiguous <code>T[] _array</code>. When it grows, it doubles its capacity via <code>Array.Resize()</code>.</li>
 <li><code>Queue&lt;T&gt;</code> is backed by a circular <code>T[] _array</code> with <code>_head</code> and <code>_tail</code> indices. It does <strong>not</strong> allocate individual node objects.</li>
 <li><code>LinkedList&lt;T&gt;</code> is a doubly-linked node list (<code>LinkedListNode&lt;T&gt;</code>), allocating 24 bytes of object header overhead per node.</li>
 </ul>
-<p>---</p>
-<h2 id='92-problem-18-valid-parentheses-syntax-validation-for-config-tokens'>9.2 Problem 18: Valid Parentheses (Syntax Validation for Config Tokens)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='102-problem-18-valid-parentheses-syntax-validation-for-config-tokens'>10.2 Problem 18: Valid Parentheses (Syntax Validation for Config Tokens)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Given a string containing <code>&#x27;(&#x27;</code>, <code>&#x27;)&#x27;</code>, <code>&#x27;{&#x27;</code>, <code>&#x27;}&#x27;</code>, <code>&#x27;[&#x27;</code>, <code>&#x27;]&#x27;</code>, determine if the input string is valid.</p>
 <ul>
@@ -3817,8 +4664,8 @@ public static class SyntaxValidator
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass over characters.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ heap allocation (runs completely on thread stack for strings up to reasonable size).</li>
 </ul>
-<p>---</p>
-<h2 id='93-problem-19-min-stack-o1-retrieval-via-companion-state'>9.3 Problem 19: Min Stack (O(1) Retrieval via Companion State)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='103-problem-19-min-stack-o1-retrieval-via-companion-state'>10.3 Problem 19: Min Stack (O(1) Retrieval via Companion State)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Design a stack that supports <code>Push</code>, <code>Pop</code>, <code>Top</code>, and retrieving the minimum element <code>GetMin</code> in <strong>$O(1)$ time</strong>.</p>
 <ul>
@@ -3861,8 +4708,8 @@ public sealed class MinStack
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='94-problem-20-evaluate-reverse-polish-notation-financial-math-engine'>9.4 Problem 20: Evaluate Reverse Polish Notation (Financial Math Engine)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='104-problem-20-evaluate-reverse-polish-notation-financial-math-engine'>10.4 Problem 20: Evaluate Reverse Polish Notation (Financial Math Engine)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Evaluate the value of an arithmetic expression in Reverse Polish Notation (Postfix). Valid operators: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>.</p>
 <ul>
@@ -3920,8 +4767,8 @@ public static class RpnEvaluator
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='95-problem-21-implement-queue-using-stacks-amortized-cost-transfer'>9.5 Problem 21: Implement Queue Using Stacks (Amortized Cost Transfer)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='105-problem-21-implement-queue-using-stacks-amortized-cost-transfer'>10.5 Problem 21: Implement Queue Using Stacks (Amortized Cost Transfer)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Implement a FIFO queue using two LIFO stacks: <code>_inStack</code> (for enqueue) and <code>_outStack</code> (for dequeue).</p>
 <ul>
@@ -3974,8 +4821,8 @@ public sealed class MyQueue&lt;T&gt;
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='96-problem-22-moving-average-from-data-stream-circular-queue-buffer'>9.6 Problem 22: Moving Average from Data Stream (Circular Queue Buffer)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='106-problem-22-moving-average-from-data-stream-circular-queue-buffer'>10.6 Problem 22: Moving Average from Data Stream (Circular Queue Buffer)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Compute the moving average of the last <code>size</code> numbers in a stream.</p>
 <ul>
@@ -4019,12 +4866,30 @@ public sealed class MyQueue&lt;T&gt;
 }</code></pre>
 </div>
 
-<p>---</p>
-<p>---</p>
-<h1 id='10-pattern-8-linked-lists'>10. PATTERN 8: LINKED LISTS</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-11" data-chapter="11" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 11</span>
+            <span class="accordion-title-text">11. PATTERN 9: LINKED LISTS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="11-pattern-9-linked-lists" class="accordion-anchor"></a>
+        <a id="11-pattern-9-linked-lists" class="accordion-anchor"></a>
+
 <p>Linked lists store elements in non-contiguous heap nodes connected by pointers. While they suffer cache miss penalties during traversal compared to arrays, they provide $O(1)$ node insertion and deletion without shifting elements.</p>
-<p>---</p>
-<h2 id='101-linked-list-memory-architecture-cache-miss-penalty'>10.1 Linked List Memory Architecture & Cache Miss Penalty</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='111-linked-list-memory-architecture-cache-miss-penalty'>11.1 Linked List Memory Architecture & Cache Miss Penalty</h2>
 <p>Each <code>ListNode</code> in C# is a heap reference:</p>
 
 <div class="code-container">
@@ -4037,8 +4902,8 @@ public sealed class MyQueue&lt;T&gt;
 </div>
 
 <p>Traversing a linked list forces the CPU memory controller to perform non-sequential memory pointer dereferences, causing L1/L2 cache misses.</p>
-<p>---</p>
-<h2 id='102-problem-1-reverse-linked-list-leetcode-206'>10.2 Problem 1: Reverse Linked List (LeetCode 206)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='112-problem-1-reverse-linked-list-leetcode-206'>11.2 Problem 1: Reverse Linked List (LeetCode 206)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Use three pointers: <code>prev</code> (starts null), <code>curr</code> (starts at head), and <code>next</code>. Invert each pointer backwards (<code>curr.next = prev</code>), then advance <code>prev</code> and <code>curr</code>.</p>
 
@@ -4082,8 +4947,8 @@ public sealed class MyQueue&lt;T&gt;
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass over list.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — Only pointer reassignments.</li>
 </ul>
-<p>---</p>
-<h2 id='103-problem-2-merge-two-sorted-lists-leetcode-21'>10.3 Problem 2: Merge Two Sorted Lists (LeetCode 21)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='113-problem-2-merge-two-sorted-lists-leetcode-21'>11.3 Problem 2: Merge Two Sorted Lists (LeetCode 21)</h2>
 <h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
 <p>Create a dummy sentinel node. Compare values at the heads of list1 and list2, splice the smaller node onto our merged tail, and advance that list's pointer.</p>
 <h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
@@ -4124,9 +4989,27 @@ public sealed class MyQueue&lt;T&gt;
 <li><strong>Time Complexity:</strong> $O(N + M)$ where $N, M$ are lengths of the lists.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — Splicing existing nodes in-place.</li>
 </ul>
-<p>---</p>
-<h1 id='11-pattern-9-trees-binary-search-trees'>11. PATTERN 9: TREES & BINARY SEARCH TREES</h1>
-<h2 id='111-tree-representations-stack-frame-traversal-mechanics'>11.1 Tree Representations & Stack Frame Traversal Mechanics</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-12" data-chapter="12" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 12</span>
+            <span class="accordion-title-text">12. PATTERN 10: TREES & BINARY SEARCH TREES</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="12-pattern-10-trees-binary-search-trees" class="accordion-anchor"></a>
+        <a id="12-pattern-10-trees-binary-search-trees" class="accordion-anchor"></a>
+
+<h2 id='121-tree-representations-stack-frame-traversal-mechanics'>12.1 Tree Representations & Stack Frame Traversal Mechanics</h2>
 <p>A Binary Tree is defined recursively:</p>
 
 <div class="code-container">
@@ -4154,8 +5037,8 @@ public sealed class MyQueue&lt;T&gt;
 <li><strong>Inorder ($Left \rightarrow Root \rightarrow Right$):</strong> In a Binary Search Tree (BST), visiting inorder yields all elements in <strong>strictly sorted ascending order</strong>.</li>
 <li><strong>Postorder ($Left \rightarrow Right \rightarrow Root$):</strong> Used for bottom-up computation (e.g., directory size calculation, freeing resources).</li>
 </ul>
-<p>---</p>
-<h2 id='112-problem-27-maximum-depth-of-binary-tree-dfs-vs-bfs'>11.2 Problem 27: Maximum Depth of Binary Tree (DFS vs. BFS)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='122-problem-27-maximum-depth-of-binary-tree-dfs-vs-bfs'>12.2 Problem 27: Maximum Depth of Binary Tree (DFS vs. BFS)</h2>
 <h3 id='1-c-solution-net-8'>1. C# Solution (.NET 8)</h3>
 
 <div class="code-container">
@@ -4183,8 +5066,8 @@ public static class TreeDepthCalculator
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='113-problem-28-binary-tree-level-order-traversal-batch-queue-sizing'>11.3 Problem 28: Binary Tree Level Order Traversal (Batch Queue Sizing)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='123-problem-28-binary-tree-level-order-traversal-batch-queue-sizing'>12.3 Problem 28: Binary Tree Level Order Traversal (Batch Queue Sizing)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Return the level order traversal of its nodes' values (i.e., from left to right, level by level).</p>
 <ul>
@@ -4236,8 +5119,8 @@ public static class LevelOrderTraverser
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='114-problem-29-validate-binary-search-tree-range-constraint-propagation'>11.4 Problem 29: Validate Binary Search Tree (Range Constraint Propagation)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='124-problem-29-validate-binary-search-tree-range-constraint-propagation'>12.4 Problem 29: Validate Binary Search Tree (Range Constraint Propagation)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Given the root of a binary tree, determine if it is a valid Binary Search Tree (BST).</p>
 <ul>
@@ -4275,8 +5158,8 @@ public static class LevelOrderTraverser
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='115-problem-30-lowest-common-ancestor-organizational-hierarchy-resolution'>11.5 Problem 30: Lowest Common Ancestor (Organizational Hierarchy Resolution)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='125-problem-30-lowest-common-ancestor-organizational-hierarchy-resolution'>12.5 Problem 30: Lowest Common Ancestor (Organizational Hierarchy Resolution)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Find the lowest node in $T$ that has both $P$ and $Q$ as descendants.</p>
 <ul>
@@ -4320,10 +5203,28 @@ public static class LevelOrderTraverser
 }</code></pre>
 </div>
 
-<p>---</p>
-<p>---</p>
-<h1 id='12-pattern-10-graphs'>12. PATTERN 10: GRAPHS</h1>
-<h2 id='121-adjacency-list-vs-adjacency-matrix-trade-offs'>12.1 Adjacency List vs. Adjacency Matrix Trade-offs</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-13" data-chapter="13" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 13</span>
+            <span class="accordion-title-text">13. PATTERN 11: GRAPHS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="13-pattern-11-graphs" class="accordion-anchor"></a>
+        <a id="13-pattern-11-graphs" class="accordion-anchor"></a>
+
+<h2 id='131-adjacency-list-vs-adjacency-matrix-trade-offs'>13.1 Adjacency List vs. Adjacency Matrix Trade-offs</h2>
 <p>In enterprise engineering, graphs model microservice dependency trees, banking transaction flow networks, role permission hierarchies, and build pipelines.</p>
 <div class='table-wrapper'><table>
 <tr><th>Property</th><th>Adjacency Matrix (<code>bool[V, V]</code>)</th><th>Adjacency List (<code>Dictionary&lt;int, List&lt;int&gt;&gt;</code>)</th></tr>
@@ -4332,8 +5233,8 @@ public static class LevelOrderTraverser
 <tr><td><strong>Iterate All Neighbors</strong></td><td>$O(V)$ scan through entire row</td><td>$O(\text{degree}(U))$ — exactly the adjacent nodes</td></tr>
 <tr><td><strong>Enterprise Fit</strong></td><td>Dense graphs (e.g., all-to-all connectivity)</td><td>Sparse graphs (99% of real-world networks)</td></tr>
 </table></div>
-<p>---</p>
-<h2 id='122-problem-31-number-of-islands-grid-dfsbfs-connected-components'>12.2 Problem 31: Number of Islands (Grid DFS/BFS Connected Components)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='132-problem-31-number-of-islands-grid-dfsbfs-connected-components'>13.2 Problem 31: Number of Islands (Grid DFS/BFS Connected Components)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Given an $M \times N$ 2D binary grid <code>grid</code> which represents a map of <code>&#x27;1&#x27;</code>s (land) and <code>&#x27;0&#x27;</code>s (water), return the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically.</p>
 <ul>
@@ -4409,8 +5310,8 @@ public static class IslandCounter
 <li><strong>Time Complexity:</strong> $O(M \times N)$ — Every cell is visited at most twice.</li>
 <li><strong>Space Complexity:</strong> $O(M \times N)$ worst-case call stack if the entire grid is land.</li>
 </ul>
-<p>---</p>
-<h2 id='123-problem-32-course-schedule-cycle-detection-topological-sort-via-kahns-algorithm'>12.3 Problem 32: Course Schedule (Cycle Detection & Topological Sort via Kahn's Algorithm)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='133-problem-32-course-schedule-cycle-detection-topological-sort-via-kahns-algorithm'>13.3 Problem 32: Course Schedule (Cycle Detection & Topological Sort via Kahn's Algorithm)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>There are <code>numCourses</code> courses labeled <code>0</code> to <code>numCourses - 1</code>. You are given an array <code>prerequisites</code> where <code>prerequisites[i] = [a, b]</code> means you must take course <code>b</code> before course <code>a</code>. Can you finish all courses?</p>
 <ul>
@@ -4499,10 +5400,28 @@ public static class WorkflowScheduler
 <li><strong>Time Complexity:</strong> $O(V + E)$ where $V$ is courses and $E$ is prerequisites.</li>
 <li><strong>Space Complexity:</strong> $O(V + E)$ for graph representation and in-degree table.</li>
 </ul>
-<p>---</p>
-<p>---</p>
-<h1 id='13-pattern-11-heap-priorityqueue-net-6'>13. PATTERN 11: HEAP & PRIORITYQUEUE (.NET 6+)</h1>
-<h2 id='131-binary-heap-mechanics-on-contiguous-arrays'>13.1 Binary Heap Mechanics on Contiguous Arrays</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-14" data-chapter="14" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 14</span>
+            <span class="accordion-title-text">14. PATTERN 12: HEAP & PRIORITYQUEUE (.NET 6+)</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="14-pattern-12-heap-priorityqueue-net-6" class="accordion-anchor"></a>
+        <a id="14-pattern-12-heap-priorityqueue-net-6" class="accordion-anchor"></a>
+
+<h2 id='141-binary-heap-mechanics-on-contiguous-arrays'>14.1 Binary Heap Mechanics on Contiguous Arrays</h2>
 <p>Prior to .NET 6, C# developers had to build custom binary heaps or misuse <code>SortedSet&lt;T&gt;</code>. Starting with .NET 6, Microsoft added <code>System.Collections.Generic.PriorityQueue&lt;TElement, TPriority&gt;</code>.</p>
 <h3 id='memory-architecture-of-array-backed-binary-min-heap'>Memory Architecture of Array-Backed Binary Min-Heap:</h3>
 <p>In a 0-indexed array:</p>
@@ -4514,8 +5433,8 @@ public static class WorkflowScheduler
 <li>Insertion (<code>Enqueue</code>): Appended to end, "sifted up" in $O(\log N)$.</li>
 <li>Extraction (<code>Dequeue</code>): Root replaced with last element, "sifted down" in $O(\log N)$.</li>
 </ul>
-<p>---</p>
-<h2 id='132-problem-33-kth-largest-element-in-an-array-min-heap-of-size-k'>13.2 Problem 33: Kth Largest Element in an Array (Min-Heap of Size K)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='142-problem-33-kth-largest-element-in-an-array-min-heap-of-size-k'>14.2 Problem 33: Kth Largest Element in an Array (Min-Heap of Size K)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Find the $K$-th largest element in an unsorted array.</p>
 <ul>
@@ -4570,8 +5489,8 @@ public static class KthLargestFinder
 <li><strong>Time Complexity:</strong> $O(N \log K)$ — Much faster than sorting $O(N \log N)$ when $K \ll N$.</li>
 <li><strong>Space Complexity:</strong> $O(K)$ — Heap never exceeds $K + 1$ elements.</li>
 </ul>
-<p>---</p>
-<h2 id='133-problem-34-merge-k-sorted-lists-telemetry-streams-k-way-min-heap-merge'>13.3 Problem 34: Merge K Sorted Lists / Telemetry Streams (K-Way Min-Heap Merge)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='143-problem-34-merge-k-sorted-lists-telemetry-streams-k-way-min-heap-merge'>14.3 Problem 34: Merge K Sorted Lists / Telemetry Streams (K-Way Min-Heap Merge)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>You are given an array of $K$ linked-lists, each sorted in ascending order. Merge all the linked-lists into one sorted linked-list.</p>
 <ul>
@@ -4629,10 +5548,28 @@ public static class KWayMerger
 <li><strong>Time Complexity:</strong> $O(N \log K)$ where $N$ is total number of nodes across all lists and $K$ is number of lists.</li>
 <li><strong>Space Complexity:</strong> $O(K)$ for the priority queue.</li>
 </ul>
-<p>---</p>
-<p>---</p>
-<h1 id='14-pattern-12-recursion-backtracking'>14. PATTERN 12: RECURSION & BACKTRACKING</h1>
-<h2 id='141-backtracking-template-choose-explore-unchoose'>14.1 Backtracking Template: Choose -> Explore -> Unchoose</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-15" data-chapter="15" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 15</span>
+            <span class="accordion-title-text">15. PATTERN 13: RECURSION & BACKTRACKING</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="15-pattern-13-recursion-backtracking" class="accordion-anchor"></a>
+        <a id="15-pattern-13-recursion-backtracking" class="accordion-anchor"></a>
+
+<h2 id='151-backtracking-template-choose-explore-unchoose'>15.1 Backtracking Template: Choose -> Explore -> Unchoose</h2>
 <p>Backtracking is exhaustive depth-first search on a decision tree. The standard template:</p>
 
 <div class="code-container">
@@ -4657,8 +5594,8 @@ public static class KWayMerger
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='142-problem-35-subsets-combinatorial-role-based-access-matrix'>14.2 Problem 35: Subsets (Combinatorial Role-Based Access Matrix)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='152-problem-35-subsets-combinatorial-role-based-access-matrix'>15.2 Problem 35: Subsets (Combinatorial Role-Based Access Matrix)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Given an integer array <code>nums</code> of unique elements, return all possible subsets (the power set).</p>
 <ul>
@@ -4699,8 +5636,8 @@ public static class PowerSetGenerator
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='143-problem-36-permutations-distinct-sequencing-generation'>14.3 Problem 36: Permutations (Distinct Sequencing Generation)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='153-problem-36-permutations-distinct-sequencing-generation'>15.3 Problem 36: Permutations (Distinct Sequencing Generation)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Generate all $N!$ orderings of an array of distinct integers.</p>
 <ul>
@@ -4751,8 +5688,8 @@ public static class PermutationGenerator
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='144-problem-37-word-search-2d-board-backtracking-with-visited-tracking'>14.4 Problem 37: Word Search (2D Board Backtracking with Visited Tracking)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='154-problem-37-word-search-2d-board-backtracking-with-visited-tracking'>15.4 Problem 37: Word Search (2D Board Backtracking with Visited Tracking)</h2>
 <h3 id='1-c-solution-net-8'>1. C# Solution (.NET 8)</h3>
 
 <div class="code-container">
@@ -4801,18 +5738,36 @@ public static class PermutationGenerator
 }</code></pre>
 </div>
 
-<p>---</p>
-<p>---</p>
-<h1 id='15-pattern-13-dynamic-programming'>15. PATTERN 13: DYNAMIC PROGRAMMING</h1>
-<h2 id='151-the-dp-framework-optimal-substructure-overlapping-subproblems'>15.1 The DP Framework: Optimal Substructure + Overlapping Subproblems</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-16" data-chapter="16" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 16</span>
+            <span class="accordion-title-text">16. PATTERN 14: DYNAMIC PROGRAMMING</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="16-pattern-14-dynamic-programming" class="accordion-anchor"></a>
+        <a id="16-pattern-14-dynamic-programming" class="accordion-anchor"></a>
+
+<h2 id='161-the-dp-framework-optimal-substructure-overlapping-subproblems'>16.1 The DP Framework: Optimal Substructure + Overlapping Subproblems</h2>
 <p>Dynamic Programming is simply <strong>recursion without doing duplicate work</strong>.</p>
 <ul>
 <li><strong>Top-Down (Memoization):</strong> Write recursion naturally, store results in cache (<code>int[] memo</code>).</li>
 <li><strong>Bottom-Up (Tabulation):</strong> Build an array from base cases up to target index.</li>
 <li><strong>Space Optimization:</strong> If state transition only depends on the previous 1 or 2 steps, discard the $O(N)$ array and keep scalar variables ($O(1)$ space).</li>
 </ul>
-<p>---</p>
-<h2 id='152-problem-38-climbing-stairs-fibonacci-state-transitions'>15.2 Problem 38: Climbing Stairs (Fibonacci State Transitions)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='162-problem-38-climbing-stairs-fibonacci-state-transitions'>16.2 Problem 38: Climbing Stairs (Fibonacci State Transitions)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>You are climbing a staircase. It takes $N$ steps to reach the top. Each time you can climb 1 or 2 steps. In how many distinct ways can you climb to the top?</p>
 <ul>
@@ -4850,8 +5805,8 @@ public static class PermutationGenerator
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='153-problem-39-coin-change-unbounded-knapsack-minimum-denominations'>15.3 Problem 39: Coin Change (Unbounded Knapsack / Minimum Denominations)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='163-problem-39-coin-change-unbounded-knapsack-minimum-denominations'>16.3 Problem 39: Coin Change (Unbounded Knapsack / Minimum Denominations)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Given an integer array <code>coins</code> representing coins of different denominations and an integer <code>amount</code>, return the fewest number of coins needed to make up that amount. If impossible, return <code>-1</code>.</p>
 <ul>
@@ -4908,8 +5863,8 @@ public static class CashierOptimizer
 <li><strong>Time Complexity:</strong> $O(\text{amount} \times C)$ where $C$ is number of coin denominations.</li>
 <li><strong>Space Complexity:</strong> $O(\text{amount})$ for DP array.</li>
 </ul>
-<p>---</p>
-<h2 id='154-problem-40-longest-common-subsequence-audit-diff-reconciliation-engine'>15.4 Problem 40: Longest Common Subsequence (Audit Diff & Reconciliation Engine)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='164-problem-40-longest-common-subsequence-audit-diff-reconciliation-engine'>16.4 Problem 40: Longest Common Subsequence (Audit Diff & Reconciliation Engine)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Given two strings <code>text1</code> and <code>text2</code>, return the length of their longest common subsequence.</p>
 <ul>
@@ -4960,8 +5915,8 @@ public static class DiffEngine
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='155-problem-41-01-knapsack-problem-saas-resource-allocation-under-budget'>15.5 Problem 41: 0/1 Knapsack Problem (SaaS Resource Allocation Under Budget)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='165-problem-41-01-knapsack-problem-saas-resource-allocation-under-budget'>16.5 Problem 41: 0/1 Knapsack Problem (SaaS Resource Allocation Under Budget)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Given weights <code>weights</code> and values <code>values</code> of $N$ items, find the maximum value that fits inside a knapsack of capacity $W$. Each item can either be taken (1) or left (0).</p>
 <ul>
@@ -4998,13 +5953,31 @@ public static class KnapsackSolver
 }</code></pre>
 </div>
 
-<p>---</p>
-<p>---</p>
-<h1 id='16-pattern-14-greedy-algorithms-intervals'>16. PATTERN 14: GREEDY ALGORITHMS & INTERVALS</h1>
-<h2 id='161-the-greedy-choice-property'>16.1 The Greedy-Choice Property</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-17" data-chapter="17" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 17</span>
+            <span class="accordion-title-text">17. PATTERN 15: GREEDY ALGORITHMS & INTERVALS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="17-pattern-15-greedy-algorithms-intervals" class="accordion-anchor"></a>
+        <a id="17-pattern-15-greedy-algorithms-intervals" class="accordion-anchor"></a>
+
+<h2 id='171-the-greedy-choice-property'>17.1 The Greedy-Choice Property</h2>
 <p>A problem exhibits the greedy choice property if a globally optimal solution can be reached by making a locally optimal choice at each step without ever needing to reconsider past choices.</p>
-<p>---</p>
-<h2 id='162-problem-42-best-time-to-buy-and-sell-stock-running-valley-peak'>16.2 Problem 42: Best Time to Buy and Sell Stock (Running Valley & Peak)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='172-problem-42-best-time-to-buy-and-sell-stock-running-valley-peak'>17.2 Problem 42: Best Time to Buy and Sell Stock (Running Valley & Peak)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Given an array <code>prices</code> where <code>prices[i]</code> is the price of a given stock on day $i$, maximize your profit by choosing a single day to buy and a different day in the future to sell.</p>
 <ul>
@@ -5050,8 +6023,8 @@ public static class StockTrader
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='163-problem-43-jump-game-boundary-horizon-expansion'>16.3 Problem 43: Jump Game (Boundary Horizon Expansion)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='173-problem-43-jump-game-boundary-horizon-expansion'>17.3 Problem 43: Jump Game (Boundary Horizon Expansion)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Given an integer array <code>nums</code> where <code>nums[i]</code> is max jump length from position $i$, determine if you can reach the last index.</p>
 <ul>
@@ -5084,8 +6057,8 @@ public static class JumpGame
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='164-problem-44-meeting-rooms-i-ii-resource-contention-peaks'>16.4 Problem 44: Meeting Rooms I & II (Resource Contention Peaks)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='174-problem-44-meeting-rooms-i-ii-resource-contention-peaks'>17.4 Problem 44: Meeting Rooms I & II (Resource Contention Peaks)</h2>
 <h3 id='1-how-to-think-meeting-rooms-ii'>1. How to Think (Meeting Rooms II)</h3>
 <p>Given an array of meeting time intervals <code>intervals</code>, find the minimum number of conference rooms required.</p>
 <ul>
@@ -5149,10 +6122,28 @@ public static class ConferenceScheduler
 }</code></pre>
 </div>
 
-<p>---</p>
-<p>---</p>
-<h1 id='17-pattern-15-bit-manipulation'>17. PATTERN 15: BIT MANIPULATION</h1>
-<h2 id='171-bitwise-operators-and-bitmask-flags-in-c'>17.1 Bitwise Operators and Bitmask Flags in C#</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-18" data-chapter="18" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 18</span>
+            <span class="accordion-title-text">18. PATTERN 16: BIT MANIPULATION</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="18-pattern-16-bit-manipulation" class="accordion-anchor"></a>
+        <a id="18-pattern-16-bit-manipulation" class="accordion-anchor"></a>
+
+<h2 id='181-bitwise-operators-and-bitmask-flags-in-c'>18.1 Bitwise Operators and Bitmask Flags in C#</h2>
 <p>Bit manipulation operates directly on binary representation in CPU registers in a single clock cycle.</p>
 
 <div class="code-container">
@@ -5187,8 +6178,8 @@ public enum UserPermissions : uint
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='172-problem-45-single-number-xor-cancellation-property'>17.2 Problem 45: Single Number (XOR Cancellation Property)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='182-problem-45-single-number-xor-cancellation-property'>18.2 Problem 45: Single Number (XOR Cancellation Property)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Given a non-empty array of integers <code>nums</code>, every element appears twice except for one. Find that single one in $O(N)$ time and $O(1)$ space.</p>
 <ul>
@@ -5226,8 +6217,8 @@ public static class SingleNumberSolver
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='173-problem-46-number-of-1-bits-brian-kernighans-bit-clear'>17.3 Problem 46: Number of 1 Bits (Brian Kernighan's Bit Clear)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='183-problem-46-number-of-1-bits-brian-kernighans-bit-clear'>18.3 Problem 46: Number of 1 Bits (Brian Kernighan's Bit Clear)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Write a function that takes the binary representation of a positive integer and returns the number of set bits (Hamming weight).</p>
 <ul>
@@ -5260,8 +6251,8 @@ public static class SingleNumberSolver
 }</code></pre>
 </div>
 
-<p>---</p>
-<h2 id='174-problem-47-power-of-two-bitmask-decrement-boundary'>17.4 Problem 47: Power of Two (Bitmask Decrement Boundary)</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='184-problem-47-power-of-two-bitmask-decrement-boundary'>18.4 Problem 47: Power of Two (Bitmask Decrement Boundary)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Given an integer <code>n</code>, return <code>true</code> if it is a power of two.</p>
 <ul>
@@ -5284,10 +6275,28 @@ public static class SingleNumberSolver
 }</code></pre>
 </div>
 
-<p>---</p>
-<p>---</p>
-<h1 id='18-infosys-technical-interview-survival-playbook'>18. INFOSYS & TECHNICAL INTERVIEW SURVIVAL PLAYBOOK</h1>
-<h2 id='181-how-infosys-evaluates-a-3-yoe-net-developer'>18.1 How Infosys Evaluates a 3 YOE .NET Developer</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-19" data-chapter="19" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 19</span>
+            <span class="accordion-title-text">19. INFOSYS & TECHNICAL INTERVIEW SURVIVAL PLAYBOOK</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="19-infosys-technical-interview-survival-playbook" class="accordion-anchor"></a>
+        <a id="19-infosys-technical-interview-survival-playbook" class="accordion-anchor"></a>
+
+<h2 id='191-how-infosys-evaluates-a-3-yoe-net-developer'>19.1 How Infosys Evaluates a 3 YOE .NET Developer</h2>
 <p>Infosys technical interviewers for 3 YOE lateral hires evaluate candidates on a 4-quadrant rubric:</p>
 
 <div class="code-container">
@@ -5319,11 +6328,11 @@ public static class SingleNumberSolver
 <li><strong>Off-by-One Loop Bounds:</strong> Writing <code>&lt;</code> instead of <code>&lt;=</code> or not checking <code>Length - 1</code>, leading to <code>IndexOutOfRangeException</code>.</li>
 <li><strong>Failing to Trace Code:</strong> Declaring "My code is complete" without walking through a single concrete test case.</li>
 </ol>
-<p>---</p>
-<h2 id='182-real-45-minute-interview-simulation-transcript'>18.2 Real 45-Minute Interview Simulation Transcript</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='192-real-45-minute-interview-simulation-transcript'>19.2 Real 45-Minute Interview Simulation Transcript</h2>
 <p><strong>Interviewer:</strong> Lead Architect, Infosys Financial Services Practice.</p>
 <p><strong>Candidate:</strong> .NET Backend Developer (3 Years Experience).</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <p><strong>Interviewer:</strong> <em>"Welcome, Rajesh. Let's start with a coding problem. Suppose we have an order processing pipeline. We receive an array of transaction integers, both positive and negative. I want you to find the contiguous subarray that produces the maximum total sum. How would you approach this?"</em></p>
 <p><strong>Candidate:</strong> <em>"Thank you, sir. Before writing any code, I would like to clarify a few constraints. First, can the array be empty or null? Second, can all the numbers in the array be negative? Third, what is the expected maximum size of this array?"</em></p>
 <p><strong>Interviewer:</strong> <em>"Good questions. The array will not be null or empty; it will have between 1 and $10^5$ elements. All numbers can indeed be negative. Values range between $-10^4$ and $+10^4$."</em></p>
@@ -5369,8 +6378,8 @@ public static class SingleNumberSolver
 <p><strong>Interviewer:</strong> <em>"Excellent. Now a follow-up: what if I asked you to return not just the sum, but the actual start and end indices of that subarray?"</em></p>
 <p><strong>Candidate:</strong> <em>"We can track three pointers: <code>start = 0</code>, <code>end = 0</code>, and <code>tempStart = 0</code>. Whenever we start a new streak (<code>currentStreak = nums[i]</code>), we set <code>tempStart = i</code>. Whenever <code>currentStreak &gt; maxSubarraySum</code>, we update <code>maxSubarraySum = currentStreak</code>, set <code>start = tempStart</code>, and <code>end = i</code>. When the loop finishes, <code>[start, end]</code> will be the exact boundaries."</em></p>
 <p><strong>Interviewer:</strong> <em>"Spot on, Rajesh. That's exactly what I wanted to hear."</em></p>
-<p>---</p>
-<h2 id='183-the-net-8-big-o-time-space-complexity-reference-matrix'>18.3 The .NET 8 Big-O Time & Space Complexity Reference Matrix</h2>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='193-the-net-8-big-o-time-space-complexity-reference-matrix'>19.3 The .NET 8 Big-O Time & Space Complexity Reference Matrix</h2>
 <div class='table-wrapper'><table>
 <tr><th>Data Structure / Operation</th><th>Access</th><th>Search</th><th>Insertion</th><th>Deletion</th><th>Space Complexity</th><th>Underlying .NET 8 Internal Architecture</th></tr>
 <tr><td><strong>Array (<code>T[]</code>)</strong></td><td>$O(1)$</td><td>$O(N)$</td><td>$O(N)$ (resize)</td><td>$O(N)$ (shift)</td><td>$O(N)$</td><td>Contiguous block on GC Heap; CPU L1 cache line prefetching.</td></tr>
@@ -5384,21 +6393,22 @@ public static class SingleNumberSolver
 <tr><td><strong><code>PriorityQueue&lt;TElement, TPriority&gt;</code></strong></td><td>N/A</td><td>$O(N)$</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(N)$</td><td>Array-backed 4-ary or binary Min-Heap; sift-up / sift-down.</td></tr>
 <tr><td><strong><code>SortedSet&lt;T&gt;</code> / <code>SortedDictionary&lt;K, V&gt;</code></strong></td><td>N/A</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(N)$</td><td>Self-balancing Red-Black Tree.</td></tr>
 </table></div>
+</div></details>
             </article>
 
             <nav class="chapter-nav">
                 
-<a href="Volume-X-DotNet-Platform-Core-Encyclopedia.html" class="nav-card">
-    <span class="nav-card-dir">← Previous Module</span>
-    <span class="nav-card-title">Volume X: .NET Platform & CoreCLR Runtime Encyclopedia</span>
-</a>
-
+    <a href="Volume-X-DotNet-Platform-Core-Encyclopedia.html" class="nav-card">
+        <span class="nav-card-dir">← Previous Module</span>
+        <span class="nav-card-title">Volume X: .NET Platform & CoreCLR Runtime Encyclopedia</span>
+    </a>
+    
                 
-<a href="Volume-2-CSharp-Encyclopedia.html" class="nav-card" style="text-align: right;">
-    <span class="nav-card-dir">Next Module →</span>
-    <span class="nav-card-title">Volume 2: C# Complete Language Encyclopedia</span>
-</a>
-
+    <a href="Volume-2-CSharp-Encyclopedia.html" class="nav-card" style="text-align: right;">
+        <span class="nav-card-dir">Next Module →</span>
+        <span class="nav-card-title">Volume 2: C# Complete Language Encyclopedia</span>
+    </a>
+    
             </nav>
         </main>
 
@@ -5406,23 +6416,13 @@ public static class SingleNumberSolver
             <div class="toc-title">On This Page</div>
             <ul class="toc-list">
                 
-        <li class="toc-item level-1">
-            <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
-        </li>
-        
-
         <li class="toc-item level-2">
             <a href="#volume-1-logical-thinking-data-structures-and-algorithms" class="toc-link">Volume 1: Logical Thinking &amp; Data Structures </a>
         </li>
         
 
         <li class="toc-item level-1">
-            <a href="#table-of-contents" class="toc-link">TABLE OF CONTENTS</a>
-        </li>
-        
-
-        <li class="toc-item level-1">
-            <a href="#1-the-engineers-mindset-from-struggling-with-dsa-to-architectural-problem-solver" class="toc-link">1. THE ENGINEER&#x27;S MINDSET: FROM &quot;STRUGGLING W</a>
+            <a href="#ch-1" class="toc-link">1. THE ENGINEER&#x27;S MINDSET: FROM &quot;STRUGGLING W</a>
         </li>
         
 
@@ -5467,7 +6467,7 @@ public static class SingleNumberSolver
         
 
         <li class="toc-item level-1">
-            <a href="#2-mastering-the-core-algorithmic-thinking-patterns" class="toc-link">2. MASTERING THE CORE ALGORITHMIC THINKING PA</a>
+            <a href="#ch-2" class="toc-link">2. MASTERING THE CORE ALGORITHMIC THINKING PA</a>
         </li>
         
 
@@ -5532,7 +6532,7 @@ public static class SingleNumberSolver
         
 
         <li class="toc-item level-1">
-            <a href="#3-pattern-1-arrays-hashing" class="toc-link">3. PATTERN 1: ARRAYS &amp; HASHING</a>
+            <a href="#ch-3" class="toc-link">3. PATTERN 1: ARRAYS &amp; HASHING</a>
         </li>
         
 
@@ -5555,12 +6555,73 @@ public static class SingleNumberSolver
             <a href="#1-the-idea-in-1-sentence" class="toc-link">1. The Idea in 1 Sentence</a>
         </li>
         
+
+        <li class="toc-item level-3">
+            <a href="#2-neetcode-style-c-solution" class="toc-link">2. NeetCode-Style C# Solution</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#33-problem-2-valid-anagram" class="toc-link">3.3 Problem 2: Valid Anagram</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#1-the-idea-in-1-sentence" class="toc-link">1. The Idea in 1 Sentence</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#2-neetcode-style-c-solution" class="toc-link">2. NeetCode-Style C# Solution</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#34-problem-3-group-anagrams" class="toc-link">3.4 Problem 3: Group Anagrams</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#1-the-idea-in-1-sentence" class="toc-link">1. The Idea in 1 Sentence</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#2-neetcode-style-c-solution" class="toc-link">2. NeetCode-Style C# Solution</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#35-problem-4-top-k-frequent-elements" class="toc-link">3.5 Problem 4: Top K Frequent Elements</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#1-the-idea-in-1-sentence" class="toc-link">1. The Idea in 1 Sentence</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#2-neetcode-style-c-solution" class="toc-link">2. NeetCode-Style C# Solution</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#36-problem-5-product-of-array-except-self" class="toc-link">3.6 Problem 5: Product of Array Except Self</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#1-the-idea-in-1-sentence" class="toc-link">1. The Idea in 1 Sentence</a>
+        </li>
+        
             </ul>
         </aside>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Theme toggle script
             const toggle = document.getElementById('theme-toggle');
             function updateToggleUI(theme) {
                 if (!toggle) return;
@@ -5581,12 +6642,140 @@ public static class SingleNumberSolver
                 });
             }
 
+            // Highlight syntax
             hljs.highlightAll();
 
+            // Mermaid diagrams initialization
             mermaid.initialize({
                 startOnLoad: true,
                 theme: currentTheme === 'dark' ? 'dark' : 'neutral',
                 securityLevel: 'loose'
+            });
+
+            // ==========================================
+            // ACCORDION & SINGLE-FOCUS CONTROLS
+            // ==========================================
+            const accordions = document.querySelectorAll('.chapter-accordion');
+            const singleFocusToggle = document.getElementById('single-focus-toggle');
+            const btnExpandAll = document.getElementById('btn-expand-all');
+            const btnCollapseAll = document.getElementById('btn-collapse-all');
+
+            function renderMermaidIn(element) {
+                if (window.mermaid) {
+                    const unrendered = element.querySelectorAll('.mermaid:not([data-processed])');
+                    if (unrendered.length > 0) {
+                        try { mermaid.run({ nodes: unrendered }); } catch(e) {}
+                    }
+                }
+            }
+
+            // Expand All
+            if (btnExpandAll) {
+                btnExpandAll.addEventListener('click', () => {
+                    if (singleFocusToggle) singleFocusToggle.checked = false;
+                    accordions.forEach(acc => {
+                        acc.open = true;
+                        renderMermaidIn(acc);
+                    });
+                });
+            }
+
+            // Collapse All
+            if (btnCollapseAll) {
+                btnCollapseAll.addEventListener('click', () => {
+                    accordions.forEach(acc => {
+                        acc.open = false;
+                    });
+                });
+            }
+
+            // Single focus auto-closing logic
+            accordions.forEach(acc => {
+                acc.addEventListener('toggle', () => {
+                    const statusText = acc.querySelector('.accordion-status-text');
+                    if (statusText) {
+                        statusText.innerText = acc.open ? 'Click to collapse' : 'Click to expand';
+                    }
+                    if (acc.open) {
+                        renderMermaidIn(acc);
+                        if (singleFocusToggle && singleFocusToggle.checked) {
+                            accordions.forEach(other => {
+                                if (other !== acc && other.open) {
+                                    other.open = false;
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            // ==========================================
+            // DEEP LINKING & TOC NAVIGATION
+            // ==========================================
+            function navigateToTarget(targetId) {
+                if (!targetId) return;
+                let target = document.getElementById(targetId);
+                
+                // Fallback for slug variations (e.g. hyphens)
+                if (!target) {
+                    const normalized = targetId.replace(/-+/g, '-');
+                    target = document.getElementById(normalized) || 
+                             document.querySelector(`[id*="${normalized}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                }
+
+                if (!target) return;
+
+                // If target is inside an accordion, open that accordion
+                const parentAcc = target.closest('.chapter-accordion');
+                if (parentAcc) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== parentAcc) a.open = false;
+                        });
+                    }
+                    parentAcc.open = true;
+                    renderMermaidIn(parentAcc);
+                } else if (target.classList.contains('chapter-accordion')) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== target) a.open = false;
+                        });
+                    }
+                    target.open = true;
+                    renderMermaidIn(target);
+                }
+
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.classList.add('flash-highlight');
+                    setTimeout(() => target.classList.remove('flash-highlight'), 1600);
+                }, 100);
+            }
+
+            // Check URL hash on page load
+            if (window.location.hash) {
+                setTimeout(() => {
+                    navigateToTarget(window.location.hash.substring(1));
+                }, 250);
+            }
+
+            // Listen for hash changes
+            window.addEventListener('hashchange', () => {
+                navigateToTarget(window.location.hash.substring(1));
+            });
+
+            // Intercept internal page anchor clicks
+            document.addEventListener('click', (e) => {
+                const anchor = e.target.closest('a[href^="#"]');
+                if (!anchor) return;
+                const href = anchor.getAttribute('href');
+                if (href && href.length > 1) {
+                    e.preventDefault();
+                    const id = href.substring(1);
+                    history.pushState(null, null, href);
+                    navigateToTarget(id);
+                }
             });
         });
     </script>

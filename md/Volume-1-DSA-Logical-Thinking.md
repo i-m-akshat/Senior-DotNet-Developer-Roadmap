@@ -27,101 +27,109 @@
    - 3.6 Problem 5: Product of Array Except Self
    - 3.7 Problem 6: Kadane's Algorithm (Maximum Subarray Sum)
    - 3.8 Problem 7: Rotate Array (In-Place 3-Step Reversal)
-4. [Pattern 2: Two Pointers](#4-pattern-2-two-pointers)
-   - 4.1 The Two Pointers Mental Model & Archetypes
-   - 4.2 Problem 1: Two Sum II (Input Array Is Sorted)
-   - 4.3 Problem 2: Valid Palindrome
-   - 4.4 Problem 3: Container With Most Water (LeetCode 11)
-   - 4.5 Problem 4: 3Sum (Zero-Sum Triplets - LeetCode 15)
-   - 4.6 Problem 5: Trapping Rain Water (LeetCode 42)
-   - 4.7 Problem 6: Sort Colors / Dutch National Flag (LeetCode 75)
-   - 4.8 Problem 7: Remove Duplicates from Sorted Array
-   - 4.9 Problem 8: Move Zeroes
-5. [Pattern 3: Sliding Window](#5-pattern-3-sliding-window)
-   - 5.1 Universal Sliding Window Architecture & Flowchart
-   - 5.2 Problem 1: Maximum Sum Subarray of Size K (Fixed Window)
-   - 5.3 Problem 2: Longest Substring Without Repeating Characters (LeetCode 3)
-   - 5.4 Problem 3: Minimum Size Subarray Sum (LeetCode 209)
-   - 5.5 Problem 4: Longest Repeating Character Replacement (LeetCode 424)
-   - 5.6 Problem 5: Longest Substring with At Most K Distinct Characters
-   - 5.7 Problem 6: Minimum Window Substring (LeetCode 76 - Hard)
-6. [Pattern 4: Fast & Slow Pointers (Tortoise & Hare)](#6-pattern-4-fast--slow-pointers-tortoise--hare)
-   - 6.1 The Mathematical Principle of Floyd's Algorithm
-   - 6.2 Problem 1: Linked List Cycle Detection (LeetCode 141)
-   - 6.3 Problem 2: Middle of the Linked List (LeetCode 876)
-   - 6.4 Problem 3: Find the Duplicate Number in an Array (LeetCode 287)
-7. [Pattern 5: Searching Algorithms Encyclopedia](#7-pattern-5-searching-algorithms-encyclopedia)
-   - 7.1 The Searching Taxonomy & Mechanical Sympathy Decision Matrix
-   - 7.2 Linear Search & The Sentinel Optimization (Eliminating Boundary Checks)
-   - 7.3 Classic Binary Search (The Monotonic Mindset)
-   - 7.4 Search in Rotated Sorted Array (Shifted Ledger Partitions)
-   - 7.5 Find First and Last Position in Sorted Array (Lower & Upper Bounds)
-   - 7.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages Within D Days)
-   - 7.7 Interpolation Search (Uniformly Distributed Probing Engine)
-   - 7.8 Exponential Search (Unbounded Ledger Streams & Fast Galloping)
-   - 7.9 Ternary Search (Finding Extrema in Unimodal Functions)
-8. [Pattern 6: Sorting Algorithms Encyclopedia](#8-pattern-6-sorting-algorithms-encyclopedia)
-   - 8.1 The Sorting Taxonomy & Complexity Matrix
-   - 8.2 Bubble Sort (Standard & Early-Exit Optimization)
-   - 8.3 Selection Sort (Minimum-Scan & Minimal Memory Writes)
-   - 8.4 Insertion Sort (Adaptive Shifting & Small Partition Powerhouse)
-   - 8.5 Merge Sort (Divide & Conquer, In-Depth Memory Mechanics & Stability)
-   - 8.6 Quick Sort (Lomuto vs. Hoare Partitioning & Median-of-3 Pivot)
-   - 8.7 Heap Sort (In-Place Array-Based Max-Heapify)
-   - 8.8 Counting Sort (Non-Comparison O(N + K) Integer Sorting)
-   - 8.9 Radix Sort (LSD Base-10 / 256 Distribution Engine)
-   - 8.10 Under the Hood: .NET 8 IntroSort & ArraySortHelper<T>
-9. [Pattern 7: Stack & Queue](#9-pattern-7-stack--queue)
-   - 9.1 Memory Models: Array-Backed vs. Node-Backed Queues
-   - 9.2 Problem 1: Valid Parentheses (Syntax Validation for Config Tokens)
-   - 9.3 Problem 2: Min Stack (O(1) Retrieval via Companion State)
-   - 9.4 Problem 3: Evaluate Reverse Polish Notation (Financial Math Engine)
-   - 9.5 Problem 4: Implement Queue Using Stacks (Amortized Cost Transfer)
-   - 9.6 Problem 5: Moving Average from Data Stream (Circular Queue Buffer)
-10. [Pattern 8: Linked Lists](#10-pattern-8-linked-lists)
-    - 10.1 Linked List Memory Architecture & Cache Miss Penalty
-    - 10.2 Problem 1: Reverse Linked List (Iterative Pointer Rewiring)
-    - 10.3 Problem 2: Merge Two Sorted Lists (Splice Nodes with Sentinel Head)
-11. [Pattern 9: Trees & Binary Search Trees](#11-pattern-9-trees--binary-search-trees)
-    - 11.1 Tree Representations & Stack Frame Traversal Mechanics
-    - 11.2 Problem 1: Maximum Depth of Binary Tree (DFS vs. BFS)
-    - 11.3 Problem 2: Binary Tree Level Order Traversal (Batch Queue Sizing)
-    - 11.4 Problem 3: Validate Binary Search Tree (Range Constraint Propagation)
-    - 11.5 Problem 4: Lowest Common Ancestor (Organizational Hierarchy Resolution)
-12. [Pattern 10: Graphs](#12-pattern-10-graphs)
-    - 12.1 Adjacency List vs. Adjacency Matrix Trade-offs
-    - 12.2 Problem 1: Number of Islands (Grid DFS/BFS Connected Components)
-    - 12.3 Problem 2: Course Schedule (Cycle Detection & Topological Sort via Kahn's Algorithm)
-13. [Pattern 11: Heap & PriorityQueue (.NET 6+)](#13-pattern-11-heap--priorityqueue-net-6)
-    - 13.1 Binary Heap Mechanics on Contiguous Arrays
-    - 13.2 Problem 1: Kth Largest Element in an Array (Min-Heap of Size K)
-    - 13.3 Problem 2: Merge K Sorted Lists / Telemetry Streams (K-Way Min-Heap Merge)
-14. [Pattern 12: Recursion & Backtracking](#14-pattern-12-recursion--backtracking)
-    - 14.1 Backtracking Template: Choose -> Explore -> Unchoose
-    - 14.2 Problem 1: Subsets (Combinatorial Role-Based Access Matrix)
-    - 14.3 Problem 2: Permutations (Distinct Sequencing Generation)
-    - 14.4 Problem 3: Word Search (2D Board Backtracking with Visited Tracking)
-15. [Pattern 13: Dynamic Programming](#15-pattern-13-dynamic-programming)
-    - 15.1 The DP Framework: Optimal Substructure + Overlapping Subproblems
-    - 15.2 Problem 1: Climbing Stairs (Fibonacci State Transitions)
-    - 15.3 Problem 2: Coin Change (Unbounded Knapsack / Minimum Denominations)
-    - 15.4 Problem 3: Longest Common Subsequence (Audit Diff & Reconciliation Engine)
-    - 15.5 Problem 4: 0/1 Knapsack Problem (SaaS Resource Allocation Under Budget)
-16. [Pattern 14: Greedy Algorithms & Intervals](#16-pattern-14-greedy-algorithms--intervals)
-    - 16.1 The Greedy-Choice Property
-    - 16.2 Problem 1: Best Time to Buy and Sell Stock (Running Valley & Peak)
-    - 16.3 Problem 2: Jump Game (Boundary Horizon Expansion)
-    - 16.4 Problem 3: Merge Intervals (Booking & Calendar Overlap Consolidation)
-    - 16.5 Problem 4: Meeting Rooms I & II (Resource Contention Peaks)
-17. [Pattern 15: Bit Manipulation](#17-pattern-15-bit-manipulation)
-    - 17.1 Bitwise Operators and Bitmask Flags in C#
-    - 17.2 Problem 1: Single Number (XOR Cancellation Property)
-    - 17.3 Problem 2: Number of 1 Bits (Brian Kernighan's Bit Clear)
-    - 17.4 Problem 3: Power of Two (Bitmask Decrement Boundary)
-18. [Infosys & Technical Interview Survival Playbook](#18-infosys--technical-interview-survival-playbook)
-    - 18.1 How Infosys Evaluates a 3 YOE .NET Developer
-    - 18.2 Real 45-Minute Interview Simulation Transcript
-    - 18.3 The .NET 8 Big-O Time & Space Complexity Reference Matrix
+4. [Pattern 2: Strings & String Algorithms](#4-pattern-2-strings--string-algorithms)
+   - 4.1 CLR Internals: String Layout, Interning Pool, UTF-16, and GC Pressures
+   - 4.2 Problem 1: Reverse Words in a Sentence (LeetCode 151)
+   - 4.3 Problem 2: String Compression / Run-Length Encoding (LeetCode 443)
+   - 4.4 Problem 3: Longest Palindromic Substring (LeetCode 5)
+   - 4.5 Problem 4: Valid Palindrome II (Delete at Most 1 Character - LeetCode 680)
+   - 4.6 Problem 5: Longest Common Prefix (LeetCode 14)
+   - 4.7 Problem 6: Isomorphic Strings (LeetCode 205)
+5. [Pattern 3: Two Pointers](#5-pattern-3-two-pointers)
+   - 5.1 The Two Pointers Mental Model & Archetypes
+   - 5.2 Problem 1: Two Sum II (Input Array Is Sorted)
+   - 5.3 Problem 2: Valid Palindrome
+   - 5.4 Problem 3: Container With Most Water (LeetCode 11)
+   - 5.5 Problem 4: 3Sum (Zero-Sum Triplets - LeetCode 15)
+   - 5.6 Problem 5: Trapping Rain Water (LeetCode 42)
+   - 5.7 Problem 6: Sort Colors / Dutch National Flag (LeetCode 75)
+   - 5.8 Problem 7: Remove Duplicates from Sorted Array
+   - 5.9 Problem 8: Move Zeroes
+6. [Pattern 4: Sliding Window](#6-pattern-4-sliding-window)
+   - 6.1 Universal Sliding Window Architecture & Flowchart
+   - 6.2 Problem 1: Maximum Sum Subarray of Size K (Fixed Window)
+   - 6.3 Problem 2: Longest Substring Without Repeating Characters (LeetCode 3)
+   - 6.4 Problem 3: Minimum Size Subarray Sum (LeetCode 209)
+   - 6.5 Problem 4: Longest Repeating Character Replacement (LeetCode 424)
+   - 6.6 Problem 5: Longest Substring with At Most K Distinct Characters
+   - 6.7 Problem 6: Minimum Window Substring (LeetCode 76 - Hard)
+7. [Pattern 5: Fast & Slow Pointers (Tortoise & Hare)](#7-pattern-5-fast--slow-pointers-tortoise--hare)
+   - 7.1 The Mathematical Principle of Floyd's Algorithm
+   - 7.2 Problem 1: Linked List Cycle Detection (LeetCode 141)
+   - 7.3 Problem 2: Middle of the Linked List (LeetCode 876)
+   - 7.4 Problem 3: Find the Duplicate Number in an Array (LeetCode 287)
+8. [Pattern 6: Searching Algorithms Encyclopedia](#8-pattern-6-searching-algorithms-encyclopedia)
+   - 8.1 The Searching Taxonomy & Mechanical Sympathy Decision Matrix
+   - 8.2 Linear Search & The Sentinel Optimization (Eliminating Boundary Checks)
+   - 8.3 Classic Binary Search (The Monotonic Mindset)
+   - 8.4 Search in Rotated Sorted Array (Shifted Ledger Partitions)
+   - 8.5 Find First and Last Position in Sorted Array (Lower & Upper Bounds)
+   - 8.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages Within D Days)
+   - 8.7 Interpolation Search (Uniformly Distributed Probing Engine)
+   - 8.8 Exponential Search (Unbounded Ledger Streams & Fast Galloping)
+   - 8.9 Ternary Search (Finding Extrema in Unimodal Functions)
+9. [Pattern 7: Sorting Algorithms Encyclopedia](#9-pattern-7-sorting-algorithms-encyclopedia)
+   - 9.1 The Sorting Taxonomy & Complexity Matrix
+   - 9.2 Bubble Sort (Standard & Early-Exit Optimization)
+   - 9.3 Selection Sort (Minimum-Scan & Minimal Memory Writes)
+   - 9.4 Insertion Sort (Adaptive Shifting & Small Partition Powerhouse)
+   - 9.5 Merge Sort (Divide & Conquer, In-Depth Memory Mechanics & Stability)
+   - 9.6 Quick Sort (Lomuto vs. Hoare Partitioning & Median-of-3 Pivot)
+   - 9.7 Heap Sort (In-Place Array-Based Max-Heapify)
+   - 9.8 Counting Sort (Non-Comparison O(N + K) Integer Sorting)
+   - 9.9 Radix Sort (LSD Base-10 / 256 Distribution Engine)
+   - 9.10 Under the Hood: .NET 8 IntroSort & ArraySortHelper<T>
+10. [Pattern 8: Stack & Queue](#10-pattern-8-stack--queue)
+    - 10.1 Memory Models: Array-Backed vs. Node-Backed Queues
+    - 10.2 Problem 1: Valid Parentheses (Syntax Validation for Config Tokens)
+    - 10.3 Problem 2: Min Stack (O(1) Retrieval via Companion State)
+    - 10.4 Problem 3: Evaluate Reverse Polish Notation (Financial Math Engine)
+    - 10.5 Problem 4: Implement Queue Using Stacks (Amortized Cost Transfer)
+    - 10.6 Problem 5: Moving Average from Data Stream (Circular Queue Buffer)
+11. [Pattern 9: Linked Lists](#11-pattern-9-linked-lists)
+    - 11.1 Linked List Memory Architecture & Cache Miss Penalty
+    - 11.2 Problem 1: Reverse Linked List (Iterative Pointer Rewiring)
+    - 11.3 Problem 2: Merge Two Sorted Lists (Splice Nodes with Sentinel Head)
+12. [Pattern 10: Trees & Binary Search Trees](#12-pattern-10-trees--binary-search-trees)
+    - 12.1 Tree Representations & Stack Frame Traversal Mechanics
+    - 12.2 Problem 1: Maximum Depth of Binary Tree (DFS vs. BFS)
+    - 12.3 Problem 2: Binary Tree Level Order Traversal (Batch Queue Sizing)
+    - 12.4 Problem 3: Validate Binary Search Tree (Range Constraint Propagation)
+    - 12.5 Problem 4: Lowest Common Ancestor (Organizational Hierarchy Resolution)
+13. [Pattern 11: Graphs](#13-pattern-11-graphs)
+    - 13.1 Adjacency List vs. Adjacency Matrix Trade-offs
+    - 13.2 Problem 1: Number of Islands (Grid DFS/BFS Connected Components)
+    - 13.3 Problem 2: Course Schedule (Cycle Detection & Topological Sort via Kahn's Algorithm)
+14. [Pattern 12: Heap & PriorityQueue (.NET 6+)](#14-pattern-12-heap--priorityqueue-net-6)
+    - 14.1 Binary Heap Mechanics on Contiguous Arrays
+    - 14.2 Problem 1: Kth Largest Element in an Array (Min-Heap of Size K)
+    - 14.3 Problem 2: Merge K Sorted Lists / Telemetry Streams (K-Way Min-Heap Merge)
+15. [Pattern 13: Recursion & Backtracking](#15-pattern-13-recursion--backtracking)
+    - 15.1 Backtracking Template: Choose -> Explore -> Unchoose
+    - 15.2 Problem 1: Subsets (Combinatorial Role-Based Access Matrix)
+    - 15.3 Problem 2: Permutations (Distinct Sequencing Generation)
+    - 15.4 Problem 3: Word Search (2D Board Backtracking with Visited Tracking)
+16. [Pattern 14: Dynamic Programming](#16-pattern-14-dynamic-programming)
+    - 16.1 The DP Framework: Optimal Substructure + Overlapping Subproblems
+    - 16.2 Problem 1: Climbing Stairs (Fibonacci State Transitions)
+    - 16.3 Problem 2: Coin Change (Unbounded Knapsack / Minimum Denominations)
+    - 16.4 Problem 3: Longest Common Subsequence (Audit Diff & Reconciliation Engine)
+    - 16.5 Problem 4: 0/1 Knapsack Problem (SaaS Resource Allocation Under Budget)
+17. [Pattern 15: Greedy Algorithms & Intervals](#17-pattern-15-greedy-algorithms--intervals)
+    - 17.1 The Greedy-Choice Property
+    - 17.2 Problem 1: Best Time to Buy and Sell Stock (Running Valley & Peak)
+    - 17.3 Problem 2: Jump Game (Boundary Horizon Expansion)
+    - 17.4 Problem 3: Merge Intervals (Booking & Calendar Overlap Consolidation)
+    - 17.5 Problem 4: Meeting Rooms I & II (Resource Contention Peaks)
+18. [Pattern 16: Bit Manipulation](#18-pattern-16-bit-manipulation)
+    - 18.1 Bitwise Operators and Bitmask Flags in C#
+    - 18.2 Problem 1: Single Number (XOR Cancellation Property)
+    - 18.3 Problem 2: Number of 1 Bits (Brian Kernighan's Bit Clear)
+    - 18.4 Problem 3: Power of Two (Bitmask Decrement Boundary)
+19. [Infosys & Technical Interview Survival Playbook](#19-infosys--technical-interview-survival-playbook)
+    - 19.1 How Infosys Evaluates a 3 YOE .NET Developer
+    - 19.2 Real 45-Minute Interview Simulation Transcript
+    - 19.3 The .NET 8 Big-O Time & Space Complexity Reference Matrix
 
 ---
 
@@ -657,13 +665,326 @@ private void Reverse(int[] nums, int l, int r)
 
 ---
 
-# 4. PATTERN 2: TWO POINTERS
+# 4. PATTERN 2: STRINGS & STRING ALGORITHMS
+
+Strings in C# (.NET 8) are immutable reference types with unique memory and garbage collection characteristics. Mastering string algorithms requires understanding both low-level CLR object layout (interning, UTF-16, GC Gen 0 churn) and classic pointer/sliding window algorithms that operate with zero heap allocations using `ReadOnlySpan<char>`.
+
+---
+
+## 4.1 CLR Internals: String Layout, Interning Pool, UTF-16, and GC Pressures
+
+In .NET 8, every `System.String` is an immutable reference type allocated on the Managed Heap:
+
+```
+Managed Heap Memory Structure of string s = "Infosys":
+[SyncBlockIndex: 8 bytes]       (Locking and object hashcode)
+[MethodTable Pointer: 8 bytes]  (Points to System.String Type Descriptor)
+[String Length: 4 bytes]         (7 characters)
+[Character Buffer: 7 * 2 bytes]  (UTF-16 encoding: 'I', 'n', 'f', 'o', 's', 'y', 's' = 14 bytes)
+[Null Terminator: 2 bytes]       (0x0000 for native C/C++ interop compatibility)
+[Padding: 4 bytes]               (64-bit alignment)
+Total Memory = 8 + 8 + 4 + 14 + 2 + 4 = 40 bytes!
+```
+
+### The String Immutability Trap in Loops
+Because strings are immutable, modifying a string creates a completely new string object on the Managed Heap:
+```csharp
+// NAIVE CONCATENATION (DANGEROUS IN HIGH-THROUGHPUT CODE)
+string result = "";
+for (int i = 0; i < n; i++)
+{
+    result += i.ToString(); // Allocates a new string on EVERY iteration!
+}
+// Time Complexity: O(N^2) due to repeated memory copying.
+// Generates massive Gen 0 garbage collection pressure.
+```
+
+### Mitigation Strategies in .NET 8
+1. **`StringBuilder`:** Backed by an internal character buffer that dynamically expands, amortizing allocations.
+2. **`ReadOnlySpan<char>`:** Enables zero-allocation parsing, sub-stringing, and character comparison without creating new heap strings.
+3. **String Interning:** The CLR maintains an internal hash table called the **Intern Pool**. Literal strings with identical content share the exact same reference address in memory (`string.IsInterned(s)`).
+
+---
+
+## 4.2 Problem 1: Reverse Words in a Sentence (LeetCode 151)
+
+### 1. The Idea in 1 Sentence
+Trim whitespace, reverse the entire character array, then reverse each individual word within its own boundaries, and finally compact multi-space gaps into single spaces.
+
+```
+Input:    "the sky is blue"
+Step 1:   "eulb si yks eht"  (Reverse entire string)
+Step 2:   "blue is sky the"  (Reverse each word individually)
+```
+
+### 2. NeetCode-Style C# Solution
+
+```csharp
+public string ReverseWords(string s)
+{
+    // 1. Split words while removing empty entries
+    string[] words = s.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+    // 2. Reverse word array using two pointers
+    int l = 0, r = words.Length - 1;
+    while (l < r)
+    {
+        (words[l], words[r]) = (words[r], words[l]);
+        l++;
+        r--;
+    }
+
+    // 3. Join with a single space
+    return string.Join(" ", words);
+}
+```
+
+> 💡 **.NET Senior Note:** In zero-allocation .NET pipelines, you can perform this in-place over `char[]` or `Span<char>` without allocating a `string[]` array. For interview whiteboard rounds, `string.Split(..., RemoveEmptyEntries)` followed by in-place reversal is clean, expressive, and immediately understood.
+
+- **Time Complexity:** $O(N)$ — Linear scan and split.
+- **Space Complexity:** $O(N)$ — To hold word tokens.
+
+---
+
+## 4.3 Problem 2: String Compression / Run-Length Encoding (LeetCode 443)
+
+### 1. The Idea in 1 Sentence
+Use a fast read pointer to count contiguous identical characters, and a slow write pointer to write the character followed by the digits of its count if greater than 1.
+
+```
+Input:  [ 'a', 'a', 'b', 'b', 'c', 'c', 'c' ]
+Output: [ 'a', '2', 'b', '2', 'c', '3' ], returns length 6
+```
+
+### 2. NeetCode-Style C# Solution
+
+```csharp
+public int Compress(char[] chars)
+{
+    int w = 0; // write pointer
+    int r = 0; // read pointer
+
+    while (r < chars.Length)
+    {
+        char c = chars[r];
+        int count = 0;
+
+        // Count contiguous matching characters
+        while (r < chars.Length && chars[r] == c)
+        {
+            r++;
+            count++;
+        }
+
+        // Write character
+        chars[w++] = c;
+
+        // Write count digits if > 1
+        if (count > 1)
+        {
+            foreach (char digit in count.ToString())
+            {
+                chars[w++] = digit;
+            }
+        }
+    }
+
+    return w;
+}
+```
+
+- **Time Complexity:** $O(N)$ — Each character is visited once by `r`.
+- **Space Complexity:** $O(1)$ — In-place array mutation.
+
+---
+
+## 4.4 Problem 3: Longest Palindromic Substring (LeetCode 5)
+
+### 1. The Idea in 1 Sentence
+Every palindrome expands symmetrically from its center. Iterate through each index as a center for both **odd-length palindromes** (center is `i`) and **even-length palindromes** (center is `i, i+1`), expanding outward as long as characters match.
+
+```
+Center Expansion:
+Odd:   c  b  [a]  b  c   &rarr; Center is 'a', expand left and right
+Even:  c  [b   b]  c     &rarr; Center is between 'b' and 'b'
+```
+
+### 2. NeetCode-Style C# Solution
+
+```csharp
+public string LongestPalindrome(string s)
+{
+    if (string.IsNullOrEmpty(s)) return "";
+
+    string res = "";
+    int resLen = 0;
+
+    for (int i = 0; i < s.Length; i++)
+    {
+        // 1. Odd length palindrome (center is i)
+        Expand(i, i);
+
+        // 2. Even length palindrome (center is i, i+1)
+        Expand(i, i + 1);
+    }
+
+    void Expand(int l, int r)
+    {
+        while (l >= 0 && r < s.Length && s[l] == s[r])
+        {
+            if ((r - l + 1) > resLen)
+            {
+                res = s.Substring(l, r - l + 1);
+                resLen = r - l + 1;
+            }
+            l--;
+            r++;
+        }
+    }
+
+    return res;
+}
+```
+
+> 💡 **.NET Senior Note:** Instead of slicing `s.Substring(...)` on every expansion, track integer indices `bestStart` and `bestLen`, and call `s.Substring(bestStart, bestLen)` only once at the end to save string allocations.
+
+- **Time Complexity:** $O(N^2)$ — Expanding from $2N - 1$ centers takes $O(N)$ each.
+- **Space Complexity:** $O(1)$ auxiliary space.
+
+---
+
+## 4.5 Problem 4: Valid Palindrome II (Delete at Most 1 Character - LeetCode 680)
+
+### 1. The Idea in 1 Sentence
+Use converging two pointers (`l` and `r`). If `s[l] != s[r]`, check if deleting either `s[l]` (test `l+1 .. r`) or `s[r]` (test `l .. r-1`) forms a valid palindrome.
+
+### 2. NeetCode-Style C# Solution
+
+```csharp
+public bool ValidPalindrome(string s)
+{
+    int l = 0, r = s.Length - 1;
+
+    while (l < r)
+    {
+        if (s[l] != s[r])
+        {
+            // Try skipping left char OR skipping right char
+            return IsSubPalindrome(s, l + 1, r) || IsSubPalindrome(s, l, r - 1);
+        }
+        l++;
+        r--;
+    }
+
+    return true;
+}
+
+private bool IsSubPalindrome(string s, int l, int r)
+{
+    while (l < r)
+    {
+        if (s[l] != s[r]) return false;
+        l++;
+        r--;
+    }
+    return true;
+}
+```
+
+- **Time Complexity:** $O(N)$ — At most two linear scans.
+- **Space Complexity:** $O(1)$ — Only pointer comparisons.
+
+---
+
+## 4.6 Problem 5: Longest Common Prefix (LeetCode 14)
+
+### 1. The Idea in 1 Sentence
+Start with the first word as our candidate prefix. Iterate through the rest of the words; while a word does not start with the prefix, shorten the prefix by one character from the end until it matches or becomes empty.
+
+```
+strs = ["flower", "flow", "flight"]
+Prefix: "flower"
+Compare with "flow":   "flower" &rarr; "flowe" &rarr; "flow" (matches!)
+Compare with "flight": "flow" &rarr; "flo" &rarr; "fl" (matches!)
+Result: "fl"
+```
+
+### 2. NeetCode-Style C# Solution
+
+```csharp
+public string LongestCommonPrefix(string[] strs)
+{
+    if (strs == null || strs.Length == 0) return "";
+
+    string prefix = strs[0];
+
+    for (int i = 1; i < strs.Length; i++)
+    {
+        // While current word does not start with prefix, trim last character
+        while (!strs[i].StartsWith(prefix))
+        {
+            prefix = prefix.Substring(0, prefix.Length - 1);
+            if (string.IsNullOrEmpty(prefix)) return "";
+        }
+    }
+
+    return prefix;
+}
+```
+
+- **Time Complexity:** $O(S)$ where $S$ is the sum of all characters in all strings.
+- **Space Complexity:** $O(1)$ auxiliary memory.
+
+---
+
+## 4.7 Problem 6: Isomorphic Strings (LeetCode 205)
+
+### 1. The Idea in 1 Sentence
+Two strings `s` and `t` are isomorphic if there is a bijective (one-to-one and onto) mapping between their characters. Verify that character `s[i]` maps uniquely to `t[i]`, and `t[i]` maps uniquely back to `s[i]`.
+
+### 2. NeetCode-Style C# Solution
+
+```csharp
+public bool IsIsomorphic(string s, string t)
+{
+    if (s.Length != t.Length) return false;
+
+    var mapST = new Dictionary<char, char>();
+    var mapTS = new Dictionary<char, char>();
+
+    for (int i = 0; i < s.Length; i++)
+    {
+        char c1 = s[i];
+        char c2 = t[i];
+
+        // If c1 was already mapped, it must map to c2
+        if (mapST.ContainsKey(c1) && mapST[c1] != c2) return false;
+
+        // If c2 was already mapped, it must map back to c1
+        if (mapTS.ContainsKey(c2) && mapTS[c2] != c1) return false;
+
+        mapST[c1] = c2;
+        mapTS[c2] = c1;
+    }
+
+    return true;
+}
+```
+
+> 💡 **.NET Senior Note:** Since characters in ASCII are bounded by 128 or 256, you can replace the two dictionaries with two integer arrays `int[256]` recording last-seen timestamps, reducing memory to $O(1)$ without hash collisions.
+
+- **Time Complexity:** $O(N)$ — Single linear pass.
+- **Space Complexity:** $O(1)$ — At most 256 unique character mappings.
+
+---
+
+# 5. PATTERN 3: TWO POINTERS
 
 The **Two Pointers** pattern maintains two index pointers moving across one linear array or string. By taking advantage of sorted data or bilateral constraints, it eliminates nested loops and reduces $O(N^2)$ brute-force solutions to $O(N)$ linear scans with strictly $O(1)$ stack memory.
 
 ---
 
-## 4.1 The Two Pointers Mental Model & Archetypes
+## 5.1 The Two Pointers Mental Model & Archetypes
 
 ```mermaid
 flowchart TD
@@ -684,7 +1005,7 @@ flowchart TD
 
 ---
 
-## 4.2 Problem 1: Two Sum II (Input Array Is Sorted)
+## 5.2 Problem 1: Two Sum II (Input Array Is Sorted)
 
 ### 1. The Idea in 1 Sentence
 Because the array is sorted, the smallest numbers are on the left and the largest on the right. If the sum of `nums[l] + nums[r]` is too small, advance `l++`. If it is too big, decrement `r--`.
@@ -732,7 +1053,7 @@ public int[] TwoSum(int[] nums, int target)
 
 ---
 
-## 4.3 Problem 2: Valid Palindrome
+## 5.3 Problem 2: Valid Palindrome
 
 ### 1. The Idea in 1 Sentence
 Compare characters from the outside inward (`l` from start, `r` from end), skipping non-alphanumeric characters. If any mismatch occurs, it's not a palindrome.
@@ -769,7 +1090,7 @@ public bool IsPalindrome(string s)
 
 ---
 
-## 4.4 Problem 3: Container With Most Water (LeetCode 11)
+## 5.4 Problem 3: Container With Most Water (LeetCode 11)
 
 ### 1. The Idea in 1 Sentence
 The water volume is bounded by the shorter pillar ($	ext{Area} = (r - l) 	imes \min(h[l], h[r])$). Moving the taller pillar only reduces width without any chance of increasing height, so **always move the shorter pillar inward**!
@@ -814,7 +1135,7 @@ public int MaxArea(int[] height)
 
 ---
 
-## 4.5 Problem 4: 3Sum (LeetCode 15)
+## 5.5 Problem 4: 3Sum (LeetCode 15)
 
 ### 1. The Idea in 1 Sentence
 Sort the array first. Loop through each number as a fixed pivot, then use converging Two Pointers (`l` and `r`) to find the remaining two numbers that sum to zero, while skipping duplicate values to prevent duplicate triplets.
@@ -879,7 +1200,7 @@ public IList<IList<int>> ThreeSum(int[] nums)
 
 ---
 
-## 4.6 Problem 5: Trapping Rain Water (LeetCode 42)
+## 5.6 Problem 5: Trapping Rain Water (LeetCode 42)
 
 ### 1. The Idea in 1 Sentence
 Water trapped at any position is determined by $\min(	ext{leftMax}, 	ext{rightMax}) - 	ext{height}[i]$. By advancing whichever pointer has the smaller maximum (`leftMax < rightMax`), we can calculate trapped water in $O(1)$ space without precomputing prefix arrays!
@@ -932,7 +1253,7 @@ public int Trap(int[] height)
 
 ---
 
-## 4.7 Problem 6: Sort Colors / Dutch National Flag (LeetCode 75)
+## 5.7 Problem 6: Sort Colors / Dutch National Flag (LeetCode 75)
 
 ### 1. The Idea in 1 Sentence
 Partition the array in-place into 3 regions (0s, 1s, 2s) using 3 pointers: `low` marks the boundary for 0s, `high` marks the boundary for 2s, and `mid` is the active scanner.
@@ -981,7 +1302,7 @@ public void SortColors(int[] nums)
 
 ---
 
-## 4.8 Problem 7: Remove Duplicates from Sorted Array
+## 5.8 Problem 7: Remove Duplicates from Sorted Array
 
 ### 1. The Idea in 1 Sentence
 Use a slow write pointer `w` that only advances when the fast read pointer `r` finds a new unique value.
@@ -1013,7 +1334,7 @@ public int RemoveDuplicates(int[] nums)
 
 ---
 
-## 4.9 Problem 8: Move Zeroes
+## 5.9 Problem 8: Move Zeroes
 
 ### 1. The Idea in 1 Sentence
 Shift all non-zero numbers to the front using a slow write pointer `w`, then fill all remaining slots up to the end with zeros.
@@ -1048,13 +1369,13 @@ public void MoveZeroes(int[] nums)
 
 ---
 
-# 5. PATTERN 3: SLIDING WINDOW
+# 6. PATTERN 4: SLIDING WINDOW
 
 The **Sliding Window** pattern solves contiguous subarray and substring problems in $O(N)$ linear time by avoiding redundant recalculations. Instead of re-evaluating the entire range from scratch, the window maintains a running state: **adding the incoming element at the right boundary** and **subtracting the outgoing element at the left boundary**.
 
 ---
 
-## 5.1 Universal Sliding Window Architecture
+## 6.1 Universal Sliding Window Architecture
 
 ```mermaid
 flowchart TD
@@ -1073,7 +1394,7 @@ flowchart TD
 
 ---
 
-## 5.2 Problem 1: Maximum Sum Subarray of Size K (Fixed Window)
+## 6.2 Problem 1: Maximum Sum Subarray of Size K (Fixed Window)
 
 ### 1. The Idea in 1 Sentence
 Calculate the sum of the first $K$ numbers. Then slide the window across the rest of the array: add the new element at index $i$ and subtract the old element at index $i - K$ in $O(1)$ time.
@@ -1117,7 +1438,7 @@ public long MaxSubarraySumOfSizeK(int[] nums, int k)
 
 ---
 
-## 5.3 Problem 2: Longest Substring Without Repeating Characters (LeetCode 3)
+## 6.3 Problem 2: Longest Substring Without Repeating Characters (LeetCode 3)
 
 ### 1. The Idea in 1 Sentence
 Expand the right pointer to add characters to a `HashSet`. If a character is already in the set (duplicate!), shrink the window from the left until the duplicate character is removed.
@@ -1164,7 +1485,7 @@ public int LengthOfLongestSubstring(string s)
 
 ---
 
-## 5.4 Problem 3: Minimum Size Subarray Sum (LeetCode 209)
+## 6.4 Problem 3: Minimum Size Subarray Sum (LeetCode 209)
 
 ### 1. The Idea in 1 Sentence
 Expand the right pointer until `curSum >= target`. Once the target is reached, shrink the window from the left greedily to record the smallest possible window length!
@@ -1200,7 +1521,7 @@ public int MinSubArrayLen(int target, int[] nums)
 
 ---
 
-## 5.5 Problem 4: Longest Repeating Character Replacement (LeetCode 424)
+## 6.5 Problem 4: Longest Repeating Character Replacement (LeetCode 424)
 
 ### 1. The Idea in 1 Sentence
 In any window of length $L = (r - l + 1)$, the number of characters we need to replace is $(L - 	ext{maxFreq})$. As long as $(L - 	ext{maxFreq}) \le k$, the window is valid! If it exceeds $k$, shrink the window from the left.
@@ -1239,7 +1560,7 @@ public int CharacterReplacement(string s, int k)
 
 ---
 
-## 5.6 Problem 5: Longest Substring with At Most K Distinct Characters
+## 6.6 Problem 5: Longest Substring with At Most K Distinct Characters
 
 ### 1. The Idea in 1 Sentence
 Track distinct characters in a frequency Dictionary. When the number of distinct keys exceeds $K$, advance the left pointer and decrement character counts until a character count hits zero and is removed.
@@ -1282,7 +1603,7 @@ public int LengthOfLongestSubstringKDistinct(string s, int k)
 
 ---
 
-## 5.7 Problem 6: Minimum Window Substring (LeetCode 76 - Hard)
+## 6.7 Problem 6: Minimum Window Substring (LeetCode 76 - Hard)
 
 ### 1. The Idea in 1 Sentence
 Keep frequency maps for target `t` and the current window. Expand `r` until the window contains all required characters (`have == need`). Then greedily shrink `l` from the left to find the minimum possible substring window length!
@@ -1344,13 +1665,13 @@ public string MinWindow(string s, string t)
 
 ---
 
-# 6. PATTERN 4: FAST & SLOW POINTERS (TORTOISE & HARE)
+# 7. PATTERN 5: FAST & SLOW POINTERS (TORTOISE & HARE)
 
 The **Fast & Slow Pointers** pattern (also called Floyd's Cycle Detection Algorithm) uses two pointers that traverse a sequence at different speeds: the slow pointer advances 1 step at a time, while the fast pointer advances 2 steps at a time.
 
 ---
 
-## 6.1 The Mathematical Principle of Floyd's Algorithm
+## 7.1 The Mathematical Principle of Floyd's Algorithm
 
 ```mermaid
 flowchart LR
@@ -1370,7 +1691,7 @@ flowchart LR
 
 ---
 
-## 6.2 Problem 1: Linked List Cycle Detection (LeetCode 141)
+## 7.2 Problem 1: Linked List Cycle Detection (LeetCode 141)
 
 ### 1. The Idea in 1 Sentence
 Advance `slow` by 1 and `fast` by 2. If `fast` or `fast.next` reaches `null`, there is no cycle. If `slow == fast`, a cycle exists!
@@ -1403,7 +1724,7 @@ public bool HasCycle(ListNode head)
 
 ---
 
-## 6.3 Problem 2: Middle of the Linked List (LeetCode 876)
+## 7.3 Problem 2: Middle of the Linked List (LeetCode 876)
 
 ### 1. The Idea in 1 Sentence
 Because `fast` travels at double the speed of `slow`, by the time `fast` reaches the end of the list, `slow` is guaranteed to be at the exact middle node!
@@ -1438,7 +1759,7 @@ public ListNode MiddleNode(ListNode head)
 
 ---
 
-## 6.4 Problem 3: Find the Duplicate Number in an Array (LeetCode 287)
+## 7.4 Problem 3: Find the Duplicate Number in an Array (LeetCode 287)
 
 ### 1. The Idea in 1 Sentence
 Because the numbers are in the range $[1..N]$ and the array has length $N+1$, we can treat the array as a linked list where `index` points to `nums[index]`. A duplicate number means two indices point to the same value, creating a cycle!
@@ -1480,13 +1801,13 @@ public int FindDuplicate(int[] nums)
 
 ---
 
-# 7. PATTERN 5: SEARCHING ALGORITHMS ENCYCLOPEDIA
+# 8. PATTERN 6: SEARCHING ALGORITHMS ENCYCLOPEDIA
 
 Searching is the fundamental operation of retrieving a target record from a data space. While novice developers treat searching as a binary choice between $O(N)$ linear scans and $O(\log N)$ binary searches, senior backend engineers evaluate algorithms based on **hardware cache locality, CPU branch prediction, data distribution, and monotonic decision spaces**.
 
 ---
 
-## 7.1 The Searching Taxonomy & Mechanical Sympathy Decision Matrix
+## 8.1 The Searching Taxonomy & Mechanical Sympathy Decision Matrix
 
 ```mermaid
 flowchart TD
@@ -1521,7 +1842,7 @@ flowchart TD
 
 ---
 
-## 7.2 Linear Search & The Sentinel Optimization
+## 8.2 Linear Search & The Sentinel Optimization
 
 ### 1. Mechanical Sympathy: Why Linear Search Wins on Small Arrays
 Modern CPU architectures load memory into **64-byte L1 Cache Lines**. If you search an array of 32-bit integers, an entire cache line holds:
@@ -1598,7 +1919,7 @@ public static class LinearSearchEngine
 
 ---
 
-## 7.3 Classic Binary Search (The Monotonic Midset)
+## 8.3 Classic Binary Search (The Monotonic Midset)
 
 ### 1. Invariants & Overflow Protection
 1. **Midpoint Overflow Protection:**
@@ -1663,7 +1984,7 @@ public static class BinarySearchEngine
 
 ---
 
-## 7.4 Search in Rotated Sorted Array (Shifted Ledger Partitions)
+## 8.4 Search in Rotated Sorted Array (Shifted Ledger Partitions)
 
 ### 1. How to Think
 An array sorted in ascending order is rotated at an unknown pivot (e.g., `[4, 5, 6, 7, 0, 1, 2]`). Find `target` in $O(\log N)$ time.
@@ -1716,7 +2037,7 @@ public static class RotatedArraySearcher
 
 ---
 
-## 7.5 Find First and Last Position in Sorted Array (Lower & Upper Bounds)
+## 8.5 Find First and Last Position in Sorted Array (Lower & Upper Bounds)
 
 ### 1. Invariants & Code
 Find the starting and ending index of a given target value in a sorted array containing duplicates.
@@ -1770,7 +2091,7 @@ public static class RangeFinder
 
 ---
 
-## 7.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages Within D Days / Allocation Engine)
+## 8.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages Within D Days / Allocation Engine)
 
 ### 1. The Architectural Paradigm: "Search Space as Solution Domain"
 In standard binary search, you search indices of an existing array. In **Binary Search on the Answer**, the array is completely unsorted or represents arbitrary items (e.g. package weights, jobs, page counts).
@@ -1858,7 +2179,7 @@ public static class ShippingCapacityOptimizer
 
 ---
 
-## 7.7 Interpolation Search (Uniformly Distributed Probing Engine)
+## 8.7 Interpolation Search (Uniformly Distributed Probing Engine)
 
 ### 1. How to Think
 When a human looks up the name "Smith" in a printed phonebook, they do not open the exact middle page (M). They open near the end (S).
@@ -1926,7 +2247,7 @@ public static class InterpolationSearchEngine
 
 ---
 
-## 7.8 Exponential Search (Unbounded Ledger Streams & Fast Galloping)
+## 8.8 Exponential Search (Unbounded Ledger Streams & Fast Galloping)
 
 ### 1. How to Think
 Exponential Search (also known as Galloping Search or Doubling Search) is designed for **unbounded, infinite, or unknown-length streams** (e.g., live append-only transactional logs, continuous telemetry feeds).
@@ -1990,7 +2311,7 @@ public static class ExponentialSearchEngine
 
 ---
 
-## 7.9 Ternary Search (Finding Extrema in Unimodal Functions)
+## 8.9 Ternary Search (Finding Extrema in Unimodal Functions)
 
 ### 1. How to Think
 Ternary Search is a divide-and-conquer algorithm used when a function or array is **unimodal**: it strictly increases to a single peak (maximum) and then strictly decreases, or vice-versa.
@@ -2053,13 +2374,13 @@ public static class TernarySearchEngine
 
 ---
 
-# 8. PATTERN 6: SORTING ALGORITHMS ENCYCLOPEDIA
+# 9. PATTERN 7: SORTING ALGORITHMS ENCYCLOPEDIA
 
 Sorting is the core foundation of data organization, database indexing, and query execution planning. In enterprise .NET systems, choosing the wrong sorting algorithm or failing to understand stability, memory allocations, and hardware cache efficiency can trigger severe performance bottlenecks, garbage collection spikes, and CPU branch thrashing.
 
 ---
 
-## 8.1 The Sorting Taxonomy & Complexity Matrix
+## 9.1 The Sorting Taxonomy & Complexity Matrix
 
 ```mermaid
 flowchart TD
@@ -2098,7 +2419,7 @@ flowchart TD
 
 ---
 
-## 8.2 Bubble Sort (Standard & Early-Exit Optimization)
+## 9.2 Bubble Sort (Standard & Early-Exit Optimization)
 
 ### 1. Invariants & Mechanics
 Bubble Sort repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order.
@@ -2149,7 +2470,7 @@ public static class BubbleSortEngine
 
 ---
 
-## 8.3 Selection Sort (Minimum-Scan & Minimal Memory Writes)
+## 9.3 Selection Sort (Minimum-Scan & Minimal Memory Writes)
 
 ### 1. Invariants & Mechanics
 Selection Sort divides the array into a sorted prefix and an unsorted suffix. In each pass, it scans the unsorted suffix to find the **index of the minimum element**, and performs **one single swap** to place it at the boundary.
@@ -2203,7 +2524,7 @@ public static class SelectionSortEngine
 
 ---
 
-## 8.4 Insertion Sort (Adaptive Shifting & Small Partition Powerhouse)
+## 9.4 Insertion Sort (Adaptive Shifting & Small Partition Powerhouse)
 
 ### 1. Mechanical Sympathy: Why All Runtimes Use Insertion Sort
 Insertion Sort works like sorting a hand of playing cards. For element `i`, it shifts all preceding elements that are greater than `key` one position to the right, and drops `key` into its open slot.
@@ -2256,7 +2577,7 @@ public static class InsertionSortEngine
 
 ---
 
-## 8.5 Merge Sort (Divide & Conquer, In-Depth Memory Mechanics & Stability)
+## 9.5 Merge Sort (Divide & Conquer, In-Depth Memory Mechanics & Stability)
 
 ### 1. Invariants, Recursion & Stability
 Merge Sort is a classic Divide and Conquer algorithm:
@@ -2356,7 +2677,7 @@ public static class MergeSortEngine
 
 ---
 
-## 8.6 Quick Sort (Lomuto vs. Hoare Partitioning & Median-of-3 Pivot)
+## 9.6 Quick Sort (Lomuto vs. Hoare Partitioning & Median-of-3 Pivot)
 
 ### 1. Partitioning Mechanics: Lomuto vs. Hoare
 - **Lomuto Partitioning:** Uses a single scanner pointer and a boundary pointer. Simple to write, but executes **3x more swap instructions** and degrades severely on duplicate elements.
@@ -2441,7 +2762,7 @@ public static class QuickSortEngine
 
 ---
 
-## 8.7 Heap Sort (In-Place Array-Based Max-Heapify)
+## 9.7 Heap Sort (In-Place Array-Based Max-Heapify)
 
 ### 1. Invariants & Complete Binary Tree Mapping
 Heap Sort is an in-place $O(N \log N)$ algorithm that requires **$O(1)$ auxiliary memory**.
@@ -2528,7 +2849,7 @@ public static class HeapSortEngine
 
 ---
 
-## 8.8 Counting Sort (Non-Comparison O(N + K) Integer Sorting)
+## 9.8 Counting Sort (Non-Comparison O(N + K) Integer Sorting)
 
 ### 1. The Power of Direct Index Addressing
 Comparison-based sorting has a mathematical lower bound of $\Omega(N \log N)$.
@@ -2592,7 +2913,7 @@ public static class CountingSortEngine
 
 ---
 
-## 8.9 Radix Sort (LSD Base-10 / 256 Distribution Engine)
+## 9.9 Radix Sort (LSD Base-10 / 256 Distribution Engine)
 
 ### 1. Invariants & Digit Bucketing
 Radix Sort sorts integers by processing individual digits, from the **Least Significant Digit (LSD)** to the Most Significant Digit (MSD).
@@ -2664,7 +2985,7 @@ public static class RadixSortEngine
 
 ---
 
-## 8.10 Under the Hood: .NET 8 IntroSort & ArraySortHelper<T>
+## 9.10 Under the Hood: .NET 8 IntroSort & ArraySortHelper<T>
 
 When you invoke `Array.Sort(arr)` or `span.Sort()` in .NET 8, the CoreCLR runtime uses **Introspective Sort (IntroSort)** inside `System.ArraySortHelper<T>`:
 
@@ -2693,9 +3014,9 @@ flowchart TD
 
 ---
 
-# 9. PATTERN 7: STACK & QUEUE
+# 10. PATTERN 8: STACK & QUEUE
 
-## 9.1 Memory Models: Array-Backed vs. Node-Backed Queues
+## 10.1 Memory Models: Array-Backed vs. Node-Backed Queues
 
 In .NET:
 - `Stack<T>` is backed internally by a contiguous `T[] _array`. When it grows, it doubles its capacity via `Array.Resize()`.
@@ -2704,7 +3025,7 @@ In .NET:
 
 ---
 
-## 9.2 Problem 18: Valid Parentheses (Syntax Validation for Config Tokens)
+## 10.2 Problem 18: Valid Parentheses (Syntax Validation for Config Tokens)
 
 ### 1. How to Think
 Given a string containing `'('`, `')'`, `'{'`, `'}'`, `'['`, `']'`, determine if the input string is valid.
@@ -2765,7 +3086,7 @@ public static class SyntaxValidator
 
 ---
 
-## 9.3 Problem 19: Min Stack (O(1) Retrieval via Companion State)
+## 10.3 Problem 19: Min Stack (O(1) Retrieval via Companion State)
 
 ### 1. How to Think
 Design a stack that supports `Push`, `Pop`, `Top`, and retrieving the minimum element `GetMin` in **$O(1)$ time**.
@@ -2806,7 +3127,7 @@ public sealed class MinStack
 
 ---
 
-## 9.4 Problem 20: Evaluate Reverse Polish Notation (Financial Math Engine)
+## 10.4 Problem 20: Evaluate Reverse Polish Notation (Financial Math Engine)
 
 ### 1. How to Think
 Evaluate the value of an arithmetic expression in Reverse Polish Notation (Postfix). Valid operators: `+`, `-`, `*`, `/`.
@@ -2862,7 +3183,7 @@ public static class RpnEvaluator
 
 ---
 
-## 9.5 Problem 21: Implement Queue Using Stacks (Amortized Cost Transfer)
+## 10.5 Problem 21: Implement Queue Using Stacks (Amortized Cost Transfer)
 
 ### 1. How to Think
 Implement a FIFO queue using two LIFO stacks: `_inStack` (for enqueue) and `_outStack` (for dequeue).
@@ -2913,7 +3234,7 @@ public sealed class MyQueue<T>
 
 ---
 
-## 9.6 Problem 22: Moving Average from Data Stream (Circular Queue Buffer)
+## 10.6 Problem 22: Moving Average from Data Stream (Circular Queue Buffer)
 
 ### 1. How to Think
 Compute the moving average of the last `size` numbers in a stream.
@@ -2956,13 +3277,13 @@ public sealed class MovingAverage
 
 ---
 
-# 10. PATTERN 8: LINKED LISTS
+# 11. PATTERN 9: LINKED LISTS
 
 Linked lists store elements in non-contiguous heap nodes connected by pointers. While they suffer cache miss penalties during traversal compared to arrays, they provide $O(1)$ node insertion and deletion without shifting elements.
 
 ---
 
-## 10.1 Linked List Memory Architecture & Cache Miss Penalty
+## 11.1 Linked List Memory Architecture & Cache Miss Penalty
 
 Each `ListNode` in C# is a heap reference:
 ```
@@ -2973,7 +3294,7 @@ Traversing a linked list forces the CPU memory controller to perform non-sequent
 
 ---
 
-## 10.2 Problem 1: Reverse Linked List (LeetCode 206)
+## 11.2 Problem 1: Reverse Linked List (LeetCode 206)
 
 ### 1. The Idea in 1 Sentence
 Use three pointers: `prev` (starts null), `curr` (starts at head), and `next`. Invert each pointer backwards (`curr.next = prev`), then advance `prev` and `curr`.
@@ -3011,7 +3332,7 @@ public ListNode ReverseList(ListNode head)
 
 ---
 
-## 10.3 Problem 2: Merge Two Sorted Lists (LeetCode 21)
+## 11.3 Problem 2: Merge Two Sorted Lists (LeetCode 21)
 
 ### 1. The Idea in 1 Sentence
 Create a dummy sentinel node. Compare values at the heads of list1 and list2, splice the smaller node onto our merged tail, and advance that list's pointer.
@@ -3051,9 +3372,9 @@ public ListNode MergeTwoLists(ListNode list1, ListNode list2)
 
 ---
 
-# 11. PATTERN 9: TREES & BINARY SEARCH TREES
+# 12. PATTERN 10: TREES & BINARY SEARCH TREES
 
-## 11.1 Tree Representations & Stack Frame Traversal Mechanics
+## 12.1 Tree Representations & Stack Frame Traversal Mechanics
 
 A Binary Tree is defined recursively:
 ```csharp
@@ -3078,7 +3399,7 @@ public sealed class TreeNode
 
 ---
 
-## 11.2 Problem 27: Maximum Depth of Binary Tree (DFS vs. BFS)
+## 12.2 Problem 27: Maximum Depth of Binary Tree (DFS vs. BFS)
 
 ### 1. C# Solution (.NET 8)
 
@@ -3105,7 +3426,7 @@ public static class TreeDepthCalculator
 
 ---
 
-## 11.3 Problem 28: Binary Tree Level Order Traversal (Batch Queue Sizing)
+## 12.3 Problem 28: Binary Tree Level Order Traversal (Batch Queue Sizing)
 
 ### 1. How to Think
 Return the level order traversal of its nodes' values (i.e., from left to right, level by level).
@@ -3155,7 +3476,7 @@ public static class LevelOrderTraverser
 
 ---
 
-## 11.4 Problem 29: Validate Binary Search Tree (Range Constraint Propagation)
+## 12.4 Problem 29: Validate Binary Search Tree (Range Constraint Propagation)
 
 ### 1. How to Think
 Given the root of a binary tree, determine if it is a valid Binary Search Tree (BST).
@@ -3191,7 +3512,7 @@ public static class BstValidator
 
 ---
 
-## 11.5 Problem 30: Lowest Common Ancestor (Organizational Hierarchy Resolution)
+## 12.5 Problem 30: Lowest Common Ancestor (Organizational Hierarchy Resolution)
 
 ### 1. How to Think
 Find the lowest node in $T$ that has both $P$ and $Q$ as descendants.
@@ -3235,9 +3556,9 @@ public static class LcaResolver
 
 ---
 
-# 12. PATTERN 10: GRAPHS
+# 13. PATTERN 11: GRAPHS
 
-## 12.1 Adjacency List vs. Adjacency Matrix Trade-offs
+## 13.1 Adjacency List vs. Adjacency Matrix Trade-offs
 
 In enterprise engineering, graphs model microservice dependency trees, banking transaction flow networks, role permission hierarchies, and build pipelines.
 
@@ -3250,7 +3571,7 @@ In enterprise engineering, graphs model microservice dependency trees, banking t
 
 ---
 
-## 12.2 Problem 31: Number of Islands (Grid DFS/BFS Connected Components)
+## 13.2 Problem 31: Number of Islands (Grid DFS/BFS Connected Components)
 
 ### 1. How to Think
 Given an $M \times N$ 2D binary grid `grid` which represents a map of `'1'`s (land) and `'0'`s (water), return the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically.
@@ -3322,7 +3643,7 @@ public static class IslandCounter
 
 ---
 
-## 12.3 Problem 32: Course Schedule (Cycle Detection & Topological Sort via Kahn's Algorithm)
+## 13.3 Problem 32: Course Schedule (Cycle Detection & Topological Sort via Kahn's Algorithm)
 
 ### 1. How to Think
 There are `numCourses` courses labeled `0` to `numCourses - 1`. You are given an array `prerequisites` where `prerequisites[i] = [a, b]` means you must take course `b` before course `a`. Can you finish all courses?
@@ -3404,9 +3725,9 @@ public static class WorkflowScheduler
 
 ---
 
-# 13. PATTERN 11: HEAP & PRIORITYQUEUE (.NET 6+)
+# 14. PATTERN 12: HEAP & PRIORITYQUEUE (.NET 6+)
 
-## 13.1 Binary Heap Mechanics on Contiguous Arrays
+## 14.1 Binary Heap Mechanics on Contiguous Arrays
 
 Prior to .NET 6, C# developers had to build custom binary heaps or misuse `SortedSet<T>`. Starting with .NET 6, Microsoft added `System.Collections.Generic.PriorityQueue<TElement, TPriority>`.
 
@@ -3421,7 +3742,7 @@ In a 0-indexed array:
 
 ---
 
-## 13.2 Problem 33: Kth Largest Element in an Array (Min-Heap of Size K)
+## 14.2 Problem 33: Kth Largest Element in an Array (Min-Heap of Size K)
 
 ### 1. How to Think
 Find the $K$-th largest element in an unsorted array.
@@ -3473,7 +3794,7 @@ public static class KthLargestFinder
 
 ---
 
-## 13.3 Problem 34: Merge K Sorted Lists / Telemetry Streams (K-Way Min-Heap Merge)
+## 14.3 Problem 34: Merge K Sorted Lists / Telemetry Streams (K-Way Min-Heap Merge)
 
 ### 1. How to Think
 You are given an array of $K$ linked-lists, each sorted in ascending order. Merge all the linked-lists into one sorted linked-list.
@@ -3530,9 +3851,9 @@ public static class KWayMerger
 
 ---
 
-# 14. PATTERN 12: RECURSION & BACKTRACKING
+# 15. PATTERN 13: RECURSION & BACKTRACKING
 
-## 14.1 Backtracking Template: Choose -> Explore -> Unchoose
+## 15.1 Backtracking Template: Choose -> Explore -> Unchoose
 
 Backtracking is exhaustive depth-first search on a decision tree. The standard template:
 
@@ -3556,7 +3877,7 @@ void Backtrack(State state, List<Result> results)
 
 ---
 
-## 14.2 Problem 35: Subsets (Combinatorial Role-Based Access Matrix)
+## 15.2 Problem 35: Subsets (Combinatorial Role-Based Access Matrix)
 
 ### 1. How to Think
 Given an integer array `nums` of unique elements, return all possible subsets (the power set).
@@ -3595,7 +3916,7 @@ public static class PowerSetGenerator
 
 ---
 
-## 14.3 Problem 36: Permutations (Distinct Sequencing Generation)
+## 15.3 Problem 36: Permutations (Distinct Sequencing Generation)
 
 ### 1. How to Think
 Generate all $N!$ orderings of an array of distinct integers.
@@ -3644,7 +3965,7 @@ public static class PermutationGenerator
 
 ---
 
-## 14.4 Problem 37: Word Search (2D Board Backtracking with Visited Tracking)
+## 15.4 Problem 37: Word Search (2D Board Backtracking with Visited Tracking)
 
 ### 1. C# Solution (.NET 8)
 
@@ -3694,9 +4015,9 @@ public static class BoardSearcher
 
 ---
 
-# 15. PATTERN 13: DYNAMIC PROGRAMMING
+# 16. PATTERN 14: DYNAMIC PROGRAMMING
 
-## 15.1 The DP Framework: Optimal Substructure + Overlapping Subproblems
+## 16.1 The DP Framework: Optimal Substructure + Overlapping Subproblems
 
 Dynamic Programming is simply **recursion without doing duplicate work**.
 - **Top-Down (Memoization):** Write recursion naturally, store results in cache (`int[] memo`).
@@ -3705,7 +4026,7 @@ Dynamic Programming is simply **recursion without doing duplicate work**.
 
 ---
 
-## 15.2 Problem 38: Climbing Stairs (Fibonacci State Transitions)
+## 16.2 Problem 38: Climbing Stairs (Fibonacci State Transitions)
 
 ### 1. How to Think
 You are climbing a staircase. It takes $N$ steps to reach the top. Each time you can climb 1 or 2 steps. In how many distinct ways can you climb to the top?
@@ -3739,7 +4060,7 @@ public static class StairClimber
 
 ---
 
-## 15.3 Problem 39: Coin Change (Unbounded Knapsack / Minimum Denominations)
+## 16.3 Problem 39: Coin Change (Unbounded Knapsack / Minimum Denominations)
 
 ### 1. How to Think
 Given an integer array `coins` representing coins of different denominations and an integer `amount`, return the fewest number of coins needed to make up that amount. If impossible, return `-1`.
@@ -3791,7 +4112,7 @@ public static class CashierOptimizer
 
 ---
 
-## 15.4 Problem 40: Longest Common Subsequence (Audit Diff & Reconciliation Engine)
+## 16.4 Problem 40: Longest Common Subsequence (Audit Diff & Reconciliation Engine)
 
 ### 1. How to Think
 Given two strings `text1` and `text2`, return the length of their longest common subsequence.
@@ -3840,7 +4161,7 @@ public static class DiffEngine
 
 ---
 
-## 15.5 Problem 41: 0/1 Knapsack Problem (SaaS Resource Allocation Under Budget)
+## 16.5 Problem 41: 0/1 Knapsack Problem (SaaS Resource Allocation Under Budget)
 
 ### 1. How to Think
 Given weights `weights` and values `values` of $N$ items, find the maximum value that fits inside a knapsack of capacity $W$. Each item can either be taken (1) or left (0).
@@ -3876,15 +4197,15 @@ public static class KnapsackSolver
 
 ---
 
-# 16. PATTERN 14: GREEDY ALGORITHMS & INTERVALS
+# 17. PATTERN 15: GREEDY ALGORITHMS & INTERVALS
 
-## 16.1 The Greedy-Choice Property
+## 17.1 The Greedy-Choice Property
 
 A problem exhibits the greedy choice property if a globally optimal solution can be reached by making a locally optimal choice at each step without ever needing to reconsider past choices.
 
 ---
 
-## 16.2 Problem 42: Best Time to Buy and Sell Stock (Running Valley & Peak)
+## 17.2 Problem 42: Best Time to Buy and Sell Stock (Running Valley & Peak)
 
 ### 1. How to Think
 Given an array `prices` where `prices[i]` is the price of a given stock on day $i$, maximize your profit by choosing a single day to buy and a different day in the future to sell.
@@ -3928,7 +4249,7 @@ public static class StockTrader
 
 ---
 
-## 16.3 Problem 43: Jump Game (Boundary Horizon Expansion)
+## 17.3 Problem 43: Jump Game (Boundary Horizon Expansion)
 
 ### 1. How to Think
 Given an integer array `nums` where `nums[i]` is max jump length from position $i$, determine if you can reach the last index.
@@ -3958,7 +4279,7 @@ public static class JumpGame
 
 ---
 
-## 16.4 Problem 44: Meeting Rooms I & II (Resource Contention Peaks)
+## 17.4 Problem 44: Meeting Rooms I & II (Resource Contention Peaks)
 
 ### 1. How to Think (Meeting Rooms II)
 Given an array of meeting time intervals `intervals`, find the minimum number of conference rooms required.
@@ -4022,9 +4343,9 @@ public static class ConferenceScheduler
 
 ---
 
-# 17. PATTERN 15: BIT MANIPULATION
+# 18. PATTERN 16: BIT MANIPULATION
 
-## 17.1 Bitwise Operators and Bitmask Flags in C#
+## 18.1 Bitwise Operators and Bitmask Flags in C#
 
 Bit manipulation operates directly on binary representation in CPU registers in a single clock cycle.
 
@@ -4053,7 +4374,7 @@ public enum UserPermissions : uint
 
 ---
 
-## 17.2 Problem 45: Single Number (XOR Cancellation Property)
+## 18.2 Problem 45: Single Number (XOR Cancellation Property)
 
 ### 1. How to Think
 Given a non-empty array of integers `nums`, every element appears twice except for one. Find that single one in $O(N)$ time and $O(1)$ space.
@@ -4085,7 +4406,7 @@ public static class SingleNumberSolver
 
 ---
 
-## 17.3 Problem 46: Number of 1 Bits (Brian Kernighan's Bit Clear)
+## 18.3 Problem 46: Number of 1 Bits (Brian Kernighan's Bit Clear)
 
 ### 1. How to Think
 Write a function that takes the binary representation of a positive integer and returns the number of set bits (Hamming weight).
@@ -4116,7 +4437,7 @@ public static class BitCounter
 
 ---
 
-## 17.4 Problem 47: Power of Two (Bitmask Decrement Boundary)
+## 18.4 Problem 47: Power of Two (Bitmask Decrement Boundary)
 
 ### 1. How to Think
 Given an integer `n`, return `true` if it is a power of two.
@@ -4138,9 +4459,9 @@ public static class PowerOfTwoChecker
 
 ---
 
-# 18. INFOSYS & TECHNICAL INTERVIEW SURVIVAL PLAYBOOK
+# 19. INFOSYS & TECHNICAL INTERVIEW SURVIVAL PLAYBOOK
 
-## 18.1 How Infosys Evaluates a 3 YOE .NET Developer
+## 19.1 How Infosys Evaluates a 3 YOE .NET Developer
 
 Infosys technical interviewers for 3 YOE lateral hires evaluate candidates on a 4-quadrant rubric:
 
@@ -4170,7 +4491,7 @@ Infosys technical interviewers for 3 YOE lateral hires evaluate candidates on a 
 
 ---
 
-## 18.2 Real 45-Minute Interview Simulation Transcript
+## 19.2 Real 45-Minute Interview Simulation Transcript
 
 **Interviewer:** Lead Architect, Infosys Financial Services Practice.  
 **Candidate:** .NET Backend Developer (3 Years Experience).
@@ -4230,7 +4551,7 @@ Loop terminates. Returns 1. The code executes in $O(N)$ time and $O(1)$ auxiliar
 
 ---
 
-## 18.3 The .NET 8 Big-O Time & Space Complexity Reference Matrix
+## 19.3 The .NET 8 Big-O Time & Space Complexity Reference Matrix
 
 | Data Structure / Operation | Access | Search | Insertion | Deletion | Space Complexity | Underlying .NET 8 Internal Architecture |
 |---|---|---|---|---|---|---|

@@ -24,9 +24,11 @@
     --bg-page: #0b0f19;
     --bg-surface: #111827;
     --bg-surface-elevated: #1f2937;
+    --bg-surface-hover: #283548;
     --bg-code: #030712;
     --border: #374151;
     --border-light: #4b5563;
+    --border-highlight: #60a5fa;
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
     --text-dim: #6b7280;
@@ -34,6 +36,7 @@
     --primary: #3b82f6;
     --primary-hover: #60a5fa;
     --primary-glow: rgba(59, 130, 246, 0.15);
+    --primary-glow-strong: rgba(59, 130, 246, 0.3);
     --accent: #8b5cf6;
     --success: #10b981;
     --warning: #f59e0b;
@@ -48,15 +51,20 @@
     --code-color: #f87171;
     --hero-bg: linear-gradient(135deg, rgba(31, 41, 55, 0.75) 0%, rgba(17, 24, 39, 0.95) 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --accordion-header-bg: #151e2e;
+    --accordion-header-hover: #1c273c;
+    --accordion-active-border: #3b82f6;
 }
 
 [data-theme="light"] {
     --bg-page: #f8fafc;
     --bg-surface: #ffffff;
     --bg-surface-elevated: #f1f5f9;
+    --bg-surface-hover: #e2e8f0;
     --bg-code: #0f172a;
     --border: #e2e8f0;
     --border-light: #cbd5e1;
+    --border-highlight: #2563eb;
     --text-main: #0f172a;
     --text-muted: #475569;
     --text-dim: #64748b;
@@ -64,6 +72,7 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-glow: rgba(37, 99, 235, 0.1);
+    --primary-glow-strong: rgba(37, 99, 235, 0.22);
     --accent: #7c3aed;
     --success: #059669;
     --warning: #b45309;
@@ -78,6 +87,9 @@
     --code-color: #b91c1c;
     --hero-bg: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --accordion-header-bg: #f8fafc;
+    --accordion-header-hover: #eef2f6;
+    --accordion-active-border: #2563eb;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -93,7 +105,7 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* SIDEBAR */
+/* SIDEBAR - STRICT FIXED 300px (NEVER OVERLAPS CONTENT) */
 #sidebar {
     width: 300px;
     background-color: var(--bg-surface);
@@ -206,33 +218,35 @@ body {
 .nav-vol { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
 .nav-link.active .nav-vol { color: var(--primary); }
 
-/* CONTENT AREA */
+/* CONTENT WRAPPER - PROPER MARGIN LEFT TO PREVENT OVERLAP */
 #content-wrapper {
     margin-left: 300px;
     flex: 1;
     display: flex;
     justify-content: center;
     padding: 40px 30px;
+    min-width: 0;
 }
 
 #main-content {
-    max-width: 880px;
+    max-width: 900px;
     width: 100%;
+    min-width: 0;
 }
 
 /* RIGHT TABLE OF CONTENTS */
 #toc-sidebar {
-    width: 250px;
+    width: 260px;
     position: sticky;
     top: 40px;
     height: calc(100vh - 80px);
     overflow-y: auto;
-    padding-left: 28px;
-    margin-left: 20px;
+    padding-left: 24px;
+    margin-left: 24px;
     display: none;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1320px) {
     #toc-sidebar { display: block; }
 }
 
@@ -258,7 +272,8 @@ body {
 }
 
 .toc-link:hover { color: var(--primary); }
-.toc-item.level-3 { padding-left: 10px; }
+.toc-item.level-2 { padding-left: 10px; }
+.toc-item.level-3 { padding-left: 18px; font-size: 0.74rem; color: var(--text-dim); }
 
 /* CHAPTER HERO */
 .chapter-hero {
@@ -266,7 +281,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 32px 36px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     box-shadow: var(--card-shadow);
 }
 
@@ -296,7 +311,7 @@ body {
 }
 
 .chapter-hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 800;
     color: var(--heading-color);
     margin-bottom: 12px;
@@ -309,32 +324,264 @@ body {
     line-height: 1.6;
 }
 
+/* ========================================================
+   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
+   ======================================================== */
+.focus-control-bar {
+    position: sticky;
+    top: 14px;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.focus-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.focus-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.focus-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    color: var(--primary-hover);
+}
+
+.focus-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border-light);
+    transition: .25s ease;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s ease;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+.toggle-label-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+/* ========================================================
+   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
+   ======================================================== */
+.chapter-accordion {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chapter-accordion:hover {
+    border-color: var(--border-light);
+}
+
+.chapter-accordion[open] {
+    border-color: var(--accordion-active-border);
+    box-shadow: 0 6px 26px var(--primary-glow-strong);
+}
+
+.chapter-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--accordion-header-bg);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-accordion-header::-webkit-details-marker {
+    display: none;
+}
+
+.chapter-accordion-header:hover {
+    background: var(--accordion-header-hover);
+}
+
+.chapter-accordion[open] > .chapter-accordion-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface-elevated);
+}
+
+.accordion-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.accordion-badge {
+    background: var(--primary-glow);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.accordion-title-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1.35;
+}
+
+.accordion-status-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+.accordion-status-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.accordion-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-page);
+    color: var(--text-muted);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, color 0.2s;
+}
+
+.chapter-accordion[open] > .chapter-accordion-header .accordion-chevron {
+    transform: rotate(180deg);
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.chapter-accordion-body {
+    padding: 28px 30px;
+    animation: accordionFadeIn 0.25s ease-out;
+}
+
+@keyframes accordionFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HIGHLIGHT ON TARGET JUMP */
+.flash-highlight {
+    outline: 2px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow-strong);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+}
+
 /* TYPOGRAPHY */
 h1, h2, h3, h4, h5 { color: var(--heading-color); font-weight: 700; line-height: 1.3; }
 
 h1 {
     font-size: 1.85rem;
-    margin: 44px 0 18px 0;
+    margin: 40px 0 16px 0;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
     color: var(--primary);
 }
 
 h2 {
-    font-size: 1.4rem;
-    margin: 36px 0 14px 0;
+    font-size: 1.35rem;
+    margin: 32px 0 14px 0;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
+    color: var(--heading-color);
 }
 
 h3 {
-    font-size: 1.15rem;
-    margin: 26px 0 10px 0;
+    font-size: 1.1rem;
+    margin: 22px 0 10px 0;
+    color: var(--heading-color);
 }
 
 h4 {
-    font-size: 0.98rem;
-    margin: 18px 0 8px 0;
+    font-size: 0.95rem;
+    margin: 16px 0 8px 0;
     color: var(--warning);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -351,7 +598,7 @@ a:hover { text-decoration: underline; }
     background: var(--bg-code);
     border: 1px solid var(--border);
     border-radius: 10px;
-    margin: 22px 0;
+    margin: 20px 0;
     overflow: hidden;
     box-shadow: var(--card-shadow);
 }
@@ -664,7 +911,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-8-Database-SQL.html" class="nav-link ">
                 <span class="nav-icon">💾</span>
-                <span>Database Engine Internals & SQL Server</span>
+                <span>Database Systems & High-Performance SQL</span>
                 <span class="nav-vol">V8</span>
             </a>
         </li>
@@ -672,7 +919,7 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-9-Microservices.html" class="nav-link ">
-                <span class="nav-icon">📡</span>
+                <span class="nav-icon">☁️</span>
                 <span>Microservices & Distributed Systems</span>
                 <span class="nav-vol">V9</span>
             </a>
@@ -681,8 +928,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-10-System-Design.html" class="nav-link ">
-                <span class="nav-icon">🏗️</span>
-                <span>Enterprise System Design</span>
+                <span class="nav-icon">📐</span>
+                <span>System Design: Enterprise Case Studies</span>
                 <span class="nav-vol">V10</span>
             </a>
         </li>
@@ -690,8 +937,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-11-Project-Interview-Mastery.html" class="nav-link ">
-                <span class="nav-icon">🎯</span>
-                <span>Project Interview Mastery & Walkthroughs</span>
+                <span class="nav-icon">💼</span>
+                <span>Project Interview Mastery & Technical Narrative</span>
                 <span class="nav-vol">V11</span>
             </a>
         </li>
@@ -699,8 +946,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-12-Interview-Question-Bank.html" class="nav-link ">
-                <span class="nav-icon">🏆</span>
-                <span>The Master Interview Question Bank</span>
+                <span class="nav-icon">🎯</span>
+                <span>Master Interview Question Bank & Verbatim Transcripts</span>
                 <span class="nav-vol">V12</span>
             </a>
         </li>
@@ -719,9 +966,29 @@ li::marker { color: var(--primary); }
                 <p>Programming thinking, scientific debugging, clean code, SOLID principles, enterprise layered architectures & production operations.</p>
             </div>
 
+            <!-- ADHD-FRIENDLY INTERACTIVE FOCUS CONTROLS -->
+            <div class="focus-control-bar">
+                <div class="focus-actions">
+                    <button class="focus-btn" id="btn-expand-all" title="Open all chapters for full scroll">
+                        <span>📂</span> Expand All
+                    </button>
+                    <button class="focus-btn" id="btn-collapse-all" title="Collapse all chapters to section headers">
+                        <span>📁</span> Collapse All
+                    </button>
+                </div>
+                <div class="focus-toggle-wrap">
+                    <label class="focus-mode-toggle" title="When active, opening one section automatically closes previous sections to minimize cognitive load and visual clutter.">
+                        <span class="toggle-switch">
+                            <input type="checkbox" id="single-focus-toggle" checked>
+                            <span class="slider"></span>
+                        </span>
+                        <span class="toggle-label-text">🎯 Single-Chapter Focus (Auto-close others)</span>
+                    </label>
+                </div>
+            </div>
+
             <article class="doc-body">
-                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
-<h2 id='volume-0-software-engineering-fundamentals'>Volume 0: Software Engineering Fundamentals</h2>
+                <h2 id='volume-0-software-engineering-fundamentals'>Volume 0: Software Engineering Fundamentals</h2>
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
@@ -740,8 +1007,23 @@ li::marker { color: var(--primary); }
     <div class="callout-body"><strong>Contexts Used:</strong> Order Management, Banking, Healthcare, SaaS, Payment Gateway</div>
 </div>
 
-<p>---</p>
-<h1 id='table-of-contents'>TABLE OF CONTENTS</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+
+<details class="chapter-accordion toc-section-accordion" id="table-of-contents" open>
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">NAVIGATION</span>
+            <span class="accordion-title-text">Table of Contents & Quick Jump Matrix</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+
 <ol>
 <li><a href="#1-programming-thinking">Programming Thinking</a></li>
 <li><a href="#2-debugging-mindset">Debugging Mindset</a></li>
@@ -750,8 +1032,26 @@ li::marker { color: var(--primary); }
 <li><a href="#5-architecture-basics">Architecture Basics</a></li>
 <li><a href="#6-how-production-software-works">How Production Software Works</a></li>
 </ol>
-<p>---</p>
-<h1 id='1-programming-thinking'>1. PROGRAMMING THINKING</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-1" data-chapter="1" open>
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 01</span>
+            <span class="accordion-title-text">1. PROGRAMMING THINKING</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="1-programming-thinking" class="accordion-anchor"></a>
+        <a id="1-programming-thinking" class="accordion-anchor"></a>
+
 <h2 id='11-what-is-programming-thinking-vs-coding'>1.1 What Is Programming Thinking vs. Coding?</h2>
 <h3 id='definition'>Definition</h3>
 <p><strong>Coding</strong> is the act of writing instructions in a programming language. Any person can learn to write C# syntax within weeks.</p>
@@ -771,7 +1071,7 @@ li::marker { color: var(--primary); }
 <p>Early computing (1950s–1970s) was dominated by mathematicians and engineers who wrote programs as mathematical proofs. They had no choice but to think rigorously — memory was measured in kilobytes, and bugs could crash physical hardware.</p>
 <p>As languages became higher-level (COBOL, BASIC, then Java, C#), the barrier to "writing something that runs" dropped dramatically. This created a generation of developers who learned to code before learning to think. The result: systems that technically work but fail under load, edge cases, or requirements change.</p>
 <h3 id='the-five-pillars-of-programming-thinking'>The Five Pillars of Programming Thinking</h3>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h4 id='pillar-1-problem-decomposition'>Pillar 1: Problem Decomposition</h4>
 <p><strong>The Mental Model:</strong> No complex problem is solved directly. Every complex problem is a composition of simpler problems.</p>
 <p><strong>Example — Order Management System:</strong></p>
@@ -814,7 +1114,7 @@ li::marker { color: var(--primary); }
 </div>
 
 <p>Now each sub-problem is independently solvable, testable, and assignable.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h4 id='pillar-2-abstraction-layers'>Pillar 2: Abstraction Layers</h4>
 <p><strong>Definition:</strong> Abstraction is the art of hiding complexity behind a simpler interface. Each layer of your system should only know what it needs to know.</p>
 <p><strong>Why it exists:</strong> A payment processing system in the 1990s was directly coupled to a single bank's mainframe API. When the bank changed their protocol, the entire application broke. Engineers realized they needed a layer of abstraction — a "payment interface" — that could swap implementations.</p>
@@ -832,7 +1132,7 @@ Infrastructure   → Knows only: &quot;Write SQL to BankingDb, call FedWire API&
 </div>
 
 <p>The Domain Layer has <em>zero</em> knowledge of SQL. The UI has <em>zero</em> knowledge of FedWire. This is abstraction. When regulations require switching from FedWire to SWIFT, only the Infrastructure layer changes.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h4 id='pillar-3-invariant-thinking'>Pillar 3: Invariant Thinking</h4>
 <p>An <strong>invariant</strong> is a condition that must always be true in your system.</p>
 <p>In a Healthcare system:</p>
@@ -842,7 +1142,7 @@ Infrastructure   → Knows only: &quot;Write SQL to BankingDb, call FedWire API&
 <li>An appointment MUST NOT overlap with another for the same doctor</li>
 </ul>
 <p>Thinking programmers encode invariants as checks that cannot be bypassed, not as comments or documentation. They ask: <em>"What is always true? What can never happen?"</em></p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h4 id='pillar-4-edge-case-enumeration'>Pillar 4: Edge Case Enumeration</h4>
 <p>For every input or trigger, enumerate:</p>
 <ul>
@@ -854,7 +1154,7 @@ Infrastructure   → Knows only: &quot;Write SQL to BankingDb, call FedWire API&
 <li><strong>Partial failure</strong> – Payment succeeded, database write failed</li>
 <li><strong>External system failure</strong> – Payment gateway timeout after deducting money</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h4 id='pillar-5-trade-off-awareness'>Pillar 5: Trade-off Awareness</h4>
 <p>Every engineering decision has a cost. Programming thinkers don't ask <em>"Is this good?"</em> They ask <em>"What am I trading?"</em></p>
 <div class='table-wrapper'><table>
@@ -865,7 +1165,7 @@ Infrastructure   → Knows only: &quot;Write SQL to BankingDb, call FedWire API&
 <tr><td>Encrypt all fields</td><td>Security</td><td>CPU overhead, no SQL <code>LIKE</code> queries</td></tr>
 <tr><td>Use async everywhere</td><td>Throughput</td><td>Debugging complexity, deadlock risk</td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='12-how-to-approach-any-unfamiliar-problem'>1.2 How to Approach Any Unfamiliar Problem</h2>
 <p><strong>The PRIMED Framework (used by senior engineers):</strong></p>
 
@@ -882,8 +1182,26 @@ E – Edge Cases: What breaks this? What assumptions am I making?
 D – Decide: Choose the simplest approach that meets requirements. Defer complexity.</code></pre>
 </div>
 
-<p>---</p>
-<h1 id='2-debugging-mindset'>2. DEBUGGING MINDSET</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-2" data-chapter="2" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 02</span>
+            <span class="accordion-title-text">2. DEBUGGING MINDSET</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="2-debugging-mindset" class="accordion-anchor"></a>
+        <a id="2-debugging-mindset" class="accordion-anchor"></a>
+
 <h2 id='21-definition'>2.1 Definition</h2>
 <p>Debugging is not random trial-and-error (though many developers do exactly that). <strong>Scientific debugging</strong> is the application of the scientific method to software defects: hypothesize, test, observe, conclude.</p>
 <h2 id='22-historical-reason'>2.2 Historical Reason</h2>
@@ -912,7 +1230,7 @@ D – Decide: Choose the simplest approach that meets requirements. Defer comple
 <p>Design the minimal test that proves or disproves it. Don't fix while testing — you need clean data.</p>
 <h3 id='step-5-fix-and-verify'>Step 5: Fix and Verify</h3>
 <p>Fix only what the hypothesis identifies. Run regression tests. Monitor in production.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='24-how-to-read-stack-traces'>2.4 How to Read Stack Traces</h2>
 <p>A stack trace is a call stack at the moment of an exception. It reads <strong>bottom-up</strong> (entry point at bottom, crash point at top).</p>
 <p><strong>Example — Order Management API:</strong></p>
@@ -937,7 +1255,7 @@ D – Decide: Choose the simplest approach that meets requirements. Defer comple
 <li><strong>Where to look:</strong> Either the Order was never fully constructed, or a property (e.g., <code>TaxRate</code>, <code>LineItems</code>) was never set</li>
 </ol>
 <p><strong>The most common mistake:</strong> Reading only the top line, ignoring the chain. The crash location is <em>where</em> it failed. The call chain tells you <em>how</em> you got there, which is <em>why</em> it failed.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='25-binary-search-debugging'>2.5 Binary Search Debugging</h2>
 <p>When you have a large codebase and can't find the bug by reading code, use binary search:</p>
 <ol>
@@ -955,7 +1273,7 @@ D – Decide: Choose the simplest approach that meets requirements. Defer comple
 <li>Check stage 3 output → correct ✓</li>
 <li>Check stage 4 output → wrong → <strong>Bug is in Stage 4</strong></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='26-debugging-production-issues-without-reproducing-locally'>2.6 Debugging Production Issues Without Reproducing Locally</h2>
 <p>Production bugs that don't reproduce locally require <strong>forensic debugging</strong> — reconstructing what happened from evidence.</p>
 <p><strong>Tools:</strong></p>
@@ -982,8 +1300,26 @@ D – Decide: Choose the simplest approach that meets requirements. Defer comple
 6. Is it isolated to one instance? (restart that instance → monitor)</code></pre>
 </div>
 
-<p>---</p>
-<h1 id='3-clean-code-principles'>3. CLEAN CODE PRINCIPLES</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-3" data-chapter="3" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 03</span>
+            <span class="accordion-title-text">3. CLEAN CODE PRINCIPLES</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="3-clean-code-principles" class="accordion-anchor"></a>
+        <a id="3-clean-code-principles" class="accordion-anchor"></a>
+
 <h2 id='31-definition'>3.1 Definition</h2>
 <p>Clean code is code that a professional developer can read and understand within minutes, without explanation. It is not about clever tricks or terseness — it is about clarity, honesty, and precision.</p>
 <p>Robert C. Martin's definition: <em>"Clean code reads like well-written prose."</em></p>
@@ -1065,7 +1401,7 @@ public async Task NotifyOrderConfirmation(Order order, PaymentResult result) { .
 <tr><td>Constants</td><td><code>0.18</code>, <code>86400</code>, <code>&quot;ADMIN&quot;</code></td><td><code>GstRate</code>, <code>SecondsPerDay</code>, <code>AdminRoleName</code></td></tr>
 <tr><td>Generic</td><td><code>manager</code>, <code>helper</code>, <code>util</code></td><td><code>PaymentGatewayRouter</code>, <code>ClaimEligibilityValidator</code></td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='34-single-responsibility-in-methods'>3.4 Single Responsibility in Methods</h2>
 <p><strong>Rule:</strong> A method should do one thing, and do it completely.</p>
 <p><strong>Healthcare Claim Processing — Wrong:</strong></p>
@@ -1121,7 +1457,7 @@ public async Task&lt;bool&gt; ProcessHealthcareClaim(Claim claim)
 </div>
 
 <p>Each extracted method can now be unit tested in isolation. The orchestrator method reads like English.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='35-avoiding-magic-numbers-and-strings'>3.5 Avoiding Magic Numbers and Strings</h2>
 <p><strong>Magic numbers</strong> are literals embedded in code with no explanation.</p>
 
@@ -1157,7 +1493,7 @@ if (token.Age &gt; SessionTokenLifetime.TotalSeconds) InvalidateToken(token);
 if (customer.Tier == PremiumCustomerTier) ApplyPremiumDiscount(order);</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='36-comment-quality'>3.6 Comment Quality</h2>
 <p><strong>Rule:</strong> Comments should explain <em>why</em>, not <em>what</em>. If a comment explains what the code does, the code is too unclear — rewrite it.</p>
 
@@ -1180,8 +1516,26 @@ decimal tax = amount * GstB2BRate;
 _context.Entry(account).Property(a =&gt; a.Version).OriginalValue = account.Version;</code></pre>
 </div>
 
-<p>---</p>
-<h1 id='4-solid-principles'>4. SOLID PRINCIPLES</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-4" data-chapter="4" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 04</span>
+            <span class="accordion-title-text">4. SOLID PRINCIPLES</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="4-solid-principles" class="accordion-anchor"></a>
+        <a id="4-solid-principles" class="accordion-anchor"></a>
+
 <h2 id='41-single-responsibility-principle-srp'>4.1 Single Responsibility Principle (SRP)</h2>
 <h3 id='definition'>Definition</h3>
 
@@ -1287,7 +1641,7 @@ public class PaymentNotificationService
 <p><strong>A:</strong> No. SRP is about <em>cohesion of concerns</em>, not method count. A <code>CustomerAccount</code> class can have <code>Deposit()</code>, <code>Withdraw()</code>, <code>GetBalance()</code>, and <code>GetTransactionHistory()</code> — all related to one concern (account state). That does not violate SRP.</p>
 <h3 id='when-to-violate-srp-intentionally'>When to Violate SRP Intentionally</h3>
 <p>In a startup with 3 developers and a 2-week deadline, over-engineering into 15 classes for a simple feature is counterproductive. Pragmatic engineering sometimes accepts temporary SRP violations as <em>technical debt</em> — explicitly documented and scheduled for refactoring.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='42-openclosed-principle-ocp'>4.2 Open/Closed Principle (OCP)</h2>
 <h3 id='definition'>Definition</h3>
 
@@ -1394,7 +1748,7 @@ Returns discount amount</code></pre>
 
 <h3 id='when-to-violate-ocp'>When to Violate OCP</h3>
 <p>OCP adds complexity (interfaces, polymorphism, DI registration). For a simple CRUD admin tool with 2 discount types and no anticipated growth, this abstraction is overkill. Apply OCP where <em>extension</em> is a realistic business scenario, not everywhere by default.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='43-liskov-substitution-principle-lsp'>4.3 Liskov Substitution Principle (LSP)</h2>
 <h3 id='definition'>Definition</h3>
 
@@ -1490,7 +1844,7 @@ public void ProcessWithdrawal(IWithdrawable account, decimal amount)
 <li>Overriding a method to do nothing (empty body)</li>
 <li>Adding null checks in calling code to handle specific subclass behavior</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='44-interface-segregation-principle-isp'>4.4 Interface Segregation Principle (ISP)</h2>
 <h3 id='definition'>Definition</h3>
 
@@ -1578,7 +1932,7 @@ public class OrderConfirmationService
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='45-dependency-inversion-principle-dip'>4.5 Dependency Inversion Principle (DIP)</h2>
 <h3 id='definition'>Definition</h3>
 
@@ -1717,8 +2071,26 @@ PatientRecordService applies business rules
 Returns to controller → HTTP Response</code></pre>
 </div>
 
-<p>---</p>
-<h1 id='5-architecture-basics'>5. ARCHITECTURE BASICS</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-5" data-chapter="5" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 05</span>
+            <span class="accordion-title-text">5. ARCHITECTURE BASICS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="5-architecture-basics" class="accordion-anchor"></a>
+        <a id="5-architecture-basics" class="accordion-anchor"></a>
+
 <h2 id='51-what-is-software-architecture'>5.1 What Is Software Architecture?</h2>
 <h3 id='definition'>Definition</h3>
 <p>Software architecture is the set of <strong>significant design decisions</strong> that shape a system — decisions that are hard to change later. It defines:</p>
@@ -1743,7 +2115,7 @@ Returns to controller → HTTP Response</code></pre>
 5. What is the data model? (relational, document, time-series, graph?)</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='52-monolith-vs-microservices'>5.2 Monolith vs. Microservices</h2>
 <h3 id='monolith-definition'>Monolith Definition</h3>
 <p>A monolith is a single deployable unit containing all application logic. When you deploy, you deploy everything.</p>
@@ -1773,7 +2145,7 @@ Returns to controller → HTTP Response</code></pre>
 <p><strong>Year 3 — Team of 25 engineers, 50,000 orders/day, 3 independent product lines:</strong></p>
 <p>→ <strong>Extract microservices</strong> surgically: Inventory Service (high read load), Payment Service (PCI compliance isolation), Notification Service (can fail without affecting orders).</p>
 <p><strong>The mistake most teams make:</strong> Starting with microservices on day one. Netflix didn't start as microservices. Amazon didn't. They were monoliths first, then decomposed along lines of actual scaling pain.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='53-layered-architecture-n-tier'>5.3 Layered Architecture (N-Tier)</h2>
 <h3 id='the-classic-3-tier-structure'>The Classic 3-Tier Structure</h3>
 
@@ -1817,7 +2189,7 @@ SqlAccountRepository.Save(accounts) + RedisCacheRepository.Invalidate(accountId)
 HTTP 200 OK with TransferResponse dto</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='54-clean-architecture-onion-architecture'>5.4 Clean Architecture / Onion Architecture</h2>
 <h3 id='the-critical-difference-from-layered-architecture'>The Critical Difference from Layered Architecture</h3>
 <p>In traditional N-Tier, the Domain layer often depends on Infrastructure (e.g., the domain calls EF Core directly). Clean Architecture / Onion Architecture enforces that <strong>dependencies only point inward</strong> — domain is the center, infrastructure is the outer ring.</p>
@@ -1841,7 +2213,7 @@ HTTP 200 OK with TransferResponse dto</code></pre>
 </div>
 
 <p><strong>What this enables:</strong> The Domain can be unit tested without any database, HTTP client, or external service — they are mocked at the boundary.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='55-hexagonal-architecture-ports-and-adapters'>5.5 Hexagonal Architecture (Ports and Adapters)</h2>
 <h3 id='definition'>Definition</h3>
 <p>Hexagonal Architecture (coined by Alistair Cockburn) models your application as a hexagon. The inside is the <strong>domain + application logic</strong>. The outside contains <strong>adapters</strong> — specific implementations for how the outside world talks to your app (HTTP, message queues, databases, file systems).</p>
@@ -1876,7 +2248,7 @@ HTTP 200 OK with TransferResponse dto</code></pre>
 </div>
 
 <p><strong>Why does this matter?</strong> You can replace any adapter without touching the core. Testing the core in isolation is trivial — inject in-memory adapters.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='56-how-requests-flow-through-a-real-enterprise-system'>5.6 How Requests Flow Through a Real Enterprise System</h2>
 <p><strong>Scenario: Customer places an order on a SaaS e-commerce platform</strong></p>
 
@@ -1928,8 +2300,26 @@ HTTP 201 Created { orderId, estimatedDelivery, totalAmount }
 Browser renders order confirmation</code></pre>
 </div>
 
-<p>---</p>
-<h1 id='6-how-production-software-works'>6. HOW PRODUCTION SOFTWARE WORKS</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-6" data-chapter="6" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 06</span>
+            <span class="accordion-title-text">6. HOW PRODUCTION SOFTWARE WORKS</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="6-how-production-software-works" class="accordion-anchor"></a>
+        <a id="6-how-production-software-works" class="accordion-anchor"></a>
+
 <h2 id='61-development-to-production-pipeline'>6.1 Development to Production Pipeline</h2>
 <h3 id='the-cicd-pipeline'>The CI/CD Pipeline</h3>
 <p><strong>CI (Continuous Integration):</strong> Every code commit triggers automated build and test.</p>
@@ -1970,7 +2360,7 @@ Deploy to PRODUCTION
     → Auto-rollback if error rate &gt; threshold</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='62-environments-explained'>6.2 Environments Explained</h2>
 <div class='table-wrapper'><table>
 <tr><th>Environment</th><th>Purpose</th><th>Data</th><th>Access</th></tr>
@@ -1980,7 +2370,7 @@ Deploy to PRODUCTION
 <tr><td><strong>Production</strong></td><td>Live user traffic</td><td>Real data</td><td>SRE + On-call</td></tr>
 </table></div>
 <p><strong>Key rule:</strong> Production data NEVER flows to non-production environments. In Healthcare (HIPAA) and Banking (SOX), this is a compliance requirement.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='63-configuration-management'>6.3 Configuration Management</h2>
 <p><strong>The Problem:</strong> You cannot hardcode connection strings, API keys, or feature flags. They differ per environment and change over time.</p>
 <p><strong>Solution Hierarchy in .NET:</strong></p>
@@ -2012,7 +2402,7 @@ Deploy to PRODUCTION
 </div>
 
 <p><strong>Golden Rule:</strong> If a secret ends up in <code>git log</code>, it is compromised. Rotate it immediately. It doesn't matter if you delete the commit — git history is permanent.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='64-monitoring-and-alerting'>6.4 Monitoring and Alerting</h2>
 <h3 id='three-pillars-of-observability'>Three Pillars of Observability</h3>
 <div class='table-wrapper'><table>
@@ -2038,7 +2428,7 @@ _logger.LogError(
 </div>
 
 <p>In Application Insights, you can now query: <em>"Show all payment failures where GatewayError = 'INSUFFICIENT_FUNDS' in the last 24 hours"</em> — impossible with string interpolation.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='65-slas-slos-and-slis-explained-for-engineers'>6.5 SLAs, SLOs, and SLIs — Explained for Engineers</h2>
 <p>These are not just management buzzwords. They directly define what your system must achieve.</p>
 <div class='table-wrapper'><table>
@@ -2061,7 +2451,7 @@ _logger.LogError(
 <tr><td>Payment authorization latency (p99)</td><td>≤ 5000ms</td></tr>
 <tr><td>Failed payments rate</td><td>≤ 0.01%</td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='66-on-call-engineering-mindset'>6.6 On-Call Engineering Mindset</h2>
 <p>Being on-call for a production system is a professional responsibility. The mindset:</p>
 <h3 id='during-an-incident'>During an Incident</h3>
@@ -2088,7 +2478,7 @@ _logger.LogError(
 <li><strong>What went well?</strong> (Detection? Communication? Rollback speed?)</li>
 <li><strong>What action items will prevent recurrence?</strong> (Assigned, with deadlines)</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='67-what-happens-when-code-is-deployed'>6.7 What Happens When Code Is Deployed</h2>
 <p>In a modern Kubernetes-based production environment:</p>
 
@@ -2121,7 +2511,7 @@ If anomaly detected → PagerDuty alert → on-call engineer
 Normal operation resumes</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='appendix-interview-preparation'>APPENDIX: INTERVIEW PREPARATION</h1>
 <h2 id='programming-thinking-interview-questions'>Programming Thinking — Interview Questions</h2>
 <p><strong>Basic:</strong></p>
@@ -2133,7 +2523,7 @@ Normal operation resumes</code></pre>
 <p><strong>Senior Follow-up:</strong></p>
 <p>Q: What's the most important question to ask when you receive a new feature request?</p>
 <p>A: "What problem does this solve, and how will we know if it's solved?" Requirements are often solutions disguised as problems. Understanding the underlying need prevents building the wrong thing perfectly.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='solid-interview-tricky-questions'>SOLID — Interview Tricky Questions</h2>
 <p><strong>Tricky Q:</strong> "Is it SOLID if you put everything in one big interface but inherit from it everywhere?"</p>
 <p>A: No — this violates ISP. A class implementing a fat interface is forced to depend on methods it doesn't use, creating tight coupling and fragility.</p>
@@ -2141,7 +2531,7 @@ Normal operation resumes</code></pre>
 <p>A: Yes, and experienced engineers do. SOLID principles are heuristics, not laws. For a time-boxed proof-of-concept, for a codebase being deprecated in 6 months, or for a truly simple domain with no expected change — over-engineering to SOLID adds cost with no benefit. The key is: document the violation, its reason, and the plan to address it.</p>
 <p><strong>Tricky Q:</strong> "Does Dependency Injection implement the Dependency Inversion Principle?"</p>
 <p>A: DI is a <em>mechanism</em>. DIP is a <em>principle</em>. You can use DI without following DIP (inject concrete classes instead of abstractions). DIP is achieved when you inject <em>abstractions</em> (interfaces), and the infrastructure implements those abstractions.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='architecture-interview-questions'>Architecture — Interview Questions</h2>
 <p><strong>Basic:</strong></p>
 <p>Q: What is the difference between monolith and microservices?</p>
@@ -2149,24 +2539,25 @@ Normal operation resumes</code></pre>
 <p><strong>Senior Follow-up:</strong></p>
 <p>Q: When would you recommend staying with a monolith despite high traffic?</p>
 <p>A: High traffic alone doesn't justify microservices. I'd recommend staying monolithic if: (1) the team is small and can't manage the operational overhead, (2) the domain is stable with few distinct scaling axes, (3) data consistency requirements are strong (many cross-entity transactions). I'd extract services surgically only where the monolith creates actual scaling or autonomy pain.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='clean-code-interview-tricky-questions'>Clean Code — Interview Tricky Questions</h2>
 <p><strong>Tricky Q:</strong> "Is commented-out code acceptable in production?"</p>
 <p>A: No. Version control (git) exists precisely to preserve history. Commented-out code adds noise, confuses readers, and is never cleaned up. Delete it; git history preserves it.</p>
 <p><strong>Tricky Q:</strong> "What's wrong with a method named <code>ProcessData()</code>?"</p>
 <p>A: It reveals nothing about what the method does. Who calls it? What data? What happens to it? Meaningful names are <code>ProcessIncomingPaymentWebhook()</code> or <code>TransformHealthclaimToFhirFormat()</code>. Vague names like <code>Process</code>, <code>Handle</code>, <code>Manage</code>, and <code>Do</code> are red flags for methods that do too much.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <p><em>End of Volume 0: Software Engineering Fundamentals</em></p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
     <div class="callout-body"><strong>Next Volume:</strong> Volume 1 — C# Language Deep Dive (Types, Memory, CLR Internals, Async/Await, Generics)</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <p><em>The Complete .NET Developer Encyclopedia + Interview Mastery Guide</em></p>
 <p><em>© 2026 — Prepared for Infosys Interview Preparation</em></p>
+</div></details>
             </article>
 
             <nav class="chapter-nav">
@@ -2184,23 +2575,13 @@ Normal operation resumes</code></pre>
             <div class="toc-title">On This Page</div>
             <ul class="toc-list">
                 
-        <li class="toc-item level-1">
-            <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
-        </li>
-        
-
         <li class="toc-item level-2">
             <a href="#volume-0-software-engineering-fundamentals" class="toc-link">Volume 0: Software Engineering Fundamentals</a>
         </li>
         
 
         <li class="toc-item level-1">
-            <a href="#table-of-contents" class="toc-link">TABLE OF CONTENTS</a>
-        </li>
-        
-
-        <li class="toc-item level-1">
-            <a href="#1-programming-thinking" class="toc-link">1. PROGRAMMING THINKING</a>
+            <a href="#ch-1" class="toc-link">1. PROGRAMMING THINKING</a>
         </li>
         
 
@@ -2230,7 +2611,7 @@ Normal operation resumes</code></pre>
         
 
         <li class="toc-item level-1">
-            <a href="#2-debugging-mindset" class="toc-link">2. DEBUGGING MINDSET</a>
+            <a href="#ch-2" class="toc-link">2. DEBUGGING MINDSET</a>
         </li>
         
 
@@ -2290,7 +2671,7 @@ Normal operation resumes</code></pre>
         
 
         <li class="toc-item level-1">
-            <a href="#3-clean-code-principles" class="toc-link">3. CLEAN CODE PRINCIPLES</a>
+            <a href="#ch-3" class="toc-link">3. CLEAN CODE PRINCIPLES</a>
         </li>
         
 
@@ -2333,6 +2714,66 @@ Normal operation resumes</code></pre>
             <a href="#35-avoiding-magic-numbers-and-strings" class="toc-link">3.5 Avoiding Magic Numbers and Strings</a>
         </li>
         
+
+        <li class="toc-item level-2">
+            <a href="#36-comment-quality" class="toc-link">3.6 Comment Quality</a>
+        </li>
+        
+
+        <li class="toc-item level-1">
+            <a href="#ch-4" class="toc-link">4. SOLID PRINCIPLES</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#41-single-responsibility-principle-srp" class="toc-link">4.1 Single Responsibility Principle (SRP)</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#definition" class="toc-link">Definition</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#historical-reason" class="toc-link">Historical Reason</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#bad-code-payment-system" class="toc-link">Bad Code — Payment System:</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#good-code-payment-system" class="toc-link">Good Code — Payment System:</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#interview-trap" class="toc-link">Interview Trap</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#when-to-violate-srp-intentionally" class="toc-link">When to Violate SRP Intentionally</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#42-openclosed-principle-ocp" class="toc-link">4.2 Open/Closed Principle (OCP)</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#definition" class="toc-link">Definition</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#historical-reason" class="toc-link">Historical Reason</a>
+        </li>
+        
             </ul>
         </aside>
     </div>
@@ -2363,11 +2804,137 @@ Normal operation resumes</code></pre>
             // Highlight syntax
             hljs.highlightAll();
 
-            // Mermaid diagrams
+            // Mermaid diagrams initialization
             mermaid.initialize({
                 startOnLoad: true,
                 theme: currentTheme === 'dark' ? 'dark' : 'neutral',
                 securityLevel: 'loose'
+            });
+
+            // ==========================================
+            // ACCORDION & SINGLE-FOCUS CONTROLS
+            // ==========================================
+            const accordions = document.querySelectorAll('.chapter-accordion');
+            const singleFocusToggle = document.getElementById('single-focus-toggle');
+            const btnExpandAll = document.getElementById('btn-expand-all');
+            const btnCollapseAll = document.getElementById('btn-collapse-all');
+
+            function renderMermaidIn(element) {
+                if (window.mermaid) {
+                    const unrendered = element.querySelectorAll('.mermaid:not([data-processed])');
+                    if (unrendered.length > 0) {
+                        try { mermaid.run({ nodes: unrendered }); } catch(e) {}
+                    }
+                }
+            }
+
+            // Expand All
+            if (btnExpandAll) {
+                btnExpandAll.addEventListener('click', () => {
+                    if (singleFocusToggle) singleFocusToggle.checked = false;
+                    accordions.forEach(acc => {
+                        acc.open = true;
+                        renderMermaidIn(acc);
+                    });
+                });
+            }
+
+            // Collapse All
+            if (btnCollapseAll) {
+                btnCollapseAll.addEventListener('click', () => {
+                    accordions.forEach(acc => {
+                        acc.open = false;
+                    });
+                });
+            }
+
+            // Single focus auto-closing logic
+            accordions.forEach(acc => {
+                acc.addEventListener('toggle', () => {
+                    const statusText = acc.querySelector('.accordion-status-text');
+                    if (statusText) {
+                        statusText.innerText = acc.open ? 'Click to collapse' : 'Click to expand';
+                    }
+                    if (acc.open) {
+                        renderMermaidIn(acc);
+                        if (singleFocusToggle && singleFocusToggle.checked) {
+                            accordions.forEach(other => {
+                                if (other !== acc && other.open) {
+                                    other.open = false;
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            // ==========================================
+            // DEEP LINKING & TOC NAVIGATION
+            // ==========================================
+            function navigateToTarget(targetId) {
+                if (!targetId) return;
+                let target = document.getElementById(targetId);
+                
+                // Fallback for slug variations (e.g. hyphens)
+                if (!target) {
+                    const normalized = targetId.replace(/-+/g, '-');
+                    target = document.getElementById(normalized) || 
+                             document.querySelector(`[id*="${normalized}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                }
+
+                if (!target) return;
+
+                // If target is inside an accordion, open that accordion
+                const parentAcc = target.closest('.chapter-accordion');
+                if (parentAcc) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== parentAcc) a.open = false;
+                        });
+                    }
+                    parentAcc.open = true;
+                    renderMermaidIn(parentAcc);
+                } else if (target.classList.contains('chapter-accordion')) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== target) a.open = false;
+                        });
+                    }
+                    target.open = true;
+                    renderMermaidIn(target);
+                }
+
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.classList.add('flash-highlight');
+                    setTimeout(() => target.classList.remove('flash-highlight'), 1600);
+                }, 100);
+            }
+
+            // Check URL hash on page load
+            if (window.location.hash) {
+                setTimeout(() => {
+                    navigateToTarget(window.location.hash.substring(1));
+                }, 250);
+            }
+
+            // Listen for hash changes
+            window.addEventListener('hashchange', () => {
+                navigateToTarget(window.location.hash.substring(1));
+            });
+
+            // Intercept internal page anchor clicks
+            document.addEventListener('click', (e) => {
+                const anchor = e.target.closest('a[href^="#"]');
+                if (!anchor) return;
+                const href = anchor.getAttribute('href');
+                if (href && href.length > 1) {
+                    e.preventDefault();
+                    const id = href.substring(1);
+                    history.pushState(null, null, href);
+                    navigateToTarget(id);
+                }
             });
         });
     </script>

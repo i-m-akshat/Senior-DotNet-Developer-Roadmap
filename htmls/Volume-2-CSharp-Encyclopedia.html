@@ -24,9 +24,11 @@
     --bg-page: #0b0f19;
     --bg-surface: #111827;
     --bg-surface-elevated: #1f2937;
+    --bg-surface-hover: #283548;
     --bg-code: #030712;
     --border: #374151;
     --border-light: #4b5563;
+    --border-highlight: #60a5fa;
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
     --text-dim: #6b7280;
@@ -34,6 +36,7 @@
     --primary: #3b82f6;
     --primary-hover: #60a5fa;
     --primary-glow: rgba(59, 130, 246, 0.15);
+    --primary-glow-strong: rgba(59, 130, 246, 0.3);
     --accent: #8b5cf6;
     --success: #10b981;
     --warning: #f59e0b;
@@ -48,15 +51,20 @@
     --code-color: #f87171;
     --hero-bg: linear-gradient(135deg, rgba(31, 41, 55, 0.75) 0%, rgba(17, 24, 39, 0.95) 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --accordion-header-bg: #151e2e;
+    --accordion-header-hover: #1c273c;
+    --accordion-active-border: #3b82f6;
 }
 
 [data-theme="light"] {
     --bg-page: #f8fafc;
     --bg-surface: #ffffff;
     --bg-surface-elevated: #f1f5f9;
+    --bg-surface-hover: #e2e8f0;
     --bg-code: #0f172a;
     --border: #e2e8f0;
     --border-light: #cbd5e1;
+    --border-highlight: #2563eb;
     --text-main: #0f172a;
     --text-muted: #475569;
     --text-dim: #64748b;
@@ -64,6 +72,7 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-glow: rgba(37, 99, 235, 0.1);
+    --primary-glow-strong: rgba(37, 99, 235, 0.22);
     --accent: #7c3aed;
     --success: #059669;
     --warning: #b45309;
@@ -78,6 +87,9 @@
     --code-color: #b91c1c;
     --hero-bg: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --accordion-header-bg: #f8fafc;
+    --accordion-header-hover: #eef2f6;
+    --accordion-active-border: #2563eb;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -93,7 +105,7 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* SIDEBAR */
+/* SIDEBAR - STRICT FIXED 300px (NEVER OVERLAPS CONTENT) */
 #sidebar {
     width: 300px;
     background-color: var(--bg-surface);
@@ -206,33 +218,35 @@ body {
 .nav-vol { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
 .nav-link.active .nav-vol { color: var(--primary); }
 
-/* CONTENT AREA */
+/* CONTENT WRAPPER - PROPER MARGIN LEFT TO PREVENT OVERLAP */
 #content-wrapper {
     margin-left: 300px;
     flex: 1;
     display: flex;
     justify-content: center;
     padding: 40px 30px;
+    min-width: 0;
 }
 
 #main-content {
-    max-width: 880px;
+    max-width: 900px;
     width: 100%;
+    min-width: 0;
 }
 
 /* RIGHT TABLE OF CONTENTS */
 #toc-sidebar {
-    width: 250px;
+    width: 260px;
     position: sticky;
     top: 40px;
     height: calc(100vh - 80px);
     overflow-y: auto;
-    padding-left: 28px;
-    margin-left: 20px;
+    padding-left: 24px;
+    margin-left: 24px;
     display: none;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1320px) {
     #toc-sidebar { display: block; }
 }
 
@@ -258,7 +272,8 @@ body {
 }
 
 .toc-link:hover { color: var(--primary); }
-.toc-item.level-3 { padding-left: 10px; }
+.toc-item.level-2 { padding-left: 10px; }
+.toc-item.level-3 { padding-left: 18px; font-size: 0.74rem; color: var(--text-dim); }
 
 /* CHAPTER HERO */
 .chapter-hero {
@@ -266,7 +281,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 32px 36px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     box-shadow: var(--card-shadow);
 }
 
@@ -296,7 +311,7 @@ body {
 }
 
 .chapter-hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 800;
     color: var(--heading-color);
     margin-bottom: 12px;
@@ -309,32 +324,264 @@ body {
     line-height: 1.6;
 }
 
+/* ========================================================
+   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
+   ======================================================== */
+.focus-control-bar {
+    position: sticky;
+    top: 14px;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.focus-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.focus-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.focus-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    color: var(--primary-hover);
+}
+
+.focus-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border-light);
+    transition: .25s ease;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s ease;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+.toggle-label-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+/* ========================================================
+   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
+   ======================================================== */
+.chapter-accordion {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chapter-accordion:hover {
+    border-color: var(--border-light);
+}
+
+.chapter-accordion[open] {
+    border-color: var(--accordion-active-border);
+    box-shadow: 0 6px 26px var(--primary-glow-strong);
+}
+
+.chapter-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--accordion-header-bg);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-accordion-header::-webkit-details-marker {
+    display: none;
+}
+
+.chapter-accordion-header:hover {
+    background: var(--accordion-header-hover);
+}
+
+.chapter-accordion[open] > .chapter-accordion-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface-elevated);
+}
+
+.accordion-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.accordion-badge {
+    background: var(--primary-glow);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.accordion-title-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1.35;
+}
+
+.accordion-status-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+.accordion-status-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.accordion-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-page);
+    color: var(--text-muted);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, color 0.2s;
+}
+
+.chapter-accordion[open] > .chapter-accordion-header .accordion-chevron {
+    transform: rotate(180deg);
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.chapter-accordion-body {
+    padding: 28px 30px;
+    animation: accordionFadeIn 0.25s ease-out;
+}
+
+@keyframes accordionFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HIGHLIGHT ON TARGET JUMP */
+.flash-highlight {
+    outline: 2px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow-strong);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+}
+
 /* TYPOGRAPHY */
 h1, h2, h3, h4, h5 { color: var(--heading-color); font-weight: 700; line-height: 1.3; }
 
 h1 {
     font-size: 1.85rem;
-    margin: 44px 0 18px 0;
+    margin: 40px 0 16px 0;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
     color: var(--primary);
 }
 
 h2 {
-    font-size: 1.4rem;
-    margin: 36px 0 14px 0;
+    font-size: 1.35rem;
+    margin: 32px 0 14px 0;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
+    color: var(--heading-color);
 }
 
 h3 {
-    font-size: 1.15rem;
-    margin: 26px 0 10px 0;
+    font-size: 1.1rem;
+    margin: 22px 0 10px 0;
+    color: var(--heading-color);
 }
 
 h4 {
-    font-size: 0.98rem;
-    margin: 18px 0 8px 0;
+    font-size: 0.95rem;
+    margin: 16px 0 8px 0;
     color: var(--warning);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -351,7 +598,7 @@ a:hover { text-decoration: underline; }
     background: var(--bg-code);
     border: 1px solid var(--border);
     border-radius: 10px;
-    margin: 22px 0;
+    margin: 20px 0;
     overflow: hidden;
     box-shadow: var(--card-shadow);
 }
@@ -664,7 +911,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-8-Database-SQL.html" class="nav-link ">
                 <span class="nav-icon">💾</span>
-                <span>Database Engine Internals & SQL Server</span>
+                <span>Database Systems & High-Performance SQL</span>
                 <span class="nav-vol">V8</span>
             </a>
         </li>
@@ -672,7 +919,7 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-9-Microservices.html" class="nav-link ">
-                <span class="nav-icon">📡</span>
+                <span class="nav-icon">☁️</span>
                 <span>Microservices & Distributed Systems</span>
                 <span class="nav-vol">V9</span>
             </a>
@@ -681,8 +928,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-10-System-Design.html" class="nav-link ">
-                <span class="nav-icon">🏗️</span>
-                <span>Enterprise System Design</span>
+                <span class="nav-icon">📐</span>
+                <span>System Design: Enterprise Case Studies</span>
                 <span class="nav-vol">V10</span>
             </a>
         </li>
@@ -690,8 +937,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-11-Project-Interview-Mastery.html" class="nav-link ">
-                <span class="nav-icon">🎯</span>
-                <span>Project Interview Mastery & Walkthroughs</span>
+                <span class="nav-icon">💼</span>
+                <span>Project Interview Mastery & Technical Narrative</span>
                 <span class="nav-vol">V11</span>
             </a>
         </li>
@@ -699,8 +946,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-12-Interview-Question-Bank.html" class="nav-link ">
-                <span class="nav-icon">🏆</span>
-                <span>The Master Interview Question Bank</span>
+                <span class="nav-icon">🎯</span>
+                <span>Master Interview Question Bank & Verbatim Transcripts</span>
                 <span class="nav-vol">V12</span>
             </a>
         </li>
@@ -719,9 +966,29 @@ li::marker { color: var(--primary); }
                 <p>Types, Stack vs Heap, Boxing/Unboxing IL, Structs, Records, Strings, Generics variance, Delegates/Events, LINQ expressions & Pattern Matching.</p>
             </div>
 
+            <!-- ADHD-FRIENDLY INTERACTIVE FOCUS CONTROLS -->
+            <div class="focus-control-bar">
+                <div class="focus-actions">
+                    <button class="focus-btn" id="btn-expand-all" title="Open all chapters for full scroll">
+                        <span>📂</span> Expand All
+                    </button>
+                    <button class="focus-btn" id="btn-collapse-all" title="Collapse all chapters to section headers">
+                        <span>📁</span> Collapse All
+                    </button>
+                </div>
+                <div class="focus-toggle-wrap">
+                    <label class="focus-mode-toggle" title="When active, opening one section automatically closes previous sections to minimize cognitive load and visual clutter.">
+                        <span class="toggle-switch">
+                            <input type="checkbox" id="single-focus-toggle" checked>
+                            <span class="slider"></span>
+                        </span>
+                        <span class="toggle-label-text">🎯 Single-Chapter Focus (Auto-close others)</span>
+                    </label>
+                </div>
+            </div>
+
             <article class="doc-body">
-                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
-<h1 id='volume-2-c-complete-encyclopedia-clr-type-system-syntax-runtime-architecture'>Volume 2: C# Complete Encyclopedia (CLR, Type System, Syntax & Runtime Architecture)</h1>
+                <h1 id='volume-2-c-complete-encyclopedia-clr-type-system-syntax-runtime-architecture'>Volume 2: C# Complete Encyclopedia (CLR, Type System, Syntax & Runtime Architecture)</h1>
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
@@ -734,7 +1001,7 @@ li::marker { color: var(--primary); }
     <div class="callout-body"><strong>Standard:</strong> Microsoft CLR Internals, ECMA-335 Standard, Roslyn Compiler Architecture, Production-Grade Financial/Healthcare/SaaS engineering. Zero trivial toy examples (no Animals, Dogs, or Shapes).</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='master-table-of-contents'>MASTER TABLE OF CONTENTS</h2>
 <ol>
 <li><a href="#1-clr-cts-cls-il-jit-tiered-compilation-native-aot-assembly-metadata-and-namespaces">CLR, CTS, CLS, IL, JIT (Tiered Compilation & Native AOT), Assembly Metadata & Namespaces</a></li>
@@ -759,7 +1026,7 @@ li::marker { color: var(--primary); }
 <li><a href="#20-extension-methods-and-compiler-lowering">Extension Methods (Static Binding, Null Receiver Nuance, Resolution Precedence)</a></li>
 <li><a href="#21-pattern-matching-evolution">Pattern Matching (Switch Expressions, Property, Positional & List Patterns)</a></li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='1-clr-cts-cls-il-jit-tiered-compilation-native-aot-assembly-metadata-and-namespaces'>1. CLR, CTS, CLS, IL, JIT (Tiered Compilation, Native AOT), Assembly Metadata and Namespaces</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <p>The <strong>Common Language Runtime (CLR)</strong> is the virtual execution engine for .NET. It manages memory allocation, garbage collection, thread management, exception dispatching, type safety, and code execution.</p>
@@ -952,7 +1219,7 @@ public readonly record struct SettlementResult(
     <div class="callout-body"><em>Best Answer:</em> No, IL never contains machine code; it contains opcodes for an abstract stack machine. The JIT compiler on the target host detects the underlying hardware capabilities (e.g., CPUID for AVX2, AVX-512, ARM Neon) at runtime and dynamically translates hardware-intrinsic IL instructions into native hardware-specific instructions.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='2-value-types-vs-reference-types'>2. Value Types vs Reference Types</h2>
 <h3 id='2-memory-layout-stack-vs-heap-and-allocation-mechanics'>2. Memory Layout, Stack vs Heap, and Allocation Mechanics</h3>
 <h3 id='1-definition'>1. Definition</h3>
@@ -1146,7 +1413,7 @@ public sealed class TelemetryIngestionService
     <div class="callout-body"><em>Best Answer:</em> If the struct is declared as a local variable, the struct itself (including its 8-byte pointer field) lives on the thread stack. The object referenced by that pointer lives on the managed heap.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='3-boxing-and-unboxing'>3. Boxing and Unboxing</h2>
 <h3 id='1-il-opcodes-heap-allocation-costs-and-benchmark-mechanics'>1. IL Opcodes, Heap Allocation Costs, and Benchmark Mechanics</h3>
 <h3 id='1-definition'>1. Definition</h3>
@@ -1328,7 +1595,7 @@ public sealed class FinancialAuditLogger
     <div class="callout-body"><em>Best Answer:</em> It throws an <code>InvalidCastException</code>. Unboxing requires an exact type match with the original boxed type. You cannot unbox an <code>object</code> containing a boxed <code>int32</code> directly into an <code>int64</code>, even though an implicit numeric conversion exists between <code>int</code> and <code>long</code>. You must first unbox to <code>int</code>, then cast to <code>long</code>.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='4-nullable-types'>4. Nullable Types</h2>
 <h3 id='nullablet-null-forgiving-operator-and-nullable-reference-types-nrt-in-c-8'>Nullable<T>, Null-Forgiving Operator, and Nullable Reference Types (NRT) in C# 8+</h3>
 <h3 id='1-definition'>1. Definition</h3>
@@ -1527,7 +1794,7 @@ public sealed class PatientDischargeRecord
     <div class="callout-body"><em>Best Answer:</em> No, the compiler will reject it. <code>System.Nullable&lt;T&gt;</code> has a generic struct constraint: <code>where T : struct</code>. Reference types are already naturally capable of representing null by storing a zero pointer address (0x0).</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='5-classes-objects-constructors-static-constructors-and-sealed-devirtualization'>5. Classes, Objects, Constructors, Static Constructors, and Sealed Devirtualization</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -1695,7 +1962,7 @@ public sealed class JwtTokenValidator : ITokenValidator
     <div class="callout-body"><em>Best Answer:</em> No. The CLR guarantees thread safety during static type initialization by acquiring an internal lock (<code>ClassInitLock</code>) on the type's Method Table. One thread executes the static constructor while the other thread is blocked until initialization completes.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='6-structs-memory-layout-readonly-structs-and-ref-structs-spant'>6. Structs, Memory Layout, Readonly Structs, and Ref Structs (Span<T>)</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -1910,7 +2177,7 @@ public ref struct FixMessageParser
     <div class="callout-body"><em>Best Answer:</em> Prior to C# 13, casting a struct to an interface implicitly boxed the struct onto the managed heap. Since <code>ref struct</code>s are forbidden from ever residing on the heap, implementing interfaces was prohibited. (Note: C# 13 allows <code>ref struct</code> to implement interfaces under strict conditions where boxing is statically prevented via generic constraints).</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='7-records-record-class-vs-record-struct-value-equality-and-with-expressions'>7. Records: Record Class vs Record Struct, Value Equality, and With-Expressions</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -2085,7 +2352,7 @@ public sealed class BillingEngine
     <div class="callout-body"><em>Best Answer:</em> No. Records perform shallow field-by-field equality. Since <code>List&lt;T&gt;</code> does not override <code>Equals</code> for value-based sequence equality, the record simply checks whether both instances reference the same list pointer in memory. To achieve deep sequence equality, you must implement a custom equality check or use an immutable collection type that implements value equality.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='8-access-modifiers-and-assembly-boundaries'>8. Access Modifiers and Assembly Boundaries</h2>
 <h3 id='clean-architecture-encasement-assembly-scoping-and-internalsvisibleto'>Clean Architecture Encasement, Assembly Scoping, and InternalsVisibleTo</h3>
 <h3 id='1-definition'>1. Definition</h3>
@@ -2263,7 +2530,7 @@ internal interface ITenantLedgerRepository
     <div class="callout-body"><em>Best Answer:</em> The effective visibility is <code>internal</code>. A member can never be more accessible than its containing type. External assemblies cannot see the enclosing class, so they can never invoke the public method directly.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='9-static-const-and-readonly'>9. Static, Const, and Readonly</h2>
 <h3 id='compile-time-vs-runtime-constants-and-the-static-constructor-deadlock-trap'>Compile-Time vs Runtime Constants, and the Static Constructor Deadlock Trap</h3>
 <h3 id='1-definition'>1. Definition</h3>
@@ -2431,7 +2698,7 @@ public sealed class PaymentProcessorConfig
     <div class="callout-body"><em>Best Answer:</em> In pure C#, no—the compiler prevents it. However, it can be modified using Reflection (<code>FieldInfo.SetValue</code>) or unsafe pointer manipulation. Note that in modern .NET (.NET Core/.NET 6+), the JIT compiler aggressively inlines and caches readonly fields, so mutating a readonly field via reflection may result in undefined behavior where callers still observe the old cached value.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='10-string-and-stringbuilder'>10. String and StringBuilder</h2>
 <h3 id='immutability-string-interning-pool-equality-semantics-stringbuilder-capacity-doubling-and-readonlyspanchar'>Immutability, String Interning Pool, Equality Semantics, StringBuilder Capacity Doubling, and ReadOnlySpan<char></h3>
 <h3 id='1-definition'>1. Definition</h3>
@@ -2647,7 +2914,7 @@ foreach(var order in orders) {
     <div class="callout-body"><em>Best Answer:</em> <code>a == b</code> returns <code>true</code> because the equality operator is overloaded on <code>System.String</code> to compare character contents. <code>object.ReferenceEquals(a, b)</code> returns <code>false</code> because <code>a</code> refers to the literal interned in the CLR pool, whereas <code>b</code> was explicitly constructed on the heap as a distinct object at runtime.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='11-collections-architecture'>11. Collections Architecture</h2>
 <h3 id='array-listt-growth-strategy-dictionarytkeytvalue-buckets-entries-hashsett-and-interface-hierarchies'>Array, List<T> Growth Strategy, Dictionary<TKey,TValue> Buckets & Entries, HashSet<T>, and Interface Hierarchies</h3>
 <h3 id='1-definition'>1. Definition</h3>
@@ -2859,7 +3126,7 @@ public sealed class LedgerCache
     <div class="callout-body"><em>Best Answer:</em> The dictionary handles this collision gracefully via separate chaining. Both entries map to the same bucket index. The second entry is inserted into the <code>_entries</code> array, and its <code>next</code> pointer is set to the index of the first entry. When looking up a key, the dictionary jumps to the bucket, traverses the collision chain following <code>next</code> indices, and verifies key equality using <code>IEqualityComparer&lt;T&gt;.Equals()</code> until an exact match is found.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='12-generics-specialization-constraints-and-variance-covariance-contravariance'>12. Generics: Specialization, Constraints, and Variance (Covariance & Contravariance)</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -3055,7 +3322,7 @@ public sealed class EventProcessingOrchestrator
     <div class="callout-body"><em>Best Answer:</em> Because <code>List&lt;T&gt;</code> is invariant and mutable. If <code>List&lt;Dog&gt;</code> could be assigned to <code>List&lt;Animal&gt;</code>, you could write <code>animalList.Add(new Cat())</code>, which would insert a <code>Cat</code> into a list of <code>Dog</code>s, completely destroying type safety. To allow covariance, the type must be an immutable/read-only interface like <code>IEnumerable&lt;out T&gt;</code>.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='13-delegates-func-action-predicate-and-multicast-chains'>13. Delegates, Func, Action, Predicate, and Multicast Chains</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -3233,7 +3500,7 @@ public sealed class PaymentAuthorizationPipeline
     <div class="callout-body"><em>Best Answer:</em> It returns 30. All three methods are executed sequentially, but the return values of the first two methods are discarded, and only the value returned by the last method in the invocation list is returned to the caller.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='14-events-eventargs-pattern-and-weakevent-handlers'>14. Events, EventArgs Pattern, and WeakEvent Handlers</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -3435,7 +3702,7 @@ public sealed class BedsideMonitorWidget : IDisposable
     <div class="callout-body"><em>Best Answer:</em> The compiler generates a private backing delegate field, an <code>add_EventName</code> method, and a <code>remove_EventName</code> method. The <code>add</code> and <code>remove</code> methods use a lock-free <code>Interlocked.CompareExchange</code> loop inside a spin-wait pattern to ensure thread-safe updates to the multicast delegate without using mutual exclusion locks (<code>Monitor.Enter</code>).</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='15-lambda-expressions-closures-and-compiler-variable-capture-hoisting'>15. Lambda Expressions, Closures, and Compiler Variable Capture Hoisting</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -3637,7 +3904,7 @@ public static class ListExtensions
     <div class="callout-body"><em>Best Answer:</em> In C# 4, the <code>foreach</code> iteration variable was treated as declared outside the loop body, so all lambdas captured the same single variable address, resulting in all lambdas evaluating the final element. In C# 5, Microsoft changed the language specification so that <code>foreach</code> variables are scoped inside the loop body (a fresh variable per iteration). However, standard <code>for</code> loops remain unchanged: <code>int i</code> is declared outside the loop condition, so capturing <code>i</code> in a standard <code>for</code> loop still captures the shared variable, evaluating the terminal index across all callbacks.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='16-linq-deferred-execution-ienumerable-vs-iqueryable-and-performance-traps'>16. LINQ: Deferred Execution, IEnumerable vs IQueryable, and Performance Traps</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -3840,7 +4107,7 @@ if (claims.Count() &gt; 0)
     <div class="callout-body"><em>Best Answer:</em> Multiple enumeration occurs when an <code>IEnumerable&lt;T&gt;</code> representing a deferred execution sequence (such as a LINQ query or an iterator method with <code>yield return</code>) is enumerated more than once (e.g., calling <code>.Count()</code>, followed by <code>foreach</code>). This causes the underlying data retrieval or calculation to execute repeatedly. It is detected using Roslyn static analysis analyzers (warning <code>Possible multiple enumeration of IEnumerable</code>) and fixed by materializing the sequence into an in-memory collection like <code>.ToList()</code> or <code>Array.Empty&lt;T&gt;()</code> before accessing it multiple times.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='17-expression-trees-and-dynamic-sql-generation'>17. Expression Trees and Dynamic SQL Generation</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -4053,7 +4320,7 @@ public static class DynamicQueryBuilder
     <div class="callout-body"><em>Best Answer:</em> The compiler inspects the target parameter type of the method being called (via overload resolution). If the parameter expects a delegate type (such as <code>Func&lt;T, bool&gt;</code>), the compiler compiles the lambda into IL bytecode. If the parameter expects <code>Expression&lt;Func&lt;T, bool&gt;&gt;</code>, the compiler emits code that constructs the Expression Tree data structure at runtime.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='18-reflection-vs-roslyn-source-generators'>18. Reflection vs Roslyn Source Generators</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -4230,7 +4497,7 @@ public sealed class ReflectionSerializerDemo
     <div class="callout-body"><em>Best Answer:</em> Native AOT uses aggressive static code analysis and tree-shaking (trimming) to strip out all types, members, and metadata that are not directly referenced in the code path. If code attempts to access a member dynamically via reflection strings, the trimmer cannot predict this usage and removes the member, resulting in missing member exceptions at runtime. Source Generators solve this because they generate direct C# references at compile time, guaranteeing the trimmer preserves them.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='19-attributes-and-metadata'>19. Attributes and Metadata</h2>
 <h3 id='custom-attributes-attributeusage-il-representation-and-metadata-extraction'>Custom Attributes, AttributeUsage, IL Representation, and Metadata Extraction</h3>
 <h3 id='1-definition'>1. Definition</h3>
@@ -4420,7 +4687,7 @@ public sealed class AuditPolicyRegistry
     <div class="callout-body"><em>Best Answer:</em> Because attribute arguments must be evaluated and serialized into the assembly's Portable Executable (PE) binary metadata tables at compile time. Since metadata is static and fixed at build time, the compiler cannot evaluate runtime variables, dynamic method calls, or non-constant memory objects.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='20-extension-methods-and-compiler-lowering'>20. Extension Methods and Compiler Lowering</h2>
 <h3 id='1-definition'>1. Definition</h3>
 <ul>
@@ -4617,7 +4884,7 @@ public sealed class PaymentAuditor
     <div class="callout-body"><em>Best Answer:</em> No. Extension methods cannot override virtual methods because they are statically bound at compile time and do not participate in virtual method table (vtable) dispatch. Similarly, a class cannot use an extension method to satisfy an interface implementation requirement; the interface member must be physically declared and implemented on the class itself.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='21-pattern-matching-evolution'>21. Pattern Matching Evolution</h2>
 <h3 id='switch-expressions-property-patterns-positional-patterns-and-list-patterns'>Switch Expressions, Property Patterns, Positional Patterns, and List Patterns</h3>
 <h3 id='1-definition'>1. Definition</h3>
@@ -4834,11 +5101,6 @@ public static class PaymentRoutingEngine
             <ul class="toc-list">
                 
         <li class="toc-item level-1">
-            <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
-        </li>
-        
-
-        <li class="toc-item level-1">
             <a href="#volume-2-c-complete-encyclopedia-clr-type-system-syntax-runtime-architecture" class="toc-link">Volume 2: C# Complete Encyclopedia (CLR, Type</a>
         </li>
         
@@ -4982,6 +5244,61 @@ public static class PaymentRoutingEngine
             <a href="#12-interview-prep" class="toc-link">12. Interview Prep</a>
         </li>
         
+
+        <li class="toc-item level-2">
+            <a href="#3-boxing-and-unboxing" class="toc-link">3. Boxing and Unboxing</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#1-il-opcodes-heap-allocation-costs-and-benchmark-mechanics" class="toc-link">1. IL Opcodes, Heap Allocation Costs, and Ben</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#1-definition" class="toc-link">1. Definition</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#2-historical-reason" class="toc-link">2. Historical Reason</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#3-problem-it-solves" class="toc-link">3. Problem It Solves</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#4-internal-working-clr-runtime-memory-compiler" class="toc-link">4. Internal Working (CLR, Runtime, Memory, Co</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#5-real-production-example" class="toc-link">5. Real Production Example</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#6-code-example-production-grade-c" class="toc-link">6. Code Example (Production-Grade C#)</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#7-execution-flow" class="toc-link">7. Execution Flow</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#8-design-reasoning-trade-offs" class="toc-link">8. Design Reasoning &amp; Trade-offs</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#9-performance-cpu-memory-gc" class="toc-link">9. Performance (CPU, Memory, GC)</a>
+        </li>
+        
             </ul>
         </aside>
     </div>
@@ -5012,11 +5329,137 @@ public static class PaymentRoutingEngine
             // Highlight syntax
             hljs.highlightAll();
 
-            // Mermaid diagrams
+            // Mermaid diagrams initialization
             mermaid.initialize({
                 startOnLoad: true,
                 theme: currentTheme === 'dark' ? 'dark' : 'neutral',
                 securityLevel: 'loose'
+            });
+
+            // ==========================================
+            // ACCORDION & SINGLE-FOCUS CONTROLS
+            // ==========================================
+            const accordions = document.querySelectorAll('.chapter-accordion');
+            const singleFocusToggle = document.getElementById('single-focus-toggle');
+            const btnExpandAll = document.getElementById('btn-expand-all');
+            const btnCollapseAll = document.getElementById('btn-collapse-all');
+
+            function renderMermaidIn(element) {
+                if (window.mermaid) {
+                    const unrendered = element.querySelectorAll('.mermaid:not([data-processed])');
+                    if (unrendered.length > 0) {
+                        try { mermaid.run({ nodes: unrendered }); } catch(e) {}
+                    }
+                }
+            }
+
+            // Expand All
+            if (btnExpandAll) {
+                btnExpandAll.addEventListener('click', () => {
+                    if (singleFocusToggle) singleFocusToggle.checked = false;
+                    accordions.forEach(acc => {
+                        acc.open = true;
+                        renderMermaidIn(acc);
+                    });
+                });
+            }
+
+            // Collapse All
+            if (btnCollapseAll) {
+                btnCollapseAll.addEventListener('click', () => {
+                    accordions.forEach(acc => {
+                        acc.open = false;
+                    });
+                });
+            }
+
+            // Single focus auto-closing logic
+            accordions.forEach(acc => {
+                acc.addEventListener('toggle', () => {
+                    const statusText = acc.querySelector('.accordion-status-text');
+                    if (statusText) {
+                        statusText.innerText = acc.open ? 'Click to collapse' : 'Click to expand';
+                    }
+                    if (acc.open) {
+                        renderMermaidIn(acc);
+                        if (singleFocusToggle && singleFocusToggle.checked) {
+                            accordions.forEach(other => {
+                                if (other !== acc && other.open) {
+                                    other.open = false;
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            // ==========================================
+            // DEEP LINKING & TOC NAVIGATION
+            // ==========================================
+            function navigateToTarget(targetId) {
+                if (!targetId) return;
+                let target = document.getElementById(targetId);
+                
+                // Fallback for slug variations (e.g. hyphens)
+                if (!target) {
+                    const normalized = targetId.replace(/-+/g, '-');
+                    target = document.getElementById(normalized) || 
+                             document.querySelector(`[id*="${normalized}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                }
+
+                if (!target) return;
+
+                // If target is inside an accordion, open that accordion
+                const parentAcc = target.closest('.chapter-accordion');
+                if (parentAcc) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== parentAcc) a.open = false;
+                        });
+                    }
+                    parentAcc.open = true;
+                    renderMermaidIn(parentAcc);
+                } else if (target.classList.contains('chapter-accordion')) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== target) a.open = false;
+                        });
+                    }
+                    target.open = true;
+                    renderMermaidIn(target);
+                }
+
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.classList.add('flash-highlight');
+                    setTimeout(() => target.classList.remove('flash-highlight'), 1600);
+                }, 100);
+            }
+
+            // Check URL hash on page load
+            if (window.location.hash) {
+                setTimeout(() => {
+                    navigateToTarget(window.location.hash.substring(1));
+                }, 250);
+            }
+
+            // Listen for hash changes
+            window.addEventListener('hashchange', () => {
+                navigateToTarget(window.location.hash.substring(1));
+            });
+
+            // Intercept internal page anchor clicks
+            document.addEventListener('click', (e) => {
+                const anchor = e.target.closest('a[href^="#"]');
+                if (!anchor) return;
+                const href = anchor.getAttribute('href');
+                if (href && href.length > 1) {
+                    e.preventDefault();
+                    const id = href.substring(1);
+                    history.pushState(null, null, href);
+                    navigateToTarget(id);
+                }
             });
         });
     </script>

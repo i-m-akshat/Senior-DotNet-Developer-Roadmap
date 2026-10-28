@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Volume 8: Database Engine Internals & SQL Server | .NET Backend Encyclopedia</title>
+    <title>Volume 8: Database Systems & High-Performance SQL | .NET Backend Encyclopedia</title>
     <!-- Prevent theme flash -->
     <script>
         (function() {
@@ -24,9 +24,11 @@
     --bg-page: #0b0f19;
     --bg-surface: #111827;
     --bg-surface-elevated: #1f2937;
+    --bg-surface-hover: #283548;
     --bg-code: #030712;
     --border: #374151;
     --border-light: #4b5563;
+    --border-highlight: #60a5fa;
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
     --text-dim: #6b7280;
@@ -34,6 +36,7 @@
     --primary: #3b82f6;
     --primary-hover: #60a5fa;
     --primary-glow: rgba(59, 130, 246, 0.15);
+    --primary-glow-strong: rgba(59, 130, 246, 0.3);
     --accent: #8b5cf6;
     --success: #10b981;
     --warning: #f59e0b;
@@ -48,15 +51,20 @@
     --code-color: #f87171;
     --hero-bg: linear-gradient(135deg, rgba(31, 41, 55, 0.75) 0%, rgba(17, 24, 39, 0.95) 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --accordion-header-bg: #151e2e;
+    --accordion-header-hover: #1c273c;
+    --accordion-active-border: #3b82f6;
 }
 
 [data-theme="light"] {
     --bg-page: #f8fafc;
     --bg-surface: #ffffff;
     --bg-surface-elevated: #f1f5f9;
+    --bg-surface-hover: #e2e8f0;
     --bg-code: #0f172a;
     --border: #e2e8f0;
     --border-light: #cbd5e1;
+    --border-highlight: #2563eb;
     --text-main: #0f172a;
     --text-muted: #475569;
     --text-dim: #64748b;
@@ -64,6 +72,7 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-glow: rgba(37, 99, 235, 0.1);
+    --primary-glow-strong: rgba(37, 99, 235, 0.22);
     --accent: #7c3aed;
     --success: #059669;
     --warning: #b45309;
@@ -78,6 +87,9 @@
     --code-color: #b91c1c;
     --hero-bg: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --accordion-header-bg: #f8fafc;
+    --accordion-header-hover: #eef2f6;
+    --accordion-active-border: #2563eb;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -93,7 +105,7 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* SIDEBAR */
+/* SIDEBAR - STRICT FIXED 300px (NEVER OVERLAPS CONTENT) */
 #sidebar {
     width: 300px;
     background-color: var(--bg-surface);
@@ -206,33 +218,35 @@ body {
 .nav-vol { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
 .nav-link.active .nav-vol { color: var(--primary); }
 
-/* CONTENT AREA */
+/* CONTENT WRAPPER - PROPER MARGIN LEFT TO PREVENT OVERLAP */
 #content-wrapper {
     margin-left: 300px;
     flex: 1;
     display: flex;
     justify-content: center;
     padding: 40px 30px;
+    min-width: 0;
 }
 
 #main-content {
-    max-width: 880px;
+    max-width: 900px;
     width: 100%;
+    min-width: 0;
 }
 
 /* RIGHT TABLE OF CONTENTS */
 #toc-sidebar {
-    width: 250px;
+    width: 260px;
     position: sticky;
     top: 40px;
     height: calc(100vh - 80px);
     overflow-y: auto;
-    padding-left: 28px;
-    margin-left: 20px;
+    padding-left: 24px;
+    margin-left: 24px;
     display: none;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1320px) {
     #toc-sidebar { display: block; }
 }
 
@@ -258,7 +272,8 @@ body {
 }
 
 .toc-link:hover { color: var(--primary); }
-.toc-item.level-3 { padding-left: 10px; }
+.toc-item.level-2 { padding-left: 10px; }
+.toc-item.level-3 { padding-left: 18px; font-size: 0.74rem; color: var(--text-dim); }
 
 /* CHAPTER HERO */
 .chapter-hero {
@@ -266,7 +281,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 32px 36px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     box-shadow: var(--card-shadow);
 }
 
@@ -296,7 +311,7 @@ body {
 }
 
 .chapter-hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 800;
     color: var(--heading-color);
     margin-bottom: 12px;
@@ -309,32 +324,264 @@ body {
     line-height: 1.6;
 }
 
+/* ========================================================
+   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
+   ======================================================== */
+.focus-control-bar {
+    position: sticky;
+    top: 14px;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.focus-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.focus-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.focus-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    color: var(--primary-hover);
+}
+
+.focus-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border-light);
+    transition: .25s ease;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s ease;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+.toggle-label-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+/* ========================================================
+   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
+   ======================================================== */
+.chapter-accordion {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chapter-accordion:hover {
+    border-color: var(--border-light);
+}
+
+.chapter-accordion[open] {
+    border-color: var(--accordion-active-border);
+    box-shadow: 0 6px 26px var(--primary-glow-strong);
+}
+
+.chapter-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--accordion-header-bg);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-accordion-header::-webkit-details-marker {
+    display: none;
+}
+
+.chapter-accordion-header:hover {
+    background: var(--accordion-header-hover);
+}
+
+.chapter-accordion[open] > .chapter-accordion-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface-elevated);
+}
+
+.accordion-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.accordion-badge {
+    background: var(--primary-glow);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.accordion-title-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1.35;
+}
+
+.accordion-status-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+.accordion-status-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.accordion-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-page);
+    color: var(--text-muted);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, color 0.2s;
+}
+
+.chapter-accordion[open] > .chapter-accordion-header .accordion-chevron {
+    transform: rotate(180deg);
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.chapter-accordion-body {
+    padding: 28px 30px;
+    animation: accordionFadeIn 0.25s ease-out;
+}
+
+@keyframes accordionFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HIGHLIGHT ON TARGET JUMP */
+.flash-highlight {
+    outline: 2px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow-strong);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+}
+
 /* TYPOGRAPHY */
 h1, h2, h3, h4, h5 { color: var(--heading-color); font-weight: 700; line-height: 1.3; }
 
 h1 {
     font-size: 1.85rem;
-    margin: 44px 0 18px 0;
+    margin: 40px 0 16px 0;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
     color: var(--primary);
 }
 
 h2 {
-    font-size: 1.4rem;
-    margin: 36px 0 14px 0;
+    font-size: 1.35rem;
+    margin: 32px 0 14px 0;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
+    color: var(--heading-color);
 }
 
 h3 {
-    font-size: 1.15rem;
-    margin: 26px 0 10px 0;
+    font-size: 1.1rem;
+    margin: 22px 0 10px 0;
+    color: var(--heading-color);
 }
 
 h4 {
-    font-size: 0.98rem;
-    margin: 18px 0 8px 0;
+    font-size: 0.95rem;
+    margin: 16px 0 8px 0;
     color: var(--warning);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -351,7 +598,7 @@ a:hover { text-decoration: underline; }
     background: var(--bg-code);
     border: 1px solid var(--border);
     border-radius: 10px;
-    margin: 22px 0;
+    margin: 20px 0;
     overflow: hidden;
     box-shadow: var(--card-shadow);
 }
@@ -664,7 +911,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-8-Database-SQL.html" class="nav-link active">
                 <span class="nav-icon">💾</span>
-                <span>Database Engine Internals & SQL Server</span>
+                <span>Database Systems & High-Performance SQL</span>
                 <span class="nav-vol">V8</span>
             </a>
         </li>
@@ -672,7 +919,7 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-9-Microservices.html" class="nav-link ">
-                <span class="nav-icon">📡</span>
+                <span class="nav-icon">☁️</span>
                 <span>Microservices & Distributed Systems</span>
                 <span class="nav-vol">V9</span>
             </a>
@@ -681,8 +928,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-10-System-Design.html" class="nav-link ">
-                <span class="nav-icon">🏗️</span>
-                <span>Enterprise System Design</span>
+                <span class="nav-icon">📐</span>
+                <span>System Design: Enterprise Case Studies</span>
                 <span class="nav-vol">V10</span>
             </a>
         </li>
@@ -690,8 +937,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-11-Project-Interview-Mastery.html" class="nav-link ">
-                <span class="nav-icon">🎯</span>
-                <span>Project Interview Mastery & Walkthroughs</span>
+                <span class="nav-icon">💼</span>
+                <span>Project Interview Mastery & Technical Narrative</span>
                 <span class="nav-vol">V11</span>
             </a>
         </li>
@@ -699,8 +946,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-12-Interview-Question-Bank.html" class="nav-link ">
-                <span class="nav-icon">🏆</span>
-                <span>The Master Interview Question Bank</span>
+                <span class="nav-icon">🎯</span>
+                <span>Master Interview Question Bank & Verbatim Transcripts</span>
                 <span class="nav-vol">V12</span>
             </a>
         </li>
@@ -712,16 +959,36 @@ li::marker { color: var(--primary); }
         <main id="main-content">
             <div class="chapter-hero">
                 <div class="hero-meta">
-                    <span class="hero-badge">Database Optimization</span>
+                    <span class="hero-badge">Databases & Storage</span>
                     <span class="hero-vol">Volume 8</span>
                 </div>
-                <h1>Database Engine Internals & SQL Server</h1>
-                <p>3-Valued NULL logic, Physical joins (Nested/Merge/Hash), B-Tree page internals, Index Seek vs Scan, ACID WAL logging, Deadlocks, Isolation levels.</p>
+                <h1>Database Systems & High-Performance SQL</h1>
+                <p>B-Tree vs LSM, ACID serializability, Deadlocks & isolation levels, Partitioning, Execution plan operators, Stored proc recompiles & Redis cache patterns.</p>
+            </div>
+
+            <!-- ADHD-FRIENDLY INTERACTIVE FOCUS CONTROLS -->
+            <div class="focus-control-bar">
+                <div class="focus-actions">
+                    <button class="focus-btn" id="btn-expand-all" title="Open all chapters for full scroll">
+                        <span>📂</span> Expand All
+                    </button>
+                    <button class="focus-btn" id="btn-collapse-all" title="Collapse all chapters to section headers">
+                        <span>📁</span> Collapse All
+                    </button>
+                </div>
+                <div class="focus-toggle-wrap">
+                    <label class="focus-mode-toggle" title="When active, opening one section automatically closes previous sections to minimize cognitive load and visual clutter.">
+                        <span class="toggle-switch">
+                            <input type="checkbox" id="single-focus-toggle" checked>
+                            <span class="slider"></span>
+                        </span>
+                        <span class="toggle-label-text">🎯 Single-Chapter Focus (Auto-close others)</span>
+                    </label>
+                </div>
             </div>
 
             <article class="doc-body">
-                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
-<h1 id='volume-8-database-sql-complete-encyclopedia'>Volume 8: Database + SQL Complete Encyclopedia</h1>
+                <h1 id='volume-8-database-sql-complete-encyclopedia'>Volume 8: Database + SQL Complete Encyclopedia</h1>
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
@@ -740,8 +1007,23 @@ li::marker { color: var(--primary); }
     <div class="callout-body"><strong>Production Contexts:</strong> Core Banking, Enterprise SaaS Billing, Healthcare Claims & Electronic Health Records (EHR), Payment Gateways, High-Volume E-Commerce Order Processing.</div>
 </div>
 
-<p>---</p>
-<h1 id='table-of-contents'>TABLE OF CONTENTS</h1>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+
+<details class="chapter-accordion toc-section-accordion" id="table-of-contents" open>
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">NAVIGATION</span>
+            <span class="accordion-title-text">Table of Contents & Quick Jump Matrix</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+
 <ol>
 <li><a href="#architectural-overview">Architectural Overview: The Relational Engine & Storage Engine</a></li>
 <li><a href="#concept-1-sql-fundamentals--three-valued-logic-3vl">Concept 1: SQL Fundamentals & Three-Valued Logic (3VL)</a></li>
@@ -759,7 +1041,7 @@ li::marker { color: var(--primary); }
 <li><a href="#concept-13-database-normalization-1nf3nf--strategic-denormalization-guid-vs-identity-vs-ulid">Concept 13: Database Normalization (1NF–3NF) & Strategic Denormalization (GUID vs IDENTITY vs ULID)</a></li>
 <li><a href="#concept-14-comprehensive-interview-question-bank">Concept 14: Comprehensive Interview Question Bank (50 Battle-Tested Questions)</a></li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='architectural-overview'>ARCHITECTURAL OVERVIEW</h1>
 <p>Every senior .NET backend engineer querying a database via Dapper, Entity Framework Core, or ADO.NET must visualize the path of an execution packet across the boundary:</p>
 
@@ -812,7 +1094,7 @@ li::marker { color: var(--primary); }
 <li>If the page is not in RAM, the Storage Engine issues an asynchronous read to disk, waiting on <code>PAGEIOLATCH_SH</code>, resulting in a <strong>Physical Read</strong>.</li>
 <li>If data is modified, changes are logged to the Write-Ahead Log (WAL) in memory, flushed to <code>.ldf</code> synchronously on transaction commit, while dirty data pages in RAM are written asynchronously to <code>.mdf</code> during a <strong>Checkpoint</strong>.</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-1-sql-fundamentals-three-valued-logic-3vl'>CONCEPT 1: SQL FUNDAMENTALS & THREE-VALUED LOGIC (3VL)</h1>
 <h2 id='1-definition'>1. Definition</h2>
 <p>Three-Valued Logic (3VL) is the foundational predicate logic of ANSI SQL. Unlike standard Boolean logic which evaluates strictly to <code>TRUE</code> or <code>FALSE</code>, SQL introduces a third logical state: <code>UNKNOWN</code>. In SQL, <code>NULL</code> does not represent zero, an empty string, or a specific value; it represents the <strong>absence of a value</strong> or <strong>unknown state</strong>. Any equality or inequality comparison against <code>NULL</code> evaluates to <code>UNKNOWN</code>.</p>
@@ -988,7 +1270,7 @@ var pending = await dbContext.Settlements
 <li><strong>Tricky:</strong> <em>Does <code>NULL</code> equal <code>NULL</code> in a <code>UNIQUE</code> constraint in SQL Server?</em></li>
 <li><strong>Answer:</strong> In ANSI SQL standard, multiple <code>NULL</code> values are permitted in a unique index because <code>NULL &lt;&gt; NULL</code>. However, in SQL Server, a standard <code>UNIQUE</code> constraint allows <strong>only one single <code>NULL</code></strong>. To achieve standard ANSI behavior in SQL Server, developers must create a <strong>Filtered Unique Index</strong>: <code>CREATE UNIQUE NONCLUSTERED INDEX UX_Col ON Table(Col) WHERE Col IS NOT NULL;</code>.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-2-complete-joins-deep-dive-logical-semantics-physical-operators'>CONCEPT 2: COMPLETE JOINS DEEP-DIVE: LOGICAL SEMANTICS & PHYSICAL OPERATORS</h1>
 <h2 id='1-definition'>1. Definition</h2>
 <p>A <strong>Join</strong> correlates records across two relations based on a join predicate. Database architecture separates joins into two distinct layers:</p>
@@ -1213,7 +1495,7 @@ Output Stream to Client</code></pre>
 <li><strong>Tricky:</strong> <em>Can an <code>INNER JOIN</code> ever return more rows than exist in both tables combined?</em></li>
 <li><strong>Answer:</strong> Yes. If the join keys contain duplicate values in both tables (a Many-to-Many relationship), the join produces a Cartesian product of those matching keys. For instance, if Table A has 1,000 rows with <code>Key = 1</code> and Table B has 1,000 rows with <code>Key = 1</code>, an <code>INNER JOIN</code> produces $1,000 \times 1,000 = 1,000,000$ rows.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-3-query-constructs-subqueries-ctes-temp-tables-and-table-variables'>CONCEPT 3: QUERY CONSTRUCTS: SUBQUERIES, CTES, TEMP TABLES, AND TABLE VARIABLES</h1>
 <h2 id='1-definition'>1. Definition</h2>
 <p>Modern T-SQL provides four core techniques to decompose complex data transformations into intermediate logical sets:</p>
@@ -1413,7 +1695,7 @@ Massively reduced base table I/O; High concurrency throughput</code></pre>
 <li><strong>Tricky:</strong> <em>If you execute a <code>ROLLBACK TRANSACTION</code> command, what happens to the rows inserted into a <code>#TempTable</code> vs a <code>@TableVariable</code> during that transaction?</em></li>
 <li><strong>Answer:</strong> The rows in the <code>#TempTable</code> are fully rolled back because <code>#TempTable</code> operations participate in the user transaction and write undo records to <code>TempDB</code>'s transaction log. Rows inserted into the <code>@TableVariable</code> are <strong>not</strong> rolled back; they persist in the variable because table variables are memory/variable scoped and insulated from user transaction rollback semantics.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-4-window-functions-analytical-sql'>CONCEPT 4: WINDOW FUNCTIONS & ANALYTICAL SQL</h1>
 <h2 id='1-definition'>1. Definition</h2>
 <p>A <strong>Window Function</strong> performs calculations across a set of table rows that are logically related to the current row (a "window"), while <strong>retaining the distinct identity and granularity of each individual row</strong> in the final result set. Unlike an aggregate <code>GROUP BY</code> clause, which collapses multiple rows into a single scalar summary row, a window function calculates aggregate, ranking, or offset values without collapsing the row stream.</p>
@@ -1651,7 +1933,7 @@ FROM AccountLedger;</code></pre>
 <li><strong>Tricky:</strong> <em>How do you write a query to detect "Islands" (consecutive sequences of events/dates) using window functions?</em></li>
 <li><strong>Answer:</strong> Use the <strong><code>ROW_NUMBER()</code> Difference Technique</strong>. Subtract a dense row number from the sequence or date key: <code>DATEADD(DAY, -ROW_NUMBER() OVER (ORDER BY EventDate), EventDate) AS IslandGroup</code>. Consecutive dates increase at the exact same rate as the row number, so their difference remains constant. You then <code>GROUP BY IslandGroup</code> to find the island's start date, end date, and duration.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-5-index-internals-b-tree-storage-architecture-indexing-strategies'>CONCEPT 5: INDEX INTERNALS: B-TREE STORAGE ARCHITECTURE & INDEXING STRATEGIES</h1>
 <h2 id='1-definition'>1. Definition</h2>
 <p>An <strong>Index</strong> is an on-disk, sorted data structure (implemented as a Balanced B+ Tree in SQL Server) that enables the storage engine to locate specific rows in $O(\log N)$ I/O operations rather than scanning an entire table in $O(N)$ linear time.</p>
@@ -1875,7 +2157,7 @@ Total I/O: 3 intermediate index reads + 12 contiguous leaf page reads = 15 Logic
 <li><strong>Tricky:</strong> <em>If you have an index on <code>(LastName, FirstName)</code>, can the optimizer use this index for a query with <code>WHERE FirstName = &#x27;David&#x27;</code>?</em></li>
 <li><strong>Answer:</strong> Yes, but <strong>only as an Index Scan</strong>, not an Index Seek. Because <code>FirstName</code> is not the leading edge of the composite index, the engine cannot navigate down the B-Tree root and intermediate branches to seek the specific value. However, scanning the non-clustered index leaf pages sequentially may still be cheaper than scanning the entire wide clustered table.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-6-execution-plans-reading-interpreting-and-optimizer-mechanics'>CONCEPT 6: EXECUTION PLANS: READING, INTERPRETING, AND OPTIMIZER MECHANICS</h1>
 <h2 id='1-definition'>1. Definition</h2>
 <p>An <strong>Execution Plan</strong> is the compiled graphical, XML, or text blueprint produced by the SQL Server Cost-Based Optimizer (CBO) that specifies the exact sequence of physical operators (<code>Index Seek</code>, <code>Clustered Index Scan</code>, <code>Nested Loops</code>, <code>Compute Scalar</code>, <code>Sort</code>) the Storage Engine must execute to satisfy a T-SQL query.</p>
@@ -2096,7 +2378,7 @@ SELECT ... WHERE TenantId = @LocalTenantId;</code></pre>
 <li><strong>Tricky:</strong> <em>In an execution plan, what does a <code>Bitmap Operator</code> right before a Parallel Hash Join represent?</em></li>
 <li><strong>Answer:</strong> A Bitmap Operator in parallel query execution represents an in-flight optimization technique called <strong>Bitmap Filtering</strong>. During the build phase of a hash join, the engine creates a compact in-memory bitmap of the join keys. This bitmap is pushed down directly to the probe input's parallel scan threads, allowing the storage engine to discard non-qualifying probe rows at the storage level <em>before</em> they are transferred across the thread exchange operators (<code>Parallelism (Repartition Streams)</code>), drastically reducing inter-thread CPU and bus communication overhead.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-7-acid-transaction-management-internals'>CONCEPT 7: ACID & TRANSACTION MANAGEMENT INTERNALS</h1>
 <h2 id='1-definition'>1. Definition</h2>
 <p>A <strong>Database Transaction</strong> is a logical unit of work that encapsulates one or more database operations. To guarantee database integrity under high concurrency and physical hardware failure, transactions must strictly adhere to the four <strong>ACID</strong> properties:</p>
@@ -2369,7 +2651,7 @@ Relational Engine returns &#x27;Command Completed&#x27; TDS packet to .NET clien
 <li><strong>Tricky:</strong> <em>If a server loses power during an active transaction, how does SQL Server handle dirty pages that were already written to disk by a Checkpoint?</em></li>
 <li><strong>Answer:</strong> When the server restarts, SQL Server runs the ARIES recovery process. During the Analysis and Redo phases, the engine brings all pages up to date using the log. Then, during the <strong>Undo Phase</strong>, SQL Server scans the transaction log backward to locate every modification performed by that active, uncommitted transaction and applies compensating log records to revert the dirty pages in the <code>.mdf</code> file back to their pre-transaction state, enforcing Atomicity.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-8-concurrency-isolation-levels-transaction-phenomena'>CONCEPT 8: CONCURRENCY, ISOLATION LEVELS & TRANSACTION PHENOMENA</h1>
 <h2 id='1-definition'>1. Definition</h2>
 <p><strong>Transaction Isolation Levels</strong> define the degree to which the modifications made by one concurrent transaction are isolated from the reads and writes of other concurrent transactions. The ANSI/ISO SQL-92 standard defines four classical pessimistic isolation levels, while modern database engines (including SQL Server) offer snapshot-based optimistic isolation levels that leverage row versioning.</p>
@@ -2587,7 +2869,7 @@ if (account.Balance &gt;= withdrawalAmount)
 <li><strong>Tricky:</strong> <em>What happens when a write conflict occurs under <code>SNAPSHOT</code> isolation versus <code>READ COMMITTED SNAPSHOT</code> isolation (RCSI)?</em></li>
 <li><strong>Answer:</strong> Under RCSI, if a transaction attempts to update a row currently being modified by another transaction, it behaves pessimistically: it blocks and waits for the writer to commit or roll back, then reads the latest committed value and proceeds. Under pure <code>SNAPSHOT</code> isolation, the engine enforces First-Committer-Wins: if the row was updated and committed by another transaction after the current snapshot transaction began, the current transaction aborts immediately with an Update Conflict exception (Error 3960) upon attempting the write.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-9-lock-internals-granularity-and-escalation'>CONCEPT 9: LOCK INTERNALS, GRANULARITY, AND ESCALATION</h1>
 <h2 id='1-definition'>1. Definition</h2>
 <p><strong>Locking</strong> is the pessimistic mechanism used by the SQL Server Storage Engine to manage concurrent access to shared database resources. The Lock Manager grants and enforces locks across a defined hierarchy of granular resources (Rows, Keys, Pages, Tables) using specific lock modes to maintain ACID isolation guarantees.</p>
@@ -2791,7 +3073,7 @@ Lock Manager triggers Escalation Event
 <li><strong>Tricky:</strong> <em>What is the purpose of an Update (U) Lock and how does it prevent conversion deadlocks?</em></li>
 <li><strong>Answer:</strong> An Update (<code>U</code>) lock is acquired during the initial read phase of a data modification statement. While compatible with Shared (<code>S</code>) locks, two transactions cannot hold <code>U</code> locks on the same resource concurrently. In a read-modify-write cycle, if both transactions acquired <code>S</code> locks initially, both would subsequently attempt to convert their <code>S</code> lock to an Exclusive (<code>X</code>) lock, causing a conversion deadlock. The <code>U</code> lock serializes the modification phase up front, preventing the second transaction from reading until the first converts its <code>U</code> lock to <code>X</code> and commits.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-10-deadlocks-in-sql-server-detection-diagnostics-prevention'>CONCEPT 10: DEADLOCKS IN SQL SERVER: DETECTION, DIAGNOSTICS & PREVENTION</h1>
 <h2 id='1-definition'>1. Definition</h2>
 <p>A <strong>Deadlock</strong> is a mutual blocking condition where two or more independent sessions hold exclusive locks on resources that the other sessions require, forming a <strong>closed cyclic dependency</strong>. Because each session is paused waiting for the other to release its lock, neither session can proceed without external intervention.</p>
@@ -3009,7 +3291,7 @@ await retryPolicy.ExecuteAsync(async () =&gt;
 <li>Transaction 2 executes a <code>SELECT</code> with a non-covering index: it performs an Index Seek, acquiring a Shared (<code>S</code>) lock on the Non-Clustered key, and then performs a Key Lookup, requesting an <code>S</code> lock on the Clustered Index key.</li>
 <li>The two transactions lock the same row's two distinct index representations in opposite order, producing a deadlock on a single table and single logical entity.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-11-query-performance-optimization-sargability-keyset-pagination'>CONCEPT 11: QUERY PERFORMANCE OPTIMIZATION, SARGABILITY & KEYSET PAGINATION</h1>
 <h2 id='1-definition'>1. Definition</h2>
 <p><strong>Query Performance Optimization</strong> is the engineering discipline of designing relational queries, predicates, and indexing structures that minimize physical and logical I/O, reduce CPU cycle consumption, eliminate memory grant spills, and avoid lock contention. Two core pillars are:</p>
@@ -3272,7 +3554,7 @@ Returns 20 rows (Total logical reads: 3 pages)</code></pre>
 <li><strong>Tricky:</strong> <em>How does SQL Server handle multi-column statistics versus composite indexes, and what is the limit of histogram steps?</em></li>
 <li><strong>Answer:</strong> A SQL Server statistic histogram contains a maximum of <strong>200 steps</strong>, regardless of table size. For multi-column statistics or composite indexes, SQL Server builds a full 200-step histogram <strong>only on the first (leading) column</strong>. For subsequent columns in the composite key, SQL Server stores only a <strong>Density Vector</strong> (a single float representing the average uniqueness of the column combinations). Therefore, multi-column correlation and range selectivity on non-leading columns rely on density heuristics rather than detailed distribution intervals, which is why column ordering in composite indexes is so critical.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-12-programmability-stored-procedures-views-and-indexed-views'>CONCEPT 12: PROGRAMMABILITY: STORED PROCEDURES, VIEWS, AND INDEXED VIEWS</h1>
 <h2 id='1-definition'>1. Definition</h2>
 <p>Database programmability structures encapsulate T-SQL business logic directly inside the relational engine:</p>
@@ -3485,7 +3767,7 @@ Returns 12 rows (Total logical reads: 3 pages; zero base table scans!)</code></p
 <li><strong>Tricky:</strong> <em>Why does SQL Server require <code>COUNT_BIG(</em>)</code> instead of <code>COUNT(<em>)</code> in an Indexed View with a <code>GROUP BY</code> clause?</em></li>
 <li><strong>Answer:</strong> SQL Server requires <code>COUNT_BIG(<em>)</code> (which returns <code>BIGINT</code>) because when base rows are inserted or deleted, the internal maintenance engine updates the pre-aggregated metrics. It uses the <code>COUNT_BIG(</em>)</code> value to determine whether an aggregation group still has active child rows. If <code>COUNT_BIG(*)</code> decrements to zero following a base row deletion, SQL Server deletes the corresponding summary row from the indexed view's clustered index. <code>BIGINT</code> is required to eliminate any mathematical possibility of integer overflow on high-volume tables.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-13-database-normalization-1nf3nf-strategic-denormalization-guid-vs-identity-vs-ulid'>CONCEPT 13: DATABASE NORMALIZATION (1NF–3NF) & STRATEGIC DENORMALIZATION (GUID VS IDENTITY VS ULID)</h1>
 <h2 id='1-definition'>1. Definition</h2>
 <ul>
@@ -3710,10 +3992,10 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
 <li>Recreate the Primary Key constraint or a Unique constraint on the original GUID column as a <strong>Non-Clustered Index</strong>.</li>
 </ol>
 <p>This satisfies all external API contracts and public lookups while eliminating page splits and internal fragmentation at the physical storage layer.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h1 id='concept-14-comprehensive-interview-question-bank'>CONCEPT 14: COMPREHENSIVE INTERVIEW QUESTION BANK</h1>
 <h2 id='50-battle-tested-database-sql-questions-for-net-developers-infosys-l2senior-enterprise-product-roles'>50 Battle-Tested Database & SQL Questions for .NET Developers (Infosys L2/Senior & Enterprise Product Roles)</h2>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='part-1-core-sql-3vl-joins-subqueries-questions-112'>PART 1: CORE SQL, 3VL, JOINS & SUBQUERIES (Questions 1–12)</h3>
 <h4 id='1-what-are-the-three-possible-values-in-sqls-three-valued-logic-3vl-and-what-is-the-result-of-null-null'>1. What are the three possible values in SQL's Three-Valued Logic (3VL), and what is the result of <code>NULL = NULL</code>?</h4>
 <ul>
@@ -3779,7 +4061,7 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
 <li><code>ORDER BY</code> (presentation sorting)</li>
 <li><code>TOP</code> / <code>OFFSET-FETCH</code> (paging and row limits)</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='part-2-window-functions-analytics-questions-1318'>PART 2: WINDOW FUNCTIONS & ANALYTICS (Questions 13–18)</h3>
 <h4 id='13-how-do-you-find-the-second-highest-salary-in-an-employee-table-using-window-functions'>13. How do you find the second highest salary in an employee table using window functions?</h4>
 <ul>
@@ -3834,7 +4116,7 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
 <ul>
 <li><strong>Answer:</strong> Because of Logical Query Processing phase ordering: <code>WHERE</code> (Phase 2) and <code>HAVING</code> (Phase 4) execute before the <code>SELECT</code> phase (Phase 5). Window functions are calculated during Phase 5 after grouping and filtering are finalized. To filter by window function results, the query must be wrapped in a CTE or derived table.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='part-3-index-internals-storage-engine-questions-1927'>PART 3: INDEX INTERNALS & STORAGE ENGINE (Questions 19–27)</h3>
 <h4 id='19-what-is-an-8-kb-page-and-what-are-its-physical-contents-in-sql-server'>19. What is an 8 KB Page and what are its physical contents in SQL Server?</h4>
 <ul>
@@ -3877,7 +4159,7 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
 <ul>
 <li><strong>Answer:</strong> The Tipping Point is the threshold where the Query Optimizer decides that a full table scan or clustered index scan is cheaper than an index seek combined with Key Lookups. In SQL Server, this typically occurs when a query returns more than approximately <strong>1% to 5%</strong> of the table's total rows.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='part-4-execution-plans-query-optimization-questions-2834'>PART 4: EXECUTION PLANS & QUERY OPTIMIZATION (Questions 28–34)</h3>
 <h4 id='28-what-is-the-difference-between-an-index-seek-and-an-index-scan'>28. What is the difference between an Index Seek and an Index Scan?</h4>
 <ul>
@@ -3912,7 +4194,7 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
 <ul>
 <li><strong>Answer:</strong> <code>OFFSET / FETCH</code> requires the engine to scan and count through all preceding offset rows before returning the requested page ($O(N)$ linear complexity). Keyset Pagination uses an inequality filter on a sorted index key (<code>WHERE Id &gt; @LastSeenId</code>), enabling the engine to seek directly to the next page in $O(\log N)$ time and read only the requested page size ($O(1)$ constant time), regardless of page depth.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='part-5-transactions-isolation-locking-questions-3543'>PART 5: TRANSACTIONS, ISOLATION & LOCKING (Questions 35–43)</h3>
 <h4 id='35-explain-the-write-ahead-logging-wal-protocol'>35. Explain the Write-Ahead Logging (WAL) protocol.</h4>
 <ul>
@@ -3955,7 +4237,7 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
 <ul>
 <li><strong>Answer:</strong> It enforces pessimistic concurrency during a read operation within a transaction. <code>UPDLOCK</code> acquires an Update lock (preventing other writers from modifying the row), and <code>HOLDLOCK</code> holds that lock until the transaction finishes (equivalent to <code>SERIALIZABLE</code> semantics), preventing race conditions and lost updates in read-modify-write workflows.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='part-6-deadlocks-views-schema-design-questions-4450'>PART 6: DEADLOCKS, VIEWS & SCHEMA DESIGN (Questions 44–50)</h3>
 <h4 id='44-what-are-the-four-coffman-conditions-required-for-a-deadlock-to-occur'>44. What are the four Coffman conditions required for a Deadlock to occur?</h4>
 <ul>
@@ -3991,6 +4273,7 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
 <ul>
 <li><strong>Answer:</strong> By using <strong>Parameterized Queries</strong>. Parameterization ensures that user input is transmitted over the TDS protocol as discrete typed parameter values rather than concatenated string literals. The Relational Engine parses and algebrizes the SQL query template independently of the parameter values, ensuring malicious SQL input is treated strictly as data literals and never executed as executable code.</li>
 </ul>
+</div></details>
             </article>
 
             <nav class="chapter-nav">
@@ -4014,17 +4297,7 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
             <ul class="toc-list">
                 
         <li class="toc-item level-1">
-            <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
-        </li>
-        
-
-        <li class="toc-item level-1">
             <a href="#volume-8-database-sql-complete-encyclopedia" class="toc-link">Volume 8: Database + SQL Complete Encyclopedi</a>
-        </li>
-        
-
-        <li class="toc-item level-1">
-            <a href="#table-of-contents" class="toc-link">TABLE OF CONTENTS</a>
         </li>
         
 
@@ -4162,6 +4435,66 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
             <a href="#9-performance" class="toc-link">9. Performance</a>
         </li>
         
+
+        <li class="toc-item level-2">
+            <a href="#10-common-mistakes" class="toc-link">10. Common Mistakes</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#11-production-problems" class="toc-link">11. Production Problems</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#12-interview-preparation" class="toc-link">12. Interview Preparation</a>
+        </li>
+        
+
+        <li class="toc-item level-1">
+            <a href="#concept-3-query-constructs-subqueries-ctes-temp-tables-and-table-variables" class="toc-link">CONCEPT 3: QUERY CONSTRUCTS: SUBQUERIES, CTES</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#1-definition" class="toc-link">1. Definition</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#2-historical-reason" class="toc-link">2. Historical Reason</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#3-problem-it-solves" class="toc-link">3. Problem It Solves</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#4-internal-working-physical-architecture-comparison" class="toc-link">4. Internal Working: Physical Architecture Co</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#tempdb-allocation-internals" class="toc-link">TempDB Allocation Internals</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#5-real-production-example-enterprise-saas-multi-tenant-billing" class="toc-link">5. Real Production Example: Enterprise SaaS M</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#6-code-example-production-sql-queries" class="toc-link">6. Code Example: Production SQL Queries</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#7-execution-flow-cte-vs-temp-table" class="toc-link">7. Execution Flow (CTE vs Temp Table)</a>
+        </li>
+        
             </ul>
         </aside>
     </div>
@@ -4192,11 +4525,137 @@ Result: Zero page splits; 99% page density; Maximum I/O throughput!</code></pre>
             // Highlight syntax
             hljs.highlightAll();
 
-            // Mermaid diagrams
+            // Mermaid diagrams initialization
             mermaid.initialize({
                 startOnLoad: true,
                 theme: currentTheme === 'dark' ? 'dark' : 'neutral',
                 securityLevel: 'loose'
+            });
+
+            // ==========================================
+            // ACCORDION & SINGLE-FOCUS CONTROLS
+            // ==========================================
+            const accordions = document.querySelectorAll('.chapter-accordion');
+            const singleFocusToggle = document.getElementById('single-focus-toggle');
+            const btnExpandAll = document.getElementById('btn-expand-all');
+            const btnCollapseAll = document.getElementById('btn-collapse-all');
+
+            function renderMermaidIn(element) {
+                if (window.mermaid) {
+                    const unrendered = element.querySelectorAll('.mermaid:not([data-processed])');
+                    if (unrendered.length > 0) {
+                        try { mermaid.run({ nodes: unrendered }); } catch(e) {}
+                    }
+                }
+            }
+
+            // Expand All
+            if (btnExpandAll) {
+                btnExpandAll.addEventListener('click', () => {
+                    if (singleFocusToggle) singleFocusToggle.checked = false;
+                    accordions.forEach(acc => {
+                        acc.open = true;
+                        renderMermaidIn(acc);
+                    });
+                });
+            }
+
+            // Collapse All
+            if (btnCollapseAll) {
+                btnCollapseAll.addEventListener('click', () => {
+                    accordions.forEach(acc => {
+                        acc.open = false;
+                    });
+                });
+            }
+
+            // Single focus auto-closing logic
+            accordions.forEach(acc => {
+                acc.addEventListener('toggle', () => {
+                    const statusText = acc.querySelector('.accordion-status-text');
+                    if (statusText) {
+                        statusText.innerText = acc.open ? 'Click to collapse' : 'Click to expand';
+                    }
+                    if (acc.open) {
+                        renderMermaidIn(acc);
+                        if (singleFocusToggle && singleFocusToggle.checked) {
+                            accordions.forEach(other => {
+                                if (other !== acc && other.open) {
+                                    other.open = false;
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            // ==========================================
+            // DEEP LINKING & TOC NAVIGATION
+            // ==========================================
+            function navigateToTarget(targetId) {
+                if (!targetId) return;
+                let target = document.getElementById(targetId);
+                
+                // Fallback for slug variations (e.g. hyphens)
+                if (!target) {
+                    const normalized = targetId.replace(/-+/g, '-');
+                    target = document.getElementById(normalized) || 
+                             document.querySelector(`[id*="${normalized}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                }
+
+                if (!target) return;
+
+                // If target is inside an accordion, open that accordion
+                const parentAcc = target.closest('.chapter-accordion');
+                if (parentAcc) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== parentAcc) a.open = false;
+                        });
+                    }
+                    parentAcc.open = true;
+                    renderMermaidIn(parentAcc);
+                } else if (target.classList.contains('chapter-accordion')) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== target) a.open = false;
+                        });
+                    }
+                    target.open = true;
+                    renderMermaidIn(target);
+                }
+
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.classList.add('flash-highlight');
+                    setTimeout(() => target.classList.remove('flash-highlight'), 1600);
+                }, 100);
+            }
+
+            // Check URL hash on page load
+            if (window.location.hash) {
+                setTimeout(() => {
+                    navigateToTarget(window.location.hash.substring(1));
+                }, 250);
+            }
+
+            // Listen for hash changes
+            window.addEventListener('hashchange', () => {
+                navigateToTarget(window.location.hash.substring(1));
+            });
+
+            // Intercept internal page anchor clicks
+            document.addEventListener('click', (e) => {
+                const anchor = e.target.closest('a[href^="#"]');
+                if (!anchor) return;
+                const href = anchor.getAttribute('href');
+                if (href && href.length > 1) {
+                    e.preventDefault();
+                    const id = href.substring(1);
+                    history.pushState(null, null, href);
+                    navigateToTarget(id);
+                }
             });
         });
     </script>

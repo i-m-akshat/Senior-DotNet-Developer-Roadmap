@@ -17,9 +17,11 @@
     --bg-page: #0b0f19;
     --bg-surface: #111827;
     --bg-surface-elevated: #1f2937;
+    --bg-surface-hover: #283548;
     --bg-code: #030712;
     --border: #374151;
     --border-light: #4b5563;
+    --border-highlight: #60a5fa;
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
     --text-dim: #6b7280;
@@ -27,6 +29,7 @@
     --primary: #3b82f6;
     --primary-hover: #60a5fa;
     --primary-glow: rgba(59, 130, 246, 0.15);
+    --primary-glow-strong: rgba(59, 130, 246, 0.3);
     --accent: #8b5cf6;
     --success: #10b981;
     --warning: #f59e0b;
@@ -41,15 +44,20 @@
     --code-color: #f87171;
     --hero-bg: linear-gradient(135deg, rgba(31, 41, 55, 0.75) 0%, rgba(17, 24, 39, 0.95) 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --accordion-header-bg: #151e2e;
+    --accordion-header-hover: #1c273c;
+    --accordion-active-border: #3b82f6;
 }
 
 [data-theme="light"] {
     --bg-page: #f8fafc;
     --bg-surface: #ffffff;
     --bg-surface-elevated: #f1f5f9;
+    --bg-surface-hover: #e2e8f0;
     --bg-code: #0f172a;
     --border: #e2e8f0;
     --border-light: #cbd5e1;
+    --border-highlight: #2563eb;
     --text-main: #0f172a;
     --text-muted: #475569;
     --text-dim: #64748b;
@@ -57,6 +65,7 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-glow: rgba(37, 99, 235, 0.1);
+    --primary-glow-strong: rgba(37, 99, 235, 0.22);
     --accent: #7c3aed;
     --success: #059669;
     --warning: #b45309;
@@ -71,6 +80,9 @@
     --code-color: #b91c1c;
     --hero-bg: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --accordion-header-bg: #f8fafc;
+    --accordion-header-hover: #eef2f6;
+    --accordion-active-border: #2563eb;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -86,7 +98,7 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* SIDEBAR */
+/* SIDEBAR - STRICT FIXED 300px (NEVER OVERLAPS CONTENT) */
 #sidebar {
     width: 300px;
     background-color: var(--bg-surface);
@@ -199,33 +211,35 @@ body {
 .nav-vol { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
 .nav-link.active .nav-vol { color: var(--primary); }
 
-/* CONTENT AREA */
+/* CONTENT WRAPPER - PROPER MARGIN LEFT TO PREVENT OVERLAP */
 #content-wrapper {
     margin-left: 300px;
     flex: 1;
     display: flex;
     justify-content: center;
     padding: 40px 30px;
+    min-width: 0;
 }
 
 #main-content {
-    max-width: 880px;
+    max-width: 900px;
     width: 100%;
+    min-width: 0;
 }
 
 /* RIGHT TABLE OF CONTENTS */
 #toc-sidebar {
-    width: 250px;
+    width: 260px;
     position: sticky;
     top: 40px;
     height: calc(100vh - 80px);
     overflow-y: auto;
-    padding-left: 28px;
-    margin-left: 20px;
+    padding-left: 24px;
+    margin-left: 24px;
     display: none;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1320px) {
     #toc-sidebar { display: block; }
 }
 
@@ -251,7 +265,8 @@ body {
 }
 
 .toc-link:hover { color: var(--primary); }
-.toc-item.level-3 { padding-left: 10px; }
+.toc-item.level-2 { padding-left: 10px; }
+.toc-item.level-3 { padding-left: 18px; font-size: 0.74rem; color: var(--text-dim); }
 
 /* CHAPTER HERO */
 .chapter-hero {
@@ -259,7 +274,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 32px 36px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     box-shadow: var(--card-shadow);
 }
 
@@ -289,7 +304,7 @@ body {
 }
 
 .chapter-hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 800;
     color: var(--heading-color);
     margin-bottom: 12px;
@@ -302,32 +317,264 @@ body {
     line-height: 1.6;
 }
 
+/* ========================================================
+   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
+   ======================================================== */
+.focus-control-bar {
+    position: sticky;
+    top: 14px;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.focus-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.focus-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.focus-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    color: var(--primary-hover);
+}
+
+.focus-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border-light);
+    transition: .25s ease;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s ease;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+.toggle-label-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+/* ========================================================
+   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
+   ======================================================== */
+.chapter-accordion {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chapter-accordion:hover {
+    border-color: var(--border-light);
+}
+
+.chapter-accordion[open] {
+    border-color: var(--accordion-active-border);
+    box-shadow: 0 6px 26px var(--primary-glow-strong);
+}
+
+.chapter-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--accordion-header-bg);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-accordion-header::-webkit-details-marker {
+    display: none;
+}
+
+.chapter-accordion-header:hover {
+    background: var(--accordion-header-hover);
+}
+
+.chapter-accordion[open] > .chapter-accordion-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface-elevated);
+}
+
+.accordion-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.accordion-badge {
+    background: var(--primary-glow);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.accordion-title-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1.35;
+}
+
+.accordion-status-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+.accordion-status-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.accordion-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-page);
+    color: var(--text-muted);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, color 0.2s;
+}
+
+.chapter-accordion[open] > .chapter-accordion-header .accordion-chevron {
+    transform: rotate(180deg);
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.chapter-accordion-body {
+    padding: 28px 30px;
+    animation: accordionFadeIn 0.25s ease-out;
+}
+
+@keyframes accordionFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HIGHLIGHT ON TARGET JUMP */
+.flash-highlight {
+    outline: 2px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow-strong);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+}
+
 /* TYPOGRAPHY */
 h1, h2, h3, h4, h5 { color: var(--heading-color); font-weight: 700; line-height: 1.3; }
 
 h1 {
     font-size: 1.85rem;
-    margin: 44px 0 18px 0;
+    margin: 40px 0 16px 0;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
     color: var(--primary);
 }
 
 h2 {
-    font-size: 1.4rem;
-    margin: 36px 0 14px 0;
+    font-size: 1.35rem;
+    margin: 32px 0 14px 0;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
+    color: var(--heading-color);
 }
 
 h3 {
-    font-size: 1.15rem;
-    margin: 26px 0 10px 0;
+    font-size: 1.1rem;
+    margin: 22px 0 10px 0;
+    color: var(--heading-color);
 }
 
 h4 {
-    font-size: 0.98rem;
-    margin: 18px 0 8px 0;
+    font-size: 0.95rem;
+    margin: 16px 0 8px 0;
     color: var(--warning);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -344,7 +591,7 @@ a:hover { text-decoration: underline; }
     background: var(--bg-code);
     border: 1px solid var(--border);
     border-radius: 10px;
-    margin: 22px 0;
+    margin: 20px 0;
     overflow: hidden;
     box-shadow: var(--card-shadow);
 }
@@ -734,11 +981,11 @@ li::marker { color: var(--primary); }
                     <div class="stat-txt">Curriculum Modules</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-val">242,000+</div>
+                    <div class="stat-val">250,000+</div>
                     <div class="stat-txt">Words of Depth</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-val">155+</div>
+                    <div class="stat-val">160+</div>
                     <div class="stat-txt">Master Scenarios</div>
                 </div>
                 <div class="stat-card">
@@ -748,13 +995,13 @@ li::marker { color: var(--primary); }
             </div>
             <div class="quick-action-bar">
                 <a href="Volume-0-Software-Engineering-Fundamentals.html" class="btn-action-primary">🚀 Start Learning (Volume 0)</a>
+                <a href="Volume-1-DSA-Logical-Thinking.html" class="btn-action-sec">⚡ Open DSA & Strings (Volume 1)</a>
                 <a href="Volume-12-Interview-Question-Bank.html" class="btn-action-sec">🎯 Open 155+ Question Bank</a>
-                <a href="../md/Context.md" class="btn-action-sec">📋 View 8-Week Study Plan</a>
             </div>
         </div>
 
         <div class="search-box">
-            <input type="text" id="filterInput" class="search-input" placeholder="🔍 Search any module by title or topic (e.g. async, GC, Kafka, JWT, EF Core)..." onkeyup="filterCards()">
+            <input type="text" id="filterInput" class="search-input" placeholder="🔍 Search any module by title or topic (e.g. strings, two pointers, sliding window, async, GC)..." onkeyup="filterCards()">
         </div>
 
         <div class="portal-grid" id="portalGrid">
@@ -861,55 +1108,55 @@ li::marker { color: var(--primary); }
     <div class="portal-card">
         <div class="portal-card-top">
             <span class="portal-icon">💾</span>
-            <span class="portal-badge">Database Optimization</span>
+            <span class="portal-badge">Databases & Storage</span>
         </div>
         <div class="portal-vol">Volume 8</div>
-        <h3 class="portal-title"><a href="Volume-8-Database-SQL.html">Database Engine Internals & SQL Server</a></h3>
-        <p class="portal-desc">3-Valued NULL logic, Physical joins (Nested/Merge/Hash), B-Tree page internals, Index Seek vs Scan, ACID WAL logging, Deadlocks, Isolation levels.</p>
+        <h3 class="portal-title"><a href="Volume-8-Database-SQL.html">Database Systems & High-Performance SQL</a></h3>
+        <p class="portal-desc">B-Tree vs LSM, ACID serializability, Deadlocks & isolation levels, Partitioning, Execution plan operators, Stored proc recompiles & Redis cache patterns.</p>
         <a href="Volume-8-Database-SQL.html" class="portal-cta">Launch Chapter →</a>
     </div>
     
     <div class="portal-card">
         <div class="portal-card-top">
-            <span class="portal-icon">📡</span>
-            <span class="portal-badge">Distributed Architecture</span>
+            <span class="portal-icon">☁️</span>
+            <span class="portal-badge">Distributed Systems</span>
         </div>
         <div class="portal-vol">Volume 9</div>
         <h3 class="portal-title"><a href="Volume-9-Microservices.html">Microservices & Distributed Systems</a></h3>
-        <p class="portal-desc">Synchronous REST/gRPC vs Asynchronous Kafka/RabbitMQ, CQRS with MediatR, Event Sourcing, Saga orchestration, Outbox pattern, Polly resilience.</p>
+        <p class="portal-desc">Monolith decomposition, Saga orchestration vs choreography, Outbox pattern, MassTransit/RabbitMQ, Distributed locking, gRPC, Idempotency.</p>
         <a href="Volume-9-Microservices.html" class="portal-cta">Launch Chapter →</a>
     </div>
     
     <div class="portal-card">
         <div class="portal-card-top">
-            <span class="portal-icon">🏗️</span>
-            <span class="portal-badge">Scale & Architecture</span>
+            <span class="portal-icon">📐</span>
+            <span class="portal-badge">Large-Scale Architecture</span>
         </div>
         <div class="portal-vol">Volume 10</div>
-        <h3 class="portal-title"><a href="Volume-10-System-Design.html">Enterprise System Design</a></h3>
-        <p class="portal-desc">5-step framework, CAP/PACELC, URL shortener, Notification system, 10k TPS Payment system, E-commerce OMS, Real-time chat, File storage.</p>
+        <h3 class="portal-title"><a href="Volume-10-System-Design.html">System Design: Enterprise Case Studies</a></h3>
+        <p class="portal-desc">Complete architectures for Payment Gateway (Idempotency, 2PC), Notification Hub (SignalR/WebSockets), Distributed Rate Limiter & URL Shortener.</p>
         <a href="Volume-10-System-Design.html" class="portal-cta">Launch Chapter →</a>
     </div>
     
     <div class="portal-card">
         <div class="portal-card-top">
-            <span class="portal-icon">🎯</span>
-            <span class="portal-badge">Interview Defense</span>
+            <span class="portal-icon">💼</span>
+            <span class="portal-badge">Senior Project Defense</span>
         </div>
         <div class="portal-vol">Volume 11</div>
-        <h3 class="portal-title"><a href="Volume-11-Project-Interview-Mastery.html">Project Interview Mastery & Walkthroughs</a></h3>
-        <p class="portal-desc">Defending architectural choices in interviews: 'Why CQRS?', 'Why PostgreSQL?', live debugging war stories, production outage handling.</p>
+        <h3 class="portal-title"><a href="Volume-11-Project-Interview-Mastery.html">Project Interview Mastery & Technical Narrative</a></h3>
+        <p class="portal-desc">How to defend complex projects (Healthcare EHR, Core Banking, Multi-Tenant SaaS), architectural decisions, production incidents, post-mortems.</p>
         <a href="Volume-11-Project-Interview-Mastery.html" class="portal-cta">Launch Chapter →</a>
     </div>
     
     <div class="portal-card">
         <div class="portal-card-top">
-            <span class="portal-icon">🏆</span>
-            <span class="portal-badge">155+ Master Scenarios</span>
+            <span class="portal-icon">🎯</span>
+            <span class="portal-badge">Interview Playbook</span>
         </div>
         <div class="portal-vol">Volume 12</div>
-        <h3 class="portal-title"><a href="Volume-12-Interview-Question-Bank.html">The Master Interview Question Bank</a></h3>
-        <p class="portal-desc">155 granular questions across 10 categories with Expected Depth, Key Answer Points, The Trap, and Senior Follow-up questions.</p>
+        <h3 class="portal-title"><a href="Volume-12-Interview-Question-Bank.html">Master Interview Question Bank & Verbatim Transcripts</a></h3>
+        <p class="portal-desc">Over 150+ categorized senior-level .NET technical questions with verbatim transcripts from Infosys, TCS, Cognizant, Wipro, and Accenture.</p>
         <a href="Volume-12-Interview-Question-Bank.html" class="portal-cta">Launch Chapter →</a>
     </div>
     

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Volume 12: The Master Interview Question Bank | .NET Backend Encyclopedia</title>
+    <title>Volume 12: Master Interview Question Bank & Verbatim Transcripts | .NET Backend Encyclopedia</title>
     <!-- Prevent theme flash -->
     <script>
         (function() {
@@ -24,9 +24,11 @@
     --bg-page: #0b0f19;
     --bg-surface: #111827;
     --bg-surface-elevated: #1f2937;
+    --bg-surface-hover: #283548;
     --bg-code: #030712;
     --border: #374151;
     --border-light: #4b5563;
+    --border-highlight: #60a5fa;
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
     --text-dim: #6b7280;
@@ -34,6 +36,7 @@
     --primary: #3b82f6;
     --primary-hover: #60a5fa;
     --primary-glow: rgba(59, 130, 246, 0.15);
+    --primary-glow-strong: rgba(59, 130, 246, 0.3);
     --accent: #8b5cf6;
     --success: #10b981;
     --warning: #f59e0b;
@@ -48,15 +51,20 @@
     --code-color: #f87171;
     --hero-bg: linear-gradient(135deg, rgba(31, 41, 55, 0.75) 0%, rgba(17, 24, 39, 0.95) 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --accordion-header-bg: #151e2e;
+    --accordion-header-hover: #1c273c;
+    --accordion-active-border: #3b82f6;
 }
 
 [data-theme="light"] {
     --bg-page: #f8fafc;
     --bg-surface: #ffffff;
     --bg-surface-elevated: #f1f5f9;
+    --bg-surface-hover: #e2e8f0;
     --bg-code: #0f172a;
     --border: #e2e8f0;
     --border-light: #cbd5e1;
+    --border-highlight: #2563eb;
     --text-main: #0f172a;
     --text-muted: #475569;
     --text-dim: #64748b;
@@ -64,6 +72,7 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-glow: rgba(37, 99, 235, 0.1);
+    --primary-glow-strong: rgba(37, 99, 235, 0.22);
     --accent: #7c3aed;
     --success: #059669;
     --warning: #b45309;
@@ -78,6 +87,9 @@
     --code-color: #b91c1c;
     --hero-bg: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --accordion-header-bg: #f8fafc;
+    --accordion-header-hover: #eef2f6;
+    --accordion-active-border: #2563eb;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -93,7 +105,7 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* SIDEBAR */
+/* SIDEBAR - STRICT FIXED 300px (NEVER OVERLAPS CONTENT) */
 #sidebar {
     width: 300px;
     background-color: var(--bg-surface);
@@ -206,33 +218,35 @@ body {
 .nav-vol { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
 .nav-link.active .nav-vol { color: var(--primary); }
 
-/* CONTENT AREA */
+/* CONTENT WRAPPER - PROPER MARGIN LEFT TO PREVENT OVERLAP */
 #content-wrapper {
     margin-left: 300px;
     flex: 1;
     display: flex;
     justify-content: center;
     padding: 40px 30px;
+    min-width: 0;
 }
 
 #main-content {
-    max-width: 880px;
+    max-width: 900px;
     width: 100%;
+    min-width: 0;
 }
 
 /* RIGHT TABLE OF CONTENTS */
 #toc-sidebar {
-    width: 250px;
+    width: 260px;
     position: sticky;
     top: 40px;
     height: calc(100vh - 80px);
     overflow-y: auto;
-    padding-left: 28px;
-    margin-left: 20px;
+    padding-left: 24px;
+    margin-left: 24px;
     display: none;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1320px) {
     #toc-sidebar { display: block; }
 }
 
@@ -258,7 +272,8 @@ body {
 }
 
 .toc-link:hover { color: var(--primary); }
-.toc-item.level-3 { padding-left: 10px; }
+.toc-item.level-2 { padding-left: 10px; }
+.toc-item.level-3 { padding-left: 18px; font-size: 0.74rem; color: var(--text-dim); }
 
 /* CHAPTER HERO */
 .chapter-hero {
@@ -266,7 +281,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 32px 36px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     box-shadow: var(--card-shadow);
 }
 
@@ -296,7 +311,7 @@ body {
 }
 
 .chapter-hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 800;
     color: var(--heading-color);
     margin-bottom: 12px;
@@ -309,32 +324,264 @@ body {
     line-height: 1.6;
 }
 
+/* ========================================================
+   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
+   ======================================================== */
+.focus-control-bar {
+    position: sticky;
+    top: 14px;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.focus-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.focus-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.focus-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    color: var(--primary-hover);
+}
+
+.focus-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border-light);
+    transition: .25s ease;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s ease;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+.toggle-label-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+/* ========================================================
+   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
+   ======================================================== */
+.chapter-accordion {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chapter-accordion:hover {
+    border-color: var(--border-light);
+}
+
+.chapter-accordion[open] {
+    border-color: var(--accordion-active-border);
+    box-shadow: 0 6px 26px var(--primary-glow-strong);
+}
+
+.chapter-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--accordion-header-bg);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-accordion-header::-webkit-details-marker {
+    display: none;
+}
+
+.chapter-accordion-header:hover {
+    background: var(--accordion-header-hover);
+}
+
+.chapter-accordion[open] > .chapter-accordion-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface-elevated);
+}
+
+.accordion-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.accordion-badge {
+    background: var(--primary-glow);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.accordion-title-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1.35;
+}
+
+.accordion-status-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+.accordion-status-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.accordion-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-page);
+    color: var(--text-muted);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, color 0.2s;
+}
+
+.chapter-accordion[open] > .chapter-accordion-header .accordion-chevron {
+    transform: rotate(180deg);
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.chapter-accordion-body {
+    padding: 28px 30px;
+    animation: accordionFadeIn 0.25s ease-out;
+}
+
+@keyframes accordionFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HIGHLIGHT ON TARGET JUMP */
+.flash-highlight {
+    outline: 2px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow-strong);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+}
+
 /* TYPOGRAPHY */
 h1, h2, h3, h4, h5 { color: var(--heading-color); font-weight: 700; line-height: 1.3; }
 
 h1 {
     font-size: 1.85rem;
-    margin: 44px 0 18px 0;
+    margin: 40px 0 16px 0;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
     color: var(--primary);
 }
 
 h2 {
-    font-size: 1.4rem;
-    margin: 36px 0 14px 0;
+    font-size: 1.35rem;
+    margin: 32px 0 14px 0;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
+    color: var(--heading-color);
 }
 
 h3 {
-    font-size: 1.15rem;
-    margin: 26px 0 10px 0;
+    font-size: 1.1rem;
+    margin: 22px 0 10px 0;
+    color: var(--heading-color);
 }
 
 h4 {
-    font-size: 0.98rem;
-    margin: 18px 0 8px 0;
+    font-size: 0.95rem;
+    margin: 16px 0 8px 0;
     color: var(--warning);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -351,7 +598,7 @@ a:hover { text-decoration: underline; }
     background: var(--bg-code);
     border: 1px solid var(--border);
     border-radius: 10px;
-    margin: 22px 0;
+    margin: 20px 0;
     overflow: hidden;
     box-shadow: var(--card-shadow);
 }
@@ -664,7 +911,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-8-Database-SQL.html" class="nav-link ">
                 <span class="nav-icon">💾</span>
-                <span>Database Engine Internals & SQL Server</span>
+                <span>Database Systems & High-Performance SQL</span>
                 <span class="nav-vol">V8</span>
             </a>
         </li>
@@ -672,7 +919,7 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-9-Microservices.html" class="nav-link ">
-                <span class="nav-icon">📡</span>
+                <span class="nav-icon">☁️</span>
                 <span>Microservices & Distributed Systems</span>
                 <span class="nav-vol">V9</span>
             </a>
@@ -681,8 +928,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-10-System-Design.html" class="nav-link ">
-                <span class="nav-icon">🏗️</span>
-                <span>Enterprise System Design</span>
+                <span class="nav-icon">📐</span>
+                <span>System Design: Enterprise Case Studies</span>
                 <span class="nav-vol">V10</span>
             </a>
         </li>
@@ -690,8 +937,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-11-Project-Interview-Mastery.html" class="nav-link ">
-                <span class="nav-icon">🎯</span>
-                <span>Project Interview Mastery & Walkthroughs</span>
+                <span class="nav-icon">💼</span>
+                <span>Project Interview Mastery & Technical Narrative</span>
                 <span class="nav-vol">V11</span>
             </a>
         </li>
@@ -699,8 +946,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-12-Interview-Question-Bank.html" class="nav-link active">
-                <span class="nav-icon">🏆</span>
-                <span>The Master Interview Question Bank</span>
+                <span class="nav-icon">🎯</span>
+                <span>Master Interview Question Bank & Verbatim Transcripts</span>
                 <span class="nav-vol">V12</span>
             </a>
         </li>
@@ -712,16 +959,36 @@ li::marker { color: var(--primary); }
         <main id="main-content">
             <div class="chapter-hero">
                 <div class="hero-meta">
-                    <span class="hero-badge">155+ Master Scenarios</span>
+                    <span class="hero-badge">Interview Playbook</span>
                     <span class="hero-vol">Volume 12</span>
                 </div>
-                <h1>The Master Interview Question Bank</h1>
-                <p>155 granular questions across 10 categories with Expected Depth, Key Answer Points, The Trap, and Senior Follow-up questions.</p>
+                <h1>Master Interview Question Bank & Verbatim Transcripts</h1>
+                <p>Over 150+ categorized senior-level .NET technical questions with verbatim transcripts from Infosys, TCS, Cognizant, Wipro, and Accenture.</p>
+            </div>
+
+            <!-- ADHD-FRIENDLY INTERACTIVE FOCUS CONTROLS -->
+            <div class="focus-control-bar">
+                <div class="focus-actions">
+                    <button class="focus-btn" id="btn-expand-all" title="Open all chapters for full scroll">
+                        <span>📂</span> Expand All
+                    </button>
+                    <button class="focus-btn" id="btn-collapse-all" title="Collapse all chapters to section headers">
+                        <span>📁</span> Collapse All
+                    </button>
+                </div>
+                <div class="focus-toggle-wrap">
+                    <label class="focus-mode-toggle" title="When active, opening one section automatically closes previous sections to minimize cognitive load and visual clutter.">
+                        <span class="toggle-switch">
+                            <input type="checkbox" id="single-focus-toggle" checked>
+                            <span class="slider"></span>
+                        </span>
+                        <span class="toggle-label-text">🎯 Single-Chapter Focus (Auto-close others)</span>
+                    </label>
+                </div>
             </div>
 
             <article class="doc-body">
-                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
-<h1 id='volume-12-the-master-interview-question-bank'>Volume 12: The Master Interview Question Bank</h1>
+                <h1 id='volume-12-the-master-interview-question-bank'>Volume 12: The Master Interview Question Bank</h1>
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
@@ -740,7 +1007,7 @@ li::marker { color: var(--primary); }
     <div class="callout-body"><strong>Standard:</strong> Production CLR Runtime Internals, Enterprise Architecture, High-Concurrence Resilience, Zero Fluff</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='interview-evaluation-framework-scoring-rubric'>INTERVIEW EVALUATION FRAMEWORK & SCORING RUBRIC</h2>
 <p>When evaluating candidate responses for mid-level (3 YOE) to senior positions, interviewers at top enterprises (Infosys L2/L3 Technical Panels) and high-bar product firms apply a four-tier candidate classification:</p>
 <div class='table-wrapper'><table>
@@ -750,7 +1017,7 @@ li::marker { color: var(--primary); }
 <tr><td><strong>L3: Engineering Thinker</strong></td><td>Explains internal mechanics (IL, MethodTable, SyncBlock, State Machines, B-Tree indexes, Page Splits, Epoll event loops). Discusses trade-offs.</td><td>Identifies traps immediately; understands memory allocation and query plan costs. Writes self-healing, performant code.</td><td><strong>Strong Hire (SSE / TA)</strong></td></tr>
 <tr><td><strong>L4: Principal / Architect</strong></td><td>Anticipates distributed failure modes, hardware cache lines, GC pressure, lock contention, backward compatibility, and business impact.</td><td>Evaluates architectural patterns through SLA, p99 latency, cost of compute, and operational maintainability.</td><td><strong>Top Tier Hire (Lead / Specialist)</strong></td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='table-of-contents'>TABLE OF CONTENTS</h2>
 <ol>
 <li><a href="#category-1-c-basic--fundamental-internals">Category 1: C# Basic & Fundamental Internals (Q001 - Q015)</a></li>
@@ -764,9 +1031,9 @@ li::marker { color: var(--primary); }
 <li><a href="#category-9-scenario-based-troubleshooting">Category 9: Scenario-Based Troubleshooting (Q128 - Q139)</a></li>
 <li><a href="#category-10-infosys--product-company-specific-traps">Category 10: Infosys & Product Company Specific Traps (Q140 - Q155)</a></li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='category-1-c-basic-fundamental-internals'>CATEGORY 1: C# BASIC & FUNDAMENTAL INTERNALS</h2>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q001-value-types-vs-reference-types-memory-allocation'>Q001: Value Types vs Reference Types Memory Allocation</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -777,7 +1044,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Claiming "Value types always go on the stack, and reference types always go on the heap." Interviewers will immediately ask what happens when a <code>struct</code> is a field of a <code>class</code> or captured in a lambda.</li>
 <li><strong>Follow-up Question</strong>: When a 64-bit runtime creates an instance of a class with an empty body (<code>class Empty {}</code>), how many bytes are allocated on the heap? <em>(Answer: 24 bytes minimum — 8 bytes SyncBlockIndex, 8 bytes MethodTable pointer, 8 bytes minimum padding/alignment).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q002-boxing-and-unboxing-internal-execution-mechanics'>Q002: Boxing and Unboxing Internal Execution Mechanics</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -788,7 +1055,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Believing that unboxing directly copies the value back to the stack. Unboxing only obtains the interior pointer; the subsequent IL <code>ldobj</code> instruction performs the copy. Also, unboxing to an incompatible type (e.g., boxing <code>int</code> and unboxing to <code>long</code> or <code>short</code>) fails at runtime with <code>InvalidCastException</code> even though an implicit numeric conversion exists between them.</li>
 <li><strong>Follow-up Question</strong>: Can you mutate the fields of a boxed struct without unboxing it completely? <em>(Answer: Yes, by casting the boxed object to an interface implemented by the struct that contains mutating methods, or via unsafe reflection/interior pointers).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q003-string-immutability-and-the-clr-string-interning-pool'>Q003: String Immutability and the CLR String Interning Pool</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -800,7 +1067,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using <code>string.Intern()</code> indiscriminately in high-throughput enterprise systems. Objects in the intern pool are rooted by the CLR and cannot be garbage collected until the entire <code>AppDomain</code> unloads, leading to unbounded native memory leaks.</li>
 <li><strong>Follow-up Question</strong>: What is the difference between <code>StringBuilder</code> capacity doubling vs <code>string.Create()</code> with <code>Span&lt;char&gt;</code> introduced in modern .NET? <em>(Answer: <code>StringBuilder</code> amortizes allocations by doubling its internal char buffer array, but still allocates multiple arrays during growth. <code>string.Create()</code> allocates the exact target string memory once on the heap and passes a writable <code>Span&lt;char&gt;</code> to populate it without any intermediate buffer or allocation).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q004-structs-vs-classes-vs-records-class-vs-struct'>Q004: Structs vs Classes vs Records (<code>class</code> vs <code>struct</code>)</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -812,7 +1079,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Candidates confusing record equality with class equality, or assuming <code>record</code> is a value type. By default, <code>record</code> is a <code>record class</code> (reference type).</li>
 <li><strong>Follow-up Question</strong>: Why is the default <code>ValueType.Equals()</code> notorious for poor performance, and how does the CLR internally determine if it can use <code>memcmp</code> (fast bitwise comparison)? <em>(Answer: If the struct contains any reference type fields or memory padding bytes, <code>ValueType.Equals</code> falls back to reflection over all fields. If it has only primitive blittable value types without padding, it uses native bitwise comparison).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q005-static-constructors-cctor-execution-guarantees-and-failure-modes'>Q005: Static Constructors (<code>.cctor</code>) Execution Guarantees and Failure Modes</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -824,7 +1091,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Catching the exception inside calling code and assuming subsequent calls will succeed. Once a static constructor fails, the type is poisoned permanently until process/domain restart.</li>
 <li><strong>Follow-up Question</strong>: What is the difference in CLR initialization timing between a class with an explicit static constructor vs a class that initializes static fields inline without an explicit constructor? <em>(Answer: Inline field initialization marks the class with the <code>beforefieldinit</code> IL metadata flag, allowing the JIT compiler to run initialization lazily at any time before the first static field access. An explicit static constructor removes <code>beforefieldinit</code>, enforcing strict initialization immediately before the first member access or instantiation).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q006-const-vs-readonly-vs-static-readonly'>Q006: <code>const</code> vs <code>readonly</code> vs <code>static readonly</code></h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -835,7 +1102,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Exposing <code>public const</code> across library/assembly boundaries. If Library A changes <code>public const int MaxRetry = 5</code> to <code>10</code>, and Application B references Library A without being recompiled, Application B continues using <code>5</code> because the value was inlined into its IL at build time. Use <code>public static readonly</code> across assemblies.</li>
 <li><strong>Follow-up Question</strong>: Can a <code>readonly</code> field's state be mutated if it holds a reference type? <em>(Answer: Yes. The reference pointer itself is immutable and cannot be redirected to a new object, but the internal state/properties of the referenced object on the heap can be freely mutated).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q007-nullable-reference-types-nrt-mechanics-and-runtime-realities'>Q007: Nullable Reference Types (NRT) Mechanics and Runtime Realities</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -847,7 +1114,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Assuming that using <code>string</code> (non-nullable) guarantees at runtime that the parameter will never be null. Deserializing malformed JSON, reflection, or un-annotated legacy libraries can freely pass <code>null</code>, crashing your code if you omit runtime guards (<code>ArgumentNullException.ThrowIfNull</code>).</li>
 <li><strong>Follow-up Question</strong>: How does EF Core interpret <code>string</code> vs <code>string?</code> in entity property definitions? <em>(Answer: EF Core uses NRT annotations to configure database schema nullability — <code>string</code> becomes <code>NOT NULL</code>, while <code>string?</code> generates a nullable column <code>NULL</code> in SQL DDL migrations).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q008-ref-struct-and-readonly-ref-struct-internals'>Q008: <code>ref struct</code> and <code>readonly ref struct</code> Internals</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -864,7 +1131,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Attempting to use <code>Span&lt;T&gt;</code> as a private field in an ASP.NET Core singleton service or storing it inside an async method across an <code>await</code> call.</li>
 <li><strong>Follow-up Question</strong>: Why does <code>Memory&lt;T&gt;</code> exist if <code>Span&lt;T&gt;</code> provides high-performance memory slicing? <em>(Answer: Because <code>Span&lt;T&gt;</code> is a <code>ref struct</code> constrained to the stack, it cannot live on the heap. <code>Memory&lt;T&gt;</code> is a standard struct that can live on the heap, allowing it to be stored in classes, used across async boundaries, and sliced into spans on demand via <code>.Span</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q009-struct-mutation-traps-and-defensive-copying'>Q009: Struct Mutation Traps and Defensive Copying</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -876,7 +1143,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using mutable structs with <code>in</code> parameters to "save memory" in high-frequency trading or math routines. If the struct is not <code>readonly</code>, method calls create millions of hidden stack copies per second, worsening performance.</li>
 <li><strong>Follow-up Question</strong>: What happens when you mutate a struct inside an array using an indexer vs a foreach loop? <em>(Answer: Mutating <code>array[i].Field = 5</code> directly updates the memory in-place inside the array's contiguous memory block. Mutating via a <code>foreach</code> loop is a compiler error because iteration variables are read-only copies).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q010-garbage-collector-fundamentals-roots-generations-and-collection-triggers'>Q010: Garbage Collector Fundamentals: Roots, Generations, and Collection Triggers</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -891,7 +1158,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Believing that calling <code>GC.Collect()</code> improves application performance. In production, calling <code>GC.Collect()</code> forces a Gen 2 sweep, halts application threads (Stop-The-World pause), ruins generation balancing algorithms, and degrades throughput.</li>
 <li><strong>Follow-up Question</strong>: What are the Large Object Heap (LOH) and Pinned Object Heap (POH), and what thresholds apply? <em>(Answer: Objects $\ge$ 85,000 bytes go directly to the LOH. The POH, introduced in .NET 5, holds objects pinned for native interop to avoid SOH fragmentation. Both are collected during Gen 2 collections).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q011-the-standard-dispose-pattern-and-safehandle'>Q011: The Standard Dispose Pattern and <code>SafeHandle</code></h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -906,7 +1173,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Writing finalizers (<code>~ClassName()</code>) on classes that only hold managed disposable dependencies (like <code>HttpClient</code> or <code>SqlConnection</code>). This moves the object into Gen 2 and drastically increases GC overhead. Finalizers should <em>only</em> exist when holding raw <code>IntPtr</code> native resources directly.</li>
 <li><strong>Follow-up Question</strong>: How does <code>IAsyncDisposable</code> with <code>DisposeAsync()</code> differ from <code>IDisposable</code>, and when must you use it? <em>(Answer: <code>DisposeAsync</code> enables flushing asynchronous network streams, completing disk writes, and returning pooled connections asynchronously without blocking calling threads on OS I/O).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q012-the-is-and-as-operators-and-pattern-matching'>Q012: The <code>is</code> and <code>as</code> Operators and Pattern Matching</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -917,7 +1184,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using <code>as</code> on non-nullable value types (e.g., <code>obj as int</code>), which produces a compiler error because <code>int</code> cannot be null (must use <code>obj as int?</code>).</li>
 <li><strong>Follow-up Question</strong>: How does C# 9+ switch pattern matching handle relational and logical patterns? <em>(Answer: Compiles complex multi-condition branches into jump tables or nested comparisons, optimizing CPU branch prediction).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q013-method-overriding-vs-method-hiding-override-vs-new'>Q013: Method Overriding vs Method Hiding (<code>override</code> vs <code>new</code>)</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -927,7 +1194,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Believing <code>new</code> overrides the behavior of the base class. If a framework invokes the method through a base class pointer or interface, the derived <code>new</code> implementation is completely bypassed.</li>
 <li><strong>Follow-up Question</strong>: What happens if an interface method is implemented implicitly in a base class, and a derived class defines a method with the same signature using <code>new</code>? <em>(Answer: An interface reference pointing to the derived instance will still invoke the base class implementation unless the derived class explicitly re-implements the interface).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q014-exception-handling-internals-cost-of-exceptions-and-throw-vs-throw-ex'>Q014: Exception Handling Internals: Cost of Exceptions and <code>throw</code> vs <code>throw ex</code></h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -938,7 +1205,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using <code>throw ex</code> inside a catch block to "log and rethrow", destroying production troubleshooting capability.</li>
 <li><strong>Follow-up Question</strong>: What are exception filters (<code>catch (Exception ex) when (...)</code>), and why are they performant compared to catching and re-throwing? <em>(Answer: Exception filters execute during the first pass of exception handling before the stack is unwound. If the condition is false, the stack remains intact without entering the catch block or unwinding frames).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q015-enums-bitwise-flags-and-underlying-storage-types'>Q015: Enums, Bitwise Flags, and Underlying Storage Types</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -950,9 +1217,9 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Defining flag values linearly ($1, 2, 3, 4, 5$). Setting value $3$ unintentionally activates both bits $1$ and $2$, causing logical bugs in permission checks.</li>
 <li><strong>Follow-up Question</strong>: Can an enum variable hold a numeric value that is not explicitly defined in its declaration? <em>(Answer: Yes, enums are essentially strongly typed numbers; any integer within the underlying type range can be cast to the enum without throwing an exception).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='category-2-c-advanced-runtime-internals'>CATEGORY 2: C# ADVANCED & RUNTIME INTERNALS</h2>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q016-clr-generics-implementation-specialization-vs-sharing'>Q016: CLR Generics Implementation: Specialization vs Sharing</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -963,7 +1230,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Assuming <code>List&lt;int&gt;</code> and <code>List&lt;string&gt;</code> share native machine code under the hood. Value types never share machine code with other types.</li>
 <li><strong>Follow-up Question</strong>: What is the impact of generic static fields (e.g., <code>class Cache&lt;T&gt; { public static int Count; }</code>)? <em>(Answer: Every unique closed generic type gets its own independent static field instance: <code>Cache&lt;int&gt;.Count</code> is completely isolated from <code>Cache&lt;string&gt;.Count</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q017-generic-variance-covariance-out-vs-contravariance-in'>Q017: Generic Variance: Covariance (<code>out</code>) vs Contravariance (<code>in</code>)</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -975,7 +1242,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Trying to make <code>IList&lt;T&gt;</code> covariant. If <code>IList&lt;Animal&gt; animals = new List&lt;Dog&gt;()</code> were allowed, you could execute <code>animals.Add(new Cat())</code>, corrupting type safety at runtime.</li>
 <li><strong>Follow-up Question</strong>: Can generic variance be used with value types (e.g., converting <code>IEnumerable&lt;int&gt;</code> to <code>IEnumerable&lt;object&gt;</code>)? <em>(Answer: No. Variance only applies to reference conversions. Value types require memory transformation/boxing, which is prohibited in generic variance).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q018-delegates-vs-events-and-delegate-memory-leaks'>Q018: Delegates vs Events and Delegate Memory Leaks</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -986,7 +1253,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Failing to unsubscribe from events in long-lived publishers, creating silent Gen 2 memory leaks.</li>
 <li><strong>Follow-up Question</strong>: What design pattern eliminates this memory leak when explicit un-subscription is difficult to track? <em>(Answer: The Weak Event pattern, using <code>WeakReference</code> or Microsoft's <code>WeakEventManager</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q019-variable-capture-in-closures-and-lambda-internals'>Q019: Variable Capture in Closures and Lambda Internals</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -998,7 +1265,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using lambda expressions in high-frequency LINQ queries inside tight loops, unknowingly allocating thousands of compiler-generated display classes and delegate instances per second.</li>
 <li><strong>Follow-up Question</strong>: What keyword was introduced in C# 9 to guarantee that a lambda does not capture any outer state, preventing unexpected heap allocations? <em>(Answer: The <code>static</code> lambda keyword, e.g., <code>static (x, y) =&gt; x + y</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q020-linq-deferred-execution-vs-immediate-execution'>Q020: LINQ Deferred Execution vs Immediate Execution</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -1009,7 +1276,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Evaluating <code>if (query.Any()) { foreach(var x in query) { ... } }</code> against an external database or expensive API without materializing it, executing two full queries.</li>
 <li><strong>Follow-up Question</strong>: How does <code>IEnumerable&lt;T&gt;</code> differ from <code>IQueryable&lt;T&gt;</code> in deferred execution? <em>(Answer: <code>IEnumerable&lt;T&gt;</code> executes in-memory LINQ-to-Objects via compiled delegate delegates; <code>IQueryable&lt;T&gt;</code> constructs an Expression Tree (<code>Expression</code>) translated by a query provider like EF Core into native SQL).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q021-expression-trees-vs-compiled-delegates'>Q021: Expression Trees vs Compiled Delegates</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1022,7 +1289,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Passing a method call that cannot be translated into an Expression Tree in an EF Core query (e.g., <code>Where(x =&gt; CustomMethod(x.Id))</code>), which will throw runtime translation exceptions in modern EF Core.</li>
 <li><strong>Follow-up Question</strong>: Why does <code>Expression.Compile()</code> have a high CPU cost, and how does the Dapper library achieve fast mapping without it? <em>(Answer: <code>.Compile()</code> invokes the runtime JIT compiler to generate a DynamicMethod and emit IL; Dapper uses lightweight IL emit (<code>ILGenerator</code>) and caches the emitted delegates by SQL query hash).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q022-spant-and-readonlyspant-internals-and-memory-safety'>Q022: <code>Span&lt;T&gt;</code> and <code>ReadOnlySpan&lt;T&gt;</code> Internals and Memory Safety</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1048,7 +1315,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Confusing <code>Span&lt;T&gt;</code> with an array. <code>Span&lt;T&gt;</code> does not own the memory; it is a temporary viewing window. If the underlying unmanaged buffer is freed or the stack frame pops, the span points to corrupted memory.</li>
 <li><strong>Follow-up Question</strong>: How does <code>MemoryExtensions.AsSpan()</code> optimize string operations like parsing an ISO 8601 date string? <em>(Answer: Slices substrings out of the original string as <code>ReadOnlySpan&lt;char&gt;</code> without allocating a single intermediate string object on the heap, allowing zero-allocation parsing with <code>int.Parse</code> or <code>DateTime.Parse</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q023-method-parameter-modifiers-ref-out-in'>Q023: Method Parameter Modifiers: <code>ref</code>, <code>out</code>, <code>in</code></h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1059,7 +1326,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using <code>in</code> parameters with small primitive types like <code>int</code> or <code>bool</code>. Passing an 8-byte reference pointer for a 4-byte <code>int</code> is slower than passing the value directly on CPU registers.</li>
 <li><strong>Follow-up Question</strong>: What is <code>ref readonly</code> return, and where is it used in the BCL? <em>(Answer: Returns a reference to internal memory without allowing the caller to mutate it; heavily used in collections like <code>CollectionsMarshal.AsSpan</code> or matrix calculations).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q024-garbage-collection-large-object-heap-loh-fragmentation-and-pinned-object-heap-poh'>Q024: Garbage Collection: Large Object Heap (LOH) Fragmentation and Pinned Object Heap (POH)</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1071,7 +1338,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Allocating large byte arrays repeatedly in high-throughput network or file processing code. Use <code>ArrayPool&lt;T&gt;.Shared.Rent()</code> to reuse memory buffers and completely avoid LOH churn.</li>
 <li><strong>Follow-up Question</strong>: How does <code>ArrayPool&lt;T&gt;.Shared</code> handle buffer sizes when you request an array of length $1000$? <em>(Answer: It rounds up to the next power of two or bucket size, returning an array larger than requested. Developers must slice it to the requested length and return it via <code>.Return()</code> when finished).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q025-the-async-await-state-machine-under-the-hood'>Q025: The <code>async</code> / <code>await</code> State Machine Under the Hood</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1091,7 +1358,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Thinking <code>async</code> creates a new thread. Pure asynchronous operations (like network sockets or file reads via OS I/O completion ports / IOCP) consume zero threads while awaiting.</li>
 <li><strong>Follow-up Question</strong>: What is the memory cost of the compiler-generated async state machine, and how did Microsoft optimize it in modern .NET? <em>(Answer: For <code>async Task</code>, the state machine is allocated on the heap if it yields; in .NET Core/6+, <code>AsyncMethodBuilderCache</code> and pooled builder types reduce or eliminate these allocations for hot paths).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q026-synchronizationcontext-and-configureawaitfalse'>Q026: <code>SynchronizationContext</code> and <code>ConfigureAwait(false)</code></h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1103,7 +1370,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Believing that <code>ConfigureAwait(false)</code> guarantees execution on a <em>different</em> thread. If the awaited task is already completed when evaluated (<code>IsCompleted == true</code>), execution continues synchronously on the <em>same</em> thread.</li>
 <li><strong>Follow-up Question</strong>: Why does <code>ConfigureAwait(false)</code> not eliminate deadlocks if calling code blocks using <code>.Result</code> or <code>.Wait()</code> on classic .NET Framework ASP.NET? <em>(Answer: If the method begins execution on the synchronization context and waits synchronously on an inner async method that wasn't decorated with <code>ConfigureAwait(false)</code>, the inner method attempts to resume on the blocked context, causing a deadlock).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q027-valuetaskt-vs-taskt-performance-vs-hazards'>Q027: <code>ValueTask&lt;T&gt;</code> vs <code>Task&lt;T&gt;</code>: Performance vs Hazards</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1118,7 +1385,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Defaulting to <code>ValueTask</code> for all async methods. If the operation frequently completes asynchronously, wrapping it in <code>ValueTask</code> is slower and larger (struct overhead) than returning a standard <code>Task</code>.</li>
 <li><strong>Follow-up Question</strong>: How does <code>IValueTaskSource</code> enable zero-allocation asynchronous operations that complete asynchronously? <em>(Answer: It allows custom reusable, pooled objects to back the <code>ValueTask</code>, resetting their state upon completion rather than allocating a new <code>Task</code> instance).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q028-threadpool-starvation-and-sync-over-async-deadlocks'>Q028: ThreadPool Starvation and Sync-Over-Async Deadlocks</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1138,7 +1405,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Thinking that wrapping blocking code in <code>Task.Run(() =&gt; LongRunningBlockingCall())</code> solves ThreadPool starvation. It actually burns another ThreadPool thread! Use proper async APIs or configure dedicated threads.</li>
 <li><strong>Follow-up Question</strong>: How do you identify ThreadPool starvation in a production memory dump using <code>dotnet-dump</code>? <em>(Answer: Run <code>clrthreads</code> and observe a massive queue of work items with thread pool worker threads sitting blocked on <code>Monitor.Wait</code> or <code>ManualResetEventSlim</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q029-asynchronous-concurrency-taskwhenall-vs-parallelforeachasync'>Q029: Asynchronous Concurrency: <code>Task.WhenAll</code> vs <code>Parallel.ForEachAsync</code></h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1148,7 +1415,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Exception handling with <code>Task.WhenAll</code>. If multiple tasks throw exceptions, <code>Task.WhenAll</code> encapsulates them in an <code>AggregateException</code>. However, when using <code>await Task.WhenAll(tasks)</code>, the <code>await</code> keyword unpacks and re-throws only the <em>first</em> exception. The other exceptions are lost unless inspected on the task directly.</li>
 <li><strong>Follow-up Question</strong>: How do you throttle concurrent asynchronous calls in .NET if you are working with an <code>IAsyncEnumerable&lt;T&gt;</code> stream? <em>(Answer: Use <code>SemaphoreSlim</code> with an initial count set to the desired concurrency limit, wrapping each unit of work).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q030-volatile-readwrite-threadmemorybarrier-and-cpu-instruction-reordering'>Q030: Volatile Read/Write, <code>Thread.MemoryBarrier</code>, and CPU Instruction Reordering</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1161,7 +1428,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using <code>volatile</code> to synchronize compound operations like <code>counter++</code>. <code>volatile</code> only guarantees memory visibility; it does <em>not</em> provide atomicity (increment requires read, modify, write).</li>
 <li><strong>Follow-up Question</strong>: Why does double-checked locking require the singleton instance variable to be <code>volatile</code> in C#? <em>(Answer: To prevent the CPU from publishing the reference pointer to other threads before the constructor has finished initializing the object's fields).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q031-interlocked-atomic-operations-vs-lock-monitor'>Q031: <code>Interlocked</code> Atomic Operations vs <code>lock</code> (Monitor)</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1172,7 +1439,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Locking on <code>this</code>, <code>typeof(Class)</code>, or a <code>string</code> literal. These objects can be accessed outside your control, leading to accidental deadlocks across components. Always lock on a private, dedicated <code>new object()</code> instance.</li>
 <li><strong>Follow-up Question</strong>: What lock-free algorithm can be built using <code>Interlocked.CompareExchange</code> in a retry loop? <em>(Answer: Optimistic concurrency / CAS loop: read the current value, compute the new value, execute <code>CompareExchange</code>; if the value changed concurrently, loop and retry).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q032-cancellation-tokens-architecture-and-linked-tokens'>Q032: Cancellation Tokens Architecture and Linked Tokens</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1184,7 +1451,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Catching generic <code>Exception</code> inside a method and suppressing <code>OperationCanceledException</code> / <code>TaskCanceledException</code>, preventing upstream controllers from properly returning HTTP 499 / 503.</li>
 <li><strong>Follow-up Question</strong>: How does ASP.NET Core expose client disconnects via cancellation tokens? <em>(Answer: Through <code>HttpContext.RequestAborted</code>, which fires when the HTTP client terminates the TCP connection before the server finishes streaming the response).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q033-unsafe-code-pointers-and-fixed-memory'>Q033: Unsafe Code, Pointers, and Fixed Memory</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1195,7 +1462,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Leaving managed objects pinned for extended periods. Pinned objects fragment the Small Object Heap (SOH) by creating immovable roadblocks for GC compaction.</li>
 <li><strong>Follow-up Question</strong>: How does modern .NET avoid the need for <code>unsafe</code> and pinning for array/string manipulation? <em>(Answer: Through <code>Span&lt;T&gt;</code>, <code>ReadOnlySpan&lt;T&gt;</code>, and <code>MemoryMarshal</code>, which provide memory safety while delivering direct native-like pointer performance).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q034-assemblyloadcontext-and-dynamic-plugin-architecture'>Q034: AssemblyLoadContext and Dynamic Plugin Architecture</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1207,7 +1474,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Passing an object instantiated from a collectible ALC into a static cache in the host application, permanently blocking the entire ALC from being garbage collected.</li>
 <li><strong>Follow-up Question</strong>: How do you verify that an <code>AssemblyLoadContext</code> has successfully unloaded? <em>(Answer: Wrap the reference in a <code>WeakReference</code>, invoke <code>.Unload()</code>, run a Gen 2 GC, and assert that <code>weakRef.IsAlive == false</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q035-source-generators-vs-reflection-performance-and-aot'>Q035: Source Generators vs Reflection: Performance and AOT</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1218,9 +1485,9 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Assuming source generators can modify existing user code. Source generators can only <em>add</em> new code (e.g., partial classes/methods); they can never alter or rewrite existing code.</li>
 <li><strong>Follow-up Question</strong>: How does <code>[JsonSerializable]</code> source generation reduce startup time and memory footprint in ASP.NET Core Minimal APIs? <em>(Answer: It generates static serializer/deserializer code ahead of time, eliminating the warm-up reflection cost and dynamic IL emit that happens during the first JSON request).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='category-3-aspnet-core-architecture'>CATEGORY 3: ASP.NET CORE ARCHITECTURE</h2>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q036-kestrel-web-server-architecture-and-transport-mechanics'>Q036: Kestrel Web Server Architecture and Transport Mechanics</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1232,7 +1499,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Believing Kestrel cannot be exposed directly to the internet. Modern Kestrel is hardened and enterprise-ready for direct internet exposure (HTTP/2, HTTP/3, QUIC, TLS SNI). However, edge features (WAF, Geo-blocking) often necessitate a fronting reverse proxy.</li>
 <li><strong>Follow-up Question</strong>: What happens if an unhandled exception escapes all middleware in the Kestrel pipeline? <em>(Answer: Kestrel logs a critical diagnostic event, returns a generic HTTP 500 Internal Server Error, and closes the TCP stream if the response has already begun streaming).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q037-httpcontext-lifecycle-and-asynchronous-thread-safety'>Q037: <code>HttpContext</code> Lifecycle and Asynchronous Thread Safety</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1245,7 +1512,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Passing <code>HttpContext</code> into a fire-and-forget <code>Task.Run</code> to do async auditing. Once the parent controller returns, <code>HttpContext</code> is recycled/disposed, causing random crashes in production.</li>
 <li><strong>Follow-up Question</strong>: How does <code>IHttpContextAccessor</code> work under the hood, and what is its performance overhead? <em>(Answer: It uses <code>AsyncLocal&lt;HttpContext&gt;</code> to flow the context across asynchronous awaits; accessing it adds minor lookup overhead and should not be used in tight loops).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q038-middleware-pipeline-execution-and-short-circuiting'>Q038: Middleware Pipeline Execution and Short-Circuiting</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -1257,7 +1524,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Registering middleware in the wrong order. E.g., placing <code>app.UseAuthorization()</code> before <code>app.UseAuthentication()</code>, which leads to authorization checks running against an unauthenticated <code>Anonymous</code> principal.</li>
 <li><strong>Follow-up Question</strong>: What happens if a middleware attempts to modify response headers after calling <code>await next()</code> when downstream components have already started writing to the response body? <em>(Answer: Throws <code>InvalidOperationException: Headers are read-only, response has already started</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q039-the-captive-dependency-trap-in-dependency-injection'>Q039: The Captive Dependency Trap in Dependency Injection</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1276,7 +1543,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Disabling scope validation in production or using Service Locator (<code>serviceProvider.GetService&lt;Scoped&gt;()</code>) inside a Singleton without creating an explicit <code>IServiceScope</code>.</li>
 <li><strong>Follow-up Question</strong>: How do you safely consume a Scoped <code>DbContext</code> inside a Singleton <code>BackgroundService</code>? <em>(Answer: Inject <code>IServiceScopeFactory</code>, call <code>using var scope = _scopeFactory.CreateScope();</code>, and resolve the DbContext from <code>scope.ServiceProvider</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q040-dependency-injection-service-lifetimes-scoped-vs-transient-vs-singleton'>Q040: Dependency Injection Service Lifetimes: Scoped vs Transient vs Singleton</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -1288,7 +1555,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Manually instantiating a disposable service (<code>var svc = new DisposableService()</code>) or resolving Transient disposable services from the Root provider (<code>app.Services.GetRequiredService&lt;TransientDisposable&gt;()</code>). The root provider holds references until app shutdown, creating a memory leak.</li>
 <li><strong>Follow-up Question</strong>: Can a Scoped service inject a Transient service? <em>(Answer: Yes. The Transient service is created fresh for that Scoped service and shares the Scoped service's lifetime).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q041-controller-based-apis-vs-minimal-apis-architecture'>Q041: Controller-based APIs vs Minimal APIs Architecture</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1300,7 +1567,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Believing Minimal APIs cannot handle large architectures. Minimal APIs can be cleanly organized using extension methods, Carter module pattern, or endpoint group mapping (<code>MapGroup</code>).</li>
 <li><strong>Follow-up Question</strong>: How do Endpoint Filters (<code>IEndpointFilter</code>) differ from MVC Action Filters? <em>(Answer: Endpoint filters execute directly in the routing pipeline, wrap arbitrary endpoint handlers including Minimal APIs, and do not carry the overhead of MVC <code>ActionExecutingContext</code> or model state objects).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q042-action-filters-vs-middleware-execution-boundaries'>Q042: Action Filters vs Middleware Execution Boundaries</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1313,7 +1580,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Trying to validate model binding state or inspect action attributes inside standard middleware. The middleware executes before MVC model binding has occurred.</li>
 <li><strong>Follow-up Question</strong>: What is the execution order between Authorization Filters, Resource Filters, Action Filters, and Result Filters? <em>(Answer: Authorization Filters $\to$ Resource Filters (before) $\to$ Action Filters (before) $\to$ Action Execution $\to$ Action Filters (after) $\to$ Result Filters (before) $\to$ Result Execution $\to$ Result Filters (after) $\to$ Resource Filters (after)).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q043-configuration-system-ioptions-vs-ioptionssnapshot-vs-ioptionsmonitor'>Q043: Configuration System: <code>IOptions</code> vs <code>IOptionsSnapshot</code> vs <code>IOptionsMonitor</code></h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1332,7 +1599,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Injecting <code>IOptionsSnapshot&lt;T&gt;</code> into a Singleton service or background worker. It fails with an <code>InvalidOperationException</code> due to scope validation. Use <code>IOptionsMonitor&lt;T&gt;</code>.</li>
 <li><strong>Follow-up Question</strong>: How does <code>IOptionsMonitor</code> detect configuration file modifications on disk? <em>(Answer: It uses physical file provider file watchers / change tokens (<code>IChangeToken</code>) registered with the OS file system notification APIs).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q044-jwt-architecture-token-invalidation-and-refresh-token-rotation'>Q044: JWT Architecture, Token Invalidation, and Refresh Token Rotation</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1354,7 +1621,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Storing sensitive data (passwords, PII, credit card numbers) in a JWT payload. The payload is Base64 encoded, not encrypted, and can be read by anyone.</li>
 <li><strong>Follow-up Question</strong>: What is the difference between symmetric signing (HS256) vs asymmetric signing (RS256) in microservice architectures? <em>(Answer: HS256 requires every microservice to share the same secret key, posing a security risk; RS256 signs tokens using a private key in the Auth service and validates tokens across all microservices using only the public key).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q045-policy-based-authorization-and-custom-requirements'>Q045: Policy-Based Authorization and Custom Requirements</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1372,7 +1639,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Calling <code>context.Fail()</code> inside an authorization handler prematurely when multiple handlers evaluate the same requirement. If any handler calls <code>context.Fail()</code>, authorization fails unconditionally even if another handler succeeds. Call <code>context.Succeed()</code> if satisfied; otherwise do nothing.</li>
 <li><strong>Follow-up Question</strong>: What is the difference between returning <code>ForbidResult()</code> (HTTP 403) vs <code>ChallengeResult()</code> (HTTP 401) from an endpoint? <em>(Answer: 401 Challenge indicates the user is unauthenticated or has invalid credentials; 403 Forbidden indicates the user is authenticated but lacks permission).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q046-output-caching-net-7-vs-response-caching'>Q046: Output Caching (.NET 7+) vs Response Caching</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1386,7 +1653,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Enabling Output Caching on endpoints returning authenticated user-specific data without partitioning the cache key by authentication header or cookie. This causes User A to see User B's cached private profile data! Use <code>.VaryByValue(ctx =&gt; ...)</code> or custom policies.</li>
 <li><strong>Follow-up Question</strong>: Why does Output Caching disable caching automatically on requests with <code>Authorization</code> or <code>Cookie</code> headers by default? <em>(Answer: To prevent accidental security leaks of tenant-specific or user-private data).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q047-backgroundservice-with-scoped-dbcontext-pattern'>Q047: <code>BackgroundService</code> with Scoped DbContext Pattern</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1422,7 +1689,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Creating a single <code>IServiceScope</code> outside the <code>while</code> loop. The <code>DbContext</code> remains alive for days, growing out of memory as tracked entities accumulate.</li>
 <li><strong>Follow-up Question</strong>: What happens if an unhandled exception is thrown inside <code>ExecuteAsync</code> in .NET 6+? <em>(Answer: By default, the host process logs the critical failure, aborts execution, and shuts down the entire application process).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q048-rate-limiting-middleware-architecture-net-7'>Q048: Rate Limiting Middleware Architecture (.NET 7+)</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1441,7 +1708,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Implementing rate limiting purely in-memory across a multi-instance, load-balanced web farm without sticky sessions or distributed token storage. Clients can bypass limits by hitting different server pods.</li>
 <li><strong>Follow-up Question</strong>: How do you implement partitioned rate limiting per client IP or authenticated tenant? <em>(Answer: Use <code>PartitionedRateLimiter.Create&lt;HttpContext, string&gt;</code> to partition buckets dynamically using client IP address or JWT tenant claim).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q049-global-exception-handling-architecture-iexceptionhandler-net-8'>Q049: Global Exception Handling Architecture: <code>IExceptionHandler</code> (.NET 8+)</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1456,7 +1723,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Logging sensitive customer data, raw SQL statements, or connection strings in the ProblemDetails response returned to external clients. Sensitive technical details belong in internal structured logs only.</li>
 <li><strong>Follow-up Question</strong>: What happens if an exception is thrown <em>during</em> the execution of an <code>IExceptionHandler</code>? <em>(Answer: The exception bubbles up to Kestrel's server-level error handler, which aborts the request and issues a blank HTTP 500).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q050-content-negotiation-and-custom-output-formatters'>Q050: Content Negotiation and Custom Output Formatters</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1469,7 +1736,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Setting <code>ReturnHttpNotAcceptable = false</code> (the default). If the client requests XML and XML is not configured, ASP.NET Core silently ignores the header and returns JSON, violating strict REST API contracts.</li>
 <li><strong>Follow-up Question</strong>: How do you implement a custom <code>CsvOutputFormatter</code> for high-speed reporting? <em>(Answer: Inherit from <code>TextOutputFormatter</code>, specify supported media types <code>text/csv</code>, and override <code>WriteResponseBodyAsync</code> using a <code>StreamWriter</code> to serialize object properties directly to the response stream).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q051-cors-mechanics-simple-requests-vs-preflight-options'>Q051: CORS Mechanics: Simple Requests vs Preflight <code>OPTIONS</code></h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1482,7 +1749,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Placing <code>app.UseCors()</code> in the wrong middleware position. In ASP.NET Core, <code>app.UseCors()</code> <strong>must</strong> be placed after <code>UseRouting()</code>, but before <code>UseAuthentication()</code> and <code>UseAuthorization()</code>. If placed after, preflight OPTIONS requests fail with 401/403.</li>
 <li><strong>Follow-up Question</strong>: Can a malicious hacker bypass CORS using Postman or a console curl script? <em>(Answer: Yes, completely. CORS is strictly enforced by web browsers. Backend APIs must use authentication and authorization tokens to secure endpoints).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q052-health-checks-architecture-liveness-vs-readiness-probes-in-kubernetes'>Q052: Health Checks Architecture: Liveness vs Readiness Probes in Kubernetes</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1499,9 +1766,9 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Checking database connection health in a Liveness probe. If the database goes down for 30 seconds, Kubernetes kills and restarts <em>all</em> web pods simultaneously in a cascading restart storm, worsening the outage.</li>
 <li><strong>Follow-up Question</strong>: How do you prevent health checks from overwhelming a failing database during an incident? <em>(Answer: Cache health check results for 10-15 seconds using custom health check caching decorators or response caching).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='category-4-entity-framework-core'>CATEGORY 4: ENTITY FRAMEWORK CORE</h2>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q053-dbcontext-lifecycle-internal-architecture-and-thread-safety'>Q053: <code>DbContext</code> Lifecycle, Internal Architecture, and Thread Safety</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1513,7 +1780,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Sharing a single <code>DbContext</code> instance across multiple parallel worker tasks or using it in a multi-threaded singleton without creating independent scopes.</li>
 <li><strong>Follow-up Question</strong>: How does <code>IDbContextFactory&lt;TContext&gt;</code> resolve concurrency when processing parallel asynchronous streams? <em>(Answer: It creates short-lived, independent <code>DbContext</code> instances per parallel task that can be independently consumed and disposed).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q054-change-tracker-mechanics-and-entity-states'>Q054: Change Tracker Mechanics and Entity States</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1533,7 +1800,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Loading thousands of entities into a tracked <code>DbContext</code>. Running <code>DetectChanges()</code> during <code>SaveChanges()</code> traverses every property of every tracked entity, causing severe CPU spikes.</li>
 <li><strong>Follow-up Question</strong>: What is <code>ChangeTracker.Clear()</code> and when should it be called in batch processing? <em>(Answer: Clears all tracked entities from memory, resetting the change tracker to avoid memory bloat and prevent cross-entity state pollution during batch loops).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q055-asnotracking-vs-asnotrackingwithidentityresolution-performance'>Q055: <code>AsNoTracking</code> vs <code>AsNoTrackingWithIdentityResolution</code> Performance</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1544,7 +1811,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using <code>AsNoTracking()</code> when updating entities later in the same request without explicitly calling <code>db.Attach()</code> or <code>db.Update()</code>.</li>
 <li><strong>Follow-up Question</strong>: How does configuring <code>QueryTrackingBehavior.NoTracking</code> globally at the <code>DbContext</code> level affect application design? <em>(Answer: Sets read-only behavior as default, requiring developers to explicitly opt-in to tracking via <code>.AsTracking()</code> on mutation workflows).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q056-the-n1-query-problem-detection-impact-and-fixes'>Q056: The N+1 Query Problem: Detection, Impact, and Fixes</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -1559,7 +1826,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Enabling lazy loading proxies (<code>UseLazyLoadingProxies()</code>) in modern Web APIs. Returning an entity with navigation properties from a controller causes JSON serializers to trigger a cascade of hundreds of synchronous SQL queries during serialization.</li>
 <li><strong>Follow-up Question</strong>: How can EF Core be configured to automatically throw an exception when an N+1 query or client-side evaluation occurs? <em>(Answer: Configure <code>optionsBuilder.ConfigureWarnings(w =&gt; w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))</code> or log query execution events).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q057-eager-loading-vs-explicit-loading-vs-lazy-loading'>Q057: Eager Loading vs Explicit Loading vs Lazy Loading</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1570,7 +1837,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using Lazy Loading in asynchronous code. Navigation property access (<code>order.Customer.Name</code>) is synchronous, causing thread blocking and unexpected hidden database roundtrips.</li>
 <li><strong>Follow-up Question</strong>: Can you apply a filter inside an <code>.Include()</code> statement in modern EF Core? <em>(Answer: Yes, filtered includes are supported: <code>.Include(o =&gt; o.OrderItems.Where(i =&gt; i.IsActive))</code> translates to a filtered JOIN or subquery).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q058-split-queries-assplitquery-vs-single-query-performance'>Q058: Split Queries (<code>AsSplitQuery</code>) vs Single Query Performance</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1582,7 +1849,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using <code>AsSplitQuery()</code> blindly without transactions on high-frequency update tables, resulting in partial or phantom child entities being stitched to parents.</li>
 <li><strong>Follow-up Question</strong>: How do you configure EF Core to use split queries globally while overriding it for specific atomic queries? <em>(Answer: Call <code>options.UseSqlServer(conn, o =&gt; o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))</code> and override locally with <code>.AsSingleQuery()</code>)</em>.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q059-idempotent-database-migrations-in-cicd-pipelines'>Q059: Idempotent Database Migrations in CI/CD Pipelines</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1622,7 +1889,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Executing migrations containing breaking column renames without a zero-downtime multi-phase deployment strategy (Expand/Contract pattern), causing existing running application instances to fail.</li>
 <li><strong>Follow-up Question</strong>: What is the EF Core Migration Bundle (<code>dotnet ef migrations bundle</code>)? <em>(Answer: A self-contained, executable binary containing the EF Core engine and migrations that executes without requiring the .NET SDK installed on the deployment agent).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q060-optimistic-concurrency-and-dbupdateconcurrencyexception'>Q060: Optimistic Concurrency and <code>DbUpdateConcurrencyException</code></h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1652,7 +1919,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Catching <code>DbUpdateConcurrencyException</code> and doing nothing. You must resolve the conflict: reload the database values via <code>entry.GetDatabaseValuesAsync()</code>, apply merge logic (Client Wins vs Database Wins), and retry <code>SaveChangesAsync()</code>.</li>
 <li><strong>Follow-up Question</strong>: How does Client-Wins vs Store-Wins conflict resolution work in EF Core? <em>(Answer: Store-Wins discards client changes and refreshes current DB state into the entity; Client-Wins updates the entity's original values snapshot with the DB's current values while preserving current modified values, forcing the update).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q061-bulk-operations-executeupdate-and-executedelete-net-7'>Q061: Bulk Operations: <code>ExecuteUpdate</code> and <code>ExecuteDelete</code> (.NET 7+)</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1677,7 +1944,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: The local ChangeTracker is completely unaware of changes made by <code>ExecuteUpdate</code>/<code>ExecuteDelete</code>. If your context already has tracked instances in memory, their state becomes out of sync with the database.</li>
 <li><strong>Follow-up Question</strong>: Can <code>ExecuteUpdateAsync</code> execute subqueries or compute values from existing column data? <em>(Answer: Yes, it can reference existing columns in the SQL update expression, e.g., <code>SetProperty(b =&gt; b.Price, b =&gt; b.Price </em> 1.1m)</code>).*</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q062-global-query-filters-and-multi-tenancy-soft-delete'>Q062: Global Query Filters and Multi-Tenancy / Soft Delete</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1699,7 +1966,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using non-parameterized local variables in Global Query Filters that prevent query cache reuse, or failing to handle navigation properties where child entities are filtered out, causing null references in navigation collections.</li>
 <li><strong>Follow-up Question</strong>: Can multiple global query filters be chained on the same entity type in EF Core? <em>(Answer: No, calling <code>HasQueryFilter</code> a second time overwrites the previous filter. You must combine multiple conditions into a single composite expression).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q063-dbcontext-pooling-adddbcontextpool-mechanics'>Q063: <code>DbContext</code> Pooling (<code>AddDbContextPool</code>) Mechanics</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1719,7 +1986,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Storing user-specific request state (like <code>TenantId</code> or <code>CurrentUserId</code>) in private fields of a pooled <code>DbContext</code> without overriding <code>ResetState()</code>, leaking tenant identity across requests.</li>
 <li><strong>Follow-up Question</strong>: What throughput increase does <code>AddDbContextPool</code> typically yield in high-load microservices? <em>(Answer: Up to 15-20% throughput increase on lightweight read queries by eliminating repeated memory allocations and GC Gen 0 churn).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q064-value-converters-and-shadow-properties'>Q064: Value Converters and Shadow Properties</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1742,7 +2009,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using Value Converters with complex expressions that EF Core cannot translate into SQL, forcing client-side evaluation or ruining index seeks on the database column.</li>
 <li><strong>Follow-up Question</strong>: Can you index a Shadow Property in the database schema? <em>(Answer: Yes, you can define indexes on shadow properties in <code>OnModelCreating</code> via <code>builder.HasIndex(&quot;TenantId&quot;)</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q065-raw-sql-execution-fromsqlinterpolated-vs-fromsqlraw'>Q065: Raw SQL Execution: <code>FromSqlInterpolated</code> vs <code>FromSqlRaw</code></h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1754,7 +2021,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Passing user-supplied strings directly into <code>FromSqlRaw</code> using <code>string.Format</code> or string concatenation.</li>
 <li><strong>Follow-up Question</strong>: What requirements must be met for a raw SQL query to return entities via <code>FromSqlInterpolated</code>? <em>(Answer: Must return all columns mapped by the entity type, column names must match entity property names, and the query cannot contain joins to other tables unless projected into an unmapped keyless type).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q066-compiled-queries-efcompileasyncquery-mechanics'>Q066: Compiled Queries (<code>EF.CompileAsyncQuery</code>) Mechanics</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1775,7 +2042,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using compiled queries for dynamic queries with changing <code>Where</code> conditions. Compiled queries require fixed query structures with varying parameters.</li>
 <li><strong>Follow-up Question</strong>: Why did compiled queries become less critical in EF Core 6/7/8? <em>(Answer: The internal query compilation pipeline was heavily optimized with fast pre-computed hashes and source-generated query plans, making manual compiled queries necessary only for extreme micro-benchmarks).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q067-ef-core-interceptors-vs-savechanges-overrides'>Q067: EF Core Interceptors vs <code>SaveChanges</code> Overrides</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1789,7 +2056,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Modifying the Change Tracker inside an async <code>SavedChanges</code> interceptor. Changes made after database persistence has completed will not be written to the database unless <code>SaveChanges</code> is called again, risking infinite loops.</li>
 <li><strong>Follow-up Question</strong>: How do you inject scoped dependencies (like <code>ICurrentUserService</code>) into an EF Core Interceptor registered as a Singleton? <em>(Answer: Inherit from <code>SaveChangesInterceptor</code> as a Scoped service and register it with <code>AddDbContext&lt;AppDbContext&gt;((sp, options) =&gt; options.AddInterceptors(sp.GetRequiredService&lt;MyInterceptor&gt;()))</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q068-many-to-many-relationships-ef-core-modern-vs-legacy'>Q068: Many-to-Many Relationships: EF Core Modern vs Legacy</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -1813,9 +2080,9 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Thinking modern EF Core cannot access the join table in direct many-to-many. You can configure and map the join table using <code>usingEntity()</code> in fluent API without cluttering the domain entity classes.</li>
 <li><strong>Follow-up Question</strong>: How do you seed data into a many-to-many relationship using Fluent API when no explicit join entity class exists? <em>(Answer: Use <code>builder.SharedTypeEntity&lt;Dictionary&lt;string, object&gt;&gt;(&quot;PostTag&quot;).HasData(...)</code> specifying foreign key property names and values).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='category-5-database-sql-server'>CATEGORY 5: DATABASE & SQL SERVER</h2>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q069-sql-joins-behavior-with-nulls-and-three-valued-logic'>Q069: SQL Joins Behavior with NULLs and Three-Valued Logic</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -1828,7 +2095,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Writing queries like <code>WHERE column &lt;&gt; &#x27;Active&#x27;</code>. If <code>column</code> contains <code>NULL</code>, that row is discarded because <code>NULL &lt;&gt; &#x27;Active&#x27;</code> evaluates to <code>UNKNOWN</code>. Must write <code>WHERE column &lt;&gt; &#x27;Active&#x27; OR column IS NULL</code>.</li>
 <li><strong>Follow-up Question</strong>: How does <code>SET ANSI_NULLS OFF</code> alter join behavior, and why is it deprecated? <em>(Answer: It allows <code>NULL = NULL</code> to evaluate to <code>TRUE</code>, violating ANSI standard SQL and disabling filtered index seek optimizations).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q070-physical-join-operators-hash-match-vs-nested-loops-vs-merge-join'>Q070: Physical Join Operators: Hash Match vs Nested Loops vs Merge Join</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1846,7 +2113,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Assuming Hash Match is always better because it handles large tables. In OLTP systems, unexpected Hash Joins usually indicate missing indexes or poor cardinality estimates resulting from stale statistics.</li>
 <li><strong>Follow-up Question</strong>: What causes a Nested Loops Join to degrade into terrible performance? <em>(Answer: Cardinality estimation errors where the query optimizer expects 1 row from the outer table but receives 1,000,000 rows, executing 1,000,000 individual inner table seeks).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q071-clustered-vs-non-clustered-indexes-and-b-tree-internals'>Q071: Clustered vs Non-Clustered Indexes and B-Tree Internals</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1863,7 +2130,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using a <code>GUID</code> (<code>uniqueidentifier</code>) generated via <code>Guid.NewGuid()</code> as a clustered primary key. Non-sequential GUIDs cause continuous <strong>Page Splits</strong>, high index fragmentation, and severe disk I/O churn. Use sequential GUIDs (<code>NEWSEQUENTIALID()</code>) or integer <code>IDENTITY</code> / <code>BIGINT</code>.</li>
 <li><strong>Follow-up Question</strong>: What is the depth of a typical B-Tree in a table with 10 million rows, and how many page reads does a seek require? <em>(Answer: Typically 3 to 4 levels deep; an index seek requires only 3 to 4 logical page reads to reach the leaf data).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q072-covering-indexes-include-vs-filtered-indexes'>Q072: Covering Indexes (<code>INCLUDE</code>) vs Filtered Indexes</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1891,7 +2158,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Adding every column from a wide table into the <code>INCLUDE</code> list, effectively duplicating the entire table on disk and slowing down <code>INSERT</code>/<code>UPDATE</code> operations.</li>
 <li><strong>Follow-up Question</strong>: Why does a query using parameterized SQL sometimes fail to use a Filtered Index? <em>(Answer: The query optimizer cannot guarantee at compile time that the parameter matches the filtered index predicate unless <code>RECOMPILE</code> or literal constants are used).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q073-sargable-predicates-and-query-performance'>Q073: SARGable Predicates and Query Performance</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -1909,7 +2176,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using <code>.Where(o =&gt; o.OrderDate.Year == 2026)</code> in EF Core, which translates to the SQL <code>DATEPART</code> function, killing index performance.</li>
 <li><strong>Follow-up Question</strong>: How does implicit collation conversion across linked databases affect SARGability? <em>(Answer: Mismatched collations force per-row collation conversions during joins, disabling index seeks and forcing nested loops with full scans).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q074-parameter-sniffing-mechanics-diagnosis-and-remediation'>Q074: Parameter Sniffing: Mechanics, Diagnosis, and Remediation</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1929,7 +2196,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Blindly slapping <code>WITH RECOMPILE</code> on every procedure. In high-throughput OLTP systems handling 5,000 requests/second, recompiling on every call exhausts CPU capacity.</li>
 <li><strong>Follow-up Question</strong>: How do you identify parameter sniffing using SQL Server Dynamic Management Views (DMVs)? <em>(Answer: Query <code>sys.dm_exec_query_stats</code> and look for high variance between <code>min_worker_time</code> and <code>max_worker_time</code> or compare compiled vs runtime parameter values in query execution plans).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q075-acid-properties-in-relational-database-engines'>Q075: ACID Properties in Relational Database Engines</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -1941,7 +2208,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Believing "Consistency" in ACID is the same as "Consistency" in the CAP theorem. ACID Consistency refers to schema and business rule validation within a single node. CAP Consistency refers to linearizability (every read returns the most recent write across distributed nodes).</li>
 <li><strong>Follow-up Question</strong>: What is Delayed Durability (<code>SET DELAYED_DURABILITY = ON</code>), and what is its catastrophic risk? <em>(Answer: Flushes transaction log records to disk asynchronously in batches, dramatically boosting write throughput at the cost of data loss if the server crashes before the log buffer flushes).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q076-transaction-isolation-levels-and-concurrency-phenomena-table'>Q076: Transaction Isolation Levels and Concurrency Phenomena Table</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1962,7 +2229,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using <code>NOLOCK</code> (Read Uncommitted) in financial or reporting systems to "avoid locking". It can return duplicate rows, skipped rows, or half-updated corrupted data due to page splits occurring during the scan.</li>
 <li><strong>Follow-up Question</strong>: How does Serializable isolation prevent phantom reads without locking the entire table? <em>(Answer: By acquiring Key-Range locks on the index B-Tree, locking both existing keys and the range gaps between keys to prevent inserts).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q077-read-committed-snapshot-isolation-rcsi-vs-snapshot-isolation'>Q077: Read Committed Snapshot Isolation (RCSI) vs Snapshot Isolation</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1980,7 +2247,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Enabling RCSI without monitoring <code>tempdb</code> disk space and I/O. Intensive update operations cause massive <code>tempdb</code> growth and I/O saturation.</li>
 <li><strong>Follow-up Question</strong>: How does EF Core behave when running against an RCSI-enabled SQL Server database? <em>(Answer: Read queries no longer block incoming updates, drastically reducing deadlocks and timeouts without requiring explicit isolation configuration).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q078-locks-latches-spinlocks-and-deadlock-graph-analysis'>Q078: Locks, Latches, Spinlocks, and Deadlock Graph Analysis</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -1994,7 +2261,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Handling deadlocks by simply increasing command timeouts. Timeout does not resolve deadlocks; you must implement exponential backoff retry policies in C# and enforce consistent object access ordering in SQL.</li>
 <li><strong>Follow-up Question</strong>: What key information do you look for in an XML Deadlock Graph (<code>system_health</code> session or Extended Events)? <em>(Answer: Look at the <code>&lt;victim-list&gt;</code>, <code>&lt;process-list&gt;</code> (identifying input buffer queries, isolation levels, and SPIDs), and <code>&lt;resource-list&gt;</code> (identifying competing locks on specific index keys or pages)).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q079-keyset-pagination-seek-method-vs-offsetfetch-pagination'>Q079: Keyset Pagination (Seek Method) vs Offset/Fetch Pagination</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -2023,7 +2290,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Keyset pagination does not support random page jumping (e.g., "Jump directly to page 450"). It is designed for continuous infinite scrolling or next/prev feeds.</li>
 <li><strong>Follow-up Question</strong>: How do you implement Keyset pagination in EF Core? <em>(Answer: Using LINQ query predicates chaining the composite keys with <code>.OrderBy().Take()</code>, or leveraging libraries like <code>MR.EntityFrameworkCore.KeysetPagination</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q080-finding-the-2nd-highest-nth-highest-salary-query'>Q080: Finding the 2nd Highest / Nth Highest Salary Query</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -2077,7 +2344,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using <code>ROW_NUMBER()</code> or <code>TOP 1 ... WHERE Salary NOT IN (SELECT TOP 1 ...)</code> without accounting for duplicate salary ties.</li>
 <li><strong>Follow-up Question</strong>: What is the difference between <code>RANK()</code> and <code>DENSE_RANK()</code>? <em>(Answer: <code>RANK()</code> leaves gaps after ties [e.g., 1, 1, 3]; <code>DENSE_RANK()</code> leaves no gaps [e.g., 1, 1, 2]).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q081-statistics-histograms-and-cardinality-estimation'>Q081: Statistics, Histograms, and Cardinality Estimation</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2092,7 +2359,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Relying solely on <code>AUTO_UPDATE_STATISTICS</code>. Auto-update triggers only after roughly $20\% + 500$ rows change in older versions (or dynamic threshold in modern versions). On a 50-million-row table, 1 million rows can change without triggering an update, degrading performance.</li>
 <li><strong>Follow-up Question</strong>: What is the impact of Cardinality Estimation under-estimation vs over-estimation? <em>(Answer: Under-estimation results in inadequate memory grants causing tempdb spills; over-estimation wastes huge memory grants, starving other queries and causing RESOURCE_SEMAPHORE waits).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q082-ctes-vs-temp-tables-table-vs-table-variables-table'>Q082: CTEs vs Temp Tables (<code>#Table</code>) vs Table Variables (<code>@Table</code>)</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -2113,7 +2380,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using Table Variables for large datasets expecting them to "live purely in RAM". Table variables write to <code>tempdb</code> just like temp tables when data exceeds small page thresholds, but lack statistics.</li>
 <li><strong>Follow-up Question</strong>: Can a CTE be indexed? <em>(Answer: No, standard CTEs cannot be indexed; if indexing is required, materialize into a <code>#Temp</code> table or create an Indexed View).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q083-table-partitioning-and-the-sliding-window-pattern'>Q083: Table Partitioning and the Sliding Window Pattern</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2129,7 +2396,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Creating non-aligned indexes on a partitioned table. For <code>SWITCH PARTITION</code> to execute instantly, all clustered and non-clustered indexes must be aligned to the identical partition scheme.</li>
 <li><strong>Follow-up Question</strong>: What is the performance difference between deleting 10 million rows via <code>DELETE FROM Logs WHERE Date &lt; &#x27;2025-01-01&#x27;</code> vs switching a partition? <em>(Answer: <code>DELETE</code> logs millions of row deletions in transaction log taking hours and locking the table; <code>SWITCH PARTITION</code> changes metadata pointers in milliseconds with zero transaction log bloat).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q084-transaction-log-architecture-and-virtual-log-files-vlfs'>Q084: Transaction Log Architecture and Virtual Log Files (VLFs)</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2141,9 +2408,9 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Assuming <code>SHRINKFILE</code> fixes log growth. Shrinking a log file fragments VLFs and causes immediate auto-growth cycles. You must fix the root cause (e.g., unscheduled log backups or uncommitted transactions).</li>
 <li><strong>Follow-up Question</strong>: What does <code>log_reuse_wait_desc</code> in <code>sys.databases</code> reveal? <em>(Answer: Explains why the transaction log cannot be truncated, such as <code>LOG_BACKUP</code>, <code>ACTIVE_TRANSACTION</code>, <code>REPLICATION</code>, or <code>CHECKPOINT</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='category-6-oop-design-patterns'>CATEGORY 6: OOP & DESIGN PATTERNS</h2>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q085-encapsulation-vs-information-hiding'>Q085: Encapsulation vs Information Hiding</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -2155,7 +2422,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Claiming properties with <code>{ get; set; }</code> provide encapsulation. Auto-properties with public setters are syntactically identical to public fields in terms of invariant safety.</li>
 <li><strong>Follow-up Question</strong>: How does Domain-Driven Design (DDD) enforce encapsulation within Aggregate Roots? <em>(Answer: Entities within an aggregate cannot be referenced or mutated directly from outside; all mutations must flow through methods on the Aggregate Root).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q086-interface-vs-abstract-class-decision-matrix'>Q086: Interface vs Abstract Class Decision Matrix</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -2173,7 +2440,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using an abstract class when an interface was required because you wanted to share 3 lines of utility code, locking derived classes into a rigid single-inheritance hierarchy.</li>
 <li><strong>Follow-up Question</strong>: What is the purpose of Default Interface Methods (DIM) in modern C#? <em>(Answer: Allows library authors to evolve an interface by adding new methods with default implementations without breaking existing third-party implementers).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q087-liskov-substitution-principle-lsp-violations-in-enterprise-code'>Q087: Liskov Substitution Principle (LSP) Violations in Enterprise Code</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2191,7 +2458,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: The classic "Square inherits from Rectangle" academic trap. If <code>Rectangle</code> has <code>SetWidth</code> and <code>SetHeight</code>, changing <code>Square.SetWidth</code> unexpectedly mutates height, breaking calling code that assumes independent dimensions.</li>
 <li><strong>Follow-up Question</strong>: How does Refactoring to Interfaces or Composition solve LSP violations caused by forced inheritance hierarchies? <em>(Answer: Split fat base classes into granular interfaces; compose components rather than forcing unnatural inheritance relationships).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q088-interface-segregation-principle-isp-and-fat-interfaces'>Q088: Interface Segregation Principle (ISP) and Fat Interfaces</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -2205,7 +2472,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Creating thousands of single-method interfaces blindly for every small operation where no independent client diversity exists. Apply ISP when distinct clients consume distinct subsets of behavior.</li>
 <li><strong>Follow-up Question</strong>: How does ISP benefit Unit Testing? <em>(Answer: Test fixtures only mock the 1 or 2 methods strictly required for the test scenario, eliminating bloated mock setups).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q089-dependency-inversion-principle-dip-vs-inversion-of-control-ioc-vs-di'>Q089: Dependency Inversion Principle (DIP) vs Inversion of Control (IoC) vs DI</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -2217,7 +2484,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Equating DI with an IoC Container. DI is a design pattern that can be done purely manually ("Pure DI" / "Poor Man's DI"). An IoC container (<code>IServiceProvider</code>, Autofac) is an automated framework tool.</li>
 <li><strong>Follow-up Question</strong>: Why is the Service Locator pattern considered an anti-pattern compared to Constructor Injection? <em>(Answer: Service Locator hides dependencies within class implementations, breaking compile-time safety and API readability, whereas Constructor Injection explicitly declares required contracts).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q090-thread-safe-singleton-pattern-double-checked-locking-vs-lazyt'>Q090: Thread-Safe Singleton Pattern: Double-Checked Locking vs <code>Lazy&lt;T&gt;</code></h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2273,7 +2540,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Omitting the inner null check inside the <code>lock</code> block in double-checked locking, resulting in duplicate instances created during race conditions.</li>
 <li><strong>Follow-up Question</strong>: How does static field initialization (<code>static readonly Singleton Instance = new Singleton();</code>) achieve lazy loading without explicit locks? <em>(Answer: The CLR guarantees that static field initializers execute thread-safely during the <code>.cctor</code> type loading step, which is lazy unless marked <code>beforefieldinit</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q091-factory-method-vs-abstract-factory-pattern-in-microservices'>Q091: Factory Method vs Abstract Factory Pattern in Microservices</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -2288,7 +2555,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Creating complex Abstract Factories for single standalone objects where a simple <code>Func&lt;T&gt;</code> or DI keyed service would suffice.</li>
 <li><strong>Follow-up Question</strong>: How did .NET 8 Keyed Services (<code>builder.Services.AddKeyedScoped</code>) modernize the Factory pattern in ASP.NET Core? <em>(Answer: Allows registering multiple implementations of the same interface with distinct keys and resolving them directly via <code>[FromKeyedServices(&quot;stripe&quot;)] IPaymentProcessor</code>, reducing the need for custom factory classes).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q092-builder-pattern-vs-telescoping-constructor'>Q092: Builder Pattern vs Telescoping Constructor</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -2302,7 +2569,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Allowing the builder to return a partially constructed, invalid domain entity. The <code>Build()</code> method must be the gatekeeper that runs complete business validation before returning the immutable object.</li>
 <li><strong>Follow-up Question</strong>: How does C# 9+ <code>init</code> accessor and record types reduce the necessity of manual Builder classes for simple DTOs? <em>(Answer: Allows object initializer syntax <code>new OrderDto { CustomerId = 1 }</code> while maintaining compile-time immutability after construction).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q093-strategy-pattern-vs-switch-statement-polymorphic-refactoring'>Q093: Strategy Pattern vs Switch Statement / Polymorphic Refactoring</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -2317,7 +2584,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using Strategy pattern when there are only 2 fixed options that will never change. Premature abstraction adds unnecessary indirection.</li>
 <li><strong>Follow-up Question</strong>: How do you dynamically select a Strategy at runtime in ASP.NET Core without using a Service Locator? <em>(Answer: Inject <code>IEnumerable&lt;IPaymentStrategy&gt;</code> into the coordinator; the coordinator queries the collection using a <code>CanHandle(paymentType)</code> method on the strategy).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q094-decorator-pattern-vs-inheritance-scrutor-in-net'>Q094: Decorator Pattern vs Inheritance (Scrutor in .NET)</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2342,7 +2609,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Creating deep decoration chains that swallow exceptions or alter business return values, making call stacks confusing during production debugging.</li>
 <li><strong>Follow-up Question</strong>: How does the MediatR Pipeline Behavior pattern relate to the Decorator pattern? <em>(Answer: MediatR pipeline behaviors (<code>IPipelineBehavior&lt;TRequest, TResponse&gt;</code>) implement the Decorator pattern around MediatR request handlers).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q095-observer-pattern-vs-publish-subscribe-architecture'>Q095: Observer Pattern vs Publish-Subscribe Architecture</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -2359,7 +2626,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Describing event-driven microservices using the term "Observer Pattern". Single-process memory events cannot survive process crashes or scale out across servers.</li>
 <li><strong>Follow-up Question</strong>: What role does Reactive Extensions (Rx.NET) play in the Observer pattern? <em>(Answer: Provides LINQ-style composable queries over asynchronous event streams using <code>IObservable&lt;T&gt;</code>)</em>.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q096-the-repository-unit-of-work-debate-with-ef-core'>Q096: The Repository & Unit of Work Debate with EF Core</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2377,7 +2644,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Exposing <code>IQueryable&lt;T&gt;</code> from a custom repository. This leaks database query translation concerns directly into the presentation layer, completely defeating the purpose of the abstraction.</li>
 <li><strong>Follow-up Question</strong>: Why is EF Core In-Memory Database provider considered an anti-pattern for testing repositories? <em>(Answer: It behaves differently from relational databases: does not enforce referential integrity, supports operations SQL Server doesn't, and hides SQL translation errors. Use Testcontainers with real Docker database instances instead).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q097-chain-of-responsibility-pattern-in-enterprise-architectures'>Q097: Chain of Responsibility Pattern in Enterprise Architectures</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -2392,7 +2659,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Failing to define a terminal condition or failing to handle cases where no handler in the chain processes the request, leaving requests dropped silently.</li>
 <li><strong>Follow-up Question</strong>: How does Chain of Responsibility differ from the Decorator pattern? <em>(Answer: Decorator wraps an object to augment its behavior without breaking the call; Chain of Responsibility can terminate execution at any link and handlers operate independently).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q098-adapter-pattern-vs-facade-pattern'>Q098: Adapter Pattern vs Facade Pattern</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -2408,7 +2675,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Confusing their intents: Adapter changes an existing interface to match another; Facade creates a brand-new simpler interface over many existing components.</li>
 <li><strong>Follow-up Question</strong>: Can an Adapter wrap multiple classes? <em>(Answer: Rarely; if it wraps many classes to simplify interaction, it is acting as a Facade. An Adapter strictly focuses on interface reconciliation).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q099-template-method-pattern-vs-strategy-pattern'>Q099: Template Method Pattern vs Strategy Pattern</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -2425,9 +2692,9 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Choosing Template Method over Strategy because "it's quick to inherit". Subclasses become tightly coupled to base class execution ordering, causing breaking changes when base algorithms evolve.</li>
 <li><strong>Follow-up Question</strong>: How does ASP.NET Core's <code>AuthenticationHandler&lt;TOptions&gt;</code> use the Template Method pattern? <em>(Answer: The base class manages the authentication plumbing and options initialization, invoking the abstract <code>HandleAuthenticateAsync()</code> method implemented by concrete schemes like JWT or Cookie).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='category-7-microservices-distributed-systems'>CATEGORY 7: MICROSERVICES & DISTRIBUTED SYSTEMS</h2>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q100-monolith-to-microservices-trade-offs-and-the-distributed-tax'>Q100: Monolith to Microservices Trade-offs and the "Distributed Tax"</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2442,7 +2709,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Claiming microservices make applications faster. The network latency and serialization overhead makes microservices inherently slower per request than a monolithic in-process call.</li>
 <li><strong>Follow-up Question</strong>: How does a Modular Monolith enforce architectural boundaries without physical process isolation? <em>(Answer: Using C# internal access modifiers, independent projects/assemblies per module, architecture testing tools like ArchUnit.NET or NetArchTest, and separate database schemas).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q101-grpc-vs-rest-with-json-in-high-throughput-microservices'>Q101: gRPC vs REST with JSON in High-Throughput Microservices</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -2459,7 +2726,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Attempting to use gRPC directly in standard web browsers without gRPC-Web proxy support. Standard browsers do not expose low-level HTTP/2 framing controls required by gRPC.</li>
 <li><strong>Follow-up Question</strong>: How does Protobuf achieve backward and forward schema compatibility when fields are added or removed? <em>(Answer: By relying on unique numerical Field Tags rather than field names; unknown tags are preserved or skipped during deserialization).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q102-message-brokers-rabbitmq-vs-apache-kafka-architecture'>Q102: Message Brokers: RabbitMQ vs Apache Kafka Architecture</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2480,7 +2747,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Adding more consumers to a Kafka consumer group than there are partitions. The excess consumers sit completely idle doing zero work.</li>
 <li><strong>Follow-up Question</strong>: What happens in RabbitMQ if a consumer throws an unhandled exception without acknowledging or rejecting a message? <em>(Answer: The TCP socket closes, RabbitMQ marks the message as unacknowledged and requeues it at the head of the queue, potentially causing infinite poison message loops).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q103-the-cqrs-pattern-with-mediatr-in-net'>Q103: The CQRS Pattern with MediatR in .NET</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -2495,7 +2762,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Implementing CQRS by forcing separate physical read/write databases with asynchronous sync for simple CRUD applications. CQRS can be implemented logically within a single database using separate read/write models.</li>
 <li><strong>Follow-up Question</strong>: How do MediatR Pipeline Behaviors streamline cross-cutting concerns in CQRS? <em>(Answer: They wrap request handling with automated validation [FluentValidation], distributed tracing, performance metrics, and transaction management without cluttering handlers).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q104-event-sourcing-mechanics-aggregates-projections-and-snapshots'>Q104: Event Sourcing Mechanics: Aggregates, Projections, and Snapshots</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2508,7 +2775,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Believing Event Sourcing requires CQRS and Microservices. While often paired together, Event Sourcing is strictly a persistence pattern for domain aggregates.</li>
 <li><strong>Follow-up Question</strong>: How do you handle schema changes / versioning to historical domain events that occurred 3 years ago? <em>(Answer: Using Upcasting: transforming older event schema payloads into modern event contracts in memory during rehydration pipeline before aggregate consumption).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q105-the-saga-pattern-choreography-vs-orchestration'>Q105: The Saga Pattern: Choreography vs Orchestration</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2526,7 +2793,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Assuming compensating transactions restore the system to an identical previous state like a SQL <code>ROLLBACK</code>. Compensations are <em>new forward transactions</em> (e.g., a refund charge appears on the customer's credit card statement; the original charge is not erased).</li>
 <li><strong>Follow-up Question</strong>: How does MassTransit State Machine (Automatonymous) persist Saga state across asynchronous steps? <em>(Answer: Using an entity mapped to a database [EF Core or Redis] containing the <code>CorrelationId</code> and <code>CurrentState</code>, resuming state machine execution upon receiving correlation events).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q106-the-outbox-pattern-solving-the-dual-write-problem'>Q106: The Outbox Pattern: Solving the Dual-Write Problem</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2547,7 +2814,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Assuming the Outbox pattern guarantees <strong>Exactly-Once</strong> delivery to consumers. The Outbox pattern guarantees <strong>At-Least-Once</strong> delivery. Network failures during broker ACK can cause duplicate publishes. Consumers must be <strong>idempotent</strong>.</li>
 <li><strong>Follow-up Question</strong>: How does the open-source MassTransit transactional outbox integrate seamlessly with EF Core? <em>(Answer: It intercepts <code>SaveChangesAsync()</code>, saves outbox message entities into the same <code>DbContext</code> transaction, and uses a hosted service to publish and sweep them).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q107-polly-circuit-breaker-states-transitions-and-configuration'>Q107: Polly Circuit Breaker: States, Transitions, and Configuration</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2565,7 +2832,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Wrapping an entire method containing non-idempotent operations (<code>POST /charge-card</code>) with an automatic aggressive Retry policy instead of Circuit Breaker, resulting in customers being billed multiple times during network timeouts.</li>
 <li><strong>Follow-up Question</strong>: How does modern .NET 8 integrate Polly via <code>Microsoft.Extensions.Http.Resilience</code>? <em>(Answer: Introduces <code>AddResilienceHandler</code>, configuring standard Hedging, Timeout, Retry, and Circuit Breaker pipelines via the modernized Polly v8 core engine).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q108-distributed-tracing-opentelemetry-w3c-tracecontext-and-correlationid'>Q108: Distributed Tracing: OpenTelemetry, W3C TraceContext, and CorrelationId</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2585,7 +2852,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Generating a new <code>TraceId</code> inside each microservice rather than extracting and continuing the incoming <code>traceparent</code> context from upstream headers.</li>
 <li><strong>Follow-up Question</strong>: How do you inject and propagate the <code>traceparent</code> context across asynchronous message brokers like RabbitMQ? <em>(Answer: Use OpenTelemetry propagators (<code>TraceContextPropagator.Inject</code>) to inject trace headers into the RabbitMQ <code>IBasicProperties.Headers</code> dictionary on publish, and extract them on consumer receive).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q109-idempotent-message-consumers-in-event-driven-systems'>Q109: Idempotent Message Consumers in Event-Driven Systems</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2613,7 +2880,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Relying on an in-memory cache (like Redis) for idempotency keys without persistent database transaction guarantees. If Redis loses data or evicts the key under memory pressure, duplicate messages will process and corrupt the database.</li>
 <li><strong>Follow-up Question</strong>: What happens if a duplicate message arrives while the first instance is still actively processing? <em>(Answer: The unique index insert or a distributed pessimistic lock will block or abort the second instance, preventing concurrent duplicate execution).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q110-api-gateway-pattern-yarp-vs-ocelot-vs-cloud-native'>Q110: API Gateway Pattern: YARP vs Ocelot vs Cloud Native</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -2628,7 +2895,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Implementing heavy business logic or domain aggregations inside the API Gateway. The Gateway becomes a bloated "distributed monolith in disguise" that blocks deployments and creates scaling bottlenecks.</li>
 <li><strong>Follow-up Question</strong>: How does YARP handle Active and Passive Health Checks for downstream service clusters? <em>(Answer: Passive checks evaluate live traffic responses [e.g., consecutive 5xx errors] to pause routing; Active checks probe designated health endpoints on destination servers at configured intervals).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q111-database-per-service-vs-shared-database-anti-pattern'>Q111: Database-per-Service vs Shared Database Anti-Pattern</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -2645,7 +2912,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Choosing microservices architecture while keeping a single monolithic database because "cross-service joins are convenient". You inherit all the operational pain of microservices with none of the autonomy benefits.</li>
 <li><strong>Follow-up Question</strong>: How do you implement a business query that requires data owned by three different microservices? <em>(Answer: Using API Composition / Gateway Aggregation for simple cases, or CQRS Read Projections listening to event streams from all three services into a denormalized read view).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q112-distributed-caching-strategies-cache-aside-vs-write-through-vs-write-behind'>Q112: Distributed Caching Strategies: Cache-Aside vs Write-Through vs Write-Behind</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2666,7 +2933,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using Cache-Aside without setting an absolute TTL expiration. If an update mutation fails to invalidate the cache key, the stale data persists indefinitely.</li>
 <li><strong>Follow-up Question</strong>: How do you avoid cache invalidation race conditions when an entity updates in the database? <em>(Answer: Delete the cache key after committing the database transaction, rather than updating it, forcing a clean reload on next read).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q113-cap-theorem-vs-pacelc-theorem-in-distributed-architectures'>Q113: CAP Theorem vs PACELC Theorem in Distributed Architectures</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2683,7 +2950,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Believing standard relational databases like SQL Server or PostgreSQL are "CA". In a distributed cluster, if the network partitions between primary and secondary, it must either reject writes (CP) or serve stale reads (AP). A network partition leaves no room for CA.</li>
 <li><strong>Follow-up Question</strong>: Why does an e-commerce shopping cart typically choose AP over CP? <em>(Answer: Business demands that a customer must always be able to add items to their cart [high availability]; temporary minor inventory count discrepancies can be resolved later before checkout).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q114-two-phase-commit-2pc-vs-distributed-sagas'>Q114: Two-Phase Commit (2PC) vs Distributed Sagas</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2701,7 +2968,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Recommending 2PC for modern cloud microservices. 2PC violates microservice autonomy, creates tight availability coupling (availability is the product of all participant availabilities), and destroys throughput.</li>
 <li><strong>Follow-up Question</strong>: What concurrency isolation anomaly can occur during a Saga execution that 2PC prevents? <em>(Answer: Lack of Isolation — intermediate states are visible to concurrent transactions, requiring semantic locks or dirty read countermeasures in business logic).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q115-eventual-consistency-and-read-your-own-writes-guarantee'>Q115: Eventual Consistency and Read-Your-Own-Writes Guarantee</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2720,9 +2987,9 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Solving replication lag by routing ALL read queries across the entire application to the Primary database, defeating the entire purpose of having read replicas.</li>
 <li><strong>Follow-up Question</strong>: How does a CQRS frontend handle eventual consistency when awaiting command completion? <em>(Answer: By displaying optimistic UI states or subscribing to a SignalR WebSocket notification that pushes the updated read model once the projection finishes processing).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='category-8-system-design-scaling-scenarios'>CATEGORY 8: SYSTEM DESIGN & SCALING SCENARIOS</h2>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q116-url-shortener-system-design-tinyurl'>Q116: URL Shortener System Design (TinyURL)</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2742,7 +3009,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Generating random 7-character strings and querying the database in a loop to check if the string already exists. Under heavy write traffic, this causes massive database read amplification and lock contention.</li>
 <li><strong>Follow-up Question</strong>: What is the impact of choosing HTTP 301 vs HTTP 302 on link click analytics? <em>(Answer: HTTP 301 causes web browsers to cache the redirect locally, completely bypassing your servers for subsequent clicks and ruining analytical tracking; HTTP 302 forces every click through your servers).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q117-high-throughput-payment-processing-idempotency-keys'>Q117: High-Throughput Payment Processing & Idempotency Keys</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2769,7 +3036,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Marking the idempotency key as completed <em>before</em> receiving confirmation from the payment gateway. If the gateway times out, the client retry will receive a false cached response without payment actually executing.</li>
 <li><strong>Follow-up Question</strong>: How do you handle downstream payment gateway webhooks confirming payment when the initial HTTP call timed out? <em>(Answer: Payment webhooks carry the gateway's transaction ID; worker acquires a distributed lock on the order, checks if already marked paid, updates state idempotently, and publishes an OrderPaid domain event).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q118-multi-tier-notification-system-architecture'>Q118: Multi-Tier Notification System Architecture</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2789,7 +3056,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Putting all notification types into a single FIFO queue. A marketing blast of 500,000 push notifications will delay time-critical two-factor authentication SMS codes by 30 minutes, blocking users from logging in.</li>
 <li><strong>Follow-up Question</strong>: How do you prevent third-party SMS gateway rate limits from throttling your system? <em>(Answer: Implement a distributed Token Bucket rate limiter in front of outbound provider HTTP clients, smoothing bursts to match provider contractual QPS).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q119-real-time-chat-system-scaling-with-signalr-and-websockets'>Q119: Real-Time Chat System Scaling with SignalR and WebSockets</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2805,7 +3072,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Storing user chat history directly in SignalR memory or trying to broadcast massive binary files over WebSockets. WebSocket channels should only transmit small JSON/Protobuf message payloads; media files should upload directly to Blob storage with URLs shared via chat.</li>
 <li><strong>Follow-up Question</strong>: How do you handle message delivery receipts and offline users in a real-time chat architecture? <em>(Answer: Write the message to a persistent store [Cassandra/Postgres] before attempting real-time socket delivery; if the recipient's connection ID is absent from presence store, dispatch an asynchronous Push Notification).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q120-cache-stampede-thundering-herd-prevention-mechanisms'>Q120: Cache Stampede (Thundering Herd) Prevention Mechanisms</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2841,7 +3108,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Implementing locking using local C# <code>lock(obj)</code> in a load-balanced web farm. In a farm of 20 server instances, local locks still allow 20 concurrent heavy database hits, which can still overload sensitive databases.</li>
 <li><strong>Follow-up Question</strong>: What is the risk of using a distributed mutex lock for cache stampede if the database query hangs? <em>(Answer: All incoming threads queue up waiting for the lock; always configure short lock timeouts and implement stale-while-revalidate fallbacks).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q121-distributed-rate-limiting-with-redis-and-lua-scripts'>Q121: Distributed Rate Limiting with Redis and Lua Scripts</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2875,7 +3142,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using Redis Sliding Window Log storing individual timestamp elements in a Sorted Set (ZSET) for extremely high-frequency APIs ($> 100,000$ req/sec). Memory consumption grows rapidly; use Token Bucket or Sliding Window Counter instead.</li>
 <li><strong>Follow-up Question</strong>: How does client-side rate limiting backoff work? <em>(Answer: Server returns HTTP 429 with <code>Retry-After: &lt;seconds&gt;</code> and rate limit headers [X-RateLimit-Limit, Remaining, Reset]; client respects the header and implements jittered exponential backoff).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q122-scalable-large-file-upload-architecture'>Q122: Scalable Large File Upload Architecture</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2896,7 +3163,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Allowing clients to specify unrestricted file extensions and MIME types without server-side validation during presigned URL generation, opening security vulnerabilities.</li>
 <li><strong>Follow-up Question</strong>: How do you prevent orphaned, incomplete multipart file uploads from accumulating storage costs in cloud storage? <em>(Answer: Configure cloud storage lifecycle management rules to automatically abort and clean up incomplete multipart uploads older than 7 days).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q123-e-commerce-flash-sale-concurrency-inventory-reservation'>Q123: E-Commerce Flash Sale Concurrency & Inventory Reservation</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2940,7 +3207,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Decrementing the database inventory only after the payment gateway call finishes (which takes 2-5 seconds). The inventory will oversell thousands of units in the interim.</li>
 <li><strong>Follow-up Question</strong>: How do you prevent a single malicious user with automated bots from reserving the entire flash sale inventory? <em>(Answer: Enforce strict user authentication, CAPTCHA on checkout button, and a per-user limit of 1 reservation key in Redis via atomic validation).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q124-real-time-leaderboard-system-with-redis-sorted-sets'>Q124: Real-Time Leaderboard System with Redis Sorted Sets</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -2963,7 +3230,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Storing complex user profile objects inside the ZSET member. Store only the minimal <code>UserId</code> in the ZSET; fetch user avatars/names from a separate cache or document store.</li>
 <li><strong>Follow-up Question</strong>: How do you handle tie-breakers when two players have the exact same score in a Redis Sorted Set? <em>(Answer: Encode a timestamp delta into the score as a fractional decimal: $\text{Score} + (1 - \text{Timestamp} / 10^{13})$, so earlier achievers rank higher).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q125-distributed-unique-id-generation-snowflake-vs-uuid-v7'>Q125: Distributed Unique ID Generation: Snowflake vs UUID v7</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -2984,7 +3251,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Snowflake generator clock drift. If the system clock is set backward by NTP synchronization, the generator can produce duplicate IDs unless it detects drift and pauses or uses logical sequence increments.</li>
 <li><strong>Follow-up Question</strong>: Why is GUID v7 superior to sequential GUIDs generated via <code>NEWSEQUENTIALID()</code> in cross-platform .NET applications? <em>(Answer: <code>NEWSEQUENTIALID()</code> is proprietary to SQL Server Windows APIs; GUID v7 can be generated natively in .NET code on Linux, containers, or clients before database insertion).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q126-global-search-autocomplete-system-design'>Q126: Global Search Autocomplete System Design</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3002,7 +3269,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Querying SQL databases with <code>WHERE Keyword LIKE &#x27;mic%&#x27; ORDER BY Frequency DESC</code> in real-time on every keystroke. This causes massive index seek/scan overhead and crashes databases under typing bursts.</li>
 <li><strong>Follow-up Question</strong>: How do you filter out inappropriate or offensive autocomplete suggestions in real-time? <em>(Answer: Maintain an in-memory Bloom Filter or Trie blacklist that purges offensive suggestions before publishing the pre-computed node rankings).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q127-scalable-distributed-logging-telemetry-pipeline'>Q127: Scalable Distributed Logging & Telemetry Pipeline</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3021,9 +3288,9 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using an unbounded in-memory logging buffer. If the log collector drops offline, the buffer grows indefinitely until the application process crashes with an <code>OutOfMemoryException</code>. Always use a <strong>bounded</strong> channel with drop-oldest or block policy.</li>
 <li><strong>Follow-up Question</strong>: Why is ClickHouse gaining massive popularity over Elasticsearch for high-volume log storage? <em>(Answer: ClickHouse uses columnar compression achieving 5-10x higher compression ratios, significantly lower RAM requirements, and orders-of-magnitude faster SQL analytical queries).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='category-9-scenario-based-troubleshooting'>CATEGORY 9: SCENARIO-BASED TROUBLESHOOTING</h2>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q128-api-504-gateway-timeout-post-deployment-forensics'>Q128: API 504 Gateway Timeout Post-Deployment Forensics</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3043,7 +3310,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Restarting pods blindly without capturing diagnostic artifacts. A restart clears symptoms temporarily but destroys in-memory diagnostic state (dumps, metrics) needed to identify the root cause.</li>
 <li><strong>Follow-up Question</strong>: What command captures an active process memory dump in a Linux Docker container running .NET? <em>(Answer: Run <code>dotnet-dump collect -p &lt;PID&gt;</code> to generate a full core dump for offline SOS/LLDB analysis).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q129-high-cpu-95-100-thread-diagnosis-in-production'>Q129: High CPU 95-100% Thread Diagnosis in Production</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3067,7 +3334,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Assuming 100% CPU always means intensive business calculation. Frequently, 90%+ CPU in .NET is caused by GC thrashing due to rapid Large Object Heap (LOH) allocations and subsequent Gen 2 collections.</li>
 <li><strong>Follow-up Question</strong>: How does <code>dotnet-counters monitor --process-id &lt;PID&gt;</code> help during a live CPU spike? <em>(Answer: Displays real-time metrics for <code>% Time in GC</code>, <code>Allocation Rate</code>, <code>ThreadPool Thread Count</code>, and <code>Lock Contention Count</code> to instantly isolate the cause).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q130-high-memory-leak-in-gen-2-loh-analysis'>Q130: High Memory Leak in Gen 2 / LOH Analysis</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3089,7 +3356,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Believing that setting an object to <code>null</code> guarantees memory reclamation. If another long-lived object (like a static collection or event publisher) maintains a reference to it, the GC will never collect it.</li>
 <li><strong>Follow-up Question</strong>: What is the difference between Shallow Size and Retained Size of an object in memory analysis? <em>(Answer: Shallow size is the memory consumed by the object's direct fields alone; Retained size is the total memory kept alive transitively across the entire object reference graph).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q131-database-blocking-and-deadlocks-live-resolution'>Q131: Database Blocking and Deadlocks Live Resolution</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3134,7 +3401,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Killing blocked sessions instead of the head blocker. If Session 50 blocks 51, 52, and 53, killing 51 does nothing; you must terminate Session 50.</li>
 <li><strong>Follow-up Question</strong>: What wait types indicate database locking vs disk I/O bottlenecks in SQL Server? <em>(Answer: <code>LCK_M_</em></code> indicates lock waits; <code>PAGEIOLATCH_<em></code> indicates waiting on physical disk I/O to read pages into buffer pool).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q132-double-message-processing-in-apache-kafka-consumers'>Q132: Double Message Processing in Apache Kafka Consumers</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3158,7 +3425,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Assuming that sending background heartbeats prevents Kafka rebalances. Heartbeats only prove the process is alive; failing to call <code>poll()</code> within <code>max.poll.interval.ms</code> explicitly signals that the consumer loop is dead.</li>
 <li><strong>Follow-up Question</strong>: What is the difference between <code>enable.auto.commit = true</code> vs manual offset committing (<code>CommitAsync()</code>) in Kafka? <em>(Answer: Auto-commit commits offsets periodically in the background regardless of whether processing succeeded, risking message loss upon crash; manual commit ensures offsets commit only after successful business processing).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q133-socket-exhaustion-timewait-hurricane-diagnosis'>Q133: Socket Exhaustion & <code>TIME_WAIT</code> Hurricane Diagnosis</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -3181,7 +3448,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Making <code>HttpClient</code> a raw static singleton (<code>private static readonly HttpClient _client = new HttpClient()</code>) without handling DNS changes. If the target server changes its IP address (common in cloud deployments), the static client never refreshes DNS and fails indefinitely.</li>
 <li><strong>Follow-up Question</strong>: How does <code>SocketsHttpHandler.PooledConnectionLifetime</code> in modern .NET solve both socket exhaustion and DNS refresh issues? <em>(Answer: It allows connection pooling across requests while specifying a maximum lifetime [e.g., 2 minutes], after which the connection is closed and a new socket is opened with fresh DNS resolution).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q134-intermittent-tls-ssl-handshake-failures-under-high-load'>Q134: Intermittent TLS / SSL Handshake Failures Under High Load</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3201,7 +3468,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Disabling certificate validation in production (<code>ServerCertificateCustomValidationCallback = DangerousAcceptAnyServerCertificateValidator</code>) to "fix" the error. This exposes the entire enterprise to Man-In-The-Middle (MITM) attacks and violates regulatory compliance (PCI-DSS / HIPAA).</li>
 <li><strong>Follow-up Question</strong>: What is TLS Session Resumption, and how does it reduce TLS handshake overhead? <em>(Answer: Allows client and server to cache session keys using Session IDs or TLS Tickets, completing subsequent handshakes in 1 network roundtrip instead of 2 without expensive asymmetric crypto).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q135-silent-backgroundservice-crashes-in-aspnet-core'>Q135: Silent BackgroundService Crashes in ASP.NET Core</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -3219,7 +3486,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Leaving <code>ExecuteAsync</code> unprotected, causing a single malformed message from a queue to crash the entire production web server pod.</li>
 <li><strong>Follow-up Question</strong>: Can you configure ASP.NET Core to keep the web host running if a background service crashes? <em>(Answer: Yes, configure <code>builder.Services.Configure&lt;HostOptions&gt;(o =&gt; o.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore)</code>, though fixing the exception handling is strongly preferred).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q136-microservice-cascading-failure-post-network-blip'>Q136: Microservice Cascading Failure Post Network Blip</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3242,7 +3509,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Implementing fixed retries (e.g., retry every 500ms). All failed requests synchronize and hammer the downstream service simultaneously in rhythmic destructive waves.</li>
 <li><strong>Follow-up Question</strong>: What is "Hedging" in resilience policies, and when is it preferred over Retries? <em>(Answer: Hedging sends a duplicate speculative request if the initial request exceeds a p95 latency threshold without waiting for failure, returning whichever completes first to smooth latency outliers).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q137-docker-container-oomkilled-exit-code-137-diagnosis'>Q137: Docker Container <code>OOMKilled</code> (Exit Code 137) Diagnosis</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3271,7 +3538,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Giving a pod a 512MB memory limit while running Server GC on a 16-core machine. Server GC allocates 16 independent heaps (one per logical core); baseline heap structures alone consume hundreds of megabytes.</li>
 <li><strong>Follow-up Question</strong>: How do you analyze an OOM crash if the kernel kills the process before a dump can be written to disk? <em>(Answer: Configure <code>createdump</code> with crash reporting or monitor memory telemetry thresholds to capture a dump when working set reaches 85% before OOMKill).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q138-slow-redis-latency-spikes-and-single-threaded-bottlenecks'>Q138: Slow Redis Latency Spikes and Single-Threaded Bottlenecks</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3293,7 +3560,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Treating Redis like a full relational database and storing multi-megabyte complex object graphs in a single cache key.</li>
 <li><strong>Follow-up Question</strong>: How does Redis 6/7 I/O Threading change the single-threaded nature of Redis? <em>(Answer: It multi-threads network socket reads and writes, but core command execution remains strictly single-threaded).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q139-ef-core-memory-bloat-during-high-volume-data-ingestion'>Q139: EF Core Memory Bloat During High-Volume Data Ingestion</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -3352,9 +3619,9 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Relying on standard EF Core <code>Add()</code> and <code>SaveChanges()</code> for multi-million-row ETL imports. EF Core is an OLTP ORM, not an ETL tool; use <code>SqlBulkCopy</code> for bulk ingestion.</li>
 <li><strong>Follow-up Question</strong>: What is the performance difference between <code>SqlBulkCopy</code> vs <code>DbContext.AddRange()</code> for 100,000 records? <em>(Answer: <code>SqlBulkCopy</code> takes ~1-2 seconds via raw streaming TDS protocol; <code>AddRange</code> takes 45-90 seconds due to object instantiation, tracking, and SQL batch framing).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='category-10-infosys-product-company-specific-traps'>CATEGORY 10: INFOSYS & PRODUCT COMPANY SPECIFIC TRAPS</h2>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q140-whiteboard-in-place-string-reversal-without-memory-allocation'>Q140: Whiteboard: In-Place String Reversal Without Memory Allocation</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3406,7 +3673,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Using LINQ <code>.Reverse()</code> on a string in an interview coding test. Interviewers will immediately flag it as failing the memory efficiency evaluation.</li>
 <li><strong>Follow-up Question</strong>: How does <code>span.Reverse()</code> handle Unicode surrogate pairs (e.g., emojis or complex scripts)? <em>(Answer: Standard character reversal splits 32-bit UTF-16 surrogate pairs, corrupting emojis; proper Unicode reversal requires iterating over <code>StringInfo.GetTextElementEnumerator</code> to reverse grapheme clusters).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q141-whiteboard-detect-loop-in-a-singly-linked-list-floyds-algorithm'>Q141: Whiteboard: Detect Loop in a Singly Linked List (Floyd's Algorithm)</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -3446,7 +3713,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Creating a <code>HashSet&lt;ListNode&gt;</code> to track visited nodes. While it works ($O(N)$ time), it requires $O(N)$ space complexity and fails strict whiteboard constraints.</li>
 <li><strong>Follow-up Question</strong>: How do you find the exact node where the cycle begins? <em>(Answer: Once slow and fast meet, reset slow to head and advance both pointers 1 step at a time; their meeting point is the exact start of the cycle).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q142-whiteboard-first-non-repeating-character-in-a-stream'>Q142: Whiteboard: First Non-Repeating Character in a Stream</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -3485,7 +3752,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Iterating through the entire string/stream with nested loops on every query ($O(N^2)$ complexity).</li>
 <li><strong>Follow-up Question</strong>: What is the space complexity if the stream contains arbitrary Unicode UTF-32 characters? <em>(Answer: Fixed array is impractical; must use a <code>Dictionary&lt;int, int&gt;</code> with linked list nodes).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q143-code-trap-async-void-crashing-the-entire-worker-process'>Q143: Code Trap: <code>async void</code> Crashing the Entire Worker Process</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3518,7 +3785,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Wrapping the call site <code>try { FireAndForgetAudit(); } catch</code> expecting it to catch the failure. It will NOT catch it.</li>
 <li><strong>Follow-up Question</strong>: How should you properly implement background fire-and-forget tasks in ASP.NET Core? <em>(Answer: Push commands to a <code>Channel&lt;T&gt;</code> consumed by a <code>BackgroundService</code>, or use a resilient distributed job runner like Hangfire).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q144-code-trap-operator-precedence-short-circuit-evaluation'>Q144: Code Trap: Operator Precedence & Short-Circuit Evaluation</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -3551,7 +3818,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Assuming <code>if (boolNullable)</code> compiles. In C#, a <code>bool?</code> cannot be implicitly evaluated as a conditional expression without explicit comparison (<code>flag == true</code>) or null-coalescing (<code>flag ?? false</code>).</li>
 <li><strong>Follow-up Question</strong>: What does <code>bool? a = null; bool? b = null; Console.WriteLine(a == b);</code> print? <em>(Answer: Prints <code>True</code>; equality operator on nullable types evaluates <code>null == null</code> as true, unlike ANSI SQL).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q145-code-trap-closures-and-the-loop-variable-capture'>Q145: Code Trap: Closures and the Loop Variable Capture</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -3595,7 +3862,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Believing this trap still applies to <code>foreach</code> loops in modern C#. In C# 5+, Microsoft changed <code>foreach</code> semantics so that the iteration variable is scoped inside the loop body, printing <code>0 1 2 3 4</code>. But <code>for</code> loops still exhibit this trap!</li>
 <li><strong>Follow-up Question</strong>: Why did Microsoft not fix the <code>for</code> loop variable scoping when they fixed <code>foreach</code> in C# 5? <em>(Answer: Changing <code>for</code> loop variable scoping would have introduced severe breaking changes to existing legacy codebases relying on index state persistence).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q146-code-trap-struct-mutability-via-interface-boxing'>Q146: Code Trap: Struct Mutability via Interface Boxing</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3635,7 +3902,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Defining mutating methods on structs and invoking them through interfaces. Always make structs immutable (<code>readonly struct</code>).</li>
 <li><strong>Follow-up Question</strong>: What happens if you call <code>((ICounter)c).Increment();</code> directly on the local struct without storing the interface reference? <em>(Answer: <code>c</code> is boxed to a temporary heap object, mutated, and immediately discarded; neither <code>c</code> nor any variable retains the change).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q147-code-trap-captive-dependency-code-analysis'>Q147: Code Trap: Captive Dependency Code Analysis</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3672,7 +3939,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Thinking that registering <code>OrderProcessingService</code> as Transient solves the problem if the controller or worker holding it is a Singleton. A transient service captured by a singleton becomes a de-facto singleton!</li>
 <li><strong>Follow-up Question</strong>: How do you fix this code snippet? <em>(Answer: Inject <code>IServiceScopeFactory</code>, create an explicit scope via <code>using var scope = _scopeFactory.CreateScope();</code>, and resolve <code>AppDbContext</code> within the scope).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q148-code-trap-ef-core-query-tracking-trap-update-vs-attach'>Q148: Code Trap: EF Core Query Tracking Trap (<code>Update()</code> vs <code>Attach()</code>)</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3732,7 +3999,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Assuming <code>db.Update()</code> only updates modified properties. <code>db.Update()</code> marks every property as modified because it has no baseline snapshot to compare against.</li>
 <li><strong>Follow-up Question</strong>: What happens if an entity property is configured as <code>[DatabaseGenerated(DatabaseGeneratedOption.Identity)]</code> when calling <code>Update()</code>? <em>(Answer: EF Core excludes identity columns from generated SQL UPDATE statements to avoid SQL exceptions).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q149-code-trap-string-concatenation-in-loops'>Q149: Code Trap: String Concatenation in Loops</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -3760,7 +4027,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Replacing <code>string.Concat</code> with <code>StringBuilder</code> for simple single-line concatenation (<code>string full = first + &quot; &quot; + last;</code>). The C# compiler automatically transforms single-line <code>+</code> expressions into a single <code>string.Concat(a, b, c)</code> call, which is faster and allocates less than instantiating a <code>StringBuilder</code>.</li>
 <li><strong>Follow-up Question</strong>: How does <code>StringBuilder</code> manage memory when its internal buffer capacity is exceeded? <em>(Answer: Prior to .NET Core, it reallocated a larger contiguous array; modern .NET uses a linked list of chunked character buffers to minimize large array reallocations).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q150-code-trap-linq-multiple-enumeration-with-side-effects'>Q150: Code Trap: LINQ Multiple Enumeration with Side Effects</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -3794,7 +4061,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Slapping <code>.ToList()</code> everywhere "just to be safe", including queries with 500,000 records that should have streamed via <code>IAsyncEnumerable</code>.</li>
 <li><strong>Follow-up Question</strong>: How does ReSharper / Rider / Roslyn analyzer detect multiple enumerations? <em>(Answer: Through static data-flow analysis flagging expressions where an <code>IEnumerable</code> reference is traversed by multiple sequence-consuming methods).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q151-code-trap-deadlock-on-synchronizationcontext-via-result'>Q151: Code Trap: Deadlock on SynchronizationContext via <code>.Result</code></h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3835,7 +4102,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Believing that because code doesn't deadlock on ASP.NET Core, <code>.Result</code> is safe. It causes catastrophic ThreadPool starvation under production load.</li>
 <li><strong>Follow-up Question</strong>: How does <code>Task.Run(() =&gt; FetchAsync()).Result</code> avoid the SynchronizationContext deadlock? <em>(Answer: <code>Task.Run</code> executes the method on a ThreadPool thread where <code>SynchronizationContext.Current</code> is null, preventing context capture, though it still burns an extra thread).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q152-code-trap-static-field-thread-safety-in-aspnet-core-controllers'>Q152: Code Trap: Static Field Thread Safety in ASP.NET Core Controllers</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -3870,7 +4137,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Believing that because controllers are instantiated as Scoped per request, their <code>static</code> fields are also scoped. Static fields belong to the type definition and are shared across all instances and all threads in the entire process.</li>
 <li><strong>Follow-up Question</strong>: What concurrency collection would you use if order processing requires thread-safe FIFO ordering? <em>(Answer: <code>ConcurrentQueue&lt;T&gt;</code> or <code>System.Threading.Channels.Channel&lt;T&gt;</code>).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q153-code-trap-inadequate-gethashcode-and-equals-override'>Q153: Code Trap: Inadequate <code>GetHashCode</code> and <code>Equals</code> Override</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Senior</li>
@@ -3919,7 +4186,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Overriding <code>Equals</code> without overriding <code>GetHashCode()</code>. Two objects evaluated as equal by <code>Equals</code> will have different default hash codes, breaking all dictionary and set lookups.</li>
 <li><strong>Follow-up Question</strong>: Why is <code>public override int GetHashCode() =&gt; 1;</code> a terrible implementation even though it strictly satisfies the hash code contract? <em>(Answer: It places all objects into the exact same hash bucket, turning $O(1)$ lookups into an $O(N)$ linear search).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q154-code-trap-disposing-httpclient-causing-socket-exhaustion'>Q154: Code Trap: Disposing <code>HttpClient</code> Causing Socket Exhaustion</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Basic</li>
@@ -3946,7 +4213,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Interviewers testing whether candidates follow standard C# conventions (<code>using</code> on <code>IDisposable</code>) blindly without understanding low-level OS network abstractions.</li>
 <li><strong>Follow-up Question</strong>: Why does <code>IHttpClientFactory.CreateClient()</code> create a new <code>HttpClient</code> instance on each call without causing socket exhaustion? <em>(Answer: Because the lightweight <code>HttpClient</code> wrapper is discarded while the heavy underlying <code>HttpClientHandler</code> / socket pool is managed and pooled separately).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='q155-code-trap-tricky-value-tuple-vs-anonymous-type-memory-and-equality'>Q155: Code Trap: Tricky Value Tuple vs Anonymous Type Memory and Equality</h3>
 <ul>
 <li><strong>Expected Depth</strong>: Intermediate</li>
@@ -3966,7 +4233,7 @@ li::marker { color: var(--primary); }
 <li><strong>The Trap</strong>: Returning Value Tuples across assembly or external API boundaries expecting property names to be preserved via reflection. The names are compiler metadata; reflection inspects them as <code>Item1</code> and <code>Item2</code>.</li>
 <li><strong>Follow-up Question</strong>: When should you choose <code>record struct</code> over a Value Tuple? <em>(Answer: When you need domain-specific semantics, explicit method behaviors, interfaces, or non-destructive mutation via <code>with</code> expressions while retaining value type performance).</em></li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='master-interview-execution-checklist-final-scoring-rubric'>MASTER INTERVIEW EXECUTION CHECKLIST & FINAL SCORING RUBRIC</h2>
 <h3 id='how-to-deliver-top-1-answers-in-infosys-enterprise-panels'>How to Deliver Top-1% Answers in Infosys & Enterprise Panels:</h3>
 <ol>
@@ -3975,7 +4242,7 @@ li::marker { color: var(--primary); }
 <li><strong>Preempt the Interviewer's Trap</strong>: Mention the edge case before they ask (e.g., "One critical trap here is captive dependencies if injected into a singleton...").</li>
 <li><strong>Tie Directly to Production Incidents</strong>: Reference real telemetry: "In a production post-mortem, this manifested as high thread pool queue length and HTTP 504 timeouts on the gateway."</li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <p><em>End of Volume 12: The Master Interview Question Bank</em></p>
             </article>
 
@@ -3983,7 +4250,7 @@ li::marker { color: var(--primary); }
                 
     <a href="Volume-11-Project-Interview-Mastery.html" class="nav-card">
         <span class="nav-card-dir">← Previous Module</span>
-        <span class="nav-card-title">Volume 11: Project Interview Mastery & Walkthroughs</span>
+        <span class="nav-card-title">Volume 11: Project Interview Mastery & Technical Narrative</span>
     </a>
     
                 <div></div>
@@ -3994,11 +4261,6 @@ li::marker { color: var(--primary); }
             <div class="toc-title">On This Page</div>
             <ul class="toc-list">
                 
-        <li class="toc-item level-1">
-            <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
-        </li>
-        
-
         <li class="toc-item level-1">
             <a href="#volume-12-the-master-interview-question-bank" class="toc-link">Volume 12: The Master Interview Question Bank</a>
         </li>
@@ -4143,6 +4405,61 @@ li::marker { color: var(--primary); }
             <a href="#q024-garbage-collection-large-object-heap-loh-fragmentation-and-pinned-object-heap-poh" class="toc-link">Q024: Garbage Collection: Large Object Heap (</a>
         </li>
         
+
+        <li class="toc-item level-3">
+            <a href="#q025-the-async-await-state-machine-under-the-hood" class="toc-link">Q025: The async / await State Machine Under t</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#q026-synchronizationcontext-and-configureawaitfalse" class="toc-link">Q026: SynchronizationContext and ConfigureAwa</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#q027-valuetaskt-vs-taskt-performance-vs-hazards" class="toc-link">Q027: ValueTask&lt;T&gt; vs Task&lt;T&gt;: Performance vs</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#q028-threadpool-starvation-and-sync-over-async-deadlocks" class="toc-link">Q028: ThreadPool Starvation and Sync-Over-Asy</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#q029-asynchronous-concurrency-taskwhenall-vs-parallelforeachasync" class="toc-link">Q029: Asynchronous Concurrency: Task.WhenAll </a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#q030-volatile-readwrite-threadmemorybarrier-and-cpu-instruction-reordering" class="toc-link">Q030: Volatile Read/Write, Thread.MemoryBarri</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#q031-interlocked-atomic-operations-vs-lock-monitor" class="toc-link">Q031: Interlocked Atomic Operations vs lock (</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#q032-cancellation-tokens-architecture-and-linked-tokens" class="toc-link">Q032: Cancellation Tokens Architecture and Li</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#q033-unsafe-code-pointers-and-fixed-memory" class="toc-link">Q033: Unsafe Code, Pointers, and Fixed Memory</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#q034-assemblyloadcontext-and-dynamic-plugin-architecture" class="toc-link">Q034: AssemblyLoadContext and Dynamic Plugin </a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#q035-source-generators-vs-reflection-performance-and-aot" class="toc-link">Q035: Source Generators vs Reflection: Perfor</a>
+        </li>
+        
             </ul>
         </aside>
     </div>
@@ -4173,11 +4490,137 @@ li::marker { color: var(--primary); }
             // Highlight syntax
             hljs.highlightAll();
 
-            // Mermaid diagrams
+            // Mermaid diagrams initialization
             mermaid.initialize({
                 startOnLoad: true,
                 theme: currentTheme === 'dark' ? 'dark' : 'neutral',
                 securityLevel: 'loose'
+            });
+
+            // ==========================================
+            // ACCORDION & SINGLE-FOCUS CONTROLS
+            // ==========================================
+            const accordions = document.querySelectorAll('.chapter-accordion');
+            const singleFocusToggle = document.getElementById('single-focus-toggle');
+            const btnExpandAll = document.getElementById('btn-expand-all');
+            const btnCollapseAll = document.getElementById('btn-collapse-all');
+
+            function renderMermaidIn(element) {
+                if (window.mermaid) {
+                    const unrendered = element.querySelectorAll('.mermaid:not([data-processed])');
+                    if (unrendered.length > 0) {
+                        try { mermaid.run({ nodes: unrendered }); } catch(e) {}
+                    }
+                }
+            }
+
+            // Expand All
+            if (btnExpandAll) {
+                btnExpandAll.addEventListener('click', () => {
+                    if (singleFocusToggle) singleFocusToggle.checked = false;
+                    accordions.forEach(acc => {
+                        acc.open = true;
+                        renderMermaidIn(acc);
+                    });
+                });
+            }
+
+            // Collapse All
+            if (btnCollapseAll) {
+                btnCollapseAll.addEventListener('click', () => {
+                    accordions.forEach(acc => {
+                        acc.open = false;
+                    });
+                });
+            }
+
+            // Single focus auto-closing logic
+            accordions.forEach(acc => {
+                acc.addEventListener('toggle', () => {
+                    const statusText = acc.querySelector('.accordion-status-text');
+                    if (statusText) {
+                        statusText.innerText = acc.open ? 'Click to collapse' : 'Click to expand';
+                    }
+                    if (acc.open) {
+                        renderMermaidIn(acc);
+                        if (singleFocusToggle && singleFocusToggle.checked) {
+                            accordions.forEach(other => {
+                                if (other !== acc && other.open) {
+                                    other.open = false;
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            // ==========================================
+            // DEEP LINKING & TOC NAVIGATION
+            // ==========================================
+            function navigateToTarget(targetId) {
+                if (!targetId) return;
+                let target = document.getElementById(targetId);
+                
+                // Fallback for slug variations (e.g. hyphens)
+                if (!target) {
+                    const normalized = targetId.replace(/-+/g, '-');
+                    target = document.getElementById(normalized) || 
+                             document.querySelector(`[id*="${normalized}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                }
+
+                if (!target) return;
+
+                // If target is inside an accordion, open that accordion
+                const parentAcc = target.closest('.chapter-accordion');
+                if (parentAcc) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== parentAcc) a.open = false;
+                        });
+                    }
+                    parentAcc.open = true;
+                    renderMermaidIn(parentAcc);
+                } else if (target.classList.contains('chapter-accordion')) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== target) a.open = false;
+                        });
+                    }
+                    target.open = true;
+                    renderMermaidIn(target);
+                }
+
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.classList.add('flash-highlight');
+                    setTimeout(() => target.classList.remove('flash-highlight'), 1600);
+                }, 100);
+            }
+
+            // Check URL hash on page load
+            if (window.location.hash) {
+                setTimeout(() => {
+                    navigateToTarget(window.location.hash.substring(1));
+                }, 250);
+            }
+
+            // Listen for hash changes
+            window.addEventListener('hashchange', () => {
+                navigateToTarget(window.location.hash.substring(1));
+            });
+
+            // Intercept internal page anchor clicks
+            document.addEventListener('click', (e) => {
+                const anchor = e.target.closest('a[href^="#"]');
+                if (!anchor) return;
+                const href = anchor.getAttribute('href');
+                if (href && href.length > 1) {
+                    e.preventDefault();
+                    const id = href.substring(1);
+                    history.pushState(null, null, href);
+                    navigateToTarget(id);
+                }
             });
         });
     </script>

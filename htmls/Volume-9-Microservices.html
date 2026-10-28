@@ -24,9 +24,11 @@
     --bg-page: #0b0f19;
     --bg-surface: #111827;
     --bg-surface-elevated: #1f2937;
+    --bg-surface-hover: #283548;
     --bg-code: #030712;
     --border: #374151;
     --border-light: #4b5563;
+    --border-highlight: #60a5fa;
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
     --text-dim: #6b7280;
@@ -34,6 +36,7 @@
     --primary: #3b82f6;
     --primary-hover: #60a5fa;
     --primary-glow: rgba(59, 130, 246, 0.15);
+    --primary-glow-strong: rgba(59, 130, 246, 0.3);
     --accent: #8b5cf6;
     --success: #10b981;
     --warning: #f59e0b;
@@ -48,15 +51,20 @@
     --code-color: #f87171;
     --hero-bg: linear-gradient(135deg, rgba(31, 41, 55, 0.75) 0%, rgba(17, 24, 39, 0.95) 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --accordion-header-bg: #151e2e;
+    --accordion-header-hover: #1c273c;
+    --accordion-active-border: #3b82f6;
 }
 
 [data-theme="light"] {
     --bg-page: #f8fafc;
     --bg-surface: #ffffff;
     --bg-surface-elevated: #f1f5f9;
+    --bg-surface-hover: #e2e8f0;
     --bg-code: #0f172a;
     --border: #e2e8f0;
     --border-light: #cbd5e1;
+    --border-highlight: #2563eb;
     --text-main: #0f172a;
     --text-muted: #475569;
     --text-dim: #64748b;
@@ -64,6 +72,7 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-glow: rgba(37, 99, 235, 0.1);
+    --primary-glow-strong: rgba(37, 99, 235, 0.22);
     --accent: #7c3aed;
     --success: #059669;
     --warning: #b45309;
@@ -78,6 +87,9 @@
     --code-color: #b91c1c;
     --hero-bg: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --accordion-header-bg: #f8fafc;
+    --accordion-header-hover: #eef2f6;
+    --accordion-active-border: #2563eb;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -93,7 +105,7 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* SIDEBAR */
+/* SIDEBAR - STRICT FIXED 300px (NEVER OVERLAPS CONTENT) */
 #sidebar {
     width: 300px;
     background-color: var(--bg-surface);
@@ -206,33 +218,35 @@ body {
 .nav-vol { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
 .nav-link.active .nav-vol { color: var(--primary); }
 
-/* CONTENT AREA */
+/* CONTENT WRAPPER - PROPER MARGIN LEFT TO PREVENT OVERLAP */
 #content-wrapper {
     margin-left: 300px;
     flex: 1;
     display: flex;
     justify-content: center;
     padding: 40px 30px;
+    min-width: 0;
 }
 
 #main-content {
-    max-width: 880px;
+    max-width: 900px;
     width: 100%;
+    min-width: 0;
 }
 
 /* RIGHT TABLE OF CONTENTS */
 #toc-sidebar {
-    width: 250px;
+    width: 260px;
     position: sticky;
     top: 40px;
     height: calc(100vh - 80px);
     overflow-y: auto;
-    padding-left: 28px;
-    margin-left: 20px;
+    padding-left: 24px;
+    margin-left: 24px;
     display: none;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1320px) {
     #toc-sidebar { display: block; }
 }
 
@@ -258,7 +272,8 @@ body {
 }
 
 .toc-link:hover { color: var(--primary); }
-.toc-item.level-3 { padding-left: 10px; }
+.toc-item.level-2 { padding-left: 10px; }
+.toc-item.level-3 { padding-left: 18px; font-size: 0.74rem; color: var(--text-dim); }
 
 /* CHAPTER HERO */
 .chapter-hero {
@@ -266,7 +281,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 32px 36px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     box-shadow: var(--card-shadow);
 }
 
@@ -296,7 +311,7 @@ body {
 }
 
 .chapter-hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 800;
     color: var(--heading-color);
     margin-bottom: 12px;
@@ -309,32 +324,264 @@ body {
     line-height: 1.6;
 }
 
+/* ========================================================
+   FOCUS CONTROLS TOOLBAR (ADHD FRIENDLY INTERACTIVE MODES)
+   ======================================================== */
+.focus-control-bar {
+    position: sticky;
+    top: 14px;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.focus-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.focus-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.focus-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    color: var(--primary-hover);
+}
+
+.focus-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border-light);
+    transition: .25s ease;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s ease;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+.toggle-label-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+/* ========================================================
+   CHAPTER ACCORDION STYLING (COLLAPSIBLE SECTIONS)
+   ======================================================== */
+.chapter-accordion {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chapter-accordion:hover {
+    border-color: var(--border-light);
+}
+
+.chapter-accordion[open] {
+    border-color: var(--accordion-active-border);
+    box-shadow: 0 6px 26px var(--primary-glow-strong);
+}
+
+.chapter-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--accordion-header-bg);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-accordion-header::-webkit-details-marker {
+    display: none;
+}
+
+.chapter-accordion-header:hover {
+    background: var(--accordion-header-hover);
+}
+
+.chapter-accordion[open] > .chapter-accordion-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface-elevated);
+}
+
+.accordion-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.accordion-badge {
+    background: var(--primary-glow);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.accordion-title-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1.35;
+}
+
+.accordion-status-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+.accordion-status-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.accordion-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-page);
+    color: var(--text-muted);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, color 0.2s;
+}
+
+.chapter-accordion[open] > .chapter-accordion-header .accordion-chevron {
+    transform: rotate(180deg);
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.chapter-accordion-body {
+    padding: 28px 30px;
+    animation: accordionFadeIn 0.25s ease-out;
+}
+
+@keyframes accordionFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HIGHLIGHT ON TARGET JUMP */
+.flash-highlight {
+    outline: 2px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow-strong);
+    border-radius: 8px;
+    transition: all 0.5s ease;
+}
+
 /* TYPOGRAPHY */
 h1, h2, h3, h4, h5 { color: var(--heading-color); font-weight: 700; line-height: 1.3; }
 
 h1 {
     font-size: 1.85rem;
-    margin: 44px 0 18px 0;
+    margin: 40px 0 16px 0;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
     color: var(--primary);
 }
 
 h2 {
-    font-size: 1.4rem;
-    margin: 36px 0 14px 0;
+    font-size: 1.35rem;
+    margin: 32px 0 14px 0;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
+    color: var(--heading-color);
 }
 
 h3 {
-    font-size: 1.15rem;
-    margin: 26px 0 10px 0;
+    font-size: 1.1rem;
+    margin: 22px 0 10px 0;
+    color: var(--heading-color);
 }
 
 h4 {
-    font-size: 0.98rem;
-    margin: 18px 0 8px 0;
+    font-size: 0.95rem;
+    margin: 16px 0 8px 0;
     color: var(--warning);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -351,7 +598,7 @@ a:hover { text-decoration: underline; }
     background: var(--bg-code);
     border: 1px solid var(--border);
     border-radius: 10px;
-    margin: 22px 0;
+    margin: 20px 0;
     overflow: hidden;
     box-shadow: var(--card-shadow);
 }
@@ -664,7 +911,7 @@ li::marker { color: var(--primary); }
         <li class="nav-item">
             <a href="Volume-8-Database-SQL.html" class="nav-link ">
                 <span class="nav-icon">💾</span>
-                <span>Database Engine Internals & SQL Server</span>
+                <span>Database Systems & High-Performance SQL</span>
                 <span class="nav-vol">V8</span>
             </a>
         </li>
@@ -672,7 +919,7 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-9-Microservices.html" class="nav-link active">
-                <span class="nav-icon">📡</span>
+                <span class="nav-icon">☁️</span>
                 <span>Microservices & Distributed Systems</span>
                 <span class="nav-vol">V9</span>
             </a>
@@ -681,8 +928,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-10-System-Design.html" class="nav-link ">
-                <span class="nav-icon">🏗️</span>
-                <span>Enterprise System Design</span>
+                <span class="nav-icon">📐</span>
+                <span>System Design: Enterprise Case Studies</span>
                 <span class="nav-vol">V10</span>
             </a>
         </li>
@@ -690,8 +937,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-11-Project-Interview-Mastery.html" class="nav-link ">
-                <span class="nav-icon">🎯</span>
-                <span>Project Interview Mastery & Walkthroughs</span>
+                <span class="nav-icon">💼</span>
+                <span>Project Interview Mastery & Technical Narrative</span>
                 <span class="nav-vol">V11</span>
             </a>
         </li>
@@ -699,8 +946,8 @@ li::marker { color: var(--primary); }
 
         <li class="nav-item">
             <a href="Volume-12-Interview-Question-Bank.html" class="nav-link ">
-                <span class="nav-icon">🏆</span>
-                <span>The Master Interview Question Bank</span>
+                <span class="nav-icon">🎯</span>
+                <span>Master Interview Question Bank & Verbatim Transcripts</span>
                 <span class="nav-vol">V12</span>
             </a>
         </li>
@@ -712,23 +959,43 @@ li::marker { color: var(--primary); }
         <main id="main-content">
             <div class="chapter-hero">
                 <div class="hero-meta">
-                    <span class="hero-badge">Distributed Architecture</span>
+                    <span class="hero-badge">Distributed Systems</span>
                     <span class="hero-vol">Volume 9</span>
                 </div>
                 <h1>Microservices & Distributed Systems</h1>
-                <p>Synchronous REST/gRPC vs Asynchronous Kafka/RabbitMQ, CQRS with MediatR, Event Sourcing, Saga orchestration, Outbox pattern, Polly resilience.</p>
+                <p>Monolith decomposition, Saga orchestration vs choreography, Outbox pattern, MassTransit/RabbitMQ, Distributed locking, gRPC, Idempotency.</p>
+            </div>
+
+            <!-- ADHD-FRIENDLY INTERACTIVE FOCUS CONTROLS -->
+            <div class="focus-control-bar">
+                <div class="focus-actions">
+                    <button class="focus-btn" id="btn-expand-all" title="Open all chapters for full scroll">
+                        <span>📂</span> Expand All
+                    </button>
+                    <button class="focus-btn" id="btn-collapse-all" title="Collapse all chapters to section headers">
+                        <span>📁</span> Collapse All
+                    </button>
+                </div>
+                <div class="focus-toggle-wrap">
+                    <label class="focus-mode-toggle" title="When active, opening one section automatically closes previous sections to minimize cognitive load and visual clutter.">
+                        <span class="toggle-switch">
+                            <input type="checkbox" id="single-focus-toggle" checked>
+                            <span class="slider"></span>
+                        </span>
+                        <span class="toggle-label-text">🎯 Single-Chapter Focus (Auto-close others)</span>
+                    </label>
+                </div>
             </div>
 
             <article class="doc-body">
-                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
-<h1 id='volume-9-microservices'>VOLUME 9: MICROSERVICES</h1>
+                <h1 id='volume-9-microservices'>VOLUME 9: MICROSERVICES</h1>
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
     <div class="callout-body"><strong>Audience:</strong> .NET Developer (~3 years). You've built REST APIs. Now we go deep into distributed architecture, messaging, resilience, and patterns used in real production systems at scale.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='table-of-contents'>TABLE OF CONTENTS</h2>
 <ol>
 <li><a href="#why-microservices">Why Microservices?</a></li>
@@ -747,7 +1014,7 @@ li::marker { color: var(--primary); }
 <li><a href="#service-mesh">Service Mesh</a></li>
 <li><a href="#interview-qa">Interview Q&A — Master List</a></li>
 </ol>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='1-why-microservices-why-microservices'>1. WHY MICROSERVICES? {#why-microservices}</h2>
 <h3 id='11-definition'>1.1 Definition</h3>
 <p>Microservices is an architectural style where an application is decomposed into <strong>small, independently deployable services</strong>, each owning its own data, business capability, and deployment lifecycle.</p>
@@ -817,7 +1084,7 @@ User Request → API Gateway → Order Service  ──HTTP/gRPC──→ Invento
                              (independent)               (independent)  (independent)</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='2-service-communication-synchronous-synchronous-communication'>2. SERVICE COMMUNICATION — SYNCHRONOUS {#synchronous-communication}</h2>
 <h3 id='21-definition'>2.1 Definition</h3>
 <p>Synchronous communication means the caller <strong>waits for a response</strong> before continuing. The caller is blocked during the call duration.</p>
@@ -991,7 +1258,7 @@ builder.Services.AddGrpcClient&lt;OrderGrpc.OrderGrpcClient&gt;(o =&gt;
 });</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='3-service-communication-asynchronous-asynchronous-communication'>3. SERVICE COMMUNICATION — ASYNCHRONOUS {#asynchronous-communication}</h2>
 <h3 id='31-definition'>3.1 Definition</h3>
 <p>Asynchronous communication means the sender <strong>does not wait</strong> for a response. It publishes a message/event and continues. The receiver processes independently.</p>
@@ -1015,7 +1282,7 @@ builder.Services.AddGrpcClient&lt;OrderGrpc.OrderGrpcClient&gt;(o =&gt;
 <li><strong>RabbitMQ:</strong> Single queue = FIFO. Multiple consumers = no ordering guarantee.</li>
 <li><strong>Kafka:</strong> Ordering guaranteed <strong>within a partition</strong>. Use the same partition key (e.g., <code>orderId</code>) to ensure order events for the same order are processed in sequence.</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='4-rabbitmq-in-depth-rabbitmq'>4. RABBITMQ IN DEPTH {#rabbitmq}</h2>
 <h3 id='41-definition'>4.1 Definition</h3>
 <p>RabbitMQ is an open-source message broker implementing the <strong>AMQP</strong> (Advanced Message Queuing Protocol). It routes messages from producers to consumers through a system of Exchanges, Queues, and Bindings.</p>
@@ -1197,7 +1464,7 @@ public class OrderPlacedConsumer : IConsumer&lt;OrderPlacedEvent&gt;
     <div class="callout-body">RabbitMQ for smart routing, task queues, work distribution (push-based). Kafka for event streaming, replay, audit trail, high-throughput pipelines (pull-based, log-based).</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='5-apache-kafka-apache-kafka'>5. APACHE KAFKA {#apache-kafka}</h2>
 <h3 id='51-definition'>5.1 Definition</h3>
 <p>Apache Kafka is a <strong>distributed event streaming platform</strong> built around an append-only, partitioned, replicated commit log. Consumers pull messages; messages are retained regardless of consumption.</p>
@@ -1410,7 +1677,7 @@ public class OrderEventConsumer : BackgroundService
 <li>Complex routing (topic exchange patterns)</li>
 <li>Lower operational complexity acceptable</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='6-nats-nats'>6. NATS {#nats}</h2>
 <h3 id='61-definition'>6.1 Definition</h3>
 <p>NATS is an ultra-lightweight, high-performance messaging system written in Go. It focuses on simplicity and speed, with sub-millisecond latency.</p>
@@ -1447,7 +1714,7 @@ await foreach (var msg in connection.SubscribeAsync&lt;OrderCreatedEvent&gt;(&qu
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='7-api-gateway-api-gateway'>7. API GATEWAY {#api-gateway}</h2>
 <h3 id='71-definition'>7.1 Definition</h3>
 <p>An API Gateway is a <strong>single entry point</strong> for all client requests, acting as a reverse proxy that routes requests to appropriate microservices while handling cross-cutting concerns.</p>
@@ -1547,7 +1814,7 @@ app.UseOcelot().Wait();</code></pre>
 <tr><td>Cost</td><td>Free</td><td>Free (OSS) / Commercial</td><td>Pay-per-request</td></tr>
 <tr><td>Use case</td><td>.NET microservices</td><td>Polyglot microservices</td><td>AWS-native apps</td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='8-cqrs-command-query-responsibility-segregation-cqrs'>8. CQRS (COMMAND QUERY RESPONSIBILITY SEGREGATION) {#cqrs}</h2>
 <h3 id='81-definition'>8.1 Definition</h3>
 <p>CQRS separates the <strong>read model</strong> (queries) from the <strong>write model</strong> (commands). Commands change state; queries return state. They can use different models, different DBs, different optimizations.</p>
@@ -1792,7 +2059,7 @@ public class OrderPlacedReadModelUpdater : IConsumer&lt;OrderPlacedEvent&gt;
 }</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='9-event-sourcing-event-sourcing'>9. EVENT SOURCING {#event-sourcing}</h2>
 <h3 id='91-definition'>9.1 Definition</h3>
 <p>Event Sourcing stores <strong>all changes to application state as a sequence of events</strong>. The current state is derived by replaying events from the beginning (or from a snapshot). The event log IS the source of truth — not the current state table.</p>
@@ -2055,7 +2322,7 @@ if (order.Version % 50 == 0)
 <li>Small teams without DDD knowledge (high learning curve)</li>
 <li>High-frequency state updates that make event log impractical (e.g., real-time cursor position)</li>
 </ul>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='10-saga-pattern-saga-pattern'>10. SAGA PATTERN {#saga-pattern}</h2>
 <h3 id='101-definition'>10.1 Definition</h3>
 <p>A Saga is a sequence of <strong>local transactions</strong>, each publishing events or messages to trigger the next step. If any step fails, compensating transactions are executed to undo previously completed steps.</p>
@@ -2244,7 +2511,7 @@ FAILURE SCENARIO (payment fails):
 [DONE] ✅ (compensated)</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='11-outbox-pattern-outbox-pattern'>11. OUTBOX PATTERN {#outbox-pattern}</h2>
 <h3 id='111-the-dual-write-problem'>11.1 The Dual-Write Problem</h3>
 
@@ -2379,7 +2646,7 @@ public class OutboxPublisherService : BackgroundService
 <tr><td>Debezium (CDC)</td><td>Reads DB transaction log directly</td><td>Milliseconds</td><td>High</td></tr>
 </table></div>
 <p><strong>Debezium</strong> (Change Data Capture) captures every row change from PostgreSQL/MySQL write-ahead log. Zero polling overhead. Better for high-throughput systems.</p>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='12-resilience-with-polly-resilience-with-polly'>12. RESILIENCE WITH POLLY {#resilience-with-polly}</h2>
 <h3 id='121-definition'>12.1 Definition</h3>
 <p>Polly is a .NET resilience library that allows you to define policies for handling transient failures: retries, circuit breakers, timeouts, bulkheads, and fallbacks.</p>
@@ -2554,7 +2821,7 @@ var bulkheadPipeline = new ResiliencePipelineBuilder()
     .Build();</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='13-distributed-tracing-distributed-tracing'>13. DISTRIBUTED TRACING {#distributed-tracing}</h2>
 <h3 id='131-correlation-ids'>13.1 Correlation IDs</h3>
 <p>Without correlation, when a request fails across 5 services, finding which service failed is like finding a needle in a haystack.</p>
@@ -2669,7 +2936,7 @@ public async Task&lt;Order&gt; ProcessOrderAsync(Guid orderId)
 → Jaeger UI shows entire waterfall for trace abc123</code></pre>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='14-service-mesh-service-mesh'>14. SERVICE MESH {#service-mesh}</h2>
 <h3 id='141-what-a-service-mesh-does'>14.1 What a Service Mesh Does</h3>
 <p>A service mesh is an infrastructure layer that handles <strong>service-to-service communication</strong> transparently via sidecar proxies (e.g., Envoy). Each pod gets a proxy sidecar that intercepts all network traffic.</p>
@@ -2699,7 +2966,7 @@ public async Task&lt;Order&gt; ProcessOrderAsync(Guid orderId)
 <tr><td>Multi-language (polyglot)</td><td>All .NET, Polly handles resilience</td></tr>
 <tr><td>Compliance requiring mTLS everywhere</td><td>Internal-only services</td></tr>
 </table></div>
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='15-interview-qa-master-list-interview-qa'>15. INTERVIEW Q&A — MASTER LIST {#interview-qa}</h2>
 <h3 id='architecture-questions'>Architecture Questions</h3>
 <p><strong>Q: What is the difference between Choreography and Orchestration sagas?</strong></p>
@@ -2772,7 +3039,7 @@ public async Task&lt;Order&gt; ProcessOrderAsync(Guid orderId)
     <div class="callout-body">2PC requires a distributed transaction coordinator and locks across multiple systems — fragile and blocking. The Outbox pattern uses a single local transaction (always fast and safe), then eventual delivery via a background publisher. It trades strict consistency for resilience and simplicity.</div>
 </div>
 
-<p>---</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <p><em>Volume 9 complete — approximately 8,500 words of production-grade microservices architecture knowledge.</em></p>
             </article>
 
@@ -2780,13 +3047,13 @@ public async Task&lt;Order&gt; ProcessOrderAsync(Guid orderId)
                 
     <a href="Volume-8-Database-SQL.html" class="nav-card">
         <span class="nav-card-dir">← Previous Module</span>
-        <span class="nav-card-title">Volume 8: Database Engine Internals & SQL Server</span>
+        <span class="nav-card-title">Volume 8: Database Systems & High-Performance SQL</span>
     </a>
     
                 
     <a href="Volume-10-System-Design.html" class="nav-card" style="text-align: right;">
         <span class="nav-card-dir">Next Module →</span>
-        <span class="nav-card-title">Volume 10: Enterprise System Design</span>
+        <span class="nav-card-title">Volume 10: System Design: Enterprise Case Studies</span>
     </a>
     
             </nav>
@@ -2796,11 +3063,6 @@ public async Task&lt;Order&gt; ProcessOrderAsync(Guid orderId)
             <div class="toc-title">On This Page</div>
             <ul class="toc-list">
                 
-        <li class="toc-item level-1">
-            <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
-        </li>
-        
-
         <li class="toc-item level-1">
             <a href="#volume-9-microservices" class="toc-link">VOLUME 9: MICROSERVICES</a>
         </li>
@@ -2945,6 +3207,61 @@ public async Task&lt;Order&gt; ProcessOrderAsync(Guid orderId)
             <a href="#48-interview-qa-rabbitmq" class="toc-link">4.8 Interview Q&amp;A — RabbitMQ</a>
         </li>
         
+
+        <li class="toc-item level-2">
+            <a href="#5-apache-kafka-apache-kafka" class="toc-link">5. APACHE KAFKA {#apache-kafka}</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#51-definition" class="toc-link">5.1 Definition</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#52-historical-reason" class="toc-link">5.2 Historical Reason</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#53-core-concepts" class="toc-link">5.3 Core Concepts</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#54-how-kafka-guarantees-ordering" class="toc-link">5.4 How Kafka Guarantees Ordering</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#55-offset-management-at-least-once-delivery" class="toc-link">5.5 Offset Management — At-Least-Once Deliver</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#56-kafka-in-net-with-confluentkafka" class="toc-link">5.6 Kafka in .NET with Confluent.Kafka</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#57-kafka-vs-rabbitmq-decision-guide" class="toc-link">5.7 Kafka vs RabbitMQ — Decision Guide</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#6-nats-nats" class="toc-link">6. NATS {#nats}</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#61-definition" class="toc-link">6.1 Definition</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#62-when-to-use-nats-vs-kafka" class="toc-link">6.2 When to Use NATS vs Kafka</a>
+        </li>
+        
             </ul>
         </aside>
     </div>
@@ -2975,11 +3292,137 @@ public async Task&lt;Order&gt; ProcessOrderAsync(Guid orderId)
             // Highlight syntax
             hljs.highlightAll();
 
-            // Mermaid diagrams
+            // Mermaid diagrams initialization
             mermaid.initialize({
                 startOnLoad: true,
                 theme: currentTheme === 'dark' ? 'dark' : 'neutral',
                 securityLevel: 'loose'
+            });
+
+            // ==========================================
+            // ACCORDION & SINGLE-FOCUS CONTROLS
+            // ==========================================
+            const accordions = document.querySelectorAll('.chapter-accordion');
+            const singleFocusToggle = document.getElementById('single-focus-toggle');
+            const btnExpandAll = document.getElementById('btn-expand-all');
+            const btnCollapseAll = document.getElementById('btn-collapse-all');
+
+            function renderMermaidIn(element) {
+                if (window.mermaid) {
+                    const unrendered = element.querySelectorAll('.mermaid:not([data-processed])');
+                    if (unrendered.length > 0) {
+                        try { mermaid.run({ nodes: unrendered }); } catch(e) {}
+                    }
+                }
+            }
+
+            // Expand All
+            if (btnExpandAll) {
+                btnExpandAll.addEventListener('click', () => {
+                    if (singleFocusToggle) singleFocusToggle.checked = false;
+                    accordions.forEach(acc => {
+                        acc.open = true;
+                        renderMermaidIn(acc);
+                    });
+                });
+            }
+
+            // Collapse All
+            if (btnCollapseAll) {
+                btnCollapseAll.addEventListener('click', () => {
+                    accordions.forEach(acc => {
+                        acc.open = false;
+                    });
+                });
+            }
+
+            // Single focus auto-closing logic
+            accordions.forEach(acc => {
+                acc.addEventListener('toggle', () => {
+                    const statusText = acc.querySelector('.accordion-status-text');
+                    if (statusText) {
+                        statusText.innerText = acc.open ? 'Click to collapse' : 'Click to expand';
+                    }
+                    if (acc.open) {
+                        renderMermaidIn(acc);
+                        if (singleFocusToggle && singleFocusToggle.checked) {
+                            accordions.forEach(other => {
+                                if (other !== acc && other.open) {
+                                    other.open = false;
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            // ==========================================
+            // DEEP LINKING & TOC NAVIGATION
+            // ==========================================
+            function navigateToTarget(targetId) {
+                if (!targetId) return;
+                let target = document.getElementById(targetId);
+                
+                // Fallback for slug variations (e.g. hyphens)
+                if (!target) {
+                    const normalized = targetId.replace(/-+/g, '-');
+                    target = document.getElementById(normalized) || 
+                             document.querySelector(`[id*="${normalized}"]`) ||
+                             document.querySelector(`[id*="${normalized.replace(/^\d+-/, '')}"]`);
+                }
+
+                if (!target) return;
+
+                // If target is inside an accordion, open that accordion
+                const parentAcc = target.closest('.chapter-accordion');
+                if (parentAcc) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== parentAcc) a.open = false;
+                        });
+                    }
+                    parentAcc.open = true;
+                    renderMermaidIn(parentAcc);
+                } else if (target.classList.contains('chapter-accordion')) {
+                    if (singleFocusToggle && singleFocusToggle.checked) {
+                        accordions.forEach(a => {
+                            if (a !== target) a.open = false;
+                        });
+                    }
+                    target.open = true;
+                    renderMermaidIn(target);
+                }
+
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.classList.add('flash-highlight');
+                    setTimeout(() => target.classList.remove('flash-highlight'), 1600);
+                }, 100);
+            }
+
+            // Check URL hash on page load
+            if (window.location.hash) {
+                setTimeout(() => {
+                    navigateToTarget(window.location.hash.substring(1));
+                }, 250);
+            }
+
+            // Listen for hash changes
+            window.addEventListener('hashchange', () => {
+                navigateToTarget(window.location.hash.substring(1));
+            });
+
+            // Intercept internal page anchor clicks
+            document.addEventListener('click', (e) => {
+                const anchor = e.target.closest('a[href^="#"]');
+                if (!anchor) return;
+                const href = anchor.getAttribute('href');
+                if (href && href.length > 1) {
+                    e.preventDefault();
+                    const id = href.substring(1);
+                    history.pushState(null, null, href);
+                    navigateToTarget(id);
+                }
             });
         });
     </script>
