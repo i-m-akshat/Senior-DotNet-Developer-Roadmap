@@ -1,0 +1,2733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volume 4: OOP & Enterprise Design Principles | .NET Backend Encyclopedia</title>
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <!-- Mermaid for Interactive Flowcharts -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+:root {
+    --bg-page: #0b0f19;
+    --bg-surface: #111827;
+    --bg-surface-elevated: #1f2937;
+    --bg-code: #030712;
+    --border: #374151;
+    --border-light: #4b5563;
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    --text-dim: #6b7280;
+    --primary: #3b82f6;
+    --primary-hover: #60a5fa;
+    --primary-glow: rgba(59, 130, 246, 0.15);
+    --accent: #8b5cf6;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    line-height: 1.75;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* LEFT SIDEBAR */
+#sidebar {
+    width: 300px;
+    background-color: var(--bg-surface);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+    padding: 24px 16px;
+    z-index: 100;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: #fff;
+}
+
+.sidebar-logo {
+    font-size: 1.7rem;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+.sidebar-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.sidebar-sub {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nav-section-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin: 16px 8px 8px 8px;
+}
+
+.nav-list { list-style: none; }
+.nav-item { margin-bottom: 3px; }
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.nav-link:hover {
+    background-color: var(--bg-surface-elevated);
+    color: #fff;
+}
+
+.nav-link.active {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.2), transparent);
+    color: var(--primary-hover);
+    border-left: 3px solid var(--primary);
+    font-weight: 600;
+}
+
+.nav-icon { font-size: 1rem; }
+.nav-vol { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
+.nav-link.active .nav-vol { color: var(--primary); }
+
+/* MAIN CONTENT CONTAINER */
+#content-wrapper {
+    margin-left: 300px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 40px 30px;
+}
+
+#main-content {
+    max-width: 860px;
+    width: 100%;
+}
+
+/* RIGHT TABLE OF CONTENTS (TOC) */
+#toc-sidebar {
+    width: 250px;
+    position: sticky;
+    top: 40px;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    padding-left: 28px;
+    margin-left: 20px;
+    display: none;
+}
+
+@media (min-width: 1300px) {
+    #toc-sidebar { display: block; }
+}
+
+.toc-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.toc-list { list-style: none; border-left: 1px solid var(--border); padding-left: 10px; }
+.toc-item { margin-bottom: 6px; }
+
+.toc-link {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    line-height: 1.35;
+    display: block;
+    transition: color 0.15s ease;
+}
+
+.toc-link:hover { color: var(--primary-hover); }
+.toc-item.level-3 { padding-left: 10px; }
+
+/* HEADER BANNER */
+.chapter-hero {
+    background: linear-gradient(135deg, rgba(31, 41, 55, 0.7) 0%, rgba(17, 24, 39, 0.9) 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 36px;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.hero-badge {
+    background: var(--primary-glow);
+    border: 1px solid var(--primary);
+    color: var(--primary-hover);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.hero-vol {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.chapter-hero h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+    line-height: 1.25;
+}
+
+.chapter-hero p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* TYPOGRAPHY */
+h1, h2, h3, h4, h5 { color: #fff; font-weight: 700; line-height: 1.3; }
+
+h1 {
+    font-size: 1.85rem;
+    margin: 44px 0 18px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--primary-hover);
+}
+
+h2 {
+    font-size: 1.4rem;
+    margin: 36px 0 14px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(55, 65, 81, 0.6);
+    color: #f9fafb;
+}
+
+h3 {
+    font-size: 1.15rem;
+    margin: 26px 0 10px 0;
+    color: #e5e7eb;
+}
+
+h4 {
+    font-size: 0.98rem;
+    margin: 18px 0 8px 0;
+    color: var(--warning);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+p { margin-bottom: 16px; font-size: 0.96rem; color: #d1d5db; }
+strong { color: #fff; font-weight: 600; }
+a { color: var(--primary-hover); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* CODE BLOCKS */
+.code-container {
+    position: relative;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 22px 0;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #111827;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    font-family: monospace;
+    font-weight: 600;
+}
+
+.copy-btn {
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    padding: 3px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.copy-btn:hover { background: var(--border-light); color: #fff; }
+
+pre {
+    padding: 16px 20px;
+    overflow-x: auto;
+    font-family: Consolas, "JetBrains Mono", Menlo, Courier, monospace;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: #e5e7eb;
+}
+
+code {
+    font-family: Consolas, Menlo, Courier, monospace;
+    font-size: 0.86em;
+    background-color: rgba(55, 65, 81, 0.6);
+    color: #f87171;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
+    font-size: 0.88rem;
+}
+
+/* MERMAID & FLOWCHARTS */
+.mermaid {
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 24px;
+    margin: 24px 0;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.flow-step-box {
+    background: #0f172a;
+    border-left: 4px solid var(--primary);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 20px;
+    margin: 18px 0;
+    font-family: monospace;
+    font-size: 0.88rem;
+    color: var(--primary-hover);
+    line-height: 1.6;
+}
+
+/* TABLES */
+.table-wrapper {
+    overflow-x: auto;
+    margin: 24px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+th, td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    background: #1f2937;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+tr:nth-child(even) { background: rgba(31, 41, 55, 0.3); }
+tr:hover { background: rgba(55, 65, 81, 0.3); }
+
+/* ALERTS & CALLOUTS */
+.callout {
+    display: flex;
+    gap: 14px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.callout-icon { font-size: 1.25rem; line-height: 1; flex-shrink: 0; }
+.callout-body { flex: 1; }
+
+.callout.note {
+    background: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-left: 4px solid var(--primary);
+}
+
+.callout.tip {
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-left: 4px solid var(--success);
+}
+
+.callout.warning {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-left: 4px solid var(--warning);
+}
+
+.callout.danger {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-left: 4px solid var(--danger);
+}
+
+/* LISTS */
+ul, ol {
+    padding-left: 24px;
+    margin-bottom: 18px;
+}
+
+li {
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+    color: #d1d5db;
+}
+
+li::marker { color: var(--primary); }
+
+/* BOTTOM CHAPTER NAV */
+.chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 60px;
+    padding-top: 30px;
+    border-top: 1px solid var(--border);
+}
+
+.nav-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 20px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.nav-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    background: var(--bg-surface-elevated);
+}
+
+.nav-card-dir {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.nav-card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+}
+</style>
+</head>
+<body>
+    <aside id="sidebar">
+        <a href="index.html" class="sidebar-header">
+            <div class="sidebar-logo">⚡</div>
+            <div>
+                <div class="sidebar-title">.NET Master Guide</div>
+                <div class="sidebar-sub">Infosys & Tier-1 Prep</div>
+            </div>
+        </a>
+        <div class="nav-section-title">Knowledge Base</div>
+        <ul class="nav-list">
+            
+        <li class="nav-item">
+            <a href="Volume-0-Software-Engineering-Fundamentals.html" class="nav-link ">
+                <span class="nav-icon">🧠</span>
+                <span>Software Engineering Fundamentals</span>
+                <span class="nav-vol">V0</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-X-DotNet-Platform-Core-Encyclopedia.html" class="nav-link ">
+                <span class="nav-icon">⚙️</span>
+                <span>.NET Platform & CoreCLR Runtime Encyclopedia</span>
+                <span class="nav-vol">VX</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-1-DSA-Logical-Thinking.html" class="nav-link ">
+                <span class="nav-icon">⚡</span>
+                <span>Logical Thinking & Data Structures and Algorithms</span>
+                <span class="nav-vol">V1</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-2-CSharp-Encyclopedia.html" class="nav-link ">
+                <span class="nav-icon">📘</span>
+                <span>C# Complete Language Encyclopedia</span>
+                <span class="nav-vol">V2</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-3-Advanced-CSharp.html" class="nav-link ">
+                <span class="nav-icon">🔥</span>
+                <span>Advanced C# & Memory Management</span>
+                <span class="nav-vol">V3</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-4-OOP-Design-Principles.html" class="nav-link active">
+                <span class="nav-icon">🏛️</span>
+                <span>OOP & Enterprise Design Principles</span>
+                <span class="nav-vol">V4</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-5-Design-Patterns.html" class="nav-link ">
+                <span class="nav-icon">🧩</span>
+                <span>GoF Design Patterns in Enterprise .NET</span>
+                <span class="nav-vol">V5</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-6-ASPNetCore.html" class="nav-link ">
+                <span class="nav-icon">🌐</span>
+                <span>ASP.NET Core Complete Architecture</span>
+                <span class="nav-vol">V6</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-7-EFCore.html" class="nav-link ">
+                <span class="nav-icon">🗄️</span>
+                <span>Entity Framework Core Internals</span>
+                <span class="nav-vol">V7</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-8-Database-SQL.html" class="nav-link ">
+                <span class="nav-icon">💾</span>
+                <span>Database Engine Internals & SQL Server</span>
+                <span class="nav-vol">V8</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-9-Microservices.html" class="nav-link ">
+                <span class="nav-icon">📡</span>
+                <span>Microservices & Distributed Systems</span>
+                <span class="nav-vol">V9</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-10-System-Design.html" class="nav-link ">
+                <span class="nav-icon">🏗️</span>
+                <span>Enterprise System Design</span>
+                <span class="nav-vol">V10</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-11-Project-Interview-Mastery.html" class="nav-link ">
+                <span class="nav-icon">🎯</span>
+                <span>Project Interview Mastery & Walkthroughs</span>
+                <span class="nav-vol">V11</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-12-Interview-Question-Bank.html" class="nav-link ">
+                <span class="nav-icon">🏆</span>
+                <span>The Master Interview Question Bank</span>
+                <span class="nav-vol">V12</span>
+            </a>
+        </li>
+        
+        </ul>
+    </aside>
+
+    <div id="content-wrapper">
+        <main id="main-content">
+            <div class="chapter-hero">
+                <div class="hero-meta">
+                    <span class="hero-badge">Architecture & Principles</span>
+                    <span class="hero-vol">Volume 4</span>
+                </div>
+                <h1>OOP & Enterprise Design Principles</h1>
+                <p>Encapsulation, VTable runtime polymorphism, Interface vs Abstract class, Pragmatic SOLID violations, and Dependency Injection container mechanics.</p>
+            </div>
+
+            <article class="doc-body">
+                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
+<h1 id='volume-4-oop-design-principles'>Volume 4: OOP + Design Principles</h1>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body"><strong>Audience:</strong> .NET developer ~3 years experience. Knows surface-level OOP. Needs deep "why" understanding for senior interviews.</div>
+</div>
+
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body"><strong>Goal:</strong> Master OOP not as definitions, but as <em>design decisions</em> made under real engineering constraints.</div>
+</div>
+
+<p>---</p>
+<h1 id='table-of-contents'>TABLE OF CONTENTS</h1>
+<ol>
+<li><a href="#the-four-pillars">The Four Pillars of OOP</a></li>
+</ol>
+<ul>
+<li><a href="#encapsulation">Encapsulation</a></li>
+<li><a href="#inheritance">Inheritance</a></li>
+<li><a href="#polymorphism">Polymorphism</a></li>
+<li><a href="#abstraction">Abstraction</a></li>
+</ul>
+<ol>
+<li><a href="#interface-vs-abstract-class">Interface vs Abstract Class — Complete Treatment</a></li>
+<li><a href="#composition-vs-inheritance">Composition vs Inheritance</a></li>
+<li><a href="#solid-principles">SOLID Principles — Full Treatment</a></li>
+<li><a href="#dependency-injection">Dependency Injection — Complete</a></li>
+</ol>
+<p>---</p>
+<h1 id='the-four-pillars-of-oop'>THE FOUR PILLARS OF OOP</h1>
+<h2 id='encapsulation'>Encapsulation</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Encapsulation is <strong>bundling data (state) and behavior (methods) together</strong> inside a class, while <strong>controlling external access</strong> to that data. It is NOT simply "making fields private" — that is <em>information hiding</em>, a related but distinct concept.</p>
+<p><strong>Encapsulation = Data + Behavior bound together</strong></p>
+<p><strong>Information Hiding = Deciding what to expose and what to protect</strong></p>
+<p>Both work together. You encapsulate by putting balance and Deposit() in the same class. You hide by making balance private.</p>
+<h3 id='2-historical-reason'>2. Historical Reason</h3>
+<p>Before OOP, programs were written procedurally: data structures (<code>struct</code>) held data and separate functions operated on them. Any function could modify any data. This led to:</p>
+<ul>
+<li>Impossible-to-trace bugs (who changed this value?)</li>
+<li>No invariants enforced (balance went negative)</li>
+<li>Global state disasters</li>
+</ul>
+<p>OOP was invented specifically to give data <em>owners</em> — to say "this data belongs to this object, and only this object manages it."</p>
+<h3 id='3-problem-it-solves'>3. Problem It Solves</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// BAD: Procedural approach — anyone can corrupt the balance
+public class BankAccount
+{
+    public decimal Balance; // public field — no protection
+    public string AccountNumber;
+}
+
+// Somewhere in the codebase...
+account.Balance = -99999; // Perfectly legal. Catastrophic.
+account.Balance += depositAmount; // No validation, no audit trail</code></pre>
+</div>
+
+<p>With encapsulation, the <code>BankAccount</code> class <em>owns</em> its balance and enforces business rules.</p>
+<h3 id='4-internal-working'>4. Internal Working</h3>
+<p>In C#, encapsulation is enforced via:</p>
+<ul>
+<li><strong>Access modifiers</strong>: <code>private</code>, <code>protected</code>, <code>internal</code>, <code>public</code></li>
+<li><strong>Properties</strong>: Expose state through controlled get/set with backing fields</li>
+<li><strong>Methods</strong>: The only way to transition state, enforcing invariants</li>
+</ul>
+<p>The CLR enforces access modifiers at IL (Intermediate Language) level — attempting to access a private member via reflection still works but requires <code>BindingFlags.NonPublic</code>, making it explicit and intentional.</p>
+<h3 id='5-production-example-bankaccount'>5. Production Example: BankAccount</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// GOOD: Encapsulated BankAccount
+public class BankAccount
+{
+    // Private backing field — external code CANNOT set this directly
+    private decimal _balance;
+    private readonly List&lt;Transaction&gt; _transactions = new();
+    
+    // Read-only property — external code can READ but not WRITE
+    public decimal Balance =&gt; _balance;
+    public string AccountNumber { get; }
+    public IReadOnlyList&lt;Transaction&gt; Transactions =&gt; _transactions.AsReadOnly();
+    
+    public BankAccount(string accountNumber, decimal initialDeposit)
+    {
+        if (string.IsNullOrWhiteSpace(accountNumber))
+            throw new ArgumentException(&quot;Account number required&quot;, nameof(accountNumber));
+        if (initialDeposit &lt; 0)
+            throw new ArgumentException(&quot;Initial deposit cannot be negative&quot;);
+            
+        AccountNumber = accountNumber;
+        _balance = initialDeposit;
+    }
+    
+    // Behavior and data are together — the class OWNS its state transitions
+    public void Deposit(decimal amount)
+    {
+        if (amount &lt;= 0)
+            throw new ArgumentException(&quot;Deposit amount must be positive&quot;);
+        
+        _balance += amount;
+        _transactions.Add(new Transaction(TransactionType.Deposit, amount, _balance));
+    }
+    
+    public void Withdraw(decimal amount)
+    {
+        if (amount &lt;= 0)
+            throw new ArgumentException(&quot;Withdrawal amount must be positive&quot;);
+        if (amount &gt; _balance)
+            throw new InvalidOperationException($&quot;Insufficient funds. Balance: {_balance}, Requested: {amount}&quot;);
+        
+        _balance -= amount;
+        _transactions.Add(new Transaction(TransactionType.Withdrawal, amount, _balance));
+    }
+    
+    // Behavior specific to this domain — belongs HERE, not in a service
+    public bool CanWithdraw(decimal amount) =&gt; amount &gt; 0 &amp;&amp; amount &lt;= _balance;
+}</code></pre>
+</div>
+
+<h3 id='6-property-vs-public-field-why-properties-win'>6. Property vs Public Field — Why Properties Win</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Public field — breaks encapsulation
+public decimal Balance;
+
+// Property — controlled access with future flexibility
+public decimal Balance { get; private set; }
+
+// You can later add:
+public decimal Balance 
+{ 
+    get =&gt; _balance;
+    private set
+    {
+        if (value &lt; 0) throw new InvalidOperationException(&quot;Balance cannot be negative&quot;);
+        _balance = value;
+        OnBalanceChanged?.Invoke(value); // Event notification
+    }
+}</code></pre>
+</div>
+
+<p><strong>Why properties win:</strong></p>
+<ol>
+<li>You can add validation without breaking API consumers</li>
+<li>You can add logging/notification logic</li>
+<li>You can make get and set have different access levels</li>
+<li>Properties work with data binding, serialization, reflection — fields don't</li>
+</ol>
+<h3 id='7-execution-flow'>7. Execution Flow</h3>
+<ol>
+<li>Client calls <code>account.Deposit(500)</code></li>
+<li><code>Deposit</code> validates amount > 0</li>
+<li>Updates <code>_balance</code> (private backing field)</li>
+<li>Appends to <code>_transactions</code> list</li>
+<li>Client reads <code>account.Balance</code> → gets computed property → returns <code>_balance</code></li>
+<li>Client <strong>cannot</strong> do <code>account._balance = 0</code> → compile error</li>
+</ol>
+<h3 id='8-design-reasoning'>8. Design Reasoning</h3>
+<p>The key insight: <strong>Encapsulation is about protecting invariants.</strong> A BankAccount invariant is "balance cannot go negative without overdraft." By encapsulating, we guarantee this is ALWAYS true, regardless of what 47 different services try to do.</p>
+<h3 id='9-performance'>9. Performance</h3>
+<ul>
+<li>Properties with simple get/set are <strong>inlined by JIT</strong> — zero overhead vs public fields</li>
+<li><code>get =&gt; _balance</code> (expression-bodied) compiles identically to a field access</li>
+<li>Only expensive if getter has complex logic (database call, computation)</li>
+</ul>
+<h3 id='10-common-mistakes'>10. Common Mistakes</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// MISTAKE 1: Exposing mutable collections
+public List&lt;Transaction&gt; Transactions { get; } = new(); // External code can Add/Remove!
+
+// FIX: Return IReadOnlyList
+public IReadOnlyList&lt;Transaction&gt; Transactions =&gt; _transactions.AsReadOnly();
+
+// MISTAKE 2: Anemic domain model — data without behavior
+public class Order
+{
+    public decimal Total { get; set; } // No validation, no logic
+    public OrderStatus Status { get; set; } // Anyone can set to anything
+}
+// Then OrderService has 500 lines of business logic that SHOULD be in Order
+
+// MISTAKE 3: Getter-only properties still exposing mutable objects
+public Address ShippingAddress { get; private set; } // Address is a class, mutable!
+// FIX: Either make Address a record (immutable) or clone on return</code></pre>
+</div>
+
+<h3 id='11-production-problems'>11. Production Problems</h3>
+<p><strong>Problem:</strong> In a payment processing system, a <code>PaymentRequest</code> object was fully public. A logging middleware accidentally mutated <code>Amount</code> to zero before it reached the payment gateway. Transactions went through as $0.</p>
+<p><strong>Fix:</strong> Encapsulation + immutable records.</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public sealed record PaymentRequest(
+    string OrderId,
+    decimal Amount,
+    string Currency,
+    string CustomerId
+); // Immutable by default — records are copy-on-modify</code></pre>
+</div>
+
+<h3 id='12-interview-prep'>12. Interview Prep</h3>
+<p><strong>Basic:</strong> "What is encapsulation?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Encapsulation bundles data and behavior together in a class and controls external access through access modifiers and properties. It's not just making fields private — it's about the class <em>owning</em> its state and enforcing business invariants.</div>
+</div>
+
+<p><strong>Intermediate:</strong> "What's the difference between encapsulation and information hiding?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Encapsulation is about grouping data and behavior together. Information hiding is about what you expose. They work together: you encapsulate a <code>BankAccount</code> (data + methods in one class), and you hide the <code>_balance</code> field (information hiding) so external code can't corrupt it.</div>
+</div>
+
+<p><strong>Senior:</strong> "How does encapsulation relate to the design of domain models?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">A well-encapsulated domain model is a Rich Domain Model where invariants are enforced by the object itself. The alternative is an Anemic Domain Model — objects are just data bags, and all logic lives in services. Anemic models violate encapsulation because the data and its behavior are separated. In DDD, entities and aggregates should encapsulate their state transitions.</div>
+</div>
+
+<p><strong>Tricky:</strong> "Can you have encapsulation without OOP?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Yes. Closures in functional languages encapsulate state. Modules in non-OOP languages can encapsulate. OOP formalizes it with classes, but the concept is architectural, not language-specific.</div>
+</div>
+
+<p>---</p>
+<h2 id='inheritance'>Inheritance</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Inheritance is a mechanism where a <strong>derived class (child)</strong> acquires the properties and behaviors of a <strong>base class (parent)</strong>. It creates an <strong>IS-A relationship</strong>.</p>
+<h3 id='2-historical-reason'>2. Historical Reason</h3>
+<p>In the 1980s–90s, inheritance was seen as the primary code reuse mechanism. "Don't rewrite PaymentProcessor logic — inherit from it." This led to massive, deep hierarchies. By the 2000s, the industry recognized the problems and began favoring composition. Inheritance still has a place but requires careful judgment.</p>
+<h3 id='3-problem-it-solves-and-creates'>3. Problem It Solves (and Creates)</h3>
+<p><strong>Legitimate use:</strong> Polymorphism — treating different subtypes uniformly through a base type reference.</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// PaymentProcessor hierarchy
+public abstract class PaymentProcessor
+{
+    protected readonly ILogger _logger;
+    
+    protected PaymentProcessor(ILogger logger) =&gt; _logger = logger;
+    
+    // Template method — skeleton defined here
+    public async Task&lt;PaymentResult&gt; ProcessAsync(PaymentRequest request)
+    {
+        _logger.LogInformation(&quot;Processing payment {Amount} via {Gateway}&quot;, 
+            request.Amount, GetType().Name);
+        
+        var validationResult = Validate(request);
+        if (!validationResult.IsValid)
+            return PaymentResult.Failed(validationResult.Errors);
+        
+        var result = await ChargeAsync(request);
+        
+        await PostProcessAsync(request, result);
+        return result;
+    }
+    
+    protected abstract Task&lt;PaymentResult&gt; ChargeAsync(PaymentRequest request);
+    
+    protected virtual ValidationResult Validate(PaymentRequest request)
+    {
+        // Default validation — subclasses can extend
+        if (request.Amount &lt;= 0)
+            return ValidationResult.Failure(&quot;Amount must be positive&quot;);
+        return ValidationResult.Success();
+    }
+    
+    protected virtual Task PostProcessAsync(PaymentRequest request, PaymentResult result)
+        =&gt; Task.CompletedTask; // Default: do nothing
+}
+
+public class StripePaymentProcessor : PaymentProcessor
+{
+    private readonly IStripeClient _stripeClient;
+    
+    public StripePaymentProcessor(IStripeClient stripeClient, ILogger&lt;StripePaymentProcessor&gt; logger)
+        : base(logger)
+    {
+        _stripeClient = stripeClient;
+    }
+    
+    protected override async Task&lt;PaymentResult&gt; ChargeAsync(PaymentRequest request)
+    {
+        var charge = await _stripeClient.Charges.CreateAsync(new ChargeCreateOptions
+        {
+            Amount = (long)(request.Amount * 100), // Stripe uses cents
+            Currency = request.Currency,
+            Customer = request.CustomerId
+        });
+        
+        return charge.Status == &quot;succeeded&quot;
+            ? PaymentResult.Success(charge.Id)
+            : PaymentResult.Failed(charge.FailureMessage);
+    }
+}</code></pre>
+</div>
+
+<h3 id='4-the-fragile-base-class-problem'>4. The Fragile Base Class Problem</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public class OrderCollection
+{
+    protected List&lt;Order&gt; _orders = new();
+    
+    public virtual void Add(Order order) =&gt; _orders.Add(order);
+    
+    public virtual void AddRange(IEnumerable&lt;Order&gt; orders)
+    {
+        foreach (var order in orders)
+            Add(order); // Calls virtual Add
+    }
+}
+
+public class AuditedOrderCollection : OrderCollection
+{
+    private int _addCount;
+    
+    public override void Add(Order order)
+    {
+        _addCount++;
+        base.Add(order);
+    }
+}
+
+// BUG: AddRange calls virtual Add → _addCount is incremented per item ✓
+// If base class CHANGES AddRange to _orders.AddRange(orders) directly,
+// _addCount stops incrementing → derived class breaks silently
+// This is the FRAGILE BASE CLASS PROBLEM</code></pre>
+</div>
+
+<h3 id='5-calling-virtual-methods-from-constructors-the-dangerous-trap'>5. Calling Virtual Methods from Constructors — The Dangerous Trap</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public class BaseProcessor
+{
+    public BaseProcessor()
+    {
+        Initialize(); // DANGEROUS! Calls derived class method
+    }
+    
+    protected virtual void Initialize()
+    {
+        Console.WriteLine(&quot;Base initialize&quot;);
+    }
+}
+
+public class DerivedProcessor : BaseProcessor
+{
+    private readonly string _connectionString; // Not yet initialized!
+    
+    public DerivedProcessor(string connectionString)
+        : base() // base() runs FIRST
+    {
+        _connectionString = connectionString;
+    }
+    
+    protected override void Initialize()
+    {
+        // _connectionString is NULL here! Base constructor runs first.
+        Console.WriteLine($&quot;Connecting to {_connectionString}&quot;); // NullReferenceException!
+    }
+}</code></pre>
+</div>
+
+<p><strong>Rule:</strong> Never call virtual methods in constructors. The derived class hasn't been initialized yet.</p>
+<h3 id='6-sealed-classes-for-protection'>6. <code>sealed</code> Classes for Protection</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Sealed: cannot be inherited — guards against fragile base class
+public sealed class RazorpayPaymentProcessor : PaymentProcessor
+{
+    protected override async Task&lt;PaymentResult&gt; ChargeAsync(PaymentRequest request)
+    {
+        // Razorpay-specific implementation
+        // sealed because Razorpay API is very specific — don&#x27;t extend this
+    }
+}</code></pre>
+</div>
+
+<h3 id='7-when-inheritance-becomes-a-trap'>7. When Inheritance Becomes a Trap</h3>
+<ul>
+<li>Deep hierarchies (>3 levels) become impossible to understand</li>
+<li>When you inherit for code reuse but there's no IS-A relationship</li>
+<li>When you can't explain the substitutability (LSP violation)</li>
+<li>When you change base class and 12 subclasses break</li>
+</ul>
+<h3 id='8-interview-prep'>8. Interview Prep</h3>
+<p><strong>Basic:</strong> "What is inheritance?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Inheritance allows a derived class to reuse and extend behavior from a base class. The child class IS-A type of the parent.</div>
+</div>
+
+<p><strong>Intermediate:</strong> "What is the fragile base class problem?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">When a base class changes its internal implementation — not its public API — derived classes can silently break because they depend on the internal behavior. For example, if a base class <code>AddRange</code> calls <code>Add</code> internally and a subclass overrides <code>Add</code> to count items, a base class change to not call <code>Add</code> breaks the count without any compiler warning.</div>
+</div>
+
+<p><strong>Senior:</strong> "When would you prefer inheritance over composition?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Inheritance is appropriate when: (1) there's a true IS-A relationship, (2) you need polymorphism through a base type, (3) you're implementing Template Method pattern, (4) you own the full hierarchy and can control changes. Composition is better when you want behavior reuse without IS-A semantics or when you need runtime flexibility.</div>
+</div>
+
+<p><strong>Tricky:</strong> "Why is calling virtual methods from constructors dangerous?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Because object construction in C# is bottom-up: base constructor runs before the derived class constructor. When the base constructor calls a virtual method, the derived class's override runs — but the derived class fields haven't been initialized yet. This leads to NullReferenceExceptions or corrupted state.</div>
+</div>
+
+<p>---</p>
+<h2 id='polymorphism'>Polymorphism</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Polymorphism means "many forms" — the ability of a single interface/method to work with objects of different types. In C#: compile-time (overloading) and runtime (overriding).</p>
+<h3 id='2-compile-time-polymorphism-overloading'>2. Compile-Time Polymorphism (Overloading)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public class PaymentCalculator
+{
+    // Same method name, different signatures — resolved at COMPILE TIME
+    public decimal Calculate(Order order) =&gt; order.Total;
+    
+    public decimal Calculate(Order order, DiscountCode discount)
+        =&gt; order.Total * (1 - discount.DiscountPercent / 100m);
+    
+    public decimal Calculate(Order order, DiscountCode discount, bool includeTax)
+        =&gt; includeTax 
+            ? Calculate(order, discount) * 1.18m 
+            : Calculate(order, discount);
+}</code></pre>
+</div>
+
+<h3 id='3-runtime-polymorphism-virtual-override-new'>3. Runtime Polymorphism — <code>virtual</code> / <code>override</code> / <code>new</code></h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public class PaymentGateway
+{
+    public virtual string GetGatewayName() =&gt; &quot;Generic Gateway&quot;;
+    public virtual async Task&lt;PaymentResult&gt; ProcessAsync(PaymentRequest req) 
+        =&gt; throw new NotImplementedException();
+}
+
+public class StripeGateway : PaymentGateway
+{
+    public override string GetGatewayName() =&gt; &quot;Stripe&quot;; // OVERRIDES — polymorphic
+    public override async Task&lt;PaymentResult&gt; ProcessAsync(PaymentRequest req)
+    {
+        // Runtime dispatch — this is called when variable is PaymentGateway
+        // but actual object is StripeGateway
+    }
+}
+
+public class PayPalGateway : PaymentGateway
+{
+    // THE INTERVIEW TRAP: `new` keyword HIDES instead of OVERRIDES
+    public new string GetGatewayName() =&gt; &quot;PayPal&quot;; // NOT polymorphic!
+}
+
+// Demonstration:
+PaymentGateway gateway = new PayPalGateway();
+Console.WriteLine(gateway.GetGatewayName()); // Prints &quot;Generic Gateway&quot; ← SURPRISE!
+// Because `new` breaks the virtual dispatch chain
+
+PayPalGateway concrete = new PayPalGateway();
+Console.WriteLine(concrete.GetGatewayName()); // Prints &quot;PayPal&quot; — variable type matters</code></pre>
+</div>
+
+<h3 id='4-how-vtable-works-in-clr'>4. How vtable Works in CLR</h3>
+<p>Every class with virtual methods gets a <strong>Virtual Method Table (vtable)</strong> — a data structure in memory that maps virtual method slots to actual method addresses.</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">PaymentGateway vtable:
+  [0] → PaymentGateway.GetGatewayName  (0x0A0A)
+  [1] → PaymentGateway.ProcessAsync     (0x0B0B)
+
+StripeGateway vtable (inherits + overrides):
+  [0] → StripeGateway.GetGatewayName   (0x1A1A) ← replaced
+  [1] → StripeGateway.ProcessAsync      (0x1B1B) ← replaced
+
+PayPalGateway vtable (hides with `new`):
+  [0] → PaymentGateway.GetGatewayName  (0x0A0A) ← NOT replaced!
+  [1] → PaymentGateway.ProcessAsync     (0x0B0B) ← NOT replaced!
+  + PayPalGateway has its own separate slot for the `new` method</code></pre>
+</div>
+
+<p>When you call through a <code>PaymentGateway</code> reference, CLR looks up slot [0] in the vtable. For <code>PayPalGateway</code>, slot [0] still points to <code>PaymentGateway.GetGatewayName</code> because <code>new</code> didn't replace it.</p>
+<h3 id='5-abstract-methods'>5. Abstract Methods</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public abstract class NotificationSender
+{
+    // Abstract: no implementation, MUST be overridden
+    public abstract Task SendAsync(Notification notification);
+    
+    // Not abstract: has default implementation, CAN be overridden
+    public virtual bool CanSend(Notification notification) =&gt; true;
+    
+    // Not virtual: cannot be overridden
+    public void LogNotification(Notification notification)
+        =&gt; Console.WriteLine($&quot;Sending notification {notification.Id}&quot;);
+}
+
+public class EmailNotificationSender : NotificationSender
+{
+    public override async Task SendAsync(Notification notification)
+    {
+        // Must implement — compiler error if missing
+    }
+}</code></pre>
+</div>
+
+<h3 id='6-production-multiple-payment-gateway-implementations'>6. Production: Multiple Payment Gateway Implementations</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Interface-based polymorphism (preferred over class inheritance for this case)
+public interface IPaymentGateway
+{
+    string GatewayName { get; }
+    bool Supports(string currency);
+    Task&lt;PaymentResult&gt; ProcessAsync(PaymentRequest request, CancellationToken ct = default);
+    Task&lt;RefundResult&gt; RefundAsync(string transactionId, decimal amount, CancellationToken ct = default);
+}
+
+public class StripeGateway : IPaymentGateway
+{
+    public string GatewayName =&gt; &quot;Stripe&quot;;
+    public bool Supports(string currency) =&gt; new[] { &quot;USD&quot;, &quot;EUR&quot;, &quot;GBP&quot;, &quot;INR&quot; }.Contains(currency);
+    
+    public async Task&lt;PaymentResult&gt; ProcessAsync(PaymentRequest request, CancellationToken ct = default)
+    {
+        // Stripe API call
+    }
+    
+    public async Task&lt;RefundResult&gt; RefundAsync(string transactionId, decimal amount, CancellationToken ct = default)
+    {
+        // Stripe refund API
+    }
+}
+
+// Runtime polymorphism in action:
+public class PaymentService
+{
+    private readonly IEnumerable&lt;IPaymentGateway&gt; _gateways;
+    
+    public PaymentService(IEnumerable&lt;IPaymentGateway&gt; gateways) =&gt; _gateways = gateways;
+    
+    public async Task&lt;PaymentResult&gt; ProcessAsync(PaymentRequest request)
+    {
+        // Runtime dispatch — correct gateway selected based on currency
+        var gateway = _gateways.FirstOrDefault(g =&gt; g.Supports(request.Currency))
+            ?? throw new InvalidOperationException($&quot;No gateway supports {request.Currency}&quot;);
+        
+        return await gateway.ProcessAsync(request); // Polymorphic call
+    }
+}</code></pre>
+</div>
+
+<h3 id='7-interview-prep'>7. Interview Prep</h3>
+<p><strong>Basic:</strong> "What is polymorphism?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Polymorphism allows objects of different types to be treated as the same base type, with each type providing its own implementation. At runtime, the correct method is called based on the actual object type.</div>
+</div>
+
+<p><strong>Intermediate:</strong> "What's the difference between <code>override</code> and <code>new</code> in C#?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body"><code>override</code> participates in virtual dispatch — when called through a base class reference, the derived class's method runs. <code>new</code> hides the base method without replacing it in the vtable, so calling through a base class reference still calls the base method. <code>override</code> is almost always what you want.</div>
+</div>
+
+<p><strong>Senior:</strong> "How does the CLR resolve virtual method calls?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">The CLR maintains a vtable per type. Each virtual method slot maps to a method address. When a virtual call is made, CLR looks up the object's actual type, finds its vtable, and dispatches to the address in the relevant slot. <code>override</code> replaces the slot; <code>new</code> adds a new slot without replacing. This happens at IL level via <code>callvirt</code> instruction.</div>
+</div>
+
+<p><strong>Tricky:</strong> "Can you have polymorphism without inheritance?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Yes — through interfaces. Interface-based polymorphism is preferred over class inheritance for behavioral substitution (SOLID: DIP). Also, C# generics with constraints provide compile-time polymorphism. Duck typing (via dynamic) is another form.</div>
+</div>
+
+<p>---</p>
+<h2 id='abstraction'>Abstraction</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Abstraction means exposing <strong>what</strong> an object does (its interface/capabilities) while hiding <strong>how</strong> it does it (its implementation). It's about managing complexity by showing only relevant details.</p>
+<h3 id='2-how-interfaces-provide-abstraction'>2. How Interfaces Provide Abstraction</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// The abstraction: clients know WHAT but not HOW
+public interface IOrderRepository
+{
+    Task&lt;Order?&gt; GetByIdAsync(Guid orderId);
+    Task&lt;IReadOnlyList&lt;Order&gt;&gt; GetByCustomerAsync(string customerId);
+    Task SaveAsync(Order order);
+    Task DeleteAsync(Guid orderId);
+}
+
+// The reality hidden behind abstraction:
+public class SqlOrderRepository : IOrderRepository
+{
+    private readonly OrderDbContext _db;
+    
+    public async Task&lt;Order?&gt; GetByIdAsync(Guid orderId)
+        =&gt; await _db.Orders
+            .Include(o =&gt; o.Items)
+            .Include(o =&gt; o.ShippingAddress)
+            .FirstOrDefaultAsync(o =&gt; o.Id == orderId);
+    
+    // SQL complexity hidden — consumer doesn&#x27;t know or care
+}
+
+public class CachedOrderRepository : IOrderRepository
+{
+    private readonly IOrderRepository _inner;
+    private readonly IDistributedCache _cache;
+    
+    public async Task&lt;Order?&gt; GetByIdAsync(Guid orderId)
+    {
+        var cacheKey = $&quot;order:{orderId}&quot;;
+        var cached = await _cache.GetAsync(cacheKey);
+        if (cached != null) return Deserialize&lt;Order&gt;(cached);
+        
+        var order = await _inner.GetByIdAsync(orderId);
+        if (order != null) await _cache.SetAsync(cacheKey, Serialize(order), _cacheOptions);
+        return order;
+    }
+}</code></pre>
+</div>
+
+<h3 id='3-how-abstract-classes-provide-abstraction'>3. How Abstract Classes Provide Abstraction</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public abstract class ReportGenerator
+{
+    // What the report generator DOES (abstraction)
+    public async Task&lt;Report&gt; GenerateAsync(ReportRequest request)
+    {
+        var data = await FetchDataAsync(request);
+        var processed = ProcessData(data);
+        return FormatReport(processed);
+    }
+    
+    // HOW is abstracted — subclass provides the details
+    protected abstract Task&lt;RawData&gt; FetchDataAsync(ReportRequest request);
+    protected abstract ProcessedData ProcessData(RawData data);
+    protected abstract Report FormatReport(ProcessedData data);
+}
+
+public class SalesReportGenerator : ReportGenerator
+{
+    protected override async Task&lt;RawData&gt; FetchDataAsync(ReportRequest request)
+    {
+        // Specific data fetching for sales report
+    }
+    // etc.
+}</code></pre>
+</div>
+
+<h3 id='4-interface-vs-abstract-class-for-abstraction'>4. Interface vs Abstract Class for Abstraction</h3>
+<div class='table-wrapper'><table>
+<tr><th>When to use Interface</th><th>When to use Abstract Class</th></tr>
+<tr><td>Multiple implementations possible</td><td>Shared implementation to inherit</td></tr>
+<tr><td>Multiple "contracts" (roles) needed</td><td>Single inheritance hierarchy</td></tr>
+<tr><td>DI/testability boundaries</td><td>Template method pattern</td></tr>
+<tr><td>No shared state needed</td><td>Protected shared state needed</td></tr>
+<tr><td>You don't own all implementors</td><td>You control the hierarchy</td></tr>
+</table></div>
+<h3 id='5-interview-prep'>5. Interview Prep</h3>
+<p><strong>Tricky:</strong> "Is abstraction about hiding implementation or reducing complexity?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Both. Abstraction reduces cognitive load (you interact with <code>IPaymentGateway.ProcessAsync</code>, not Stripe's REST API internals). And it hides implementation so it can change without affecting clients. These are two sides of the same coin.</div>
+</div>
+
+<p>---</p>
+<h1 id='interface-vs-abstract-class-complete-treatment'>INTERFACE vs ABSTRACT CLASS — COMPLETE TREATMENT</h1>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">This is the <strong>most asked OOP interview question</strong>. Know this cold.</div>
+</div>
+
+<h2 id='the-full-comparison-table'>The Full Comparison Table</h2>
+<div class='table-wrapper'><table>
+<tr><th>Feature</th><th>Interface</th><th>Abstract Class</th></tr>
+<tr><td>Inheritance</td><td>Multiple interfaces allowed</td><td>Single class only</td></tr>
+<tr><td>State</td><td>No instance state (until C#8 static)</td><td>Can have fields, properties</td></tr>
+<tr><td>Constructor</td><td>None</td><td>Yes (called via base())</td></tr>
+<tr><td>Access modifiers</td><td>All public (by default pre-C#8)</td><td>Any modifier</td></tr>
+<tr><td>Implementation</td><td>Default methods only (C#8+)</td><td>Any methods</td></tr>
+<tr><td>Versioning</td><td>Adding member = breaking change*</td><td>Can add non-abstract members</td></tr>
+<tr><td>Purpose</td><td>Contract/role</td><td>Partial implementation + extension</td></tr>
+</table></div>
+<p>*Before default interface methods in C# 8.</p>
+<h2 id='when-exactly-to-use-interface'>When EXACTLY to Use Interface</h2>
+<h3 id='1-multiple-implementations-of-same-contract'>1. Multiple Implementations of Same Contract</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Many payment gateways, many notification channels, many repositories
+// All follow the same CONTRACT but have completely different implementations
+public interface INotificationChannel
+{
+    bool CanHandle(NotificationType type);
+    Task SendAsync(Notification notification, CancellationToken ct = default);
+}
+
+// Each implementation has different dependencies, different logic
+public class EmailChannel : INotificationChannel { ... }
+public class SmsChannel : INotificationChannel { ... }
+public class PushChannel : INotificationChannel { ... }
+public class SlackChannel : INotificationChannel { ... }</code></pre>
+</div>
+
+<h3 id='2-dependency-injection-boundaries'>2. Dependency Injection Boundaries</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// NEVER inject concrete classes — inject interfaces
+// Allows swapping implementations without changing consumers
+
+// In Program.cs / Startup.cs:
+builder.Services.AddScoped&lt;IOrderRepository, SqlOrderRepository&gt;();
+// Swap to: builder.Services.AddScoped&lt;IOrderRepository, MongoOrderRepository&gt;();
+// Zero changes to OrderService!</code></pre>
+</div>
+
+<h3 id='3-testing-mock-boundaries'>3. Testing (Mock Boundaries)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Interface makes mocking trivial
+public class OrderServiceTests
+{
+    [Fact]
+    public async Task PlaceOrder_SufficientStock_ReturnsSuccess()
+    {
+        // Arrange
+        var mockRepo = new Mock&lt;IOrderRepository&gt;();
+        var mockPayment = new Mock&lt;IPaymentGateway&gt;();
+        var mockInventory = new Mock&lt;IInventoryService&gt;();
+        
+        mockInventory.Setup(i =&gt; i.IsAvailableAsync(It.IsAny&lt;string&gt;(), It.IsAny&lt;int&gt;()))
+            .ReturnsAsync(true);
+        mockPayment.Setup(p =&gt; p.ProcessAsync(It.IsAny&lt;PaymentRequest&gt;(), default))
+            .ReturnsAsync(PaymentResult.Success(&quot;txn_123&quot;));
+        
+        var service = new OrderService(mockRepo.Object, mockPayment.Object, mockInventory.Object);
+        
+        // Act &amp; Assert
+        var result = await service.PlaceOrderAsync(new PlaceOrderRequest { ... });
+        Assert.True(result.IsSuccess);
+    }
+}</code></pre>
+</div>
+
+<h3 id='4-when-a-type-plays-multiple-roles'>4. When a Type Plays Multiple Roles</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// One class can implement multiple interfaces — multiple roles
+public class OrderProcessor : IOrderProcessor, IOrderStatusUpdater, IHealthCheck
+{
+    // Implements all three contracts
+}
+// You can&#x27;t do this with abstract classes!</code></pre>
+</div>
+
+<h2 id='when-exactly-to-use-abstract-class'>When EXACTLY to Use Abstract Class</h2>
+<h3 id='1-template-method-pattern-most-common'>1. Template Method Pattern (Most Common)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// When you have an algorithm skeleton with customizable steps
+public abstract class DataImporter
+{
+    // Template method — the algorithm
+    public async Task ImportAsync(Stream dataStream)
+    {
+        using var reader = CreateReader(dataStream);
+        
+        await BeforeImportAsync();
+        
+        int rowsImported = 0;
+        await foreach (var record in reader.ReadAllAsync())
+        {
+            if (Validate(record))
+            {
+                var entity = Transform(record);
+                await PersistAsync(entity);
+                rowsImported++;
+            }
+        }
+        
+        await AfterImportAsync(rowsImported);
+    }
+    
+    protected abstract IDataReader CreateReader(Stream stream);
+    protected abstract bool Validate(RawRecord record);
+    protected abstract T Transform(RawRecord record);
+    protected abstract Task PersistAsync(T entity);
+    
+    // Optional hooks with defaults
+    protected virtual Task BeforeImportAsync() =&gt; Task.CompletedTask;
+    protected virtual Task AfterImportAsync(int rowsImported) =&gt; Task.CompletedTask;
+}</code></pre>
+</div>
+
+<h3 id='2-shared-implementation-with-protected-state'>2. Shared Implementation with Protected State</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public abstract class CachedRepository&lt;T&gt;
+{
+    private readonly IMemoryCache _cache; // Shared state — impossible with interface
+    protected readonly ILogger Logger;
+    
+    protected CachedRepository(IMemoryCache cache, ILogger logger)
+    {
+        _cache = cache;
+        Logger = logger;
+    }
+    
+    protected async Task&lt;T?&gt; GetCachedAsync(string key, Func&lt;Task&lt;T?&gt;&gt; fetch)
+    {
+        if (_cache.TryGetValue(key, out T? cached)) return cached;
+        
+        var value = await fetch();
+        if (value != null) _cache.Set(key, value, TimeSpan.FromMinutes(5));
+        return value;
+    }
+    
+    // Subclasses use shared cache infrastructure
+    protected abstract Task&lt;T?&gt; GetFromDatabaseAsync(Guid id);
+}</code></pre>
+</div>
+
+<h2 id='default-interface-methods-c-8-blurring-the-line'>Default Interface Methods (C# 8+) — Blurring the Line</h2>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public interface IPaymentGateway
+{
+    Task&lt;PaymentResult&gt; ProcessAsync(PaymentRequest request);
+    
+    // Default implementation — C# 8+
+    // Existing implementors don&#x27;t need to implement this
+    async Task&lt;PaymentResult&gt; ProcessWithRetryAsync(PaymentRequest request, int maxRetries = 3)
+    {
+        for (int attempt = 1; attempt &lt;= maxRetries; attempt++)
+        {
+            try
+            {
+                return await ProcessAsync(request);
+            }
+            catch (TransientException) when (attempt &lt; maxRetries)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, attempt)));
+            }
+        }
+        return await ProcessAsync(request); // Last attempt, let exception propagate
+    }
+}</code></pre>
+</div>
+
+<p><strong>Why this blurs the line:</strong> You can now add methods to interfaces without breaking implementors. But: default interface methods are NOT inherited by implementing classes — you must cast to the interface to call them. They're primarily for API evolution, not design.</p>
+<h2 id='the-interface-trap-fat-interfaces-isp-violation'>The Interface Trap: Fat Interfaces (ISP Violation)</h2>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// FAT INTERFACE — violates Interface Segregation
+public interface IOrderService
+{
+    Task&lt;Order&gt; GetOrderAsync(Guid id);
+    Task&lt;PagedResult&lt;Order&gt;&gt; GetAllOrdersAsync(PagingParams paging);
+    Task&lt;Order&gt; CreateOrderAsync(CreateOrderRequest request);
+    Task UpdateOrderAsync(Guid id, UpdateOrderRequest request);
+    Task CancelOrderAsync(Guid id, string reason);
+    Task&lt;ShippingInfo&gt; GetShippingInfoAsync(Guid id);
+    Task UpdateShippingAsync(Guid id, ShippingInfo info);
+    Task&lt;Invoice&gt; GenerateInvoiceAsync(Guid id);
+    Task&lt;PaymentStatus&gt; GetPaymentStatusAsync(Guid id);
+    Task ProcessPaymentAsync(Guid id, PaymentRequest payment);
+    // ... 10 more methods
+}
+// Classes implementing this MUST implement ALL methods, even irrelevant ones</code></pre>
+</div>
+
+<h2 id='the-abstract-class-trap-forcing-inheritance'>The Abstract Class Trap: Forcing Inheritance</h2>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// BAD: Using inheritance just for code reuse
+public abstract class BaseService
+{
+    protected ILogger Logger { get; }
+    protected IConfiguration Config { get; }
+    
+    protected BaseService(ILogger logger, IConfiguration config) { ... }
+    
+    // Everyone inherits just for Logger and Config
+}
+
+// This forces all services into an inheritance chain
+// Better: inject Logger and Config via constructor
+// Or: use composition with a shared ServiceContext</code></pre>
+</div>
+
+<h2 id='interview-prep-interface-vs-abstract-class'>Interview Prep — Interface vs Abstract Class</h2>
+<p><strong>Basic:</strong> "When do you use interface vs abstract class?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Interface when defining a contract that multiple unrelated classes will implement, especially for DI and testability. Abstract class when you have shared implementation and want to define an algorithm skeleton that subclasses customize.</div>
+</div>
+
+<p><strong>Intermediate:</strong> "Can you implement multiple interfaces? Multiple abstract classes?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Multiple interfaces: yes. Multiple abstract classes: no — C# supports single class inheritance. This is why interfaces are preferred for defining roles/contracts.</div>
+</div>
+
+<p><strong>Senior:</strong> "How do default interface methods in C# 8 change the interface vs abstract class decision?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Default interface methods allow interfaces to evolve without breaking implementors, similar to abstract classes with non-abstract methods. But they don't support state or constructors. The line blurs for API evolution, but for template method pattern requiring protected state, abstract classes are still the right choice.</div>
+</div>
+
+<p><strong>Tricky:</strong> "If interfaces are so great, why does C# have abstract classes?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Because some patterns genuinely need protected state, constructors, and the template method pattern. Also, single inheritance of classes (vs. multiple interfaces) can be a feature — it means there's one authoritative place for shared implementation, making inheritance trees easier to understand. Abstract classes say "these things ARE the same kind of thing." Interfaces say "these things CAN DO the same things."</div>
+</div>
+
+<p>---</p>
+<h1 id='composition-vs-inheritance'>COMPOSITION vs INHERITANCE</h1>
+<h2 id='favor-composition-over-inheritance-why'>"Favor Composition Over Inheritance" — Why</h2>
+<p><strong>Gang of Four, Design Patterns (1994):</strong> <em>"Favor object composition over class inheritance."</em> This was a reaction to abuse of deep inheritance hierarchies.</p>
+<p><strong>Composition:</strong> Build complex behavior by combining simpler objects.</p>
+<p><strong>Inheritance:</strong> Build complex behavior by extending existing objects.</p>
+<h3 id='when-composition-wins'>When Composition Wins</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// INHERITANCE APPROACH: Problems
+public class Order { }
+public class DiscountedOrder : Order { } // IS-A? Sometimes...
+public class InternationalOrder : Order { } // IS-A? Sometimes...
+public class DiscountedInternationalOrder : DiscountedOrder { } // Explosion!
+// What if you have 5 variations? 2^5 = 32 subclasses!
+
+// COMPOSITION APPROACH: Flexible, combinable
+public class Order
+{
+    private readonly IDiscountStrategy _discountStrategy;
+    private readonly IShippingCalculator _shippingCalculator;
+    private readonly ITaxCalculator _taxCalculator;
+    
+    public Order(
+        IDiscountStrategy discountStrategy,
+        IShippingCalculator shippingCalculator,
+        ITaxCalculator taxCalculator)
+    {
+        _discountStrategy = discountStrategy;
+        _shippingCalculator = shippingCalculator;
+        _taxCalculator = taxCalculator;
+    }
+    
+    public decimal CalculateTotal(IEnumerable&lt;OrderItem&gt; items)
+    {
+        var subtotal = items.Sum(i =&gt; i.Price * i.Quantity);
+        var discount = _discountStrategy.Calculate(subtotal);
+        var shipping = _shippingCalculator.Calculate(items, subtotal - discount);
+        var tax = _taxCalculator.Calculate(subtotal - discount + shipping);
+        return subtotal - discount + shipping + tax;
+    }
+}
+
+// At runtime, compose any combination:
+var order = new Order(
+    new VolumeDiscountStrategy(threshold: 1000),
+    new InternationalShippingCalculator(&quot;IN&quot;),
+    new GSTaxCalculator(rate: 0.18m)
+);</code></pre>
+</div>
+
+<h3 id='when-inheritance-is-legitimate'>When Inheritance Is Legitimate</h3>
+<ol>
+<li><strong>True IS-A relationships</strong> that won't change (<code>Animal → Dog</code>, <code>Shape → Circle</code>)</li>
+<li><strong>Template Method Pattern</strong> where algorithm skeleton is shared</li>
+<li><strong>Framework extension points</strong> (<code>Controller</code>, <code>BackgroundService</code>, <code>DbContext</code>)</li>
+<li><strong>When you control the entire hierarchy</strong></li>
+</ol>
+<h3 id='the-decorator-pattern-as-composition'>The Decorator Pattern as Composition</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Adding behavior without inheritance
+public interface IOrderRepository { Task&lt;Order?&gt; GetByIdAsync(Guid id); }
+
+public class SqlOrderRepository : IOrderRepository { ... }
+
+// Adds caching WITHOUT inheriting from SqlOrderRepository
+public class CachingOrderRepository : IOrderRepository
+{
+    private readonly IOrderRepository _inner; // COMPOSITION
+    private readonly IDistributedCache _cache;
+    
+    public CachingOrderRepository(IOrderRepository inner, IDistributedCache cache)
+    {
+        _inner = inner;
+        _cache = cache;
+    }
+    
+    public async Task&lt;Order?&gt; GetByIdAsync(Guid id)
+    {
+        var key = $&quot;order:{id}&quot;;
+        // Try cache first, then delegate to inner
+        ...
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h1 id='solid-principles'>SOLID PRINCIPLES</h1>
+<h2 id='s-single-responsibility-principle'>S — Single Responsibility Principle</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p><strong>"A class should have only one reason to change."</strong> — Robert C. Martin</p>
+<p>One <em>reason to change</em> means one <em>actor</em> (stakeholder) who can demand the class changes.</p>
+<h3 id='2-the-bad-code'>2. The Bad Code</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// VIOLATION: OrderService does EVERYTHING
+public class OrderService
+{
+    private readonly SqlConnection _db;
+    private readonly SmtpClient _smtp;
+    private readonly ILogger _logger;
+    
+    public async Task&lt;bool&gt; PlaceOrderAsync(PlaceOrderRequest request)
+    {
+        // 1. VALIDATION — Reason to change: Business rules change
+        if (request.Items == null || !request.Items.Any())
+            return false;
+        if (request.TotalAmount &gt; 100000)
+            return false; // Hardcoded business rule!
+        
+        // 2. DATABASE ACCESS — Reason to change: DB schema changes
+        var order = new Order { ... };
+        await _db.ExecuteAsync(
+            &quot;INSERT INTO Orders (Id, CustomerId, Total) VALUES (@Id, @CustomerId, @Total)&quot;,
+            order);
+        
+        // 3. EMAIL NOTIFICATION — Reason to change: Email template changes
+        var message = new MailMessage();
+        message.To.Add(request.CustomerEmail);
+        message.Subject = &quot;Order Confirmed&quot;;
+        message.Body = $&quot;Your order {order.Id} has been confirmed.&quot;;
+        await _smtp.SendMailAsync(message);
+        
+        // 4. LOGGING — Reason to change: Log format changes
+        _logger.LogInformation($&quot;[{DateTime.Now}] Order placed: {order.Id} for {request.CustomerEmail}&quot;);
+        
+        // 5. REPORTING — Reason to change: Report format changes
+        File.AppendAllText(&quot;orders.csv&quot;, $&quot;{order.Id},{request.TotalAmount}\n&quot;);
+        
+        return true;
+    }
+}
+// This class has 5+ reasons to change. One change ripples through everything.</code></pre>
+</div>
+
+<h3 id='3-the-good-code'>3. The Good Code</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Each class: ONE responsibility, ONE reason to change
+
+// Responsibility 1: Order validation
+public class OrderValidator
+{
+    private readonly IEnumerable&lt;IOrderValidationRule&gt; _rules;
+    
+    public OrderValidator(IEnumerable&lt;IOrderValidationRule&gt; rules) =&gt; _rules = rules;
+    
+    public ValidationResult Validate(PlaceOrderRequest request)
+    {
+        var errors = _rules
+            .Where(r =&gt; !r.IsSatisfiedBy(request))
+            .Select(r =&gt; r.ErrorMessage)
+            .ToList();
+        
+        return errors.Any() 
+            ? ValidationResult.Failure(errors) 
+            : ValidationResult.Success();
+    }
+}
+
+// Responsibility 2: Order persistence
+public class OrderRepository : IOrderRepository
+{
+    private readonly OrderDbContext _db;
+    
+    public async Task SaveAsync(Order order)
+        =&gt; await _db.Orders.AddAsync(order);
+}
+
+// Responsibility 3: Order notification
+public class OrderNotificationService : IOrderNotificationService
+{
+    private readonly IEnumerable&lt;INotificationChannel&gt; _channels;
+    
+    public async Task NotifyOrderPlacedAsync(Order order, string customerEmail)
+    {
+        foreach (var channel in _channels)
+            await channel.SendAsync(new OrderPlacedNotification(order, customerEmail));
+    }
+}
+
+// Responsibility 4: Orchestration (the only job of OrderService now)
+public class OrderService : IOrderService
+{
+    private readonly IOrderValidator _validator;
+    private readonly IOrderRepository _repository;
+    private readonly IOrderNotificationService _notifications;
+    private readonly ILogger&lt;OrderService&gt; _logger;
+    
+    public OrderService(
+        IOrderValidator validator,
+        IOrderRepository repository,
+        IOrderNotificationService notifications,
+        ILogger&lt;OrderService&gt; logger)
+    {
+        _validator = validator;
+        _repository = repository;
+        _notifications = notifications;
+        _logger = logger;
+    }
+    
+    public async Task&lt;OrderResult&gt; PlaceOrderAsync(PlaceOrderRequest request)
+    {
+        var validation = _validator.Validate(request);
+        if (!validation.IsValid)
+            return OrderResult.Failed(validation.Errors);
+        
+        var order = Order.Create(request);
+        await _repository.SaveAsync(order);
+        
+        await _notifications.NotifyOrderPlacedAsync(order, request.CustomerEmail);
+        
+        _logger.LogInformation(&quot;Order {OrderId} placed successfully&quot;, order.Id);
+        
+        return OrderResult.Success(order.Id);
+    }
+}</code></pre>
+</div>
+
+<h3 id='4-when-to-pragmatically-violate-srp'>4. When to Pragmatically Violate SRP</h3>
+<ul>
+<li>In small scripts/utilities where complexity isn't worth the abstraction</li>
+<li>In CRUD controllers with simple validation (splitting is over-engineering)</li>
+<li>When performance matters more than purity (object creation has cost)</li>
+</ul>
+<h3 id='5-interview-prep'>5. Interview Prep</h3>
+<p><strong>Tricky Q:</strong> "Is SRP 'one reason to change' or 'one responsibility'?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">These sound similar but are different. "One responsibility" is ambiguous — what counts as one? "One reason to change" is precise — it means one <em>actor</em> (business stakeholder) who can demand changes. A <code>ReportGenerator</code> has one reason to change: the reporting requirements. When you hear "one responsibility," think: who would ask you to change this? If the answer is "my DBA AND my marketing team," SRP is violated.</div>
+</div>
+
+<p>---</p>
+<h2 id='o-openclosed-principle'>O — Open/Closed Principle</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p><strong>"Software entities should be open for extension, closed for modification."</strong> — Bertrand Meyer, Robert C. Martin</p>
+<p>Open for extension: add new behavior. Closed for modification: don't change existing tested code.</p>
+<h3 id='2-the-bad-code'>2. The Bad Code</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// VIOLATION: Every new payment type requires modifying this code
+public class PaymentProcessor
+{
+    public PaymentResult Process(PaymentRequest request)
+    {
+        switch (request.PaymentType)
+        {
+            case &quot;CreditCard&quot;:
+                // Credit card processing logic
+                return ProcessCreditCard(request);
+            
+            case &quot;PayPal&quot;:
+                // PayPal logic
+                return ProcessPayPal(request);
+            
+            case &quot;Stripe&quot;:
+                // Stripe logic
+                return ProcessStripe(request);
+            
+            // Adding Razorpay? MODIFY this switch. All tests rerun. Risk of regression.
+            default:
+                throw new NotSupportedException($&quot;Payment type {request.PaymentType} not supported&quot;);
+        }
+    }
+}</code></pre>
+</div>
+
+<h3 id='3-the-good-code'>3. The Good Code</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// GOOD: Strategy pattern — extend by adding new class, no modification
+public interface IPaymentStrategy
+{
+    bool CanHandle(string paymentType);
+    Task&lt;PaymentResult&gt; ProcessAsync(PaymentRequest request);
+}
+
+public class CreditCardPaymentStrategy : IPaymentStrategy
+{
+    public bool CanHandle(string paymentType) =&gt; paymentType == &quot;CreditCard&quot;;
+    
+    public async Task&lt;PaymentResult&gt; ProcessAsync(PaymentRequest request)
+    {
+        // Credit card logic — isolated, tested, stable
+    }
+}
+
+public class StripePaymentStrategy : IPaymentStrategy
+{
+    public bool CanHandle(string paymentType) =&gt; paymentType == &quot;Stripe&quot;;
+    
+    public async Task&lt;PaymentResult&gt; ProcessAsync(PaymentRequest request)
+    {
+        // Stripe logic
+    }
+}
+
+// Adding Razorpay: Create RazorpayPaymentStrategy, register in DI. DONE.
+// Zero changes to existing code.
+
+public class PaymentProcessor
+{
+    private readonly IEnumerable&lt;IPaymentStrategy&gt; _strategies;
+    
+    public PaymentProcessor(IEnumerable&lt;IPaymentStrategy&gt; strategies) 
+        =&gt; _strategies = strategies;
+    
+    public async Task&lt;PaymentResult&gt; ProcessAsync(PaymentRequest request)
+    {
+        var strategy = _strategies.FirstOrDefault(s =&gt; s.CanHandle(request.PaymentType))
+            ?? throw new NotSupportedException($&quot;Payment type {request.PaymentType} not supported&quot;);
+        
+        return await strategy.ProcessAsync(request);
+    }
+}
+
+// DI registration:
+builder.Services.AddScoped&lt;IPaymentStrategy, CreditCardPaymentStrategy&gt;();
+builder.Services.AddScoped&lt;IPaymentStrategy, StripePaymentStrategy&gt;();
+builder.Services.AddScoped&lt;IPaymentStrategy, RazorpayPaymentStrategy&gt;(); // NEW — no old code changed
+builder.Services.AddScoped&lt;PaymentProcessor&gt;();</code></pre>
+</div>
+
+<h3 id='4-when-ocp-is-not-worth-it-tricky-interview-q'>4. When OCP Is NOT Worth It (Tricky Interview Q)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// When you have 2 known, stable cases that will NEVER change
+// OCP creates unnecessary abstraction
+public decimal CalculateShipping(string method) =&gt; method switch
+{
+    &quot;Standard&quot; =&gt; 5.99m,
+    &quot;Express&quot; =&gt; 14.99m,
+    _ =&gt; throw new ArgumentException()
+};
+// If this will NEVER need a third case, OCP abstraction is over-engineering</code></pre>
+</div>
+
+<p><strong>Rule:</strong> Apply OCP at points of <strong>predicted variability</strong>. Don't abstract everything speculatively.</p>
+<h3 id='5-interview-prep'>5. Interview Prep</h3>
+<p><strong>Tricky Q:</strong> "Can you give an example where OCP is NOT worth it?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">When the variation is already complete and bounded. If I have a <code>TaxCalculator</code> that handles exactly two known tax zones and business has confirmed there will never be a third, adding a strategy pattern for OCP adds indirection without benefit. OCP is most valuable at architectural seams — payment gateways, notification channels, report formats — where extensions are expected and frequent.</div>
+</div>
+
+<p>---</p>
+<h2 id='l-liskov-substitution-principle'>L — Liskov Substitution Principle</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p><strong>"Subtypes must be substitutable for their base types without altering the correctness of the program."</strong> — Barbara Liskov, 1987</p>
+<p>If you have <code>PaymentProcessor processor = new StripeProcessor()</code>, the program should work correctly treating it as <code>PaymentProcessor</code>.</p>
+<h3 id='2-the-classic-violation-rectanglesquare'>2. The Classic Violation (Rectangle/Square)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public class Rectangle
+{
+    public virtual int Width { get; set; }
+    public virtual int Height { get; set; }
+    public int Area() =&gt; Width * Height;
+}
+
+public class Square : Rectangle
+{
+    public override int Width
+    {
+        get =&gt; base.Width;
+        set { base.Width = value; base.Height = value; } // Enforces square rule
+    }
+    public override int Height
+    {
+        get =&gt; base.Height;
+        set { base.Width = value; base.Height = value; }
+    }
+}
+
+// This breaks LSP:
+Rectangle rect = new Square();
+rect.Width = 4;
+rect.Height = 5;
+Console.WriteLine(rect.Area()); // Expected: 20, Actual: 25 ← LSP violated!
+// Substituting Square for Rectangle breaks the program</code></pre>
+</div>
+
+<h3 id='3-enterprise-equivalent-employee-hierarchy'>3. Enterprise Equivalent: Employee Hierarchy</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// BAD: LSP violation in HR system
+public class Employee
+{
+    public virtual decimal CalculateBonus() =&gt; Salary * 0.10m;
+    public virtual int GetMaxVacationDays() =&gt; 20;
+    public decimal Salary { get; set; }
+}
+
+public class ContractEmployee : Employee
+{
+    public override decimal CalculateBonus()
+        =&gt; throw new InvalidOperationException(&quot;Contract employees don&#x27;t get bonuses!&quot;);
+    
+    public override int GetMaxVacationDays()
+        =&gt; throw new InvalidOperationException(&quot;Contract employees don&#x27;t get vacation!&quot;);
+}
+
+// Client code BREAKS when it gets a ContractEmployee instead of Employee
+void ProcessBonuses(IEnumerable&lt;Employee&gt; employees)
+{
+    foreach (var emp in employees)
+        ProcessBonus(emp.CalculateBonus()); // THROWS for contract employees!
+}</code></pre>
+</div>
+
+<h3 id='4-the-good-redesign'>4. The Good Redesign</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// GOOD: Redesign the hierarchy to honor LSP
+public abstract class Employee
+{
+    public string Id { get; }
+    public string Name { get; }
+}
+
+public abstract class PermanentEmployee : Employee
+{
+    public decimal Salary { get; }
+    public virtual decimal CalculateBonus() =&gt; Salary * 0.10m;
+    public virtual int GetMaxVacationDays() =&gt; 20;
+}
+
+public class ContractEmployee : Employee
+{
+    public decimal HourlyRate { get; }
+    public int HoursWorked { get; }
+    public decimal CalculateEarnings() =&gt; HourlyRate * HoursWorked; // Different concept entirely
+}
+
+// Now ContractEmployee doesn&#x27;t inherit vacation/bonus — no LSP violation
+// Client code is explicit about what type it needs
+void ProcessBonuses(IEnumerable&lt;PermanentEmployee&gt; employees)
+{
+    foreach (var emp in employees)
+        ProcessBonus(emp.CalculateBonus()); // Safe!
+}</code></pre>
+</div>
+
+<h3 id='5-lsp-rules-summary'>5. LSP Rules Summary</h3>
+<ul>
+<li><strong>Preconditions</strong> cannot be strengthened in a subtype</li>
+<li><strong>Postconditions</strong> cannot be weakened in a subtype</li>
+<li><strong>Invariants</strong> of the supertype must be preserved</li>
+<li>Methods should not throw unexpected exceptions</li>
+</ul>
+<h3 id='6-interview-prep'>6. Interview Prep</h3>
+<p><strong>Tricky Q:</strong> "When have you VIOLATED LSP in production?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Great answer: "We had a <code>DataExporter</code> base class with a <code>Export(DataSet data)</code> method. A <code>LargeDataExporter</code> subclass added a restriction that DataSet must have fewer than 100,000 rows — throwing an exception otherwise. This strengthened the precondition and violated LSP. Client code that worked fine with <code>DataExporter</code> broke when given <code>LargeDataExporter</code>. We fixed it by having <code>LargeDataExporter</code> implement a different interface <code>IBatchedExporter</code> with explicit batching semantics."</div>
+</div>
+
+<p>---</p>
+<h2 id='i-interface-segregation-principle'>I — Interface Segregation Principle</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p><strong>"No client should be forced to depend on methods it does not use."</strong> — Robert C. Martin</p>
+<h3 id='2-the-bad-code'>2. The Bad Code</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// FAT INTERFACE — forces implementing classes to support irrelevant operations
+public interface IOrderService
+{
+    Task&lt;Order&gt; GetOrderAsync(Guid id);
+    Task&lt;PagedResult&lt;Order&gt;&gt; SearchOrdersAsync(OrderSearchParams search);
+    Task&lt;Order&gt; CreateOrderAsync(CreateOrderRequest request);
+    Task&lt;Order&gt; UpdateOrderAsync(Guid id, UpdateOrderRequest request);
+    Task CancelOrderAsync(Guid id, string reason);
+    Task&lt;ShippingInfo&gt; GetShippingAsync(Guid id);
+    Task UpdateShippingAsync(Guid id, ShippingInfo info);
+    Task&lt;Invoice&gt; GenerateInvoiceAsync(Guid id);
+    Task&lt;PaymentStatus&gt; GetPaymentStatusAsync(Guid id);
+    Task RetryPaymentAsync(Guid id);
+    Task&lt;OrderStats&gt; GetStatisticsAsync(DateRange range);
+    Task ExportOrdersAsync(ExportFormat format, Stream output);
+}
+
+// Warehouse system only needs GetOrder + UpdateShipping:
+public class WarehouseOrderService : IOrderService
+{
+    public Task&lt;Order&gt; GetOrderAsync(Guid id) =&gt; ...; // IMPLEMENTS
+    public Task UpdateShippingAsync(Guid id, ShippingInfo info) =&gt; ...; // IMPLEMENTS
+    
+    // Forced to implement irrelevant methods:
+    public Task&lt;Order&gt; CreateOrderAsync(CreateOrderRequest request) 
+        =&gt; throw new NotImplementedException(); // This IS an LSP violation too!
+    // ... 10 more throw NotImplementedException
+}</code></pre>
+</div>
+
+<h3 id='3-the-good-code-role-based-interfaces'>3. The Good Code — Role-Based Interfaces</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Segregated interfaces by CLIENT ROLE
+public interface IOrderReader
+{
+    Task&lt;Order?&gt; GetOrderAsync(Guid id);
+    Task&lt;PagedResult&lt;Order&gt;&gt; SearchOrdersAsync(OrderSearchParams search);
+}
+
+public interface IOrderWriter
+{
+    Task&lt;Order&gt; CreateOrderAsync(CreateOrderRequest request);
+    Task&lt;Order&gt; UpdateOrderAsync(Guid id, UpdateOrderRequest request);
+}
+
+public interface IOrderCancellation
+{
+    Task CancelOrderAsync(Guid id, string reason);
+}
+
+public interface IOrderShipping
+{
+    Task&lt;ShippingInfo&gt; GetShippingAsync(Guid id);
+    Task UpdateShippingAsync(Guid id, ShippingInfo info);
+}
+
+public interface IOrderPayment
+{
+    Task&lt;PaymentStatus&gt; GetPaymentStatusAsync(Guid id);
+    Task RetryPaymentAsync(Guid id);
+}
+
+public interface IOrderReporting
+{
+    Task&lt;OrderStats&gt; GetStatisticsAsync(DateRange range);
+    Task ExportOrdersAsync(ExportFormat format, Stream output);
+}
+
+// Full implementation (one class can implement multiple interfaces):
+public class OrderService : IOrderReader, IOrderWriter, IOrderCancellation, 
+    IOrderShipping, IOrderPayment, IOrderReporting
+{
+    // Implements everything — but organized by role
+}
+
+// Warehouse service only needs its interfaces:
+public class WarehouseIntegrationService
+{
+    private readonly IOrderReader _orderReader;
+    private readonly IOrderShipping _orderShipping;
+    
+    // Constructor only accepts what it NEEDS — ISP satisfied
+    public WarehouseIntegrationService(IOrderReader orderReader, IOrderShipping orderShipping)
+    {
+        _orderReader = orderReader;
+        _orderShipping = orderShipping;
+    }
+}</code></pre>
+</div>
+
+<h3 id='4-interview-prep'>4. Interview Prep</h3>
+<p><strong>Tricky Q:</strong> "How many methods should an interface have?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">There's no fixed number. The guidance is: as many methods as a single CLIENT ROLE needs, no more. A <code>IOrderReader</code> might have 5 methods if all 5 are needed by every read client. The rule isn't "one method per interface" (that leads to interface explosion). It's "don't force clients to depend on methods they don't use." In practice, I design interfaces from the consumer's perspective: what does this client actually need?</div>
+</div>
+
+<p>---</p>
+<h2 id='d-dependency-inversion-principle'>D — Dependency Inversion Principle</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p><strong>"High-level modules should not depend on low-level modules. Both should depend on abstractions."</strong> — Robert C. Martin</p>
+<p>High-level = business logic. Low-level = database, email, HTTP clients. Both should depend on <em>interfaces</em>.</p>
+<h3 id='2-the-bad-code'>2. The Bad Code</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// BAD: High-level OrderService directly depends on low-level SqlOrderRepository
+public class OrderService
+{
+    // Direct instantiation — concrete coupling
+    private readonly SqlOrderRepository _repository = new SqlOrderRepository(
+        &quot;Server=prod-db;Database=Orders;...&quot;);
+    
+    private readonly SmtpEmailSender _emailSender = new SmtpEmailSender(
+        &quot;smtp.company.com&quot;, 587);
+    
+    public async Task PlaceOrderAsync(PlaceOrderRequest request)
+    {
+        // OrderService must change if:
+        // - You switch from SQL Server to PostgreSQL
+        // - You switch from SMTP to SendGrid
+        // - You want to unit test (can&#x27;t mock concrete classes)
+        var order = Order.Create(request);
+        await _repository.SaveAsync(order);        // Coupled to SQL
+        await _emailSender.SendAsync(request.Email, &quot;Order confirmed&quot;); // Coupled to SMTP
+    }
+}</code></pre>
+</div>
+
+<h3 id='3-the-good-code'>3. The Good Code</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// GOOD: All dependencies are abstractions
+public class OrderService : IOrderService
+{
+    private readonly IOrderRepository _repository;   // Abstraction
+    private readonly IEmailSender _emailSender;      // Abstraction
+    private readonly ILogger&lt;OrderService&gt; _logger;  // Abstraction
+    
+    // Constructor injection — dependencies are PUSHED IN
+    public OrderService(
+        IOrderRepository repository,
+        IEmailSender emailSender,
+        ILogger&lt;OrderService&gt; logger)
+    {
+        _repository = repository;
+        _emailSender = emailSender;
+        _logger = logger;
+    }
+    
+    public async Task&lt;OrderResult&gt; PlaceOrderAsync(PlaceOrderRequest request)
+    {
+        var order = Order.Create(request);
+        await _repository.SaveAsync(order);
+        await _emailSender.SendAsync(request.CustomerEmail, &quot;Order confirmed&quot;, $&quot;Order {order.Id} confirmed&quot;);
+        _logger.LogInformation(&quot;Order {OrderId} placed&quot;, order.Id);
+        return OrderResult.Success(order.Id);
+    }
+}
+
+// Registrations in DI container:
+builder.Services.AddScoped&lt;IOrderRepository, SqlOrderRepository&gt;();    // Low-level
+builder.Services.AddScoped&lt;IEmailSender, SendGridEmailSender&gt;();       // Low-level
+builder.Services.AddScoped&lt;IOrderService, OrderService&gt;();             // High-level</code></pre>
+</div>
+
+<p>---</p>
+<h1 id='dependency-injection-complete'>DEPENDENCY INJECTION — COMPLETE</h1>
+<h2 id='what-di-really-is'>What DI Really Is</h2>
+<p>Dependency Injection is the technique of providing an object's dependencies from <em>outside</em> rather than letting the object create them. It implements the Dependency Inversion Principle and the Inversion of Control principle.</p>
+<p><strong>IoC (Inversion of Control):</strong> Control of object creation is inverted — the framework controls it, not your code.</p>
+<h2 id='constructor-vs-property-vs-method-injection'>Constructor vs Property vs Method Injection</h2>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// 1. CONSTRUCTOR INJECTION (PREFERRED)
+public class OrderService
+{
+    private readonly IOrderRepository _repo;
+    
+    public OrderService(IOrderRepository repo)
+    {
+        _repo = repo ?? throw new ArgumentNullException(nameof(repo));
+    }
+    // Advantages: dependencies required (no null state), clear, testable
+    // Disadvantage: many dependencies = messy constructor (SRP violation signal!)
+}
+
+// 2. PROPERTY INJECTION (rare, use sparingly)
+public class OrderService
+{
+    public IOrderRepository Repository { get; set; } // Optional dependency
+    // Disadvantage: nullable state possible, harder to enforce required deps
+    // Use for: optional dependencies, circular dependencies (very rare)
+}
+
+// 3. METHOD INJECTION (contextual injection)
+public class OrderProcessor
+{
+    public async Task ProcessAsync(Order order, IPaymentGateway gateway)
+    {
+        // Gateway injected per-call — not stored
+        await gateway.ProcessAsync(new PaymentRequest { Amount = order.Total });
+    }
+    // Use for: dependencies that vary per operation, or are externally provided
+}</code></pre>
+</div>
+
+<h2 id='why-constructor-injection-is-preferred'>Why Constructor Injection Is Preferred</h2>
+<ol>
+<li>Dependencies are <strong>required</strong> — no null checks needed</li>
+<li>Class is <strong>never in invalid state</strong> — dependencies ready at construction</li>
+<li><strong>Testability</strong> — easy to pass mocks in constructors</li>
+<li><strong>Visibility</strong> — large constructor signals SRP violation (too many responsibilities)</li>
+</ol>
+<h2 id='service-lifetimes'>Service Lifetimes</h2>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// 1. SINGLETON: One instance per application lifetime
+builder.Services.AddSingleton&lt;IConnectionPool, SqlConnectionPool&gt;();
+// Use for: stateless services, caches, configuration, expensive-to-create objects
+// DANGER: Singleton holds mutable state shared across all requests → thread safety issues
+
+// 2. SCOPED: One instance per HTTP request (or scope)
+builder.Services.AddScoped&lt;IOrderService, OrderService&gt;();
+builder.Services.AddScoped&lt;OrderDbContext&gt;(); // DbContext is always Scoped!
+// Use for: database contexts, services that span one request, units of work
+
+// 3. TRANSIENT: New instance every time it&#x27;s requested
+builder.Services.AddTransient&lt;IPasswordHasher, BCryptPasswordHasher&gt;();
+// Use for: lightweight, stateless services, factory-like scenarios</code></pre>
+</div>
+
+<h2 id='the-captive-dependency-problem'>The Captive Dependency Problem</h2>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// BUG: Singleton capturing a Scoped dependency
+public class OrderCacheService // Registered as SINGLETON
+{
+    private readonly IOrderRepository _repo; // Registered as SCOPED
+    
+    public OrderCacheService(IOrderRepository repo) // SINGLETON captures SCOPED
+    {
+        _repo = repo; // This scoped instance is now HELD FOREVER by the singleton!
+    }
+    // Problem: The scoped repository (with its DbContext) lives for the entire app lifetime
+    // DbContext accumulates changes, connections are leaked, data is stale
+}
+
+// FIX 1: Use IServiceScopeFactory to create scopes explicitly
+public class OrderCacheService // SINGLETON
+{
+    private readonly IServiceScopeFactory _scopeFactory;
+    
+    public OrderCacheService(IServiceScopeFactory scopeFactory)
+        =&gt; _scopeFactory = scopeFactory;
+    
+    public async Task&lt;Order?&gt; GetOrderAsync(Guid id)
+    {
+        // Create a new scope per operation — correct lifecycle management
+        using var scope = _scopeFactory.CreateScope();
+        var repo = scope.ServiceProvider.GetRequiredService&lt;IOrderRepository&gt;();
+        return await repo.GetByIdAsync(id);
+    }
+}
+
+// FIX 2: Make your cache service Scoped (if it doesn&#x27;t need singleton lifetime)
+// FIX 3: Make the dependency Singleton too (if it&#x27;s truly stateless)</code></pre>
+</div>
+
+<h2 id='net-di-container-internals-how-it-resolves'>.NET DI Container Internals (How It Resolves)</h2>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Registration builds a ServiceDescriptor graph
+builder.Services.AddScoped&lt;IOrderService, OrderService&gt;();
+// Creates: ServiceDescriptor { ServiceType=IOrderService, ImplementationType=OrderService, Lifetime=Scoped }
+
+// At resolution time (when controller/handler is instantiated):
+// 1. IServiceProvider.GetRequiredService&lt;IOrderService&gt;()
+// 2. Container checks ServiceDescriptor for IOrderService → OrderService
+// 3. Inspects OrderService constructor: (IOrderRepository, IEmailSender, ILogger&lt;OrderService&gt;)
+// 4. Recursively resolves each parameter
+// 5. Creates OrderService with resolved dependencies
+// 6. For Scoped: stores in current scope dictionary → same instance returned within scope
+// 7. For Singleton: stores in root container → same instance for app lifetime
+
+// IServiceProvider vs IServiceScopeFactory:
+IServiceProvider provider = ...; // Current scope&#x27;s provider
+// Use: GetService&lt;T&gt;() within current scope
+
+IServiceScopeFactory factory = ...; // Creates NEW scopes
+// Use: When you&#x27;re in a singleton and need scoped services
+using var scope = factory.CreateScope();
+var service = scope.ServiceProvider.GetRequiredService&lt;IOrderService&gt;();</code></pre>
+</div>
+
+<h2 id='interview-prep-di'>Interview Prep — DI</h2>
+<p><strong>Basic:</strong> "What is Dependency Injection?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">DI is a technique where a class receives its dependencies from outside rather than creating them itself. This makes classes testable, configurable, and loosely coupled. In .NET, the built-in DI container manages object creation and lifetime.</div>
+</div>
+
+<p><strong>Intermediate:</strong> "What is the Captive Dependency Problem?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">It occurs when a longer-lived service (singleton) holds a reference to a shorter-lived service (scoped/transient). The short-lived service is "captured" and lives as long as the singleton — defeating its intended lifecycle. Fix: use <code>IServiceScopeFactory</code> to create explicit scopes in singletons.</div>
+</div>
+
+<p><strong>Senior:</strong> "How does the .NET DI container resolve dependencies?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">During registration, <code>ServiceDescriptor</code> objects are added to a <code>ServiceCollection</code>. At startup, <code>ServiceCollection.BuildServiceProvider()</code> compiles these into a <code>ServiceProvider</code>. When <code>GetRequiredService&lt;T&gt;()</code> is called, the provider finds the descriptor for T, uses reflection to examine the implementation type's constructor, recursively resolves each parameter, creates the instance, and manages its lifetime (scoped in a dictionary, singleton in root scope).</div>
+</div>
+
+<p><strong>Tricky:</strong> "Is Dependency Injection the same as Inversion of Control?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">DI is one implementation of IoC. IoC is the broader principle: control of something (object creation, program flow) is inverted from your code to the framework. DI specifically inverts control of dependency creation. Other IoC examples: event systems (framework calls your handlers), template method (framework calls your override), iterator pattern.</div>
+</div>
+
+<p>---</p>
+<h1 id='summary-solid-in-one-table'>SUMMARY: SOLID IN ONE TABLE</h1>
+<div class='table-wrapper'><table>
+<tr><th>Principle</th><th>Core Question</th><th>Symptom of Violation</th><th>Key Solution</th></tr>
+<tr><td>SRP</td><td>"Who asks you to change this?"</td><td>God class, 500-line service</td><td>Separate concerns by actor</td></tr>
+<tr><td>OCP</td><td>"Can I extend without modifying?"</td><td>Switch statements, if-else chains</td><td>Strategy + Polymorphism</td></tr>
+<tr><td>LSP</td><td>"Is substitution safe?"</td><td><code>throw NotImplementedException()</code> in subclass</td><td>Redesign hierarchy</td></tr>
+<tr><td>ISP</td><td>"Do clients use all methods?"</td><td>Fat interfaces, forced implementations</td><td>Role-based interfaces</td></tr>
+<tr><td>DIP</td><td>"Who controls dependencies?"</td><td><code>new</code> in business logic, concrete coupling</td><td>Interfaces + DI</td></tr>
+</table></div>
+<p>---</p>
+<p><em>Volume 4 Complete — Proceed to Volume 5: Design Patterns</em></p>
+            </article>
+
+            <nav class="chapter-nav">
+                
+    <a href="Volume-3-Advanced-CSharp.html" class="nav-card">
+        <span class="nav-card-dir">← Previous Module</span>
+        <span class="nav-card-title">Volume 3: Advanced C# & Memory Management</span>
+    </a>
+    
+                
+    <a href="Volume-5-Design-Patterns.html" class="nav-card" style="text-align: right;">
+        <span class="nav-card-dir">Next Module →</span>
+        <span class="nav-card-title">Volume 5: GoF Design Patterns in Enterprise .NET</span>
+    </a>
+    
+            </nav>
+        </main>
+
+        <aside id="toc-sidebar">
+            <div class="toc-title">On This Page</div>
+            <ul class="toc-list">
+                
+        <li class="toc-item level-1">
+            <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
+        </li>
+        
+
+        <li class="toc-item level-1">
+            <a href="#volume-4-oop-design-principles" class="toc-link">Volume 4: OOP + Design Principles</a>
+        </li>
+        
+
+        <li class="toc-item level-1">
+            <a href="#table-of-contents" class="toc-link">TABLE OF CONTENTS</a>
+        </li>
+        
+
+        <li class="toc-item level-1">
+            <a href="#the-four-pillars-of-oop" class="toc-link">THE FOUR PILLARS OF OOP</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#encapsulation" class="toc-link">Encapsulation</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#1-definition" class="toc-link">1. Definition</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#2-historical-reason" class="toc-link">2. Historical Reason</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#3-problem-it-solves" class="toc-link">3. Problem It Solves</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#4-internal-working" class="toc-link">4. Internal Working</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#5-production-example-bankaccount" class="toc-link">5. Production Example: BankAccount</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#6-property-vs-public-field-why-properties-win" class="toc-link">6. Property vs Public Field — Why Properties </a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#7-execution-flow" class="toc-link">7. Execution Flow</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#8-design-reasoning" class="toc-link">8. Design Reasoning</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#9-performance" class="toc-link">9. Performance</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#10-common-mistakes" class="toc-link">10. Common Mistakes</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#11-production-problems" class="toc-link">11. Production Problems</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#12-interview-prep" class="toc-link">12. Interview Prep</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#inheritance" class="toc-link">Inheritance</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#1-definition" class="toc-link">1. Definition</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#2-historical-reason" class="toc-link">2. Historical Reason</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#3-problem-it-solves-and-creates" class="toc-link">3. Problem It Solves (and Creates)</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#4-the-fragile-base-class-problem" class="toc-link">4. The Fragile Base Class Problem</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#5-calling-virtual-methods-from-constructors-the-dangerous-trap" class="toc-link">5. Calling Virtual Methods from Constructors </a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#6-sealed-classes-for-protection" class="toc-link">6. sealed Classes for Protection</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#7-when-inheritance-becomes-a-trap" class="toc-link">7. When Inheritance Becomes a Trap</a>
+        </li>
+        
+            </ul>
+        </aside>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            hljs.highlightAll();
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'dark',
+                themeVariables: {
+                    primaryColor: '#1e3a8a',
+                    primaryTextColor: '#f8fafc',
+                    primaryBorderColor: '#3b82f6',
+                    lineColor: '#60a5fa',
+                    secondaryColor: '#1e293b',
+                    tertiaryColor: '#0f172a'
+                }
+            });
+        });
+    </script>
+</body>
+</html>

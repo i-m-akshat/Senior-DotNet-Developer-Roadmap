@@ -1,0 +1,3128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volume 5: GoF Design Patterns in Enterprise .NET | .NET Backend Encyclopedia</title>
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <!-- Mermaid for Interactive Flowcharts -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+:root {
+    --bg-page: #0b0f19;
+    --bg-surface: #111827;
+    --bg-surface-elevated: #1f2937;
+    --bg-code: #030712;
+    --border: #374151;
+    --border-light: #4b5563;
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    --text-dim: #6b7280;
+    --primary: #3b82f6;
+    --primary-hover: #60a5fa;
+    --primary-glow: rgba(59, 130, 246, 0.15);
+    --accent: #8b5cf6;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    line-height: 1.75;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* LEFT SIDEBAR */
+#sidebar {
+    width: 300px;
+    background-color: var(--bg-surface);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+    padding: 24px 16px;
+    z-index: 100;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: #fff;
+}
+
+.sidebar-logo {
+    font-size: 1.7rem;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+.sidebar-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.sidebar-sub {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nav-section-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin: 16px 8px 8px 8px;
+}
+
+.nav-list { list-style: none; }
+.nav-item { margin-bottom: 3px; }
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.nav-link:hover {
+    background-color: var(--bg-surface-elevated);
+    color: #fff;
+}
+
+.nav-link.active {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.2), transparent);
+    color: var(--primary-hover);
+    border-left: 3px solid var(--primary);
+    font-weight: 600;
+}
+
+.nav-icon { font-size: 1rem; }
+.nav-vol { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
+.nav-link.active .nav-vol { color: var(--primary); }
+
+/* MAIN CONTENT CONTAINER */
+#content-wrapper {
+    margin-left: 300px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 40px 30px;
+}
+
+#main-content {
+    max-width: 860px;
+    width: 100%;
+}
+
+/* RIGHT TABLE OF CONTENTS (TOC) */
+#toc-sidebar {
+    width: 250px;
+    position: sticky;
+    top: 40px;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    padding-left: 28px;
+    margin-left: 20px;
+    display: none;
+}
+
+@media (min-width: 1300px) {
+    #toc-sidebar { display: block; }
+}
+
+.toc-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.toc-list { list-style: none; border-left: 1px solid var(--border); padding-left: 10px; }
+.toc-item { margin-bottom: 6px; }
+
+.toc-link {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    line-height: 1.35;
+    display: block;
+    transition: color 0.15s ease;
+}
+
+.toc-link:hover { color: var(--primary-hover); }
+.toc-item.level-3 { padding-left: 10px; }
+
+/* HEADER BANNER */
+.chapter-hero {
+    background: linear-gradient(135deg, rgba(31, 41, 55, 0.7) 0%, rgba(17, 24, 39, 0.9) 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 36px;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.hero-badge {
+    background: var(--primary-glow);
+    border: 1px solid var(--primary);
+    color: var(--primary-hover);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.hero-vol {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.chapter-hero h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+    line-height: 1.25;
+}
+
+.chapter-hero p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* TYPOGRAPHY */
+h1, h2, h3, h4, h5 { color: #fff; font-weight: 700; line-height: 1.3; }
+
+h1 {
+    font-size: 1.85rem;
+    margin: 44px 0 18px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--primary-hover);
+}
+
+h2 {
+    font-size: 1.4rem;
+    margin: 36px 0 14px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(55, 65, 81, 0.6);
+    color: #f9fafb;
+}
+
+h3 {
+    font-size: 1.15rem;
+    margin: 26px 0 10px 0;
+    color: #e5e7eb;
+}
+
+h4 {
+    font-size: 0.98rem;
+    margin: 18px 0 8px 0;
+    color: var(--warning);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+p { margin-bottom: 16px; font-size: 0.96rem; color: #d1d5db; }
+strong { color: #fff; font-weight: 600; }
+a { color: var(--primary-hover); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* CODE BLOCKS */
+.code-container {
+    position: relative;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 22px 0;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #111827;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    font-family: monospace;
+    font-weight: 600;
+}
+
+.copy-btn {
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    padding: 3px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.copy-btn:hover { background: var(--border-light); color: #fff; }
+
+pre {
+    padding: 16px 20px;
+    overflow-x: auto;
+    font-family: Consolas, "JetBrains Mono", Menlo, Courier, monospace;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: #e5e7eb;
+}
+
+code {
+    font-family: Consolas, Menlo, Courier, monospace;
+    font-size: 0.86em;
+    background-color: rgba(55, 65, 81, 0.6);
+    color: #f87171;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
+    font-size: 0.88rem;
+}
+
+/* MERMAID & FLOWCHARTS */
+.mermaid {
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 24px;
+    margin: 24px 0;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.flow-step-box {
+    background: #0f172a;
+    border-left: 4px solid var(--primary);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 20px;
+    margin: 18px 0;
+    font-family: monospace;
+    font-size: 0.88rem;
+    color: var(--primary-hover);
+    line-height: 1.6;
+}
+
+/* TABLES */
+.table-wrapper {
+    overflow-x: auto;
+    margin: 24px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+th, td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    background: #1f2937;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+tr:nth-child(even) { background: rgba(31, 41, 55, 0.3); }
+tr:hover { background: rgba(55, 65, 81, 0.3); }
+
+/* ALERTS & CALLOUTS */
+.callout {
+    display: flex;
+    gap: 14px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.callout-icon { font-size: 1.25rem; line-height: 1; flex-shrink: 0; }
+.callout-body { flex: 1; }
+
+.callout.note {
+    background: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-left: 4px solid var(--primary);
+}
+
+.callout.tip {
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-left: 4px solid var(--success);
+}
+
+.callout.warning {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-left: 4px solid var(--warning);
+}
+
+.callout.danger {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-left: 4px solid var(--danger);
+}
+
+/* LISTS */
+ul, ol {
+    padding-left: 24px;
+    margin-bottom: 18px;
+}
+
+li {
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+    color: #d1d5db;
+}
+
+li::marker { color: var(--primary); }
+
+/* BOTTOM CHAPTER NAV */
+.chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 60px;
+    padding-top: 30px;
+    border-top: 1px solid var(--border);
+}
+
+.nav-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 20px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.nav-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    background: var(--bg-surface-elevated);
+}
+
+.nav-card-dir {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.nav-card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+}
+</style>
+</head>
+<body>
+    <aside id="sidebar">
+        <a href="index.html" class="sidebar-header">
+            <div class="sidebar-logo">⚡</div>
+            <div>
+                <div class="sidebar-title">.NET Master Guide</div>
+                <div class="sidebar-sub">Infosys & Tier-1 Prep</div>
+            </div>
+        </a>
+        <div class="nav-section-title">Knowledge Base</div>
+        <ul class="nav-list">
+            
+        <li class="nav-item">
+            <a href="Volume-0-Software-Engineering-Fundamentals.html" class="nav-link ">
+                <span class="nav-icon">🧠</span>
+                <span>Software Engineering Fundamentals</span>
+                <span class="nav-vol">V0</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-X-DotNet-Platform-Core-Encyclopedia.html" class="nav-link ">
+                <span class="nav-icon">⚙️</span>
+                <span>.NET Platform & CoreCLR Runtime Encyclopedia</span>
+                <span class="nav-vol">VX</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-1-DSA-Logical-Thinking.html" class="nav-link ">
+                <span class="nav-icon">⚡</span>
+                <span>Logical Thinking & Data Structures and Algorithms</span>
+                <span class="nav-vol">V1</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-2-CSharp-Encyclopedia.html" class="nav-link ">
+                <span class="nav-icon">📘</span>
+                <span>C# Complete Language Encyclopedia</span>
+                <span class="nav-vol">V2</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-3-Advanced-CSharp.html" class="nav-link ">
+                <span class="nav-icon">🔥</span>
+                <span>Advanced C# & Memory Management</span>
+                <span class="nav-vol">V3</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-4-OOP-Design-Principles.html" class="nav-link ">
+                <span class="nav-icon">🏛️</span>
+                <span>OOP & Enterprise Design Principles</span>
+                <span class="nav-vol">V4</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-5-Design-Patterns.html" class="nav-link active">
+                <span class="nav-icon">🧩</span>
+                <span>GoF Design Patterns in Enterprise .NET</span>
+                <span class="nav-vol">V5</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-6-ASPNetCore.html" class="nav-link ">
+                <span class="nav-icon">🌐</span>
+                <span>ASP.NET Core Complete Architecture</span>
+                <span class="nav-vol">V6</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-7-EFCore.html" class="nav-link ">
+                <span class="nav-icon">🗄️</span>
+                <span>Entity Framework Core Internals</span>
+                <span class="nav-vol">V7</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-8-Database-SQL.html" class="nav-link ">
+                <span class="nav-icon">💾</span>
+                <span>Database Engine Internals & SQL Server</span>
+                <span class="nav-vol">V8</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-9-Microservices.html" class="nav-link ">
+                <span class="nav-icon">📡</span>
+                <span>Microservices & Distributed Systems</span>
+                <span class="nav-vol">V9</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-10-System-Design.html" class="nav-link ">
+                <span class="nav-icon">🏗️</span>
+                <span>Enterprise System Design</span>
+                <span class="nav-vol">V10</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-11-Project-Interview-Mastery.html" class="nav-link ">
+                <span class="nav-icon">🎯</span>
+                <span>Project Interview Mastery & Walkthroughs</span>
+                <span class="nav-vol">V11</span>
+            </a>
+        </li>
+        
+
+        <li class="nav-item">
+            <a href="Volume-12-Interview-Question-Bank.html" class="nav-link ">
+                <span class="nav-icon">🏆</span>
+                <span>The Master Interview Question Bank</span>
+                <span class="nav-vol">V12</span>
+            </a>
+        </li>
+        
+        </ul>
+    </aside>
+
+    <div id="content-wrapper">
+        <main id="main-content">
+            <div class="chapter-hero">
+                <div class="hero-meta">
+                    <span class="hero-badge">Design Patterns</span>
+                    <span class="hero-vol">Volume 5</span>
+                </div>
+                <h1>GoF Design Patterns in Enterprise .NET</h1>
+                <p>Creational, Structural & Behavioral patterns applied exclusively to Banking, Payments, and Healthcare with bad vs good production designs.</p>
+            </div>
+
+            <article class="doc-body">
+                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
+<h1 id='volume-5-design-patterns'>Volume 5: Design Patterns</h1>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body"><strong>Audience:</strong> .NET developer ~3 years experience. Knows pattern names, needs deep "why" and production context.</div>
+</div>
+
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body"><strong>Goal:</strong> Know not just WHAT each pattern is, but WHEN to use it and WHEN NOT TO.</div>
+</div>
+
+<p>---</p>
+<h1 id='table-of-contents'>TABLE OF CONTENTS</h1>
+<ol>
+<li><a href="#creational-patterns">Creational Patterns</a></li>
+</ol>
+<ul>
+<li><a href="#singleton-pattern">Singleton</a></li>
+<li><a href="#factory-method-pattern">Factory Method</a></li>
+<li><a href="#abstract-factory-pattern">Abstract Factory</a></li>
+<li><a href="#builder-pattern">Builder</a></li>
+</ul>
+<ol>
+<li><a href="#structural-patterns">Structural Patterns</a></li>
+</ol>
+<ul>
+<li><a href="#repository-pattern">Repository</a></li>
+<li><a href="#decorator-pattern">Decorator</a></li>
+<li><a href="#adapter-pattern">Adapter</a></li>
+<li><a href="#facade-pattern">Facade</a></li>
+</ul>
+<ol>
+<li><a href="#behavioral-patterns">Behavioral Patterns</a></li>
+</ol>
+<ul>
+<li><a href="#strategy-pattern">Strategy</a></li>
+<li><a href="#observer-pattern">Observer</a></li>
+<li><a href="#command-pattern">Command</a></li>
+<li><a href="#mediator-pattern">Mediator</a></li>
+<li><a href="#chain-of-responsibility">Chain of Responsibility</a></li>
+<li><a href="#template-method-pattern">Template Method</a></li>
+<li><a href="#state-pattern">State</a></li>
+</ul>
+<ol>
+<li><a href="#observer-vs-mediator-vs-events">Observer vs Mediator vs Events — Comparison</a></li>
+</ol>
+<p>---</p>
+<h1 id='creational-patterns'>CREATIONAL PATTERNS</h1>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Creational patterns abstract the process of object creation, making systems independent of how objects are created, composed, and represented.</div>
+</div>
+
+<p>---</p>
+<h2 id='singleton-pattern'>Singleton Pattern</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Ensures a class has <strong>exactly one instance</strong> and provides a <strong>global point of access</strong> to it.</p>
+<h3 id='2-historical-reason'>2. Historical Reason</h3>
+<p>Originally invented for shared resources: connection pools, configuration stores, hardware device proxies. The idea: if only one of something should exist, enforce it structurally.</p>
+<h3 id='3-problem-it-solves'>3. Problem It Solves</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// BAD: Static class — not testable, not DI-friendly, not mockable
+public static class ConfigurationManager
+{
+    private static readonly Dictionary&lt;string, string&gt; _config = new();
+    
+    static ConfigurationManager()
+    {
+        // Loads from file at app start — no way to inject test config
+        _config = File.ReadAllLines(&quot;appsettings.ini&quot;)
+            .ToDictionary(l =&gt; l.Split(&#x27;=&#x27;)[0], l =&gt; l.Split(&#x27;=&#x27;)[1]);
+    }
+    
+    public static string Get(string key) =&gt; _config.GetValueOrDefault(key, string.Empty);
+}
+
+// Cannot mock in tests. Cannot swap implementation. Global mutable state.</code></pre>
+</div>
+
+<h3 id='4-thread-safe-singleton-double-checked-locking-with-lazyt'>4. Thread-Safe Singleton — Double-Checked Locking with <code>Lazy&lt;T&gt;</code></h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// APPROACH 1: Lazy&lt;T&gt; — simplest, thread-safe, preferred
+public sealed class ConnectionPool
+{
+    // Lazy&lt;T&gt; uses double-checked locking internally
+    // Thread-safe, created only when first accessed, value never changes after
+    private static readonly Lazy&lt;ConnectionPool&gt; _instance = 
+        new(() =&gt; new ConnectionPool(), LazyThreadSafetyMode.ExecutionAndPublication);
+    
+    public static ConnectionPool Instance =&gt; _instance.Value;
+    
+    private ConnectionPool()
+    {
+        // Private constructor — external code cannot instantiate
+        _maxConnections = 20;
+        InitializePool();
+    }
+    
+    private int _maxConnections;
+    private readonly SemaphoreSlim _semaphore = new(20, 20);
+    private readonly Queue&lt;SqlConnection&gt; _pool = new();
+    
+    public async Task&lt;SqlConnection&gt; AcquireAsync()
+    {
+        await _semaphore.WaitAsync();
+        return _pool.TryDequeue(out var conn) ? conn : CreateConnection();
+    }
+    
+    public void Release(SqlConnection conn)
+    {
+        _pool.Enqueue(conn);
+        _semaphore.Release();
+    }
+    
+    private void InitializePool()
+    {
+        for (int i = 0; i &lt; _maxConnections; i++)
+            _pool.Enqueue(CreateConnection());
+    }
+    
+    private SqlConnection CreateConnection() =&gt; 
+        new SqlConnection(&quot;Server=prod-db;Database=Orders;Integrated Security=true&quot;);
+}
+
+// APPROACH 2: DI-managed Singleton (PREFERRED in modern .NET)
+// Let the DI container manage singleton lifetime — much better!
+builder.Services.AddSingleton&lt;IConnectionPool, SqlConnectionPool&gt;();
+
+// The DI container:
+// - Creates ONE instance for the app lifetime
+// - Handles thread safety during creation
+// - Allows interface abstraction (mockable!)
+// - No global state anti-pattern</code></pre>
+</div>
+
+<h3 id='5-production-example-distributed-cache'>5. Production Example: Distributed Cache</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// In .NET, singletons via DI are standard for:
+// 1. IMemoryCache — one cache per process
+// 2. HttpClient (via IHttpClientFactory) — manages connection pools
+// 3. IConfiguration — app config loaded once
+// 4. Logging providers
+
+builder.Services.AddSingleton&lt;IMemoryCache, MemoryCache&gt;(); // One cache
+builder.Services.AddSingleton&lt;IConfiguration&gt;(config);      // One config
+builder.Services.AddSingleton&lt;IApiKeyStore, InMemoryApiKeyStore&gt;(); // One key store
+
+// InMemoryApiKeyStore (SaaS: valid API keys cached in memory)
+public class InMemoryApiKeyStore : IApiKeyStore
+{
+    private readonly ConcurrentDictionary&lt;string, ApiKeyInfo&gt; _keys = new();
+    private readonly Timer _refreshTimer;
+    
+    public InMemoryApiKeyStore(IApiKeyRepository repository)
+    {
+        // Load all keys on startup, refresh every 5 minutes
+        RefreshAsync(repository).Wait();
+        _refreshTimer = new Timer(
+            async _ =&gt; await RefreshAsync(repository), 
+            null, 
+            TimeSpan.FromMinutes(5), 
+            TimeSpan.FromMinutes(5));
+    }
+    
+    public bool IsValid(string apiKey) =&gt; 
+        _keys.TryGetValue(apiKey, out var info) &amp;&amp; !info.IsExpired;
+    
+    private async Task RefreshAsync(IApiKeyRepository repository)
+    {
+        var keys = await repository.GetAllActiveAsync();
+        _keys.Clear();
+        foreach (var key in keys)
+            _keys[key.Key] = key;
+    }
+}</code></pre>
+</div>
+
+<h3 id='6-execution-flow'>6. Execution Flow</h3>
+<ol>
+<li>App starts → <code>builder.Services.AddSingleton&lt;IApiKeyStore, InMemoryApiKeyStore&gt;()</code></li>
+<li>First request to resolve <code>IApiKeyStore</code> → DI container creates <code>InMemoryApiKeyStore</code></li>
+<li>Constructor called once — loads all API keys from DB</li>
+<li>All subsequent requests → same instance returned (no DB call)</li>
+<li>Timer fires every 5 min → refreshes keys in background</li>
+</ol>
+<h3 id='7-when-not-to-use-singleton'>7. When NOT to Use Singleton</h3>
+<ul>
+<li>When it holds <strong>request-specific state</strong> (use Scoped instead)</li>
+<li>When it depends on Scoped services (captive dependency problem)</li>
+<li>When you need <strong>multiple instances</strong> in testing (global state makes parallel tests fail)</li>
+<li>When the object is cheap to create (over-engineering)</li>
+</ul>
+<h3 id='8-interview-prep'>8. Interview Prep</h3>
+<p><strong>Basic:</strong> "What is the Singleton pattern?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">A pattern that ensures a class has only one instance throughout the application lifetime and provides a global access point.</div>
+</div>
+
+<p><strong>Intermediate:</strong> "How do you make a Singleton thread-safe in C#?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Using <code>Lazy&lt;T&gt;</code> with <code>LazyThreadSafetyMode.ExecutionAndPublication</code> — it handles double-checked locking internally. Or better, use the DI container with <code>AddSingleton&lt;&gt;</code>, which handles thread safety and also allows interface abstraction.</div>
+</div>
+
+<p><strong>Senior:</strong> "Is Singleton an anti-pattern?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">It can be. The classic static-class Singleton is an anti-pattern because it introduces hidden global state, makes testing difficult, and couples code to a concrete class. BUT a DI-managed singleton (registered with <code>AddSingleton</code>) solves all those problems — it's a single instance, but resolved through an interface, mockable in tests, and with no static state. The pattern itself isn't wrong; the static implementation is.</div>
+</div>
+
+<p><strong>Tricky:</strong> "What's the difference between Singleton and static class?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">A static class cannot implement interfaces, cannot be inherited, cannot be instantiated, cannot be passed as a parameter, and cannot be mocked. A singleton class CAN do all of these — it's just constrained to one instance. DI singletons are the cleanest: interface-based, mockable, lifecycle-managed by the framework.</div>
+</div>
+
+<p>---</p>
+<h2 id='factory-method-pattern'>Factory Method Pattern</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Defines an interface for creating an object, but <strong>lets subclasses decide which class to instantiate</strong>. Factory Method defers instantiation to subclasses.</p>
+<h3 id='2-problem-it-solves'>2. Problem It Solves</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// BAD: Client code directly creates payment gateways — coupled to concrete types
+public class CheckoutService
+{
+    public async Task&lt;PaymentResult&gt; ProcessPaymentAsync(Order order, string gateway)
+    {
+        IPaymentGateway paymentGateway;
+        
+        // Client must know about all concrete classes
+        if (gateway == &quot;Stripe&quot;)
+            paymentGateway = new StripeGateway(Environment.GetEnvironmentVariable(&quot;STRIPE_KEY&quot;));
+        else if (gateway == &quot;PayPal&quot;)
+            paymentGateway = new PayPalGateway(Environment.GetEnvironmentVariable(&quot;PAYPAL_CLIENT_ID&quot;),
+                Environment.GetEnvironmentVariable(&quot;PAYPAL_SECRET&quot;));
+        else if (gateway == &quot;Razorpay&quot;)
+            paymentGateway = new RazorpayGateway(Environment.GetEnvironmentVariable(&quot;RAZORPAY_KEY&quot;));
+        else
+            throw new ArgumentException($&quot;Unknown gateway: {gateway}&quot;);
+        
+        return await paymentGateway.ProcessAsync(new PaymentRequest { Amount = order.Total });
+    }
+}</code></pre>
+</div>
+
+<h3 id='3-pattern-solution'>3. Pattern Solution</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Factory Method: encapsulates creation logic
+public interface IPaymentGatewayFactory
+{
+    IPaymentGateway Create(string gatewayName);
+}
+
+public class PaymentGatewayFactory : IPaymentGatewayFactory
+{
+    private readonly IConfiguration _config;
+    private readonly ILogger&lt;PaymentGatewayFactory&gt; _logger;
+    private readonly IHttpClientFactory _httpClientFactory;
+    
+    public PaymentGatewayFactory(
+        IConfiguration config,
+        ILogger&lt;PaymentGatewayFactory&gt; logger,
+        IHttpClientFactory httpClientFactory)
+    {
+        _config = config;
+        _logger = logger;
+        _httpClientFactory = httpClientFactory;
+    }
+    
+    public IPaymentGateway Create(string gatewayName) =&gt; gatewayName.ToUpperInvariant() switch
+    {
+        &quot;STRIPE&quot; =&gt; new StripeGateway(
+            _config[&quot;PaymentGateways:Stripe:SecretKey&quot;],
+            _httpClientFactory.CreateClient(&quot;Stripe&quot;),
+            _logger.CreateLogger&lt;StripeGateway&gt;()),
+        
+        &quot;PAYPAL&quot; =&gt; new PayPalGateway(
+            _config[&quot;PaymentGateways:PayPal:ClientId&quot;],
+            _config[&quot;PaymentGateways:PayPal:Secret&quot;],
+            _httpClientFactory.CreateClient(&quot;PayPal&quot;)),
+        
+        &quot;RAZORPAY&quot; =&gt; new RazorpayGateway(
+            _config[&quot;PaymentGateways:Razorpay:KeyId&quot;],
+            _config[&quot;PaymentGateways:Razorpay:Secret&quot;]),
+        
+        _ =&gt; throw new NotSupportedException($&quot;Payment gateway &#x27;{gatewayName}&#x27; is not supported&quot;)
+    };
+}
+
+// DI-based alternative (Open/Closed — preferred):
+public class DependencyResolvingGatewayFactory : IPaymentGatewayFactory
+{
+    private readonly IServiceProvider _serviceProvider;
+    
+    public DependencyResolvingGatewayFactory(IServiceProvider serviceProvider)
+        =&gt; _serviceProvider = serviceProvider;
+    
+    public IPaymentGateway Create(string gatewayName)
+    {
+        // Resolves from DI — adding a gateway = register in DI, no factory change
+        var gateways = _serviceProvider.GetServices&lt;IPaymentGateway&gt;();
+        return gateways.FirstOrDefault(g =&gt; g.GatewayName.Equals(gatewayName, StringComparison.OrdinalIgnoreCase))
+            ?? throw new NotSupportedException($&quot;Gateway &#x27;{gatewayName}&#x27; not registered&quot;);
+    }
+}
+
+// Usage:
+public class CheckoutService
+{
+    private readonly IPaymentGatewayFactory _gatewayFactory;
+    
+    public async Task&lt;PaymentResult&gt; ProcessPaymentAsync(Order order, string preferredGateway)
+    {
+        var gateway = _gatewayFactory.Create(preferredGateway);
+        return await gateway.ProcessAsync(new PaymentRequest { Amount = order.Total });
+    }
+}</code></pre>
+</div>
+
+<h3 id='4-when-not-to-use-factory-method'>4. When NOT to Use Factory Method</h3>
+<ul>
+<li>When you only ever have ONE concrete implementation — overkill</li>
+<li>When object creation is trivially simple (<code>new Order()</code>)</li>
+<li>When the DI container already handles creation (it often makes Factory Method redundant)</li>
+</ul>
+<h3 id='5-interview-prep'>5. Interview Prep</h3>
+<p><strong>Tricky:</strong> "What's the difference between Factory Method and Abstract Factory?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Factory Method creates ONE product via a method (often in a class hierarchy). Abstract Factory creates FAMILIES of related products. Factory Method: <code>CreatePaymentGateway()</code>. Abstract Factory: <code>CreatePaymentGateway() + CreateRefundProcessor() + CreateWebhookHandler()</code> — all related objects for one payment provider.</div>
+</div>
+
+<p>---</p>
+<h2 id='abstract-factory-pattern'>Abstract Factory Pattern</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Provides an interface for creating <strong>families of related or dependent objects</strong> without specifying their concrete classes.</p>
+<h3 id='2-problem-it-solves-database-provider-families'>2. Problem It Solves — Database Provider Families</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Problem: You need to switch between SQL Server and PostgreSQL
+// Each database has different connection, command, and parameter types
+
+// Abstract Factory: creates a family of related objects
+public interface IDatabaseProviderFactory
+{
+    IDbConnection CreateConnection(string connectionString);
+    IDbCommand CreateCommand(string sql, IDbConnection connection);
+    IDbDataParameter CreateParameter(string name, object value);
+    IDataAdapter CreateDataAdapter(IDbCommand command);
+}
+
+public class SqlServerProviderFactory : IDatabaseProviderFactory
+{
+    public IDbConnection CreateConnection(string connectionString)
+        =&gt; new SqlConnection(connectionString);
+    
+    public IDbCommand CreateCommand(string sql, IDbConnection connection)
+        =&gt; new SqlCommand(sql, (SqlConnection)connection);
+    
+    public IDbDataParameter CreateParameter(string name, object value)
+        =&gt; new SqlParameter(name, value);
+    
+    public IDataAdapter CreateDataAdapter(IDbCommand command)
+        =&gt; new SqlDataAdapter((SqlCommand)command);
+}
+
+public class PostgreSqlProviderFactory : IDatabaseProviderFactory
+{
+    public IDbConnection CreateConnection(string connectionString)
+        =&gt; new NpgsqlConnection(connectionString);
+    
+    public IDbCommand CreateCommand(string sql, IDbConnection connection)
+        =&gt; new NpgsqlCommand(sql, (NpgsqlConnection)connection);
+    
+    public IDbDataParameter CreateParameter(string name, object value)
+        =&gt; new NpgsqlParameter(name, value);
+    
+    public IDataAdapter CreateDataAdapter(IDbCommand command)
+        =&gt; new NpgsqlDataAdapter((NpgsqlCommand)command);
+}
+
+public class InMemoryProviderFactory : IDatabaseProviderFactory
+{
+    // For unit testing — fake all DB objects
+    public IDbConnection CreateConnection(string connectionString) =&gt; new FakeConnection();
+    public IDbCommand CreateCommand(string sql, IDbConnection connection) =&gt; new FakeCommand();
+    // etc.
+}
+
+// Usage — switches entire family by swapping factory:
+public class DataAccessService
+{
+    private readonly IDatabaseProviderFactory _factory;
+    private readonly string _connectionString;
+    
+    public DataAccessService(IDatabaseProviderFactory factory, IConfiguration config)
+    {
+        _factory = factory;
+        _connectionString = config.GetConnectionString(&quot;DefaultConnection&quot;);
+    }
+    
+    public async Task&lt;IEnumerable&lt;Order&gt;&gt; GetOrdersAsync()
+    {
+        using var connection = _factory.CreateConnection(_connectionString);
+        await connection.OpenAsync();
+        using var command = _factory.CreateCommand(&quot;SELECT * FROM Orders&quot;, connection);
+        // Works with ANY database — factory determines which
+    }
+}
+
+// DI: swap entire database family with one line
+builder.Services.AddSingleton&lt;IDatabaseProviderFactory, SqlServerProviderFactory&gt;();
+// Or: builder.Services.AddSingleton&lt;IDatabaseProviderFactory, PostgreSqlProviderFactory&gt;();</code></pre>
+</div>
+
+<h3 id='3-real-production-use-saas-multi-tenant-storage'>3. Real Production Use — SaaS Multi-Tenant Storage</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Each tenant can have different storage back-end
+public interface IStorageFactory
+{
+    IBlobStorage CreateBlobStorage();
+    IQueueStorage CreateQueueStorage();
+    ITableStorage CreateTableStorage();
+}
+
+public class AzureStorageFactory : IStorageFactory
+{
+    private readonly string _connectionString;
+    public AzureStorageFactory(string connectionString) =&gt; _connectionString = connectionString;
+    
+    public IBlobStorage CreateBlobStorage() =&gt; new AzureBlobStorage(_connectionString);
+    public IQueueStorage CreateQueueStorage() =&gt; new AzureQueueStorage(_connectionString);
+    public ITableStorage CreateTableStorage() =&gt; new AzureTableStorage(_connectionString);
+}
+
+public class AwsStorageFactory : IStorageFactory
+{
+    private readonly AWSCredentials _credentials;
+    public AWSCredentials Credentials =&gt; _credentials;
+    
+    public IBlobStorage CreateBlobStorage() =&gt; new S3BlobStorage(_credentials);
+    public IQueueStorage CreateQueueStorage() =&gt; new SqsQueueStorage(_credentials);
+    public ITableStorage CreateTableStorage() =&gt; new DynamoTableStorage(_credentials);
+}</code></pre>
+</div>
+
+<h3 id='4-when-not-to-use-abstract-factory'>4. When NOT to Use Abstract Factory</h3>
+<ul>
+<li>When you only have one concrete family (adds unnecessary abstraction)</li>
+<li>When the families are unlikely to change (YAGNI)</li>
+<li>When families grow — each new product type requires changes to ALL factories</li>
+</ul>
+<p>---</p>
+<h2 id='builder-pattern'>Builder Pattern</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Separates the <strong>construction</strong> of a complex object from its <strong>representation</strong>, letting the same construction process create different representations.</p>
+<h3 id='2-problem-constructor-explosion-telescoping-constructors'>2. Problem: Constructor Explosion (Telescoping Constructors)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// BAD: Telescoping constructors — unreadable, error-prone
+public class Order
+{
+    public Order(string customerId, string currency) { ... }
+    public Order(string customerId, string currency, string couponCode) { ... }
+    public Order(string customerId, string currency, string couponCode, Address shippingAddress) { ... }
+    public Order(string customerId, string currency, string couponCode, Address shippingAddress, 
+        ShippingMethod shippingMethod) { ... }
+    public Order(string customerId, string currency, string couponCode, Address shippingAddress, 
+        ShippingMethod shippingMethod, bool isGiftOrder) { ... }
+    // ... and so on
+    
+    // At call site — which argument is which?!
+    var order = new Order(&quot;cust_123&quot;, &quot;USD&quot;, null, address, ShippingMethod.Express, true, false, null);
+    // Is that &#x27;true&#x27; isGiftOrder or isPriority? Impossible to know without IDE.
+}</code></pre>
+</div>
+
+<h3 id='3-pattern-solution-fluent-builder'>3. Pattern Solution: Fluent Builder</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// The complex object
+public sealed class Order
+{
+    public Guid Id { get; private init; }
+    public string CustomerId { get; private init; }
+    public string Currency { get; private init; }
+    public IReadOnlyList&lt;OrderItem&gt; Items { get; private init; }
+    public Address? ShippingAddress { get; private init; }
+    public ShippingMethod ShippingMethod { get; private init; }
+    public string? CouponCode { get; private init; }
+    public bool IsGiftOrder { get; private init; }
+    public string? GiftMessage { get; private init; }
+    public decimal? InsuranceAmount { get; private init; }
+    
+    // Private constructor — only Builder can create
+    private Order() { }
+    
+    // Builder lives as nested class for access to private constructor
+    public sealed class Builder
+    {
+        private readonly string _customerId;
+        private readonly string _currency;
+        private readonly List&lt;OrderItem&gt; _items = new();
+        private Address? _shippingAddress;
+        private ShippingMethod _shippingMethod = ShippingMethod.Standard;
+        private string? _couponCode;
+        private bool _isGiftOrder;
+        private string? _giftMessage;
+        private decimal? _insuranceAmount;
+        
+        // Required parameters in constructor — can&#x27;t build without them
+        public Builder(string customerId, string currency)
+        {
+            if (string.IsNullOrWhiteSpace(customerId))
+                throw new ArgumentException(&quot;Customer ID required&quot;, nameof(customerId));
+            if (string.IsNullOrWhiteSpace(currency))
+                throw new ArgumentException(&quot;Currency required&quot;, nameof(currency));
+            
+            _customerId = customerId;
+            _currency = currency;
+        }
+        
+        // Fluent methods — each returns &#x27;this&#x27; for chaining
+        public Builder AddItem(string productId, int quantity, decimal unitPrice)
+        {
+            if (quantity &lt;= 0) throw new ArgumentException(&quot;Quantity must be positive&quot;);
+            if (unitPrice &lt;= 0) throw new ArgumentException(&quot;Price must be positive&quot;);
+            
+            _items.Add(new OrderItem(productId, quantity, unitPrice));
+            return this;
+        }
+        
+        public Builder ShipTo(Address address)
+        {
+            _shippingAddress = address ?? throw new ArgumentNullException(nameof(address));
+            return this;
+        }
+        
+        public Builder WithShippingMethod(ShippingMethod method)
+        {
+            _shippingMethod = method;
+            return this;
+        }
+        
+        public Builder WithCoupon(string couponCode)
+        {
+            _couponCode = couponCode;
+            return this;
+        }
+        
+        public Builder AsGiftOrder(string giftMessage)
+        {
+            _isGiftOrder = true;
+            _giftMessage = giftMessage ?? throw new ArgumentNullException(nameof(giftMessage));
+            return this;
+        }
+        
+        public Builder WithInsurance(decimal amount)
+        {
+            if (amount &lt;= 0) throw new ArgumentException(&quot;Insurance amount must be positive&quot;);
+            _insuranceAmount = amount;
+            return this;
+        }
+        
+        // Build: validate and create the immutable Order
+        public Order Build()
+        {
+            if (!_items.Any())
+                throw new InvalidOperationException(&quot;Order must have at least one item&quot;);
+            
+            if (_shippingAddress == null)
+                throw new InvalidOperationException(&quot;Shipping address is required&quot;);
+            
+            return new Order
+            {
+                Id = Guid.NewGuid(),
+                CustomerId = _customerId,
+                Currency = _currency,
+                Items = _items.AsReadOnly(),
+                ShippingAddress = _shippingAddress,
+                ShippingMethod = _shippingMethod,
+                CouponCode = _couponCode,
+                IsGiftOrder = _isGiftOrder,
+                GiftMessage = _giftMessage,
+                InsuranceAmount = _insuranceAmount
+            };
+        }
+    }
+}
+
+// Usage — crystal clear and readable:
+var order = new Order.Builder(&quot;cust_123&quot;, &quot;USD&quot;)
+    .AddItem(&quot;SKU-001&quot;, quantity: 2, unitPrice: 29.99m)
+    .AddItem(&quot;SKU-002&quot;, quantity: 1, unitPrice: 49.99m)
+    .ShipTo(new Address(&quot;123 Main St&quot;, &quot;New York&quot;, &quot;NY&quot;, &quot;10001&quot;, &quot;US&quot;))
+    .WithShippingMethod(ShippingMethod.Express)
+    .WithCoupon(&quot;SAVE10&quot;)
+    .AsGiftOrder(&quot;Happy Birthday!&quot;)
+    .WithInsurance(20m)
+    .Build();</code></pre>
+</div>
+
+<h3 id='4-execution-flow'>4. Execution Flow</h3>
+<ol>
+<li><code>new Order.Builder(&quot;cust_123&quot;, &quot;USD&quot;)</code> → validates required params, sets state</li>
+<li>Each <code>.AddItem(...)</code> → validates, adds to <code>_items</code>, returns <code>this</code></li>
+<li><code>.ShipTo(...)</code>, <code>.WithCoupon(...)</code> etc. → sets optional state</li>
+<li><code>.Build()</code> → validates completeness, creates immutable <code>Order</code> with <code>private init</code></li>
+<li>If any invariant fails → exception at build time, not at use time</li>
+</ol>
+<h3 id='5-when-not-to-use-builder'>5. When NOT to Use Builder</h3>
+<ul>
+<li>Simple objects with ≤3 constructor parameters</li>
+<li>Objects created by ORMs (EF Core handles construction)</li>
+<li>When <code>record</code> types with <code>with</code> expressions suffice</li>
+</ul>
+<h3 id='6-interview-prep'>6. Interview Prep</h3>
+<p><strong>Tricky:</strong> "How is Builder different from Factory?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Factory encapsulates WHICH type to create (the selection). Builder encapsulates HOW to construct a KNOWN type step-by-step. Factory answers "which object?" Builder answers "how to assemble THIS object?"</div>
+</div>
+
+<p>---</p>
+<h1 id='structural-patterns'>STRUCTURAL PATTERNS</h1>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Structural patterns deal with object composition — how objects and classes are combined to form larger structures.</div>
+</div>
+
+<p>---</p>
+<h2 id='repository-pattern'>Repository Pattern</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Mediates between the domain and data mapping layers, providing a collection-like interface for accessing domain objects.</p>
+<h3 id='2-problem-it-solves'>2. Problem It Solves</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// BAD: Data access logic scattered in business services
+public class OrderService
+{
+    private readonly OrderDbContext _db;
+    
+    public async Task&lt;Order?&gt; GetOrderAsync(Guid id)
+    {
+        // EF query in service layer — business logic mixes with data access
+        return await _db.Orders
+            .Include(o =&gt; o.Items)
+            .Include(o =&gt; o.Customer)
+            .Where(o =&gt; o.Id == id &amp;&amp; !o.IsDeleted)
+            .FirstOrDefaultAsync();
+    }
+    
+    public async Task&lt;IEnumerable&lt;Order&gt;&gt; GetPendingOrdersAsync()
+    {
+        // Query duplicated in multiple services
+        return await _db.Orders
+            .Where(o =&gt; o.Status == OrderStatus.Pending &amp;&amp; !o.IsDeleted)
+            .OrderBy(o =&gt; o.CreatedAt)
+            .ToListAsync();
+    }
+}
+// Problem: Test OrderService → need real DB. Change schema → find all LINQ queries.</code></pre>
+</div>
+
+<h3 id='3-pattern-solution'>3. Pattern Solution</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Repository Interface — the abstraction
+public interface IOrderRepository
+{
+    Task&lt;Order?&gt; GetByIdAsync(Guid id, CancellationToken ct = default);
+    Task&lt;IReadOnlyList&lt;Order&gt;&gt; GetByCustomerAsync(string customerId, CancellationToken ct = default);
+    Task&lt;IReadOnlyList&lt;Order&gt;&gt; GetPendingAsync(CancellationToken ct = default);
+    Task&lt;IReadOnlyList&lt;Order&gt;&gt; GetByDateRangeAsync(DateTimeOffset from, DateTimeOffset to, CancellationToken ct = default);
+    Task AddAsync(Order order, CancellationToken ct = default);
+    Task UpdateAsync(Order order, CancellationToken ct = default);
+    Task&lt;bool&gt; ExistsAsync(Guid id, CancellationToken ct = default);
+}
+
+// Concrete implementation — data access details here only
+public class EfOrderRepository : IOrderRepository
+{
+    private readonly OrderDbContext _db;
+    
+    public EfOrderRepository(OrderDbContext db) =&gt; _db = db;
+    
+    public async Task&lt;Order?&gt; GetByIdAsync(Guid id, CancellationToken ct = default)
+        =&gt; await _db.Orders
+            .AsNoTracking()
+            .Include(o =&gt; o.Items).ThenInclude(i =&gt; i.Product)
+            .Include(o =&gt; o.ShippingAddress)
+            .FirstOrDefaultAsync(o =&gt; o.Id == id &amp;&amp; !o.IsDeleted, ct);
+    
+    public async Task&lt;IReadOnlyList&lt;Order&gt;&gt; GetPendingAsync(CancellationToken ct = default)
+        =&gt; await _db.Orders
+            .Where(o =&gt; o.Status == OrderStatus.Pending &amp;&amp; !o.IsDeleted)
+            .OrderBy(o =&gt; o.CreatedAt)
+            .Take(1000) // Safeguard
+            .ToListAsync(ct);
+    
+    public async Task AddAsync(Order order, CancellationToken ct = default)
+    {
+        await _db.Orders.AddAsync(order, ct);
+        // Note: SaveChanges handled by Unit of Work, not here
+    }
+    
+    // ... other implementations
+}
+
+// Unit of Work — coordinates multiple repositories in one transaction
+public interface IUnitOfWork : IDisposable
+{
+    IOrderRepository Orders { get; }
+    IPaymentRepository Payments { get; }
+    IInventoryRepository Inventory { get; }
+    Task&lt;int&gt; SaveChangesAsync(CancellationToken ct = default);
+}
+
+public class EfUnitOfWork : IUnitOfWork
+{
+    private readonly OrderDbContext _db;
+    
+    public EfUnitOfWork(OrderDbContext db)
+    {
+        _db = db;
+        Orders = new EfOrderRepository(db);
+        Payments = new EfPaymentRepository(db);
+        Inventory = new EfInventoryRepository(db);
+    }
+    
+    public IOrderRepository Orders { get; }
+    public IPaymentRepository Payments { get; }
+    public IInventoryRepository Inventory { get; }
+    
+    public async Task&lt;int&gt; SaveChangesAsync(CancellationToken ct = default)
+        =&gt; await _db.SaveChangesAsync(ct);
+    
+    public void Dispose() =&gt; _db.Dispose();
+}
+
+// Service uses repository abstraction:
+public class OrderService
+{
+    private readonly IUnitOfWork _uow;
+    
+    public async Task&lt;OrderResult&gt; PlaceOrderAsync(PlaceOrderRequest request, CancellationToken ct)
+    {
+        // Check inventory
+        var isAvailable = await _uow.Inventory.IsAvailableAsync(request.Items, ct);
+        if (!isAvailable) return OrderResult.Failed(&quot;Items not available&quot;);
+        
+        var order = Order.Create(request);
+        await _uow.Orders.AddAsync(order, ct);
+        
+        // Reserve inventory
+        await _uow.Inventory.ReserveAsync(order.Items, ct);
+        
+        // Both saved in ONE transaction
+        await _uow.SaveChangesAsync(ct);
+        
+        return OrderResult.Success(order.Id);
+    }
+}</code></pre>
+</div>
+
+<h3 id='4-generic-repository-pros-and-cons'>4. Generic Repository — Pros and Cons</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Generic Repository
+public interface IRepository&lt;T&gt; where T : class
+{
+    Task&lt;T?&gt; GetByIdAsync(Guid id);
+    Task&lt;IReadOnlyList&lt;T&gt;&gt; GetAllAsync();
+    Task AddAsync(T entity);
+    Task UpdateAsync(T entity);
+    Task DeleteAsync(Guid id);
+}
+
+// PROS: Reduces boilerplate for simple CRUD
+// CONS: 
+// - Exposes GetAll() for all entities (dangerous for large tables!)
+// - Can&#x27;t express domain-specific queries (GetPendingOrders, GetByCustomer)
+// - Leads to &quot;GenericRepository&lt;Order&gt;.GetAll().Where(...)&quot; — leaks into service layer
+// - You end up adding domain-specific methods anyway
+
+// VERDICT: Use SPECIFIC repositories. Generic can be a base class but NOT the API.
+public abstract class RepositoryBase&lt;T&gt; : IRepository&lt;T&gt; where T : class
+{
+    protected readonly DbContext Context;
+    
+    protected RepositoryBase(DbContext context) =&gt; Context = context;
+    
+    public virtual async Task&lt;T?&gt; GetByIdAsync(Guid id) 
+        =&gt; await Context.Set&lt;T&gt;().FindAsync(id);
+    
+    // Subclasses ADD domain-specific methods on top
+}
+
+public class OrderRepository : RepositoryBase&lt;Order&gt;, IOrderRepository
+{
+    public OrderRepository(OrderDbContext context) : base(context) { }
+    
+    // Domain-specific — these are what make repository valuable
+    public async Task&lt;IReadOnlyList&lt;Order&gt;&gt; GetPendingAsync()
+        =&gt; await Context.Set&lt;Order&gt;()
+            .Where(o =&gt; o.Status == OrderStatus.Pending)
+            .ToListAsync();
+}</code></pre>
+</div>
+
+<h3 id='5-when-repository-is-an-anti-pattern-over-ef-core'>5. When Repository Is an Anti-Pattern (Over EF Core)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// If you&#x27;re using EF Core and NOT testing with mocks:
+// - DbContext IS a unit of work
+// - DbSet&lt;T&gt; IS a repository
+// - Adding a repository layer on top = redundant abstraction
+
+// ACCEPTABLE to skip repository if:
+// 1. Team won&#x27;t switch databases
+// 2. Tests use real DB (integration tests)
+// 3. Application is simple CRUD
+// 4. You&#x27;re using DbContext directly in handlers (CQRS/Vertical Slice)
+
+// In CQRS/Minimal API approach (common today):
+public class GetOrderQueryHandler
+{
+    private readonly OrderDbContext _db; // Direct DbContext — no repository
+    
+    public async Task&lt;OrderDto?&gt; Handle(GetOrderQuery query, CancellationToken ct)
+        =&gt; await _db.Orders
+            .Where(o =&gt; o.Id == query.OrderId)
+            .Select(o =&gt; new OrderDto { Id = o.Id, Total = o.Total })
+            .FirstOrDefaultAsync(ct);
+    // Query is the abstraction; repository adds nothing here
+}</code></pre>
+</div>
+
+<h3 id='6-interview-prep'>6. Interview Prep</h3>
+<p><strong>Tricky:</strong> "Is the Repository pattern an anti-pattern over Entity Framework?"</p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">It depends on goals. If your goals are: testability via mocks, database-independence, and centralized query logic — Repository adds value. If you use integration tests with real DB, EF Core IS your repository (DbSet is a repository, DbContext is a unit of work). Adding another layer creates redundant abstraction. In modern CQRS/Vertical Slice architectures, it's common to skip Repository and query DbContext directly in handlers.</div>
+</div>
+
+<p>---</p>
+<h2 id='decorator-pattern'>Decorator Pattern</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Attaches additional responsibilities to an object <strong>dynamically</strong> by wrapping it. Provides a flexible alternative to subclassing.</p>
+<h3 id='2-problem-it-solves'>2. Problem It Solves</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Need to add: caching, logging, retry — to an existing service
+// WITHOUT modifying the original class (OCP)
+// WITHOUT inheritance chains (composition over inheritance)</code></pre>
+</div>
+
+<h3 id='3-pattern-solution'>3. Pattern Solution</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Base interface
+public interface IOrderService
+{
+    Task&lt;Order?&gt; GetOrderAsync(Guid id);
+    Task&lt;OrderResult&gt; PlaceOrderAsync(PlaceOrderRequest request);
+}
+
+// Core implementation
+public class OrderService : IOrderService
+{
+    private readonly IOrderRepository _repo;
+    
+    public async Task&lt;Order?&gt; GetOrderAsync(Guid id) 
+        =&gt; await _repo.GetByIdAsync(id);
+    
+    public async Task&lt;OrderResult&gt; PlaceOrderAsync(PlaceOrderRequest request)
+    {
+        // Core business logic
+    }
+}
+
+// Decorator 1: Adds caching
+public class CachingOrderService : IOrderService
+{
+    private readonly IOrderService _inner;    // Wraps IOrderService (not OrderService!)
+    private readonly IDistributedCache _cache;
+    private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(5);
+    
+    public CachingOrderService(IOrderService inner, IDistributedCache cache)
+    {
+        _inner = inner;
+        _cache = cache;
+    }
+    
+    public async Task&lt;Order?&gt; GetOrderAsync(Guid id)
+    {
+        var key = $&quot;order:{id}&quot;;
+        var cached = await _cache.GetStringAsync(key);
+        
+        if (cached != null)
+            return JsonSerializer.Deserialize&lt;Order&gt;(cached);
+        
+        var order = await _inner.GetOrderAsync(id); // Delegate to wrapped service
+        
+        if (order != null)
+            await _cache.SetStringAsync(key, JsonSerializer.Serialize(order),
+                new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = CacheDuration });
+        
+        return order;
+    }
+    
+    public Task&lt;OrderResult&gt; PlaceOrderAsync(PlaceOrderRequest request)
+        =&gt; _inner.PlaceOrderAsync(request); // Pass through — no caching for writes
+}
+
+// Decorator 2: Adds logging
+public class LoggingOrderService : IOrderService
+{
+    private readonly IOrderService _inner;
+    private readonly ILogger&lt;LoggingOrderService&gt; _logger;
+    
+    public LoggingOrderService(IOrderService inner, ILogger&lt;LoggingOrderService&gt; logger)
+    {
+        _inner = inner;
+        _logger = logger;
+    }
+    
+    public async Task&lt;Order?&gt; GetOrderAsync(Guid id)
+    {
+        _logger.LogInformation(&quot;Getting order {OrderId}&quot;, id);
+        var sw = Stopwatch.StartNew();
+        
+        try
+        {
+            var result = await _inner.GetOrderAsync(id);
+            _logger.LogInformation(&quot;Got order {OrderId} in {Ms}ms. Found: {Found}&quot;, 
+                id, sw.ElapsedMilliseconds, result != null);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, &quot;Failed to get order {OrderId}&quot;, id);
+            throw;
+        }
+    }
+    
+    public async Task&lt;OrderResult&gt; PlaceOrderAsync(PlaceOrderRequest request)
+    {
+        _logger.LogInformation(&quot;Placing order for customer {CustomerId}&quot;, request.CustomerId);
+        var result = await _inner.PlaceOrderAsync(request);
+        _logger.LogInformation(&quot;Order placement result: {Success}&quot;, result.IsSuccess);
+        return result;
+    }
+}
+
+// DI registration with Scrutor (popular NuGet for decorator registration):
+builder.Services.AddScoped&lt;IOrderService, OrderService&gt;();
+builder.Services.Decorate&lt;IOrderService, CachingOrderService&gt;();  // Wraps OrderService
+builder.Services.Decorate&lt;IOrderService, LoggingOrderService&gt;();  // Wraps CachingOrderService
+
+// Resolution order: LoggingOrderService → CachingOrderService → OrderService
+// Call chain: Logging.GetOrder → Caching.GetOrder → OrderService.GetOrder
+
+// Manual registration (without Scrutor):
+builder.Services.AddScoped&lt;OrderService&gt;();
+builder.Services.AddScoped&lt;IOrderService&gt;(sp =&gt;
+{
+    var core = sp.GetRequiredService&lt;OrderService&gt;();
+    var cached = new CachingOrderService(core, sp.GetRequiredService&lt;IDistributedCache&gt;());
+    var logged = new LoggingOrderService(cached, sp.GetRequiredService&lt;ILogger&lt;LoggingOrderService&gt;&gt;());
+    return logged;
+});</code></pre>
+</div>
+
+<h3 id='4-execution-flow'>4. Execution Flow</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Client.GetOrderAsync(id)
+  → LoggingOrderService.GetOrderAsync(id)          [logs start, starts timer]
+    → CachingOrderService.GetOrderAsync(id)        [checks Redis cache]
+      → OrderService.GetOrderAsync(id)             [queries SQL — if cache miss]
+    ← CachingOrderService [stores in Redis, returns order]
+  ← LoggingOrderService [logs completion, elapsed time, returns order]
+← Client receives Order</code></pre>
+</div>
+
+<h3 id='5-when-not-to-use-decorator'>5. When NOT to Use Decorator</h3>
+<ul>
+<li>When cross-cutting concerns are better handled by middleware (ASP.NET pipeline)</li>
+<li>When AOP (Aspect-Oriented Programming) via <code>DispatchProxy</code> or <code>Castle DynamicProxy</code> is cleaner</li>
+<li>When only ONE decorator is ever needed (just modify the class)</li>
+<li>When the interface has many methods — every decorator must implement them all</li>
+</ul>
+<p>---</p>
+<h2 id='adapter-pattern'>Adapter Pattern</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Converts the interface of a class into another interface that clients expect. Lets classes work together that otherwise couldn't due to incompatible interfaces.</p>
+<h3 id='2-problem-incompatible-third-party-sdk'>2. Problem: Incompatible Third-Party SDK</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Your system uses this contract:
+public interface IPaymentGateway
+{
+    Task&lt;PaymentResult&gt; ProcessAsync(PaymentRequest request);
+    Task&lt;RefundResult&gt; RefundAsync(string transactionId, decimal amount);
+}
+
+// Legacy SDK you must integrate — completely different interface:
+public class LegacyPaymentSdk
+{
+    public bool MakePayment(string cardNumber, string cvv, decimal amount, string currency)
+    { /* Returns bool - success/failure */ return true; }
+    
+    public string GetLastTransactionId() { return &quot;TXN-123&quot;; }
+    
+    public bool ReverseTransaction(string transactionId, double amount)
+    { return true; }
+    
+    public string GetLastError() { return string.Empty; }
+}</code></pre>
+</div>
+
+<h3 id='3-pattern-solution'>3. Pattern Solution</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Adapter: translates YOUR interface to THE LEGACY SDK
+public class LegacyPaymentGatewayAdapter : IPaymentGateway
+{
+    private readonly LegacyPaymentSdk _legacySdk;
+    private readonly ILogger&lt;LegacyPaymentGatewayAdapter&gt; _logger;
+    
+    public LegacyPaymentGatewayAdapter(LegacyPaymentSdk legacySdk, 
+        ILogger&lt;LegacyPaymentGatewayAdapter&gt; logger)
+    {
+        _legacySdk = legacySdk;
+        _logger = logger;
+    }
+    
+    public async Task&lt;PaymentResult&gt; ProcessAsync(PaymentRequest request)
+    {
+        // Translate YOUR model to LEGACY SDK&#x27;s model
+        var cardNumber = request.PaymentMethod.CardNumber;
+        var cvv = request.PaymentMethod.CVV;
+        var amount = request.Amount;
+        var currency = request.Currency;
+        
+        // Legacy SDK is synchronous — wrap in Task.Run
+        var success = await Task.Run(() =&gt; 
+            _legacySdk.MakePayment(cardNumber, cvv, amount, currency));
+        
+        if (success)
+        {
+            var transactionId = _legacySdk.GetLastTransactionId();
+            _logger.LogInformation(&quot;Legacy payment succeeded: {TransactionId}&quot;, transactionId);
+            return PaymentResult.Success(transactionId);
+        }
+        else
+        {
+            var error = _legacySdk.GetLastError();
+            _logger.LogWarning(&quot;Legacy payment failed: {Error}&quot;, error);
+            return PaymentResult.Failed(error);
+        }
+    }
+    
+    public async Task&lt;RefundResult&gt; RefundAsync(string transactionId, decimal amount)
+    {
+        // Legacy SDK uses double, we use decimal — convert
+        var success = await Task.Run(() =&gt; 
+            _legacySdk.ReverseTransaction(transactionId, (double)amount));
+        
+        return success 
+            ? RefundResult.Success(transactionId) 
+            : RefundResult.Failed(_legacySdk.GetLastError());
+    }
+}
+
+// Usage in DI — fully transparent to CheckoutService:
+builder.Services.AddSingleton&lt;LegacyPaymentSdk&gt;();
+builder.Services.AddScoped&lt;IPaymentGateway, LegacyPaymentGatewayAdapter&gt;();
+// CheckoutService doesn&#x27;t know it&#x27;s talking to a legacy system</code></pre>
+</div>
+
+<h3 id='4-when-not-to-use-adapter'>4. When NOT to Use Adapter</h3>
+<ul>
+<li>When you OWN the class you're adapting (just change its interface)</li>
+<li>When the mismatch is too large (might need a full integration layer)</li>
+<li>When you can use inheritance directly (<code>class NewClass : INewInterface, OldClass</code>) — class adapter</li>
+</ul>
+<p>---</p>
+<h2 id='facade-pattern'>Facade Pattern</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Provides a <strong>simplified interface</strong> to a complex subsystem. Doesn't hide the subsystem, but makes it easier to use.</p>
+<h3 id='2-problem-complex-checkout-subsystem'>2. Problem: Complex Checkout Subsystem</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Checkout involves many systems — complex for controller to orchestrate
+public class CheckoutController : ControllerBase
+{
+    // BAD: Controller knows about all subsystems
+    private readonly IInventoryService _inventory;
+    private readonly IPaymentGateway _payment;
+    private readonly IShippingService _shipping;
+    private readonly INotificationService _notifications;
+    private readonly ILoyaltyService _loyalty;
+    private readonly IOrderRepository _orders;
+    private readonly IFraudDetectionService _fraud;
+    private readonly ITaxCalculationService _tax;
+    
+    public async Task&lt;IActionResult&gt; Checkout(CheckoutRequest request)
+    {
+        // Controller doing too much — should not know all these steps
+        if (!await _inventory.CheckAvailabilityAsync(request.Items)) 
+            return BadRequest(&quot;Out of stock&quot;);
+        
+        var fraudScore = await _fraud.CheckAsync(request.CustomerId, request.PaymentMethod);
+        if (fraudScore &gt; 0.8) return BadRequest(&quot;Payment declined&quot;);
+        
+        var taxAmount = await _tax.CalculateAsync(request.Items, request.ShippingAddress);
+        
+        var paymentResult = await _payment.ProcessAsync(new PaymentRequest { 
+            Amount = request.Total + taxAmount });
+        if (!paymentResult.IsSuccess) return BadRequest(&quot;Payment failed&quot;);
+        
+        var order = Order.Create(request);
+        await _orders.SaveAsync(order);
+        
+        await _inventory.ReserveAsync(request.Items, order.Id);
+        
+        var shippingLabel = await _shipping.CreateLabelAsync(order);
+        
+        await _loyalty.AwardPointsAsync(request.CustomerId, request.Total);
+        
+        await _notifications.SendOrderConfirmationAsync(request.CustomerEmail, order);
+        
+        return Ok(new CheckoutResponse { OrderId = order.Id, ShippingLabel = shippingLabel });
+    }
+}</code></pre>
+</div>
+
+<h3 id='3-pattern-solution-facade'>3. Pattern Solution — Facade</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Facade: simplified entry point for complex checkout subsystem
+public interface ICheckoutFacade
+{
+    Task&lt;CheckoutResult&gt; CheckoutAsync(CheckoutRequest request, CancellationToken ct = default);
+}
+
+public class CheckoutFacade : ICheckoutFacade
+{
+    private readonly IInventoryService _inventory;
+    private readonly IPaymentGateway _payment;
+    private readonly IShippingService _shipping;
+    private readonly INotificationService _notifications;
+    private readonly ILoyaltyService _loyalty;
+    private readonly IOrderRepository _orders;
+    private readonly IFraudDetectionService _fraud;
+    private readonly ITaxCalculationService _tax;
+    private readonly ILogger&lt;CheckoutFacade&gt; _logger;
+    
+    public CheckoutFacade(/* all dependencies */) { /* inject */ }
+    
+    public async Task&lt;CheckoutResult&gt; CheckoutAsync(CheckoutRequest request, CancellationToken ct)
+    {
+        _logger.LogInformation(&quot;Starting checkout for customer {CustomerId}&quot;, request.CustomerId);
+        
+        // Orchestrates the entire flow — hidden from caller
+        if (!await _inventory.CheckAvailabilityAsync(request.Items, ct))
+            return CheckoutResult.Failed(&quot;One or more items are out of stock&quot;);
+        
+        var fraudScore = await _fraud.CheckAsync(request.CustomerId, request.PaymentMethod, ct);
+        if (fraudScore &gt; 0.8)
+            return CheckoutResult.Failed(&quot;Payment declined by security system&quot;);
+        
+        var taxAmount = await _tax.CalculateAsync(request.Items, request.ShippingAddress, ct);
+        var totalWithTax = request.Total + taxAmount;
+        
+        var paymentResult = await _payment.ProcessAsync(
+            new PaymentRequest { Amount = totalWithTax, Currency = request.Currency }, ct);
+        
+        if (!paymentResult.IsSuccess)
+            return CheckoutResult.Failed($&quot;Payment failed: {paymentResult.FailureReason}&quot;);
+        
+        var order = Order.Create(request, paymentResult.TransactionId, taxAmount);
+        await _orders.SaveAsync(order, ct);
+        
+        // These can run in parallel — no interdependency
+        await Task.WhenAll(
+            _inventory.ReserveAsync(request.Items, order.Id, ct),
+            _loyalty.AwardPointsAsync(request.CustomerId, request.Total, ct),
+            _shipping.CreateLabelAsync(order, ct)
+                .ContinueWith(async t =&gt; await _notifications.SendOrderConfirmationAsync(
+                    request.CustomerEmail, order, t.Result, ct)));
+        
+        _logger.LogInformation(&quot;Checkout completed. OrderId: {OrderId}&quot;, order.Id);
+        return CheckoutResult.Success(order.Id, taxAmount);
+    }
+}
+
+// Controller is now clean — just uses facade:
+public class CheckoutController : ControllerBase
+{
+    private readonly ICheckoutFacade _checkout;
+    
+    [HttpPost(&quot;checkout&quot;)]
+    public async Task&lt;IActionResult&gt; Checkout(
+        [FromBody] CheckoutRequest request, 
+        CancellationToken ct)
+    {
+        var result = await _checkout.CheckoutAsync(request, ct);
+        return result.IsSuccess ? Ok(result) : BadRequest(result.ErrorMessage);
+    }
+}</code></pre>
+</div>
+
+<h3 id='4-when-not-to-use-facade'>4. When NOT to Use Facade</h3>
+<ul>
+<li>When the subsystem is already simple</li>
+<li>When you need clients to access subsystem details (Facade hides too much)</li>
+<li>When it becomes a "God Object" — too many responsibilities (violates SRP)</li>
+</ul>
+<p>---</p>
+<h1 id='behavioral-patterns'>BEHAVIORAL PATTERNS</h1>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Behavioral patterns deal with algorithms and assignment of responsibilities between objects.</div>
+</div>
+
+<p>---</p>
+<h2 id='strategy-pattern'>Strategy Pattern</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Defines a family of algorithms, encapsulates each one, and makes them interchangeable. Lets the algorithm vary independently from clients that use it.</p>
+<h3 id='2-problem-and-solution'>2. Problem and Solution</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// BAD: If/else chains for discount calculation
+public decimal CalculateDiscount(Order order, string customerType)
+{
+    if (customerType == &quot;Premium&quot;) return order.Total * 0.20m;
+    else if (customerType == &quot;VIP&quot;) return order.Total * 0.30m;
+    else if (customerType == &quot;Seasonal&quot;) return order.Total &gt; 1000 ? order.Total * 0.15m : 0;
+    else return 0;
+}
+
+// GOOD: Strategy Pattern
+public interface IDiscountStrategy
+{
+    string StrategyName { get; }
+    decimal CalculateDiscount(Order order);
+}
+
+public class PremiumCustomerDiscount : IDiscountStrategy
+{
+    public string StrategyName =&gt; &quot;Premium&quot;;
+    public decimal CalculateDiscount(Order order) =&gt; order.Total * 0.20m;
+}
+
+public class VIPCustomerDiscount : IDiscountStrategy
+{
+    public string StrategyName =&gt; &quot;VIP&quot;;
+    public decimal CalculateDiscount(Order order) =&gt; order.Total * 0.30m;
+}
+
+public class SeasonalDiscount : IDiscountStrategy
+{
+    private readonly decimal _threshold;
+    private readonly decimal _discountPercent;
+    
+    public SeasonalDiscount(decimal threshold, decimal discountPercent)
+    {
+        _threshold = threshold;
+        _discountPercent = discountPercent;
+    }
+    
+    public string StrategyName =&gt; &quot;Seasonal&quot;;
+    public decimal CalculateDiscount(Order order) 
+        =&gt; order.Total &gt;= _threshold ? order.Total * _discountPercent : 0;
+}
+
+public class NoDiscount : IDiscountStrategy
+{
+    public string StrategyName =&gt; &quot;None&quot;;
+    public decimal CalculateDiscount(Order order) =&gt; 0;
+}
+
+// Context that uses strategy:
+public class OrderPricingService
+{
+    private readonly IEnumerable&lt;IDiscountStrategy&gt; _strategies;
+    
+    public OrderPricingService(IEnumerable&lt;IDiscountStrategy&gt; strategies)
+        =&gt; _strategies = strategies;
+    
+    public PricingResult CalculatePrice(Order order, string customerType)
+    {
+        var strategy = _strategies.FirstOrDefault(s =&gt; 
+            s.StrategyName.Equals(customerType, StringComparison.OrdinalIgnoreCase))
+            ?? new NoDiscount();
+        
+        var discount = strategy.CalculateDiscount(order);
+        return new PricingResult(order.Total, discount, order.Total - discount, strategy.StrategyName);
+    }
+}
+
+// DI Registration:
+builder.Services.AddScoped&lt;IDiscountStrategy, PremiumCustomerDiscount&gt;();
+builder.Services.AddScoped&lt;IDiscountStrategy, VIPCustomerDiscount&gt;();
+builder.Services.AddScoped&lt;IDiscountStrategy, SeasonalDiscount&gt;(sp =&gt;
+    new SeasonalDiscount(threshold: 1000, discountPercent: 0.15m));</code></pre>
+</div>
+
+<h3 id='3-when-not-to-use-strategy'>3. When NOT to Use Strategy</h3>
+<ul>
+<li>When you have 2 fixed, never-changing algorithms (over-engineering)</li>
+<li>When the algorithm differences are trivial (lambda is enough)</li>
+</ul>
+<p>---</p>
+<h2 id='observer-pattern-event-driven'>Observer Pattern (Event-Driven)</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Defines a one-to-many dependency between objects so when one object changes state, all dependents are notified and updated automatically.</p>
+<h3 id='2-production-example-order-placed-multiple-reactions'>2. Production Example: Order Placed → Multiple Reactions</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// C# Events as Observer Pattern:
+public class Order
+{
+    // The SUBJECT exposes an event (observable)
+    public event EventHandler&lt;OrderPlacedEventArgs&gt;? OrderPlaced;
+    
+    private OrderStatus _status;
+    
+    public void Place()
+    {
+        _status = OrderStatus.Placed;
+        // Notify all observers
+        OrderPlaced?.Invoke(this, new OrderPlacedEventArgs(Id, CustomerId, Total));
+    }
+}
+
+// OBSERVERS register and react:
+public class WarehouseNotifier
+{
+    public WarehouseNotifier(Order order)
+    {
+        order.OrderPlaced += OnOrderPlaced; // Subscribe
+    }
+    
+    private async void OnOrderPlaced(object? sender, OrderPlacedEventArgs e)
+    {
+        await NotifyWarehouseAsync(e.OrderId);
+    }
+}
+
+// Domain Events approach (better for production):
+public record OrderPlacedEvent(Guid OrderId, string CustomerId, decimal Total, DateTimeOffset OccurredAt)
+    : IDomainEvent;
+
+public class Order
+{
+    private readonly List&lt;IDomainEvent&gt; _domainEvents = new();
+    public IReadOnlyList&lt;IDomainEvent&gt; DomainEvents =&gt; _domainEvents.AsReadOnly();
+    
+    public void Place()
+    {
+        Status = OrderStatus.Placed;
+        _domainEvents.Add(new OrderPlacedEvent(Id, CustomerId, Total, DateTimeOffset.UtcNow));
+    }
+    
+    public void ClearDomainEvents() =&gt; _domainEvents.Clear();
+}
+
+// After SaveChanges, publish domain events:
+public class DomainEventDispatcher
+{
+    private readonly IMediator _mediator;
+    
+    public async Task DispatchAsync(IEnumerable&lt;IDomainEvent&gt; events)
+    {
+        foreach (var @event in events)
+            await _mediator.Publish(@event);
+    }
+}
+
+// Handlers — multiple observers for one event:
+public class OrderPlacedEmailHandler : INotificationHandler&lt;OrderPlacedEvent&gt;
+{
+    public async Task Handle(OrderPlacedEvent notification, CancellationToken ct)
+        =&gt; await SendOrderConfirmationEmailAsync(notification);
+}
+
+public class OrderPlacedInventoryHandler : INotificationHandler&lt;OrderPlacedEvent&gt;
+{
+    public async Task Handle(OrderPlacedEvent notification, CancellationToken ct)
+        =&gt; await ReserveInventoryAsync(notification.OrderId);
+}
+
+public class OrderPlacedAnalyticsHandler : INotificationHandler&lt;OrderPlacedEvent&gt;
+{
+    public async Task Handle(OrderPlacedEvent notification, CancellationToken ct)
+        =&gt; await TrackConversionAsync(notification);
+}
+// All three react to the same event — decoupled!</code></pre>
+</div>
+
+<h3 id='3-observer-vs-events-vs-kafka'>3. Observer vs Events vs Kafka</h3>
+<div class='table-wrapper'><table>
+<tr><th></th><th>C# Events</th><th>MediatR Notifications</th><th>Kafka Messages</th></tr>
+<tr><td>Scope</td><td>In-process</td><td>In-process</td><td>Cross-service</td></tr>
+<tr><td>Coupling</td><td>Tight (direct reference)</td><td>Loose (interface)</td><td>Fully decoupled</td></tr>
+<tr><td>Persistence</td><td>None</td><td>None</td><td>Durable, replayable</td></tr>
+<tr><td>Error handling</td><td>Complex</td><td>Per-handler</td><td>Consumer groups, retry</td></tr>
+<tr><td>Use when</td><td>Simple callbacks</td><td>In-process domain events</td><td>Cross-service, reliability needed</td></tr>
+</table></div>
+<p>---</p>
+<h2 id='command-pattern'>Command Pattern</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Encapsulates a request as an object, letting you parameterize clients with different requests, queue or log requests, and support undo/redo.</p>
+<h3 id='2-production-example-banking-transactions-with-undo'>2. Production Example: Banking Transactions with Undo</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Command interface
+public interface IBankingCommand
+{
+    string CommandId { get; }
+    string Description { get; }
+    Task ExecuteAsync();
+    Task UndoAsync();
+}
+
+// Concrete commands
+public class DepositCommand : IBankingCommand
+{
+    private readonly BankAccount _account;
+    private readonly decimal _amount;
+    private string? _transactionId;
+    
+    public string CommandId { get; } = Guid.NewGuid().ToString();
+    public string Description =&gt; $&quot;Deposit {_amount:C}&quot;;
+    
+    public DepositCommand(BankAccount account, decimal amount)
+    {
+        _account = account;
+        _amount = amount;
+    }
+    
+    public async Task ExecuteAsync()
+    {
+        _transactionId = await _account.DepositAsync(_amount);
+    }
+    
+    public async Task UndoAsync()
+    {
+        if (_transactionId == null)
+            throw new InvalidOperationException(&quot;Command not yet executed&quot;);
+        await _account.WithdrawAsync(_amount, reason: $&quot;Undo of deposit {_transactionId}&quot;);
+    }
+}
+
+public class TransferCommand : IBankingCommand
+{
+    private readonly BankAccount _source;
+    private readonly BankAccount _destination;
+    private readonly decimal _amount;
+    
+    public string CommandId { get; } = Guid.NewGuid().ToString();
+    public string Description =&gt; $&quot;Transfer {_amount:C}&quot;;
+    
+    public async Task ExecuteAsync()
+    {
+        await _source.WithdrawAsync(_amount, reason: &quot;Transfer out&quot;);
+        await _destination.DepositAsync(_amount);
+    }
+    
+    public async Task UndoAsync()
+    {
+        // Reverse: withdraw from destination, deposit back to source
+        await _destination.WithdrawAsync(_amount, reason: &quot;Undo transfer&quot;);
+        await _source.DepositAsync(_amount);
+    }
+}
+
+// Command Processor with undo stack and audit log
+public class BankingCommandProcessor
+{
+    private readonly Stack&lt;IBankingCommand&gt; _undoStack = new();
+    private readonly List&lt;CommandAuditLog&gt; _auditLog = new();
+    private readonly ILogger&lt;BankingCommandProcessor&gt; _logger;
+    
+    public async Task ExecuteAsync(IBankingCommand command)
+    {
+        _logger.LogInformation(&quot;Executing command: {CommandId} - {Description}&quot;, 
+            command.CommandId, command.Description);
+        
+        await command.ExecuteAsync();
+        
+        _undoStack.Push(command);
+        _auditLog.Add(new CommandAuditLog(command.CommandId, command.Description, 
+            DateTimeOffset.UtcNow, &quot;EXECUTED&quot;));
+        
+        _logger.LogInformation(&quot;Command executed. Stack depth: {Depth}&quot;, _undoStack.Count);
+    }
+    
+    public async Task UndoAsync()
+    {
+        if (!_undoStack.TryPop(out var command))
+            throw new InvalidOperationException(&quot;No commands to undo&quot;);
+        
+        _logger.LogInformation(&quot;Undoing command: {CommandId}&quot;, command.CommandId);
+        await command.UndoAsync();
+        
+        _auditLog.Add(new CommandAuditLog(command.CommandId, command.Description,
+            DateTimeOffset.UtcNow, &quot;UNDONE&quot;));
+    }
+    
+    public IReadOnlyList&lt;CommandAuditLog&gt; GetAuditLog() =&gt; _auditLog.AsReadOnly();
+}</code></pre>
+</div>
+
+<h3 id='3-when-not-to-use-command'>3. When NOT to Use Command</h3>
+<ul>
+<li>Simple CRUD without undo/redo requirement</li>
+<li>When MediatR already handles the request/response pattern</li>
+<li>When overhead of encapsulating commands is more than the benefit</li>
+</ul>
+<p>---</p>
+<h2 id='mediator-pattern'>Mediator Pattern</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Defines an object that encapsulates how a set of objects interact. Promotes loose coupling by preventing objects from referring to each other explicitly.</p>
+<h3 id='2-mediatr-in-aspnet-core-complete-example'>2. MediatR in ASP.NET Core — Complete Example</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// Install: dotnet add package MediatR.Extensions.Microsoft.DependencyInjection
+
+// 1. REQUEST (Query or Command):
+public record GetOrderByIdQuery(Guid OrderId) : IRequest&lt;OrderDto?&gt;;
+
+public record PlaceOrderCommand(
+    string CustomerId,
+    string Currency,
+    IReadOnlyList&lt;OrderItemRequest&gt; Items,
+    Address ShippingAddress
+) : IRequest&lt;PlaceOrderResult&gt;;
+
+// 2. HANDLERS:
+public class GetOrderByIdHandler : IRequestHandler&lt;GetOrderByIdQuery, OrderDto?&gt;
+{
+    private readonly IOrderRepository _repo;
+    private readonly IMapper _mapper;
+    
+    public GetOrderByIdHandler(IOrderRepository repo, IMapper mapper)
+    {
+        _repo = repo;
+        _mapper = mapper;
+    }
+    
+    public async Task&lt;OrderDto?&gt; Handle(GetOrderByIdQuery request, CancellationToken ct)
+    {
+        var order = await _repo.GetByIdAsync(request.OrderId, ct);
+        return order == null ? null : _mapper.Map&lt;OrderDto&gt;(order);
+    }
+}
+
+public class PlaceOrderHandler : IRequestHandler&lt;PlaceOrderCommand, PlaceOrderResult&gt;
+{
+    private readonly IOrderService _orderService;
+    private readonly IMediator _mediator;
+    
+    public async Task&lt;PlaceOrderResult&gt; Handle(PlaceOrderCommand request, CancellationToken ct)
+    {
+        var result = await _orderService.PlaceOrderAsync(request, ct);
+        
+        if (result.IsSuccess)
+        {
+            // Publish notification — mediator dispatches to all handlers
+            await _mediator.Publish(new OrderPlacedEvent(result.OrderId, request.CustomerId), ct);
+        }
+        
+        return result;
+    }
+}
+
+// 3. NOTIFICATIONS (Observer through Mediator):
+public record OrderPlacedEvent(Guid OrderId, string CustomerId) : INotification;
+
+public class SendOrderConfirmationHandler : INotificationHandler&lt;OrderPlacedEvent&gt;
+{
+    public async Task Handle(OrderPlacedEvent notification, CancellationToken ct)
+        =&gt; await SendEmailAsync(notification);
+}
+
+public class UpdateInventoryHandler : INotificationHandler&lt;OrderPlacedEvent&gt;
+{
+    public async Task Handle(OrderPlacedEvent notification, CancellationToken ct)
+        =&gt; await UpdateInventoryAsync(notification.OrderId, ct);
+}
+
+// 4. PIPELINE BEHAVIORS (Cross-cutting concerns):
+public class LoggingBehavior&lt;TRequest, TResponse&gt; : IPipelineBehavior&lt;TRequest, TResponse&gt;
+    where TRequest : IRequest&lt;TResponse&gt;
+{
+    private readonly ILogger&lt;LoggingBehavior&lt;TRequest, TResponse&gt;&gt; _logger;
+    
+    public LoggingBehavior(ILogger&lt;LoggingBehavior&lt;TRequest, TResponse&gt;&gt; logger)
+        =&gt; _logger = logger;
+    
+    public async Task&lt;TResponse&gt; Handle(
+        TRequest request,
+        RequestHandlerDelegate&lt;TResponse&gt; next,
+        CancellationToken ct)
+    {
+        var requestName = typeof(TRequest).Name;
+        _logger.LogInformation(&quot;Handling {RequestName}: {@Request}&quot;, requestName, request);
+        var sw = Stopwatch.StartNew();
+        
+        var response = await next(); // Call next behavior or handler
+        
+        _logger.LogInformation(&quot;Handled {RequestName} in {Ms}ms&quot;, requestName, sw.ElapsedMilliseconds);
+        return response;
+    }
+}
+
+public class ValidationBehavior&lt;TRequest, TResponse&gt; : IPipelineBehavior&lt;TRequest, TResponse&gt;
+    where TRequest : IRequest&lt;TResponse&gt;
+{
+    private readonly IEnumerable&lt;IValidator&lt;TRequest&gt;&gt; _validators;
+    
+    public ValidationBehavior(IEnumerable&lt;IValidator&lt;TRequest&gt;&gt; validators)
+        =&gt; _validators = validators;
+    
+    public async Task&lt;TResponse&gt; Handle(
+        TRequest request,
+        RequestHandlerDelegate&lt;TResponse&gt; next,
+        CancellationToken ct)
+    {
+        if (!_validators.Any()) return await next();
+        
+        var context = new ValidationContext&lt;TRequest&gt;(request);
+        var failures = _validators
+            .Select(v =&gt; v.Validate(context))
+            .SelectMany(r =&gt; r.Errors)
+            .Where(f =&gt; f != null)
+            .ToList();
+        
+        if (failures.Any())
+            throw new ValidationException(failures);
+        
+        return await next();
+    }
+}
+
+// 5. REGISTRATION:
+builder.Services.AddMediatR(cfg =&gt; 
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+builder.Services.AddTransient(typeof(IPipelineBehavior&lt;,&gt;), typeof(LoggingBehavior&lt;,&gt;));
+builder.Services.AddTransient(typeof(IPipelineBehavior&lt;,&gt;), typeof(ValidationBehavior&lt;,&gt;));
+
+// 6. CONTROLLER — thin, uses mediator:
+[ApiController]
+[Route(&quot;api/orders&quot;)]
+public class OrdersController : ControllerBase
+{
+    private readonly IMediator _mediator;
+    
+    public OrdersController(IMediator mediator) =&gt; _mediator = mediator;
+    
+    [HttpGet(&quot;{id}&quot;)]
+    public async Task&lt;ActionResult&lt;OrderDto&gt;&gt; GetById(Guid id, CancellationToken ct)
+    {
+        var order = await _mediator.Send(new GetOrderByIdQuery(id), ct);
+        return order == null ? NotFound() : Ok(order);
+    }
+    
+    [HttpPost]
+    public async Task&lt;ActionResult&lt;PlaceOrderResult&gt;&gt; PlaceOrder(
+        [FromBody] PlaceOrderCommand command, CancellationToken ct)
+    {
+        var result = await _mediator.Send(command, ct);
+        return result.IsSuccess 
+            ? CreatedAtAction(nameof(GetById), new { id = result.OrderId }, result)
+            : BadRequest(result.ErrorMessage);
+    }
+}</code></pre>
+</div>
+
+<h3 id='4-pipeline-execution-flow'>4. Pipeline Execution Flow</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Controller → _mediator.Send(PlaceOrderCommand)
+  → ValidationBehavior.Handle() [validates request]
+    → LoggingBehavior.Handle() [logs request, starts timer]
+      → PlaceOrderHandler.Handle() [business logic]
+        → _mediator.Publish(OrderPlacedEvent)
+          → SendOrderConfirmationHandler.Handle()
+          → UpdateInventoryHandler.Handle()
+      ← PlaceOrderHandler returns PlaceOrderResult
+    ← LoggingBehavior [logs completion time]
+  ← ValidationBehavior [passes through]
+← Controller returns 201 Created</code></pre>
+</div>
+
+<h3 id='5-when-not-to-use-mediatrmediator'>5. When NOT to Use MediatR/Mediator</h3>
+<ul>
+<li>When it adds indirection for simple CRUD with no cross-cutting concerns</li>
+<li>When request/handler mapping is 1:1 and never changes (just call the service directly)</li>
+<li>When debugging becomes hard because the "chain" is implicit</li>
+<li>Over-used in small apps — becomes "enterprise-itis"</li>
+</ul>
+<p>---</p>
+<h2 id='chain-of-responsibility'>Chain of Responsibility</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Passes requests along a chain of handlers. Each handler decides either to process the request or pass it to the next handler.</p>
+<h3 id='2-middleware-is-chain-of-responsibility'>2. Middleware IS Chain of Responsibility</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// ASP.NET Core Middleware = Chain of Responsibility
+app.UseAuthentication();    // Handler 1: Check JWT
+app.UseAuthorization();     // Handler 2: Check permissions  
+app.UseRateLimiting();      // Handler 3: Check rate limits
+app.UseResponseCaching();   // Handler 4: Return cached response
+app.MapControllers();       // Handler 5: Process actual request
+
+// Each middleware: process → pass to next → or short-circuit</code></pre>
+</div>
+
+<h3 id='3-custom-validation-pipeline-for-payment-orders'>3. Custom Validation Pipeline for Payment Orders</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public abstract class PaymentValidationHandler
+{
+    private PaymentValidationHandler? _next;
+    
+    public PaymentValidationHandler SetNext(PaymentValidationHandler next)
+    {
+        _next = next;
+        return next; // Enables chaining: handler1.SetNext(handler2).SetNext(handler3)
+    }
+    
+    public async Task&lt;ValidationResult&gt; ValidateAsync(PaymentRequest request)
+    {
+        var result = await HandleAsync(request);
+        
+        // If this handler passes (or chooses to continue), pass to next
+        if (result.IsValid &amp;&amp; _next != null)
+            return await _next.ValidateAsync(request);
+        
+        return result;
+    }
+    
+    protected abstract Task&lt;ValidationResult&gt; HandleAsync(PaymentRequest request);
+}
+
+public class AmountValidationHandler : PaymentValidationHandler
+{
+    protected override Task&lt;ValidationResult&gt; HandleAsync(PaymentRequest request)
+    {
+        if (request.Amount &lt;= 0)
+            return Task.FromResult(ValidationResult.Failure(&quot;Amount must be positive&quot;));
+        if (request.Amount &gt; 1_000_000)
+            return Task.FromResult(ValidationResult.Failure(&quot;Amount exceeds maximum limit&quot;));
+        return Task.FromResult(ValidationResult.Success());
+    }
+}
+
+public class FraudDetectionHandler : PaymentValidationHandler
+{
+    private readonly IFraudDetectionService _fraudService;
+    
+    public FraudDetectionHandler(IFraudDetectionService fraudService)
+        =&gt; _fraudService = fraudService;
+    
+    protected override async Task&lt;ValidationResult&gt; HandleAsync(PaymentRequest request)
+    {
+        var score = await _fraudService.GetFraudScoreAsync(request.CustomerId, request.Amount);
+        return score &gt; 0.85 
+            ? ValidationResult.Failure(&quot;Transaction flagged as potentially fraudulent&quot;)
+            : ValidationResult.Success();
+    }
+}
+
+public class DailyLimitHandler : PaymentValidationHandler
+{
+    private readonly ITransactionRepository _repo;
+    private const decimal DailyLimit = 50_000m;
+    
+    protected override async Task&lt;ValidationResult&gt; HandleAsync(PaymentRequest request)
+    {
+        var todayTotal = await _repo.GetDailyTotalAsync(request.CustomerId, DateOnly.FromDateTime(DateTime.Today));
+        return todayTotal + request.Amount &gt; DailyLimit
+            ? ValidationResult.Failure($&quot;Daily limit of {DailyLimit:C} exceeded&quot;)
+            : ValidationResult.Success();
+    }
+}
+
+// Build the chain:
+public class PaymentValidationPipeline
+{
+    private readonly PaymentValidationHandler _chain;
+    
+    public PaymentValidationPipeline(IFraudDetectionService fraud, ITransactionRepository repo)
+    {
+        var amountHandler = new AmountValidationHandler();
+        var fraudHandler = new FraudDetectionHandler(fraud);
+        var limitHandler = new DailyLimitHandler(repo);
+        
+        // Chain: Amount → Fraud → DailyLimit
+        amountHandler.SetNext(fraudHandler).SetNext(limitHandler);
+        _chain = amountHandler;
+    }
+    
+    public Task&lt;ValidationResult&gt; ValidateAsync(PaymentRequest request)
+        =&gt; _chain.ValidateAsync(request);
+}</code></pre>
+</div>
+
+<h3 id='4-when-not-to-use-chain-of-responsibility'>4. When NOT to Use Chain of Responsibility</h3>
+<ul>
+<li>When ALL handlers should process (use Observer instead)</li>
+<li>When order doesn't matter (use a collection of validators)</li>
+<li>When a single handler always handles (no chain needed)</li>
+</ul>
+<p>---</p>
+<h2 id='template-method-pattern'>Template Method Pattern</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Defines the <strong>skeleton of an algorithm</strong> in a base class, deferring some steps to subclasses. Subclasses override specific steps without changing the algorithm's structure.</p>
+<h3 id='2-production-example-payment-processing-pipeline'>2. Production Example: Payment Processing Pipeline</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public abstract class PaymentProcessor
+{
+    private readonly ILogger _logger;
+    
+    protected PaymentProcessor(ILogger logger) =&gt; _logger = logger;
+    
+    // TEMPLATE METHOD — skeleton defined here, FINAL (sealed would prevent override)
+    public async Task&lt;PaymentResult&gt; ProcessAsync(PaymentRequest request)
+    {
+        _logger.LogInformation(&quot;[{Gateway}] Processing payment {Amount}&quot;, 
+            GatewayName, request.Amount);
+        
+        // Step 1: Validate (can be overridden for gateway-specific validation)
+        var validation = await ValidateAsync(request);
+        if (!validation.IsValid)
+            return PaymentResult.Failed(validation.Errors);
+        
+        // Step 2: Prepare request (gateway-specific transformation)
+        var gatewayRequest = await PrepareRequestAsync(request);
+        
+        // Step 3: Execute charge (MUST be implemented by subclass)
+        var response = await ExecuteChargeAsync(gatewayRequest);
+        
+        // Step 4: Process response (gateway-specific parsing)
+        var result = ParseResponse(response);
+        
+        // Step 5: Post-process (optional hook — default does nothing)
+        await PostProcessAsync(request, result);
+        
+        _logger.LogInformation(&quot;[{Gateway}] Payment result: {Success}&quot;, GatewayName, result.IsSuccess);
+        return result;
+    }
+    
+    protected abstract string GatewayName { get; }
+    
+    // Concrete — same for all gateways
+    protected virtual Task&lt;ValidationResult&gt; ValidateAsync(PaymentRequest request)
+    {
+        if (request.Amount &lt;= 0)
+            return Task.FromResult(ValidationResult.Failure(&quot;Amount must be positive&quot;));
+        return Task.FromResult(ValidationResult.Success());
+    }
+    
+    // Abstract — MUST implement
+    protected abstract Task&lt;object&gt; PrepareRequestAsync(PaymentRequest request);
+    protected abstract Task&lt;object&gt; ExecuteChargeAsync(object gatewayRequest);
+    protected abstract PaymentResult ParseResponse(object response);
+    
+    // Hook — optional override
+    protected virtual Task PostProcessAsync(PaymentRequest request, PaymentResult result)
+        =&gt; Task.CompletedTask;
+}
+
+public class StripePaymentProcessor : PaymentProcessor
+{
+    private readonly IStripeClient _stripe;
+    
+    protected override string GatewayName =&gt; &quot;Stripe&quot;;
+    
+    protected override async Task&lt;object&gt; PrepareRequestAsync(PaymentRequest request)
+        =&gt; new ChargeCreateOptions 
+        { 
+            Amount = (long)(request.Amount * 100), // Stripe uses cents
+            Currency = request.Currency,
+            Customer = request.StripeCustomerId
+        };
+    
+    protected override async Task&lt;object&gt; ExecuteChargeAsync(object gatewayRequest)
+        =&gt; await _stripe.Charges.CreateAsync((ChargeCreateOptions)gatewayRequest);
+    
+    protected override PaymentResult ParseResponse(object response)
+    {
+        var charge = (Charge)response;
+        return charge.Status == &quot;succeeded&quot;
+            ? PaymentResult.Success(charge.Id)
+            : PaymentResult.Failed(charge.FailureMessage);
+    }
+    
+    protected override async Task PostProcessAsync(PaymentRequest request, PaymentResult result)
+    {
+        if (result.IsSuccess)
+            await UpdateStripeMetadataAsync(result.TransactionId, request.OrderId);
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='state-pattern'>State Pattern</h2>
+<h3 id='1-definition'>1. Definition</h3>
+<p>Allows an object to alter its behavior when its internal state changes. The object will appear to change its class.</p>
+<h3 id='2-production-example-order-state-machine'>2. Production Example: Order State Machine</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">// State interface
+public interface IOrderState
+{
+    string StateName { get; }
+    Task ConfirmAsync(Order order);
+    Task ProcessAsync(Order order);
+    Task ShipAsync(Order order, string trackingNumber);
+    Task DeliverAsync(Order order);
+    Task CancelAsync(Order order, string reason);
+}
+
+// Base state with default behavior (throw for invalid transitions)
+public abstract class OrderStateBase : IOrderState
+{
+    public abstract string StateName { get; }
+    
+    protected void ThrowInvalidTransition(string action)
+        =&gt; throw new InvalidOperationException(
+            $&quot;Cannot perform &#x27;{action}&#x27; when order is in &#x27;{StateName}&#x27; state&quot;);
+    
+    public virtual Task ConfirmAsync(Order order) { ThrowInvalidTransition(&quot;Confirm&quot;); return Task.CompletedTask; }
+    public virtual Task ProcessAsync(Order order) { ThrowInvalidTransition(&quot;Process&quot;); return Task.CompletedTask; }
+    public virtual Task ShipAsync(Order order, string trackingNumber) { ThrowInvalidTransition(&quot;Ship&quot;); return Task.CompletedTask; }
+    public virtual Task DeliverAsync(Order order) { ThrowInvalidTransition(&quot;Deliver&quot;); return Task.CompletedTask; }
+    public virtual Task CancelAsync(Order order, string reason) { ThrowInvalidTransition(&quot;Cancel&quot;); return Task.CompletedTask; }
+}
+
+// Concrete states
+public class PendingState : OrderStateBase
+{
+    public override string StateName =&gt; &quot;Pending&quot;;
+    
+    public override Task ConfirmAsync(Order order)
+    {
+        order.TransitionTo(new ConfirmedState());
+        order.ConfirmedAt = DateTimeOffset.UtcNow;
+        return Task.CompletedTask;
+    }
+    
+    public override Task CancelAsync(Order order, string reason)
+    {
+        order.TransitionTo(new CancelledState());
+        order.CancellationReason = reason;
+        order.CancelledAt = DateTimeOffset.UtcNow;
+        return Task.CompletedTask;
+    }
+}
+
+public class ConfirmedState : OrderStateBase
+{
+    public override string StateName =&gt; &quot;Confirmed&quot;;
+    
+    public override async Task ProcessAsync(Order order)
+    {
+        // Process payment
+        var paymentResult = await order.PaymentGateway.ProcessAsync(
+            new PaymentRequest { Amount = order.Total });
+        
+        if (!paymentResult.IsSuccess)
+            throw new PaymentFailedException(paymentResult.FailureReason);
+        
+        order.TransactionId = paymentResult.TransactionId;
+        order.TransitionTo(new ProcessingState());
+    }
+    
+    public override Task CancelAsync(Order order, string reason)
+    {
+        order.TransitionTo(new CancelledState());
+        order.CancellationReason = reason;
+        return Task.CompletedTask;
+    }
+}
+
+public class ProcessingState : OrderStateBase
+{
+    public override string StateName =&gt; &quot;Processing&quot;;
+    
+    public override Task ShipAsync(Order order, string trackingNumber)
+    {
+        order.TrackingNumber = trackingNumber;
+        order.ShippedAt = DateTimeOffset.UtcNow;
+        order.TransitionTo(new ShippedState());
+        return Task.CompletedTask;
+    }
+    // Cannot cancel once processing started (business rule enforced by state)
+}
+
+public class ShippedState : OrderStateBase
+{
+    public override string StateName =&gt; &quot;Shipped&quot;;
+    
+    public override Task DeliverAsync(Order order)
+    {
+        order.DeliveredAt = DateTimeOffset.UtcNow;
+        order.TransitionTo(new DeliveredState());
+        return Task.CompletedTask;
+    }
+}
+
+public class DeliveredState : OrderStateBase
+{
+    public override string StateName =&gt; &quot;Delivered&quot;;
+    // Terminal state — no more transitions (all methods throw via base)
+}
+
+public class CancelledState : OrderStateBase
+{
+    public override string StateName =&gt; &quot;Cancelled&quot;;
+    // Terminal state
+}
+
+// Order delegates to current state:
+public class Order
+{
+    private IOrderState _state;
+    
+    public Order() =&gt; _state = new PendingState();
+    
+    public string CurrentState =&gt; _state.StateName;
+    
+    internal void TransitionTo(IOrderState newState)
+    {
+        _logger.LogInformation(&quot;Order {Id} transitioning from {From} to {To}&quot;,
+            Id, _state.StateName, newState.StateName);
+        _state = newState;
+        Status = Enum.Parse&lt;OrderStatus&gt;(newState.StateName);
+    }
+    
+    // Delegates to state — ORDER doesn&#x27;t know how to transition, STATE does
+    public Task ConfirmAsync() =&gt; _state.ConfirmAsync(this);
+    public Task ProcessAsync() =&gt; _state.ProcessAsync(this);
+    public Task ShipAsync(string trackingNumber) =&gt; _state.ShipAsync(this, trackingNumber);
+    public Task DeliverAsync() =&gt; _state.DeliverAsync(this);
+    public Task CancelAsync(string reason) =&gt; _state.CancelAsync(this, reason);
+}
+
+// Usage — state machine in action:
+var order = new Order();
+await order.ConfirmAsync();        // Pending → Confirmed ✓
+await order.ProcessAsync();        // Confirmed → Processing ✓
+await order.ShipAsync(&quot;TRK-123&quot;); // Processing → Shipped ✓
+await order.CancelAsync(&quot;...&quot;);    // InvalidOperationException! Cannot cancel shipped order ✓</code></pre>
+</div>
+
+<h3 id='3-when-not-to-use-state-pattern'>3. When NOT to Use State Pattern</h3>
+<ul>
+<li>When states are few (2-3) and transitions are simple (enum + switch is fine)</li>
+<li>When states don't have behavior differences (just data differences)</li>
+<li>When a state machine library (Stateless, MassTransit state machine) already handles it</li>
+</ul>
+<p>---</p>
+<h1 id='observer-vs-mediator-vs-events-comparison'>OBSERVER VS MEDIATOR VS EVENTS — COMPARISON</h1>
+<div class='table-wrapper'><table>
+<tr><th>Dimension</th><th>C# Events</th><th>Domain Events + Mediator</th><th>Kafka/Message Bus</th></tr>
+<tr><td><strong>Coupling</strong></td><td>Tight (subscriber holds reference to publisher)</td><td>Loose (through IMediator)</td><td>Fully decoupled (broker in between)</td></tr>
+<tr><td><strong>Scope</strong></td><td>In-process only</td><td>In-process only</td><td>Cross-process, cross-service</td></tr>
+<tr><td><strong>Persistence</strong></td><td>None</td><td>None</td><td>Durable, replayable</td></tr>
+<tr><td><strong>Error handling</strong></td><td>Exceptions propagate to publisher</td><td>Per-handler, configurable</td><td>Consumer groups, DLQ, retry</td></tr>
+<tr><td><strong>Ordering</strong></td><td>Guaranteed (synchronous)</td><td>Configurable</td><td>Partition-ordered</td></tr>
+<tr><td><strong>Transaction</strong></td><td>Same transaction</td><td>Same transaction</td><td>Separate (outbox pattern needed)</td></tr>
+<tr><td><strong>Use when</strong></td><td>Simple UI callbacks, tight coupling OK</td><td>In-process domain events, CQRS</td><td>Cross-service, reliability critical</td></tr>
+<tr><td><strong>Example</strong></td><td>Button click handlers</td><td>OrderPlaced → Email + Inventory</td><td>Payment processed → Fulfillment service</td></tr>
+</table></div>
+<h2 id='when-to-use-each'>When to Use Each</h2>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">C# Events:
+  ✓ UI components (PropertyChanged)
+  ✓ Simple pub-sub within one object graph
+  ✗ Cross-service communication
+  ✗ When handlers need DI services
+
+Domain Events + MediatR:
+  ✓ Rich domain model events (Order.Place() → OrderPlacedEvent)
+  ✓ CQRS command/query separation
+  ✓ Pipeline behaviors (logging, validation, auth)
+  ✗ Cross-service communication
+  ✗ When durability is required
+
+Kafka/Service Bus:
+  ✓ Cross-microservice communication
+  ✓ When event history/replay is needed
+  ✓ When consumers are separate services
+  ✓ High-throughput event streaming
+  ✗ Simple in-process notifications (overkill)
+  ✗ When transaction atomicity is required without outbox pattern</code></pre>
+</div>
+
+<p>---</p>
+<h1 id='patterns-quick-reference-table'>PATTERNS QUICK REFERENCE TABLE</h1>
+<div class='table-wrapper'><table>
+<tr><th>Pattern</th><th>Category</th><th>Problem</th><th>Key Participants</th><th>.NET Example</th></tr>
+<tr><td>Singleton</td><td>Creational</td><td>One shared instance</td><td>Singleton class, DI container</td><td><code>AddSingleton&lt;&gt;</code>, <code>IMemoryCache</code></td></tr>
+<tr><td>Factory Method</td><td>Creational</td><td>Who creates the object?</td><td>Creator, Product</td><td><code>IPaymentGatewayFactory</code></td></tr>
+<tr><td>Abstract Factory</td><td>Creational</td><td>Families of objects</td><td>Abstract Factory, Products</td><td><code>IDatabaseProviderFactory</code></td></tr>
+<tr><td>Builder</td><td>Creational</td><td>Complex construction</td><td>Builder, Director, Product</td><td><code>Order.Builder</code>, Fluent builders</td></tr>
+<tr><td>Repository</td><td>Structural</td><td>Separate data access</td><td>Repository, UoW, DbContext</td><td><code>IOrderRepository</code> + EF Core</td></tr>
+<tr><td>Decorator</td><td>Structural</td><td>Add behavior dynamically</td><td>Component, Decorator</td><td>Caching/Logging wrappers</td></tr>
+<tr><td>Adapter</td><td>Structural</td><td>Incompatible interfaces</td><td>Adapter, Adaptee, Target</td><td>Legacy SDK adapters</td></tr>
+<tr><td>Facade</td><td>Structural</td><td>Simplify complex subsystem</td><td>Facade, Subsystems</td><td><code>CheckoutFacade</code></td></tr>
+<tr><td>Strategy</td><td>Behavioral</td><td>Algorithm variations</td><td>Strategy, Context</td><td><code>IDiscountStrategy</code></td></tr>
+<tr><td>Observer</td><td>Behavioral</td><td>Reactive notifications</td><td>Subject, Observers</td><td><code>event</code>, MediatR INotification</td></tr>
+<tr><td>Command</td><td>Behavioral</td><td>Encapsulate operations</td><td>Command, Invoker, Receiver</td><td><code>IBankingCommand</code>, undo stack</td></tr>
+<tr><td>Mediator</td><td>Behavioral</td><td>Reduce coupling</td><td>Mediator, Colleagues</td><td>MediatR, <code>IMediator</code></td></tr>
+<tr><td>Chain of Resp.</td><td>Behavioral</td><td>Sequential processing</td><td>Handler chain</td><td>Middleware, validation pipeline</td></tr>
+<tr><td>Template Method</td><td>Behavioral</td><td>Algorithm skeleton</td><td>Abstract class</td><td><code>PaymentProcessor</code> base</td></tr>
+<tr><td>State</td><td>Behavioral</td><td>State-dependent behavior</td><td>Context, States</td><td><code>OrderState</code> machine</td></tr>
+</table></div>
+<p>---</p>
+<h1 id='anti-patterns-to-know-for-interviews'>ANTI-PATTERNS TO KNOW FOR INTERVIEWS</h1>
+<div class='table-wrapper'><table>
+<tr><th>Anti-Pattern</th><th>What It Is</th><th>Better Alternative</th></tr>
+<tr><td>God Object</td><td>One class does everything</td><td>SRP, decompose</td></tr>
+<tr><td>Magic Numbers</td><td>Hardcoded values</td><td>Named constants, config</td></tr>
+<tr><td>Spaghetti Code</td><td>No structure, flow jumps everywhere</td><td>Structured patterns, layers</td></tr>
+<tr><td>Anemic Domain Model</td><td>Data objects, logic in services</td><td>Rich domain model</td></tr>
+<tr><td>Primitive Obsession</td><td>Using strings/ints for domain concepts</td><td>Value objects, strong types</td></tr>
+<tr><td>Leaky Abstraction</td><td>Implementation details bleed through interface</td><td>Better encapsulation</td></tr>
+<tr><td>Big Ball of Mud</td><td>No architecture, all mixed</td><td>Layered/clean architecture</td></tr>
+<tr><td>Cargo Cult Programming</td><td>Copying patterns without understanding</td><td>Learn the WHY</td></tr>
+</table></div>
+<p>---</p>
+<h1 id='senior-interview-which-pattern-would-you-use-and-why'>SENIOR INTERVIEW: "WHICH PATTERN WOULD YOU USE AND WHY?"</h1>
+<p><strong>Scenario: Order Management System — Add logging + caching to OrderService without changing it.</strong></p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Use <strong>Decorator Pattern</strong>. Implement <code>LoggingOrderService : IOrderService</code> and <code>CachingOrderService : IOrderService</code>, each wrapping the previous. Register with Scrutor's <code>.Decorate&lt;&gt;()</code>. No modification to existing OrderService — Open/Closed Principle satisfied.</div>
+</div>
+
+<p><strong>Scenario: Payment gateway — support Stripe, PayPal, Razorpay. New ones will be added.</strong></p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Use <strong>Strategy Pattern</strong> + <strong>Factory Method</strong>. Each gateway implements <code>IPaymentStrategy</code>. <code>PaymentGatewayFactory</code> resolves the correct strategy from DI. Adding a new gateway = add a class + register in DI. Zero modification to existing code.</div>
+</div>
+
+<p><strong>Scenario: Order status — Pending, Confirmed, Processing, Shipped, Delivered. Invalid transitions must be rejected.</strong></p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Use <strong>State Pattern</strong>. Each status is a state class. Order delegates all state-transition calls to the current state. Invalid transitions throw <code>InvalidOperationException</code>. State machines are also a solution (Stateless library).</div>
+</div>
+
+<p><strong>Scenario: Order placed → notify warehouse, send email, update analytics, award loyalty points.</strong></p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Use <strong>Observer/Mediator Pattern</strong>. Publish <code>OrderPlacedEvent</code> via MediatR after saving. Multiple <code>INotificationHandler&lt;OrderPlacedEvent&gt;</code> implementations handle each concern independently. Decoupled, extensible, independently testable.</div>
+</div>
+
+<p><strong>Scenario: Build complex Order object with 10+ optional properties, validation at creation time.</strong></p>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Use <strong>Builder Pattern</strong> with fluent API. Required params in constructor, optional via fluent methods, validation in <code>Build()</code>. Prevents invalid objects from ever being created.</div>
+</div>
+
+<p>---</p>
+<p><em>Volume 5 Complete — All Creational, Structural, and Behavioral patterns covered with production-quality C# examples.</em></p>
+            </article>
+
+            <nav class="chapter-nav">
+                
+    <a href="Volume-4-OOP-Design-Principles.html" class="nav-card">
+        <span class="nav-card-dir">← Previous Module</span>
+        <span class="nav-card-title">Volume 4: OOP & Enterprise Design Principles</span>
+    </a>
+    
+                
+    <a href="Volume-6-ASPNetCore.html" class="nav-card" style="text-align: right;">
+        <span class="nav-card-dir">Next Module →</span>
+        <span class="nav-card-title">Volume 6: ASP.NET Core Complete Architecture</span>
+    </a>
+    
+            </nav>
+        </main>
+
+        <aside id="toc-sidebar">
+            <div class="toc-title">On This Page</div>
+            <ul class="toc-list">
+                
+        <li class="toc-item level-1">
+            <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
+        </li>
+        
+
+        <li class="toc-item level-1">
+            <a href="#volume-5-design-patterns" class="toc-link">Volume 5: Design Patterns</a>
+        </li>
+        
+
+        <li class="toc-item level-1">
+            <a href="#table-of-contents" class="toc-link">TABLE OF CONTENTS</a>
+        </li>
+        
+
+        <li class="toc-item level-1">
+            <a href="#creational-patterns" class="toc-link">CREATIONAL PATTERNS</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#singleton-pattern" class="toc-link">Singleton Pattern</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#1-definition" class="toc-link">1. Definition</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#2-historical-reason" class="toc-link">2. Historical Reason</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#3-problem-it-solves" class="toc-link">3. Problem It Solves</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#4-thread-safe-singleton-double-checked-locking-with-lazyt" class="toc-link">4. Thread-Safe Singleton — Double-Checked Loc</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#5-production-example-distributed-cache" class="toc-link">5. Production Example: Distributed Cache</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#6-execution-flow" class="toc-link">6. Execution Flow</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#7-when-not-to-use-singleton" class="toc-link">7. When NOT to Use Singleton</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#8-interview-prep" class="toc-link">8. Interview Prep</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#factory-method-pattern" class="toc-link">Factory Method Pattern</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#1-definition" class="toc-link">1. Definition</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#2-problem-it-solves" class="toc-link">2. Problem It Solves</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#3-pattern-solution" class="toc-link">3. Pattern Solution</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#4-when-not-to-use-factory-method" class="toc-link">4. When NOT to Use Factory Method</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#5-interview-prep" class="toc-link">5. Interview Prep</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#abstract-factory-pattern" class="toc-link">Abstract Factory Pattern</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#1-definition" class="toc-link">1. Definition</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#2-problem-it-solves-database-provider-families" class="toc-link">2. Problem It Solves — Database Provider Fami</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#3-real-production-use-saas-multi-tenant-storage" class="toc-link">3. Real Production Use — SaaS Multi-Tenant St</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#4-when-not-to-use-abstract-factory" class="toc-link">4. When NOT to Use Abstract Factory</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#builder-pattern" class="toc-link">Builder Pattern</a>
+        </li>
+        
+            </ul>
+        </aside>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            hljs.highlightAll();
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'dark',
+                themeVariables: {
+                    primaryColor: '#1e3a8a',
+                    primaryTextColor: '#f8fafc',
+                    primaryBorderColor: '#3b82f6',
+                    lineColor: '#60a5fa',
+                    secondaryColor: '#1e293b',
+                    tertiaryColor: '#0f172a'
+                }
+            });
+        });
+    </script>
+</body>
+</html>
