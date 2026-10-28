@@ -20,6 +20,7 @@
     <!-- Mermaid for Interactive Diagrams -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <style>
+
 :root, [data-theme="dark"] {
     --bg-page: #0b0f19;
     --bg-surface: #111827;
@@ -560,26 +561,29 @@ li::marker { color: var(--primary); }
     font-weight: 600;
     color: var(--heading-color);
 }
-</style>
+
+    </style>
 </head>
 <body>
+    <!-- SIDEBAR -->
     <aside id="sidebar">
         <div class="sidebar-header">
             <a href="index.html" class="sidebar-brand">
-                <span class="sidebar-logo">⚡</span>
-                <div>
-                    <div class="sidebar-title">.NET Master Guide</div>
-                    <div class="sidebar-sub">Infosys & Tier-1 Prep</div>
-                </div>
+                <span class="brand-icon">⚡</span>
+                <span class="brand-text">.NET Master Guide</span>
             </a>
-            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
-                <span class="theme-icon">🌙</span>
-                <span class="theme-label">Dark</span>
-            </button>
+            <div class="theme-toggle-wrap">
+                <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                    <span class="theme-label">Dark</span>
+                </button>
+            </div>
         </div>
-        <div class="nav-section-title">Knowledge Base</div>
-        <ul class="nav-list">
-            
+        <div class="sidebar-search">
+            <input type="text" id="searchInput" placeholder="Filter sections..." onkeyup="filterNav()">
+        </div>
+        <ul class="nav-list" id="navList">
+
         <li class="nav-item">
             <a href="Volume-0-Software-Engineering-Fundamentals.html" class="nav-link ">
                 <span class="nav-icon">🧠</span>
@@ -706,21 +710,24 @@ li::marker { color: var(--primary); }
         </li>
         
         </ul>
+        <div class="sidebar-footer">
+            <a href="index.html" class="home-btn">🏠 Portal Home</a>
+        </div>
     </aside>
 
-    <div id="content-wrapper">
-        <main id="main-content">
-            <div class="chapter-hero">
-                <div class="hero-meta">
-                    <span class="hero-badge">Algorithmic Mastery</span>
-                    <span class="hero-vol">Volume 1</span>
-                </div>
-                <h1>Logical Thinking & Data Structures and Algorithms</h1>
-                <p>10 thinking patterns, arrays, strings, Dictionary bucket hashing, trees, graphs, dynamic programming, and verbatim Infosys interview transcript.</p>
+    <!-- MAIN CONTENT -->
+    <main id="main">
+        <header class="chapter-hero">
+            <div class="hero-meta">
+                <span class="hero-badge">Algorithmic Mastery</span>
+                <span class="hero-vol">Volume 1</span>
             </div>
+            <h1>Logical Thinking & Data Structures and Algorithms</h1>
+            <p>10 thinking patterns, arrays, strings, Dictionary bucket hashing, trees, graphs, dynamic programming, and verbatim Infosys interview transcript.</p>
+        </header>
 
-            <article class="doc-body">
-                <h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
+        <article class="content-body">
+<h1 id='the-complete-net-developer-encyclopedia-interview-mastery-guide'>THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + INTERVIEW MASTERY GUIDE</h1>
 <h2 id='volume-1-logical-thinking-data-structures-and-algorithms'>Volume 1: Logical Thinking & Data Structures and Algorithms</h2>
 
 <div class="callout note">
@@ -776,6 +783,12 @@ li::marker { color: var(--primary); }
 <li>3.6 Problem 4: Find Duplicate Number (Floyd's Cycle Detection on Array Pointers)</li>
 <li>3.7 Problem 5: Merge Intervals (Booking & Calendar Overlap Consolidation)</li>
 <li>3.8 Problem 6: Product of Array Except Self (Prefix-Suffix Accumulation Without Division)</li>
+<li>3.9 The Two Pointers Masterclass: Deep Engineering Mechanics & Visual Invariants</li>
+<li>3.10 Problem 7: Container With Most Water (Max Water Retention Engine - LeetCode 11)</li>
+<li>3.11 Problem 8: 3Sum (Zero-Sum Settlement Triplet Auditor - LeetCode 15)</li>
+<li>3.12 Problem 9: Trapping Rain Water (Hydraulic Basin Capacity Analyzer - LeetCode 42)</li>
+<li>3.13 Problem 10: Sort Colors / Dutch National Flag (3-Way Transaction Risk Sorter - LeetCode 75)</li>
+<li>3.14 Problem 11: Remove Duplicates & Move Zeroes (In-Place Memory Compaction)</li>
 </ul>
 <ol>
 <li><a href="#4-strings-immutability-memory-optimization--pattern-matching">Strings: Immutability, Memory Optimization & Pattern Matching</a></li>
@@ -787,6 +800,12 @@ li::marker { color: var(--primary); }
 <li>4.4 Problem 9: Longest Substring Without Repeating Characters (Sliding Window)</li>
 <li>4.5 Problem 10: String Compression (Run-Length Encoding with Write Pointers)</li>
 <li>4.6 Problem 11: Palindrome Check & Longest Palindromic Substring</li>
+<li>4.7 The Sliding Window Masterclass: Structural Anatomy & State Templates</li>
+<li>4.8 Problem 12: Maximum Sum Subarray of Size K (Streaming Telemetry Throughput)</li>
+<li>4.9 Problem 13: Minimum Size Subarray Sum (Target Threshold Breaker - LeetCode 209)</li>
+<li>4.10 Problem 14: Minimum Window Substring (Enterprise Token Syntax Matcher - LeetCode 76)</li>
+<li>4.11 Problem 15: Longest Repeating Character Replacement (Burst Compression Engine - LeetCode 424)</li>
+<li>4.12 Problem 16: Longest Substring with At Most K Distinct Characters (Multi-Tenant Session Limiter)</li>
 </ul>
 <ol>
 <li><a href="#5-hashmap--dictionary-internals-deep-clr-dive--applications">HashMap & Dictionary Internals: Deep CLR Dive & Applications</a></li>
@@ -798,20 +817,33 @@ li::marker { color: var(--primary); }
 <li>5.4 Problem 14: First Unique Character in a Stream</li>
 </ul>
 <ol>
-<li><a href="#6-binary-search-the-monotonic-mindset">Binary Search: The Monotonic Mindset</a></li>
+<li><a href="#6-searching-algorithms-the-complete-searching-encyclopedia">Searching Algorithms: The Complete Searching Encyclopedia</a></li>
 </ol>
 <ul>
-<li>6.1 The Universal Binary Search Paradigm</li>
-<li>6.2 Problem 15: Classic Binary Search (Exact Order ID Match)</li>
-<li>6.3 Problem 16: Search in Rotated Sorted Array (Shifted Ledger Partitions)</li>
-<li>6.4 Problem 17: Find First and Last Position in Sorted Array (Lower & Upper Bounds)</li>
+<li>6.1 The Searching Taxonomy & Mechanical Sympathy Decision Matrix</li>
+<li>6.2 Linear Search & The Sentinel Optimization (Eliminating Boundary Checks)</li>
+<li>6.3 Classic Binary Search (The Monotonic Mindset)</li>
+<li>6.4 Search in Rotated Sorted Array (Shifted Ledger Partitions)</li>
+<li>6.5 Find First and Last Position in Sorted Array (Lower & Upper Bounds)</li>
+<li>6.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages Within D Days / Allocation Engine)</li>
+<li>6.7 Interpolation Search (Uniformly Distributed Probing Engine)</li>
+<li>6.8 Exponential Search (Unbounded Ledger Streams & Fast Galloping)</li>
+<li>6.9 Ternary Search (Finding Extrema in Unimodal Functions)</li>
 </ul>
 <ol>
 <li><a href="#7-sorting-algorithms-from-first-principles-to-net-introsort">Sorting Algorithms: From First Principles to .NET IntroSort</a></li>
 </ol>
 <ul>
-<li>7.1 QuickSort & MergeSort Internals</li>
-<li>7.2 Under the Hood: .NET <code>Array.Sort</code> and IntroSort (QuickSort + HeapSort + InsertionSort)</li>
+<li>7.1 The Sorting Taxonomy & Complexity Matrix</li>
+<li>7.2 Bubble Sort (Standard & Early-Exit Optimization)</li>
+<li>7.3 Selection Sort (Minimum-Scan & Minimal Memory Writes)</li>
+<li>7.4 Insertion Sort (Adaptive Shifting & Small Partition Powerhouse)</li>
+<li>7.5 Merge Sort (Divide & Conquer, In-Depth Memory Mechanics & Stability)</li>
+<li>7.6 Quick Sort (Lomuto vs. Hoare Partitioning & Median-of-3 Pivot)</li>
+<li>7.7 Heap Sort (In-Place Array-Based Max-Heapify)</li>
+<li>7.8 Counting Sort (Non-Comparison O(N + K) Integer Sorting)</li>
+<li>7.9 Radix Sort (LSD Base-10 / 256 Distribution Engine)</li>
+<li>7.10 Under the Hood: .NET 8 IntroSort & ArraySortHelper<T></li>
 </ul>
 <ol>
 <li><a href="#8-stack--queue-lifo-fifo-and-expression-parsing">Stack & Queue: LIFO, FIFO, and Expression Parsing</a></li>
@@ -1914,6 +1946,591 @@ public static class ArrayProductSolver
 <li><strong>Space Complexity:</strong> $O(1)$ auxiliary space (the output array does not count toward auxiliary space complexity).</li>
 </ul>
 <p>---</p>
+<p>---</p>
+<h2 id='39-the-two-pointers-masterclass-deep-engineering-mechanics-visual-invariants'>3.9 The Two Pointers Masterclass: Deep Engineering Mechanics & Visual Invariants</h2>
+<p>The <strong>Two Pointers</strong> pattern is one of the most mechanically sympathetic algorithmic archetypes in computer science. In high-performance backend systems, managing multiple pointer offsets across linear contiguous memory buffers allows $O(N)$ linear scans with $O(1)$ stack-allocated auxiliary memory, completely eliminating heap allocations, GC allocation churn, and hash table overhead.</p>
+<h3 id='the-three-fundamental-two-pointer-archetypes'>The Three Fundamental Two-Pointer Archetypes</h3>
+<div class='mermaid'>flowchart TD
+    subgraph Converging ["Archetype 1: Converging Pointers (Inward Squeeze)"]
+        A1["Left Pointer: Index 0 &rarr;"] --- A2["[ Data Array / Buffer ]"] --- A3["&larr; Right Pointer: Index N-1"]
+        A4["Condition: Move Left if sum too small, Right if sum too big"]
+    end
+
+    subgraph Parallel ["Archetype 2: Parallel / Read-Write Pointers (Compaction)"]
+        B1["Write Pointer: Slow &rarr; (Holds valid compacted boundary)"]
+        B2["Read Pointer: Fast &rarr;&rarr; (Scans stream and filters elements)"]
+    end
+
+    subgraph ThreeWay ["Archetype 3: 3-Way Partitioning (Dutch National Flag)"]
+        C1["Low Pointer: End of 0s"] --- C2["Mid Pointer: Current Scanner"] --- C3["High Pointer: Start of 2s"]
+    end</div>
+<h3 id='visual-memory-layout-pointer-traversal'>Visual Memory Layout & Pointer Traversal</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">1. CONVERGING (Sorted Pairs, Water Basins, Palindromes):
+   Index:     0      1      2      3      4      5      6
+   Array:   [ 2,     7,    11,    15,    19,    23,    30 ]
+              ▲                                         ▲
+              Left (moves right &amp;rarr;)               Right (moves left &amp;larr;)
+
+2. READ-WRITE / FAST-SLOW (In-Place Array Compaction):
+   Index:     0      1      2      3      4      5      6
+   Array:   [ 0,     1,     0,     3,    12,     0,     5 ]
+              ▲      ▲
+            Write   Read (scans ahead, writes non-zero elements to Write)
+
+3. THREE-WAY PARTITIONING (Sort Colors / 3-Tier Risk):
+   Zones:   [ 0 0 0 | 1 1 1 | ? ? ? ? ? | 2 2 2 ]
+                    ▲       ▲           ▲
+                   Low     Mid         High</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='310-problem-7-container-with-most-water-max-water-retention-engine-leetcode-11'>3.10 Problem 7: Container With Most Water (Max Water Retention Engine - LeetCode 11)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>You are given an integer array <code>height</code> of length $N$ representing vertical lines drawn at indices $0$ to $N-1$. You must find two lines that together with the x-axis form a container that holds the maximum amount of water.</p>
+<ul>
+<li><strong>Formula:</strong> $	ext{Area} = (R - L) 	imes \min(	ext{height}[L], 	ext{height}[R])$</li>
+<li><strong>Production Analogy:</strong> In a High-Throughput Stream Buffer or Burst Absorption Buffer, vertical bars represent queue drain capacities across microservice nodes. We seek the maximum throughput absorption window between two edge nodes.</li>
+<li><strong>The Core Invariant (The Mathematical Proof):</strong></li>
+<li>Suppose $	ext{height}[L] < 	ext{height}[R]$. The current area is bounded by $	ext{height}[L]$.</li>
+<li>What happens if we move $R$ inward ($R - 1$)?</li>
+<li>The width $(R - L)$ <em>decreases</em> by 1.</li>
+<li>The bottleneck height can <em>at most</em> be $	ext{height}[L]$ (or smaller). It can NEVER exceed $	ext{height}[L]$.</li>
+<li>Therefore, moving $R$ inward while $	ext{height}[L] < 	ext{height}[R]$ will <strong>provably</strong> yield a strictly smaller or equal area!</li>
+<li><strong>Conclusion:</strong> The ONLY chance of finding a larger area is to move the <strong>shorter pillar</strong> inward in hope of encountering a taller pillar that overcomes the width reduction.</li>
+</ul>
+<h3 id='2-how-interviewer-thinks'>2. How Interviewer Thinks</h3>
+<ul>
+<li>Candidates who fail propose $O(N^2)$ brute force checking all pairs.</li>
+<li>Mid-level candidates guess moving pointers randomly.</li>
+<li>Senior candidates clearly articulate the <strong>proof of monotonicity elimination</strong>: moving the taller line guarantees an inferior configuration.</li>
+</ul>
+<h3 id='3-visual-execution-diagram'>3. Visual Execution Diagram</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Index:    0    1    2    3    4    5    6    7    8
+Height: [ 1,   8,   6,   2,   5,   4,   8,   3,   7 ]
+          L=0 (1)                                  R=8 (7)
+          Current Area = (8 - 0) * min(1, 7) = 8 * 1 = 8.
+          height[L] &lt; height[R] (1 &lt; 7) &amp;rarr; Bottleneck is L. Advance L!
+
+          &amp;darr; Next Step:
+               L=1 (8)                             R=8 (7)
+          Current Area = (8 - 1) * min(8, 7) = 7 * 7 = 49. (NEW MAX!)
+          height[L] &gt; height[R] (8 &gt; 7) &amp;rarr; Bottleneck is R. Move R left!</code></pre>
+</div>
+
+<div class='mermaid'>sequenceDiagram
+    autonumber
+    participant Engine as ContainerEngine
+    participant Left as Left Pointer (L)
+    participant Right as Right Pointer (R)
+    
+    Note over Left,Right: Initial State: L = 0, R = N-1, maxArea = 0
+    Engine->>Left: Inspect height[L]
+    Engine->>Right: Inspect height[R]
+    Engine->>Engine: Calculate width = R - L, area = width * min(h[L], h[R])
+    Engine->>Engine: maxArea = Math.Max(maxArea, area)
+    alt height[L] < height[R]
+        Engine->>Left: L++ (Eliminate left pillar: cannot produce larger area)
+    else height[L] >= height[R]
+        Engine->>Right: R-- (Eliminate right pillar: bottleneck is right)
+    end
+    Note over Left,Right: Repeat until L >= R</div>
+<h3 id='4-c-solution-net-8-with-readonlyspanint'>4. C# Solution (.NET 8 with ReadOnlySpan<int>)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class ContainerOptimizer
+{
+    /// &lt;summary&gt;
+    /// Computes the maximum water retention volume between two pillars in O(N) time and O(1) space.
+    /// Uses ReadOnlySpan to ensure zero heap allocations on high-frequency evaluation pipelines.
+    /// &lt;/summary&gt;
+    public static int MaxArea(ReadOnlySpan&lt;int&gt; height)
+    {
+        if (height.Length &lt; 2) return 0;
+
+        int left = 0;
+        int right = height.Length - 1;
+        int maxWaterArea = 0;
+
+        while (left &lt; right)
+        {
+            int hLeft = height[left];
+            int hRight = height[right];
+            int currentWidth = right - left;
+
+            if (hLeft &lt; hRight)
+            {
+                int currentArea = currentWidth * hLeft;
+                if (currentArea &gt; maxWaterArea) maxWaterArea = currentArea;
+                left++; // Eliminate shorter left pillar
+            }
+            else
+            {
+                int currentArea = currentWidth * hRight;
+                if (currentArea &gt; maxWaterArea) maxWaterArea = currentArea;
+                right--; // Eliminate shorter (or equal) right pillar
+            }
+        }
+
+        return maxWaterArea;
+    }
+}</code></pre>
+</div>
+
+<h3 id='5-complexity-analysis'>5. Complexity Analysis</h3>
+<ul>
+<li><strong>Time Complexity:</strong> $O(N)$ — Every iteration decrements $(R - L)$ by exactly 1. Total iterations $\le N$.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Only three 32-bit registers (<code>left</code>, <code>right</code>, <code>maxWaterArea</code>). Zero GC allocation.</li>
+</ul>
+<p>---</p>
+<h2 id='311-problem-8-3sum-zero-sum-settlement-triplet-auditor-leetcode-15'>3.11 Problem 8: 3Sum (Zero-Sum Settlement Triplet Auditor - LeetCode 15)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>Given an integer array <code>nums</code>, find all <strong>unique triplets</strong> <code>[nums[i], nums[j], nums[k]]</code> such that $i</p>
+<p>e j</p>
+<p>e k$ and $nums[i] + nums[j] + nums[k] = 0$. The solution set must not contain duplicate triplets.</p>
+<ul>
+<li><strong>Production Analogy:</strong> In a Multi-Party Clearinghouse Reconciliation Engine, transactions from three parties must balance to zero ($T_1 + T_2 + T_3 = 0$) to verify balanced settlement without cash leakage.</li>
+<li><strong>Mental Model & Transformation:</strong></li>
+</ul>
+<ol>
+<li>Brute Force is $O(N^3)$, which times out on $N \ge 3,000$.</li>
+<li>Sorting the array costs $O(N \log N)$. Once sorted, we can fix the first number <code>nums[i]</code> and reduce the remaining search to <strong>Two Sum II (Sorted)</strong> for the target $-nums[i]$ using converging Two Pointers ($L$ and $R$).</li>
+<li>Total Time: $O(N \log N) + O(N^2) = O(N^2)$.</li>
+</ol>
+<ul>
+<li><strong>The #1 Interview Trap (Duplicate Triplets):</strong></li>
+<li>Many candidates use a <code>HashSet&lt;string&gt;</code> or <code>HashSet&lt;(int,int,int)&gt;</code> to filter duplicates. <strong>Interviewers reject this</strong> because it allocates substantial heap memory and degrades cache locality.</li>
+<li><strong>The Senior Fix:</strong> Handle duplicates in-place via pointer skipping:</li>
+<li>If <code>nums[i] == nums[i-1]</code>, <code>continue</code> (skip duplicate pivot).</li>
+<li>When a valid triplet is found, advance $L$ while <code>nums[L] == nums[L+1]</code> and decrement $R$ while <code>nums[R] == nums[R-1]</code>.</li>
+</ul>
+<h3 id='2-visual-ascii-trace'>2. Visual ASCII Trace</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Sorted Array: [ -4,   -1,   -1,    0,    1,    2 ]
+                 ▲      ▲                      ▲
+               Pivot  Left                   Right
+              nums[i]=-4, target = +4
+              Sum = (-1) + 2 = 1 &lt; 4 &amp;rarr; Left++
+              
+Next Iteration:
+Sorted Array: [ -4,   -1,   -1,    0,    1,    2 ]
+                       ▲      ▲                ▲
+                     Pivot  Left             Right
+              nums[i]=-1, target = +1
+              Sum = nums[L] + nums[R] = (-1) + 2 = 1 == target! &amp;rarr; MATCH [-1, -1, 2]
+              Skip duplicate nums[L] and nums[R], then converge!</code></pre>
+</div>
+
+<h3 id='3-c-solution-net-8'>3. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+
+public static class SettlementClearinghouse
+{
+    /// &lt;summary&gt;
+    /// Finds all unique triplets that sum to 0 in O(N^2) time with zero duplicate triplets.
+    /// &lt;/summary&gt;
+    public static IList&lt;IList&lt;int&gt;&gt; ThreeSum(int[] nums)
+    {
+        var results = new List&lt;IList&lt;int&gt;&gt;();
+        if (nums == null || nums.Length &lt; 3) return results;
+
+        // Step 1: In-place Dual-Pivot QuickSort / IntroSort
+        Array.Sort(nums);
+
+        int n = nums.Length;
+
+        for (int i = 0; i &lt; n - 2; i++)
+        {
+            // Early exit optimization: If the smallest number is &gt; 0, three positive numbers cannot sum to 0
+            if (nums[i] &gt; 0) break;
+
+            // Duplicate avoidance for Pivot
+            if (i &gt; 0 &amp;&amp; nums[i] == nums[i - 1]) continue;
+
+            int left = i + 1;
+            int right = n - 1;
+            int target = -nums[i];
+
+            while (left &lt; right)
+            {
+                int sum = nums[left] + nums[right];
+
+                if (sum == target)
+                {
+                    results.Add(new List&lt;int&gt; { nums[i], nums[left], nums[right] });
+
+                    // Duplicate avoidance for Left pointer
+                    while (left &lt; right &amp;&amp; nums[left] == nums[left + 1]) left++;
+                    // Duplicate avoidance for Right pointer
+                    while (left &lt; right &amp;&amp; nums[right] == nums[right - 1]) right--;
+
+                    left++;
+                    right--;
+                }
+                else if (sum &lt; target)
+                {
+                    left++; // Need a larger value
+                }
+                else
+                {
+                    right--; // Need a smaller value
+                }
+            }
+        }
+
+        return results;
+    }
+}</code></pre>
+</div>
+
+<h3 id='4-complexity-analysis'>4. Complexity Analysis</h3>
+<ul>
+<li><strong>Time Complexity:</strong> $O(N^2)$ — Sorting takes $O(N \log N)$. The outer loop runs $N$ times, and the inner two-pointer search takes $O(N)$. $O(N \log N + N^2) = O(N^2)$.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ auxiliary memory (ignoring the memory needed to store the output list). Sorting in .NET uses IntroSort which requires $O(\log N)$ stack space.</li>
+</ul>
+<p>---</p>
+<h2 id='312-problem-9-trapping-rain-water-hydraulic-basin-capacity-analyzer-leetcode-42'>3.12 Problem 9: Trapping Rain Water (Hydraulic Basin Capacity Analyzer - LeetCode 42)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>Given $N$ non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.</p>
+<ul>
+<li><strong>Fundamental Hydraulic Formula:</strong> Water trapped directly above bar $i$ is:</li>
+</ul>
+<p>$$	ext{Water}[i] = \max\Big(0, \; \min(	ext{LeftMax}[i], \, 	ext{RightMax}[i]) - 	ext{height}[i]\Big)$$</p>
+<ul>
+<li><strong>Why Two Pointers Beats Prefix Arrays:</strong></li>
+<li>Standard Approach: Precompute <code>leftMax[N]</code> and <code>rightMax[N]</code> using two separate arrays &rarr; $O(N)$ Time and $O(N)$ Space.</li>
+<li><strong>Two-Pointer Optimization ($O(1)$ Space):</strong></li>
+<li>Maintain <code>leftMax</code> and <code>rightMax</code> scalar variables.</li>
+<li>If <code>height[left] &lt; height[right]</code>:</li>
+<li>We know for a fact that <code>leftMax &lt; rightMax</code> (or bounded by <code>height[right]</code>).</li>
+<li>Therefore, the water trapped at <code>left</code> is determined <strong>strictly by <code>leftMax</code></strong>, regardless of any peaks between <code>left</code> and <code>right</code>!</li>
+<li>If <code>height[left] &gt;= leftMax</code>, update <code>leftMax = height[left]</code>.</li>
+<li>Else, trapped water += <code>leftMax - height[left]</code>. Advance <code>left++</code>.</li>
+<li>Else (<code>height[left] &gt;= height[right]</code>):</li>
+<li>Symmetrically, water at <code>right</code> is bounded strictly by <code>rightMax</code>.</li>
+<li>If <code>height[right] &gt;= rightMax</code>, update <code>rightMax = height[right]</code>.</li>
+<li>Else, trapped water += <code>rightMax - height[right]</code>. Decrement <code>right--</code>.</li>
+</ul>
+<h3 id='2-visual-elevation-basin-diagram'>2. Visual Elevation & Basin Diagram</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Elevation Map &amp; Trapped Water:
+Height: [ 0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1 ]
+
+   3 |                      █
+   2 |             █  ░░░░  █  █  ░░  █
+   1 |       █  ░░ █  █  ░░ █  █  █  ██  █
+   0 | ──█───█──██─█──█──██─█──█──█──██──█─
+Index: 0  1  2  3  4  5  6  7  8  9 10 11
+       (█ = Concrete Pillar, ░░ = Trapped Rain Water)
+Total Trapped Water = 6 Units</code></pre>
+</div>
+
+<div class='mermaid'>flowchart TD
+    Start["Initialize left=0, right=N-1, leftMax=0, rightMax=0, totalWater=0"] --> CheckCondition{"left < right?"}
+    CheckCondition -- No --> Done["Return totalWater"]
+    CheckCondition -- Yes --> CompareHeight{"height[left] < height[right]?"}
+    
+    CompareHeight -- Yes --> CheckLeft{"height[left] >= leftMax?"}
+    CheckLeft -- Yes --> UpdateLeftMax["leftMax = height[left]"]
+    CheckLeft -- No --> AddLeftWater["totalWater += (leftMax - height[left])"]
+    UpdateLeftMax --> IncLeft["left++"]
+    AddLeftWater --> IncLeft
+    IncLeft --> CheckCondition
+
+    CompareHeight -- No --> CheckRight{"height[right] >= rightMax?"}
+    CheckRight -- Yes --> UpdateRightMax["rightMax = height[right]"]
+    CheckRight -- No --> AddRightWater["totalWater += (rightMax - height[right])"]
+    UpdateRightMax --> DecRight["right--"]
+    AddRightWater --> DecRight
+    DecRight --> CheckCondition</div>
+<h3 id='3-c-solution-net-8'>3. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class HydraulicAnalyzer
+{
+    /// &lt;summary&gt;
+    /// Computes total trapped rainwater in O(N) time and O(1) auxiliary heap allocation.
+    /// &lt;/summary&gt;
+    public static int Trap(ReadOnlySpan&lt;int&gt; height)
+    {
+        if (height.Length &lt; 3) return 0;
+
+        int left = 0;
+        int right = height.Length - 1;
+        int leftMax = 0;
+        int rightMax = 0;
+        int totalWater = 0;
+
+        while (left &lt; right)
+        {
+            if (height[left] &lt; height[right])
+            {
+                if (height[left] &gt;= leftMax)
+                {
+                    leftMax = height[left];
+                }
+                else
+                {
+                    totalWater += leftMax - height[left];
+                }
+                left++;
+            }
+            else
+            {
+                if (height[right] &gt;= rightMax)
+                {
+                    rightMax = height[right];
+                }
+                else
+                {
+                    totalWater += rightMax - height[right];
+                }
+                right--;
+            }
+        }
+
+        return totalWater;
+    }
+}</code></pre>
+</div>
+
+<h3 id='4-complexity-analysis'>4. Complexity Analysis</h3>
+<ul>
+<li><strong>Time Complexity:</strong> $O(N)$ — Single pass over the span; each element is visited once.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Five primitive scalar variables stored directly on the execution stack frame.</li>
+</ul>
+<p>---</p>
+<h2 id='313-problem-10-sort-colors-dutch-national-flag-3-way-transaction-risk-sorter-leetcode-75'>3.13 Problem 10: Sort Colors / Dutch National Flag (3-Way Transaction Risk Sorter - LeetCode 75)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>Given an array <code>nums</code> with $N$ objects colored red (0), white (1), or blue (2), sort them <strong>in-place</strong> so that objects of the same color are adjacent, in the order 0, 1, and 2.</p>
+<ul>
+<li><strong>Production Analogy:</strong> In an Enterprise Payment Router, transactions are tagged by risk tier: <code>0 = Low Risk (Direct Route)</code>, <code>1 = Medium Risk (SCA 3DS Challenge)</code>, <code>2 = High Risk (Manual Fraud Review)</code>. We need to group batches in $O(N)$ single-pass without allocating auxiliary memory.</li>
+<li><strong>The Three Pointers Invariant:</strong></li>
+<li><code>low</code>: Points to boundary where next <code>0</code> should be placed.</li>
+<li><code>mid</code>: Current scanning pointer.</li>
+<li><code>high</code>: Points to boundary where next <code>2</code> should be placed.</li>
+<li><strong>Array Partition Invariants at Any Time:</strong></li>
+<li><code>[0 .. low-1]</code> $\implies$ All elements are <code>0</code></li>
+<li><code>[low .. mid-1]</code> $\implies$ All elements are <code>1</code></li>
+<li><code>[mid .. high]</code> $\implies$ Unknown / unprocessed elements</li>
+<li><code>[high+1 .. N-1]</code> $\implies$ All elements are <code>2</code></li>
+</ul>
+<h3 id='2-visual-partition-zones'>2. Visual Partition Zones</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Array State During Execution:
++-------------------+-------------------+-------------------+-------------------+
+|       0 0 0       |       1 1 1       |    ? ? ? ? ? ?    |       2 2 2       |
++-------------------+-------------------+-------------------+-------------------+
+0                 low-1 low            mid-1 mid           high high+1             N-1</code></pre>
+</div>
+
+<div class='mermaid'>stateDiagram-v2
+    [*] --> InspectMid
+    InspectMid --> Value0: nums[mid] == 0
+    InspectMid --> Value1: nums[mid] == 1
+    InspectMid --> Value2: nums[mid] == 2
+
+    Value0 --> SwapLow: Swap(nums[low], nums[mid])
+    SwapLow --> AdvanceBoth: low++, mid++
+    AdvanceBoth --> CheckBounds
+
+    Value1 --> AdvanceMid: mid++
+    AdvanceMid --> CheckBounds
+
+    Value2 --> SwapHigh: Swap(nums[mid], nums[high])
+    SwapHigh --> DecrementHigh: high-- (Notice: mid does NOT advance!)
+    DecrementHigh --> CheckBounds
+
+    CheckBounds --> InspectMid: mid <= high
+    CheckBounds --> [*]: mid > high (Complete)</div>
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body"><strong>The #1 Interview Trap:</strong> Why does <code>mid</code> NOT advance after swapping with <code>high</code>?</div>
+</div>
+
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body"><strong>Answer:</strong> Because the element swapped from <code>high</code> came from the <em>unprocessed</em> zone. It could be a <code>0</code>, <code>1</code>, or <code>2</code>! We must evaluate it on the next iteration. In contrast, when swapping with <code>low</code>, we know the incoming element at <code>low</code> was guaranteed to be a <code>1</code> (or <code>0</code> when <code>low == mid</code>), so advancing <code>mid</code> is completely safe.</div>
+</div>
+
+<h3 id='3-c-solution-net-8'>3. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class DutchNationalFlagSorter
+{
+    /// &lt;summary&gt;
+    /// Partitions an array into 0s, 1s, and 2s in a single pass O(N) time and O(1) space.
+    /// &lt;/summary&gt;
+    public static void SortColors(Span&lt;int&gt; nums)
+    {
+        int low = 0;
+        int mid = 0;
+        int high = nums.Length - 1;
+
+        while (mid &lt;= high)
+        {
+            switch (nums[mid])
+            {
+                case 0:
+                    // Swap nums[low] and nums[mid], then advance both
+                    (nums[low], nums[mid]) = (nums[mid], nums[low]);
+                    low++;
+                    mid++;
+                    break;
+
+                case 1:
+                    // Already in correct middle section; just advance scanner
+                    mid++;
+                    break;
+
+                case 2:
+                    // Swap nums[mid] and nums[high], shrink high boundary.
+                    // DO NOT advance mid because the newly swapped nums[mid] is unexamined!
+                    (nums[mid], nums[high]) = (nums[high], nums[mid]);
+                    high--;
+                    break;
+            }
+        }
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='314-problem-11-remove-duplicates-move-zeroes-in-place-memory-compaction'>3.14 Problem 11: Remove Duplicates & Move Zeroes (In-Place Memory Compaction)</h2>
+<h3 id='1-the-fast-slow-read-write-architecture'>1. The Fast-Slow / Read-Write Architecture</h3>
+<p>In high-throughput logging, telemetry buffers, and cache compaction engines, we frequently need to eliminate invalid entries (zeros, nulls, or duplicates) <strong>in-place</strong> without triggering garbage collector allocations.</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Read/Write Pointers Trace for MoveZeroes:
+Original: [ 0,  1,  0,  3,  12 ]
+            W   R
+1. nums[R]=0  &amp;rarr; R++
+2. nums[R]=1  &amp;rarr; nums[W] = 1, W++, R++
+3. nums[R]=0  &amp;rarr; R++
+4. nums[R]=3  &amp;rarr; nums[W] = 3, W++, R++
+5. nums[R]=12 &amp;rarr; nums[W] = 12, W++, R++
+Fill remaining [W .. N-1] with 0.
+Final:    [ 1,  3, 12,  0,   0 ]</code></pre>
+</div>
+
+<h3 id='2-c-solutions-net-8'>2. C# Solutions (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class BufferCompactor
+{
+    /// &lt;summary&gt;
+    /// Removes duplicates from sorted span in O(N) time and O(1) space.
+    /// Returns the new valid length.
+    /// &lt;/summary&gt;
+    public static int RemoveDuplicates(Span&lt;int&gt; nums)
+    {
+        if (nums.Length == 0) return 0;
+
+        int writeIndex = 1;
+
+        for (int readIndex = 1; readIndex &lt; nums.Length; readIndex++)
+        {
+            if (nums[readIndex] != nums[readIndex - 1])
+            {
+                nums[writeIndex] = nums[readIndex];
+                writeIndex++;
+            }
+        }
+
+        return writeIndex;
+    }
+
+    /// &lt;summary&gt;
+    /// Moves all zeros to the end of the span while maintaining relative order of non-zeros.
+    /// O(N) time, O(1) space, zero allocations.
+    /// &lt;/summary&gt;
+    public static void MoveZeroes(Span&lt;int&gt; nums)
+    {
+        int writeIndex = 0;
+
+        // Phase 1: Shift all non-zero elements to front
+        for (int readIndex = 0; readIndex &lt; nums.Length; readIndex++)
+        {
+            if (nums[readIndex] != 0)
+            {
+                nums[writeIndex] = nums[readIndex];
+                writeIndex++;
+            }
+        }
+
+        // Phase 2: Clear remaining slots to zero
+        while (writeIndex &lt; nums.Length)
+        {
+            nums[writeIndex++] = 0;
+        }
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
 <h1 id='4-strings-immutability-memory-optimization-pattern-matching'>4. STRINGS: IMMUTABILITY, MEMORY OPTIMIZATION & PATTERN MATCHING</h1>
 <h2 id='41-clr-internals-string-layout-interning-pool-utf-16-and-gc-pressures'>4.1 CLR Internals: String Layout, Interning Pool, UTF-16, and GC Pressures</h2>
 <p>In C#, a <code>System.String</code> is an immutable reference type. Let's look at its low-level memory representation on a 64-bit machine:</p>
@@ -2319,6 +2936,414 @@ public static class PalindromeEngine
 </div>
 
 <p>---</p>
+<p>---</p>
+<h2 id='47-the-sliding-window-masterclass-structural-anatomy-state-templates'>4.7 The Sliding Window Masterclass: Structural Anatomy & State Templates</h2>
+<p>The <strong>Sliding Window</strong> technique converts quadratic $O(N^2)$ brute-force inspection of contiguous subarrays or substrings into optimal $O(N)$ linear scans. Instead of recomputing aggregations across overlapping sub-ranges from scratch, the window maintains a running state by <strong>adding the incoming element at the right boundary</strong> and <strong>subtracting the outgoing element at the left boundary</strong>.</p>
+<h3 id='archetype-1-fixed-size-window-k'>Archetype 1: Fixed-Size Window ($K$)</h3>
+<p>Used when the window size $K$ is invariant (e.g., rolling 5-minute telemetry average, top $K$-day moving average).</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Window slides by 1 position:
+[ E0,  E1,  E2 ], E3,  E4   &amp;rarr; Sum = E0 + E1 + E2
+  E0, [ E1,  E2,  E3 ], E4   &amp;rarr; NewSum = PrevSum - E0 + E3  (O(1) update!)</code></pre>
+</div>
+
+<h3 id='archetype-2-dynamic-size-variable-window'>Archetype 2: Dynamic-Size Variable Window</h3>
+<p>Used when finding the longest, shortest, or optimal substring satisfying a variable constraint (e.g., sum $\ge S$, at most $K$ distinct tokens, minimum characters to form a template).</p>
+<div class='mermaid'>flowchart TD
+    Start["Initialize left=0, right=0, windowState = empty"] --> ExpandRight["Expand Window: Add arr[right] to windowState"]
+    ExpandRight --> ValidateCondition{"Is Window Constraint Violated / Valid?"}
+    
+    ValidateCondition -- "Violated (e.g. Too Many Distinct)" --> ShrinkLeft["Shrink Window: Remove arr[left] from windowState, left++"]
+    ShrinkLeft --> ValidateCondition
+    
+    ValidateCondition -- "Valid State" --> UpdateOptimal["Update Best Result (e.g. maxLen = Math.Max(maxLen, right - left + 1))"]
+    UpdateOptimal --> CheckEnd{"right < N - 1?"}
+    CheckEnd -- Yes --> IncRight["right++"]
+    IncRight --> ExpandRight
+    CheckEnd -- No --> Done["Return Best Result"]</div>
+<p>---</p>
+<h2 id='48-problem-12-maximum-sum-subarray-of-size-k-streaming-telemetry-throughput'>4.8 Problem 12: Maximum Sum Subarray of Size K (Streaming Telemetry Throughput)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>Given an array of integers and a number $K$, find the maximum sum of any contiguous subarray of size $K$.</p>
+<ul>
+<li><strong>Production Analogy:</strong> In a Cloud Monitoring Service, telemetry incoming rate is recorded per second. Find the highest load surge across any consecutive $K$-second SLA calculation interval.</li>
+<li><strong>Invariant:</strong> Compute the sum of the first $K$ elements. Then for each index $i$ from $K$ to $N-1$:</li>
+</ul>
+<p>$$	ext{WindowSum} = 	ext{WindowSum} + 	ext{nums}[i] - 	ext{nums}[i - K]$$</p>
+<p>This operation is strictly $O(1)$ per step.</p>
+<h3 id='2-c-solution-net-8'>2. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class TelemetrySlidingWindow
+{
+    /// &lt;summary&gt;
+    /// Computes max sum of contiguous slice of size K in O(N) time and O(1) space.
+    /// &lt;/summary&gt;
+    public static long MaxSubarraySumOfSizeK(ReadOnlySpan&lt;int&gt; nums, int k)
+    {
+        if (nums.Length &lt; k || k &lt;= 0) return 0;
+
+        long currentWindowSum = 0;
+
+        // Step 1: Establish baseline window of size K
+        for (int i = 0; i &lt; k; i++)
+        {
+            currentWindowSum += nums[i];
+        }
+
+        long maxWindowSum = currentWindowSum;
+
+        // Step 2: Slide the window across the remaining stream
+        for (int i = k; i &lt; nums.Length; i++)
+        {
+            currentWindowSum += nums[i] - nums[i - k]; // Add incoming, subtract outgoing
+            if (currentWindowSum &gt; maxWindowSum)
+            {
+                maxWindowSum = currentWindowSum;
+            }
+        }
+
+        return maxWindowSum;
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='49-problem-13-minimum-size-subarray-sum-target-threshold-breaker-leetcode-209'>4.9 Problem 13: Minimum Size Subarray Sum (Target Threshold Breaker - LeetCode 209)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>Given an array of positive integers <code>nums</code> and a positive integer <code>target</code>, return the minimal length of a contiguous subarray of which the sum is greater than or equal to <code>target</code>. If there is no such subarray, return 0.</p>
+<ul>
+<li><strong>Production Analogy:</strong> In a Circuit Breaker / DDoS Protection gateway, incoming requests accumulate. Find the smallest window of milliseconds during which requests breached the saturation threshold $S$.</li>
+<li><strong>Invariant:</strong> Because all numbers are <strong>positive</strong>, expanding the right pointer monotonically <em>increases</em> the sum, and advancing the left pointer monotonically <em>decreases</em> the sum.</li>
+<li><strong>Two-Phase Sliding Loop:</strong></li>
+</ul>
+<ol>
+<li>Expand <code>right</code> until <code>sum &gt;= target</code>.</li>
+<li>While <code>sum &gt;= target</code>: Record <code>minLen = Math.Min(minLen, right - left + 1)</code>, then subtract <code>nums[left]</code> and advance <code>left++</code>.</li>
+</ol>
+<h3 id='2-visual-trace'>2. Visual Trace</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">nums = [2, 3, 1, 2, 4, 3], target = 7
+1. L=0, R=0..2: sum = 2+3+1 = 6 &lt; 7
+2. R=3: sum = 6+2 = 8 &gt;= 7! Window [2,3,1,2], len=4.
+   Shrink L: sum - 2 = 6 &lt; 7 &amp;rarr; L=1.
+3. R=4: sum = 6+4 = 10 &gt;= 7! Window [3,1,2,4], len=4.
+   Shrink L: sum - 3 = 7 &gt;= 7! Window [1,2,4], len=3. minLen = 3!
+   Shrink L: sum - 1 = 6 &lt; 7 &amp;rarr; L=3.
+4. R=5: sum = 6+3 = 9 &gt;= 7! Window [2,4,3], len=3.
+   Shrink L: sum - 2 = 7 &gt;= 7! Window [4,3], len=2. minLen = 2! (OPTIMAL)</code></pre>
+</div>
+
+<h3 id='3-c-solution-net-8'>3. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class RateLimitBreaker
+{
+    /// &lt;summary&gt;
+    /// Finds minimal window length whose sum &gt;= target in O(N) time and O(1) space.
+    /// &lt;/summary&gt;
+    public static int MinSubArrayLen(int target, ReadOnlySpan&lt;int&gt; nums)
+    {
+        int minLength = int.MaxValue;
+        long currentSum = 0;
+        int left = 0;
+
+        for (int right = 0; right &lt; nums.Length; right++)
+        {
+            currentSum += nums[right];
+
+            // Invariant: Shrink window greedily from the left as long as constraint holds
+            while (currentSum &gt;= target)
+            {
+                int currentWindowSize = right - left + 1;
+                if (currentWindowSize &lt; minLength) minLength = currentWindowSize;
+
+                currentSum -= nums[left];
+                left++;
+            }
+        }
+
+        return minLength == int.MaxValue ? 0 : minLength;
+    }
+}</code></pre>
+</div>
+
+<h3 id='4-complexity-analysis'>4. Complexity Analysis</h3>
+<ul>
+<li><strong>Time Complexity:</strong> $O(N)$ — Although there is a nested while loop, <code>left</code> and <code>right</code> each increment at most $N$ times. Total pointer advances $\le 2N$.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Zero heap allocation.</li>
+</ul>
+<p>---</p>
+<h2 id='410-problem-14-minimum-window-substring-enterprise-token-syntax-matcher-leetcode-76'>4.10 Problem 14: Minimum Window Substring (Enterprise Token Syntax Matcher - LeetCode 76)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>Given two strings <code>s</code> and <code>t</code> of lengths $m$ and $n$, return the minimum window substring of <code>s</code> such that every character in <code>t</code> (including duplicates) is included in the window. If there is no such substring, return <code>&quot;&quot;</code>.</p>
+<ul>
+<li><strong>Production Analogy:</strong> Matching distributed trace tags. An incoming HTTP trace header stream must contain all required security assertion claims (<code>iss</code>, <code>sub</code>, <code>aud</code>) within the tightest possible header segment.</li>
+<li><strong>The Core Mechanics:</strong></li>
+</ul>
+<ol>
+<li>Build a target frequency map for <code>t</code>.</li>
+<li>Use a counter <code>requiredUniqueChars</code> tracking how many distinct characters in <code>t</code> must be satisfied.</li>
+<li>Expand <code>right</code>: If <code>s[right]</code> matches a required character, increment its frequency in our window map. When its count matches <code>t</code>'s count, decrement <code>charsSatisfied</code>.</li>
+<li>When <code>charsSatisfied == requiredUniqueChars</code>, our window is <strong>valid</strong>. Now greedily contract <code>left</code> while the window remains valid, updating our minimum window coordinates.</li>
+</ol>
+<h3 id='2-high-performance-zero-allocation-ascii-array-trick'>2. High-Performance Zero-Allocation ASCII Array Trick</h3>
+<p>Instead of allocating a <code>Dictionary&lt;char, int&gt;</code>, standard ASCII characters fit into a stack-allocated <code>Span&lt;int&gt;</code> of size 128:</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">Span&lt;int&gt; targetFreq = stackalloc int[128];
+Span&lt;int&gt; windowFreq = stackalloc int[128];</code></pre>
+</div>
+
+<p>This guarantees <strong>zero Garbage Collection overhead</strong> and blazing $O(1)$ direct array index access!</p>
+<h3 id='3-visual-execution-flowchart'>3. Visual Execution Flowchart</h3>
+<div class='mermaid'>flowchart TD
+    Init["Initialize targetFreq[128], windowFreq[128]<br>requiredMatches = unique chars in T<br>left=0, right=0, matched=0, minLen=INF"] --> ReadRight["Read char s[right]"]
+    ReadRight --> AddRight["windowFreq[s[right]]++<br>If windowFreq[c] == targetFreq[c] &rarr; matched++"]
+    AddRight --> CheckValid{"matched == requiredMatches?"}
+    
+    CheckValid -- Yes --> RecordBest["If (right - left + 1) < minLen:<br>minLen = right - left + 1, bestStart = left"]
+    RecordBest --> ShrinkLeft["char s[left]<br>If windowFreq[s[left]] == targetFreq[s[left]] &rarr; matched--<br>windowFreq[s[left]]--<br>left++"]
+    ShrinkLeft --> CheckValid
+
+    CheckValid -- No --> CheckNextRight{"right < s.Length - 1?"}
+    CheckNextRight -- Yes --> IncRight["right++"]
+    IncRight --> ReadRight
+    CheckNextRight -- No --> ReturnResult["Return s.Substring(bestStart, minLen)"]</div>
+<h3 id='4-c-solution-net-8'>4. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class SyntaxMatcher
+{
+    /// &lt;summary&gt;
+    /// Finds the minimum window in s containing all characters of t in O(N + M) time.
+    /// Utilizes stackalloc for zero heap allocation during character frequency matching.
+    /// &lt;/summary&gt;
+    public static string MinWindow(string s, string t)
+    {
+        if (string.IsNullOrEmpty(s) || string.IsNullOrEmpty(t) || s.Length &lt; t.Length)
+            return string.Empty;
+
+        Span&lt;int&gt; targetCounts = stackalloc int[128];
+        Span&lt;int&gt; windowCounts = stackalloc int[128];
+
+        int requiredDistinct = 0;
+        foreach (char c in t)
+        {
+            if (targetCounts[c] == 0) requiredDistinct++;
+            targetCounts[c]++;
+        }
+
+        int satisfiedDistinct = 0;
+        int left = 0;
+        int minLength = int.MaxValue;
+        int bestStart = 0;
+
+        ReadOnlySpan&lt;char&gt; sSpan = s.AsSpan();
+
+        for (int right = 0; right &lt; sSpan.Length; right++)
+        {
+            char rightChar = sSpan[right];
+            if (rightChar &lt; 128)
+            {
+                windowCounts[rightChar]++;
+                if (targetCounts[rightChar] &gt; 0 &amp;&amp; windowCounts[rightChar] == targetCounts[rightChar])
+                {
+                    satisfiedDistinct++;
+                }
+            }
+
+            // Window is valid; greedily shrink from left
+            while (satisfiedDistinct == requiredDistinct)
+            {
+                int currentLen = right - left + 1;
+                if (currentLen &lt; minLength)
+                {
+                    minLength = currentLen;
+                    bestStart = left;
+                }
+
+                char leftChar = sSpan[left];
+                if (leftChar &lt; 128)
+                {
+                    if (targetCounts[leftChar] &gt; 0 &amp;&amp; windowCounts[leftChar] == targetCounts[leftChar])
+                    {
+                        satisfiedDistinct--;
+                    }
+                    windowCounts[leftChar]--;
+                }
+                left++;
+            }
+        }
+
+        return minLength == int.MaxValue ? string.Empty : s.Substring(bestStart, minLength);
+    }
+}</code></pre>
+</div>
+
+<h3 id='5-complexity-analysis'>5. Complexity Analysis</h3>
+<ul>
+<li><strong>Time Complexity:</strong> $O(M + N)$ where $M = 	ext{length}(s)$ and $N = 	ext{length}(t)$. Building <code>targetCounts</code> takes $O(N)$. Scanning $s$ advances <code>left</code> and <code>right</code> at most $M$ times.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — <code>stackalloc int[128]</code> consumes exactly 512 bytes on the execution stack frame. Zero allocations on the .NET Managed Heap.</li>
+</ul>
+<p>---</p>
+<h2 id='411-problem-15-longest-repeating-character-replacement-burst-compression-engine-leetcode-424'>4.11 Problem 15: Longest Repeating Character Replacement (Burst Compression Engine - LeetCode 424)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>You are given a string <code>s</code> consisting of uppercase English letters and an integer <code>k</code>. You can choose up to <code>k</code> characters of the string and replace them with any other uppercase letter. Find the length of the longest substring containing the same letter you can get after performing the above operations.</p>
+<ul>
+<li><strong>Production Analogy:</strong> Run-Length burst encoding on an encrypted message stream. We allow up to $k$ corrupted bit tokens to be flipped to maximize homogeneous compression runs.</li>
+<li><strong>The Core Invariant:</strong></li>
+<li>In any window of length $L = 	ext{right} - 	ext{left} + 1$:</li>
+<li>Let $	ext{maxFreq}$ be the count of the most frequent character in that window.</li>
+<li>The number of characters that need to be replaced is:</li>
+</ul>
+<p>$$	ext{Replacements Needed} = L - 	ext{maxFreq}$$</p>
+<ul>
+<li>If $(L - 	ext{maxFreq}) \le k$, the window is <strong>valid</strong>!</li>
+<li>If $(L - 	ext{maxFreq}) > k$, the window is <strong>invalid</strong>: increment <code>left++</code> and decrement <code>freq[s[left]]</code>.</li>
+</ul>
+<h3 id='2-c-solution-net-8'>2. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class BurstCompressor
+{
+    /// &lt;summary&gt;
+    /// Computes length of longest uniform substring after at most k replacements in O(N) time.
+    /// &lt;/summary&gt;
+    public static int CharacterReplacement(string s, int k)
+    {
+        if (string.IsNullOrEmpty(s)) return 0;
+
+        Span&lt;int&gt; charCounts = stackalloc int[26];
+        int maxFreq = 0;
+        int left = 0;
+        int maxWindow = 0;
+
+        for (int right = 0; right &lt; s.Length; right++)
+        {
+            int index = s[right] - &#x27;A&#x27;;
+            charCounts[index]++;
+            if (charCounts[index] &gt; maxFreq) maxFreq = charCounts[index];
+
+            int windowLen = right - left + 1;
+
+            // If characters to replace exceed k, shrink window
+            if (windowLen - maxFreq &gt; k)
+            {
+                charCounts[s[left] - &#x27;A&#x27;]--;
+                left++;
+            }
+            else
+            {
+                if (windowLen &gt; maxWindow) maxWindow = windowLen;
+            }
+        }
+
+        return maxWindow;
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='412-problem-16-longest-substring-with-at-most-k-distinct-characters-multi-tenant-session-limiter'>4.12 Problem 16: Longest Substring with At Most K Distinct Characters (Multi-Tenant Session Limiter)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>Given a string <code>s</code> and an integer <code>k</code>, return the length of the longest substring of <code>s</code> that contains at most <code>k</code> <strong>distinct</strong> characters.</p>
+<ul>
+<li><strong>Production Analogy:</strong> In a Multi-Tenant SaaS Gateway, a single API session is allowed to multiplex calls across at most $k$ tenant partitions simultaneously. Find the longest contiguous event streak that remains within tenant isolation quotas.</li>
+<li><strong>Invariant:</strong> Maintain a character frequency map and a scalar <code>distinctCount</code>. When <code>distinctCount &gt; k</code>, advance <code>left</code> until one character's frequency drops to 0, decrementing <code>distinctCount</code>.</li>
+</ul>
+<h3 id='2-c-solution-net-8'>2. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+
+public static class MultiTenantSessionLimiter
+{
+    /// &lt;summary&gt;
+    /// Finds longest substring containing at most k distinct characters in O(N) time and O(1) space.
+    /// &lt;/summary&gt;
+    public static int LengthOfLongestSubstringKDistinct(string s, int k)
+    {
+        if (string.IsNullOrEmpty(s) || k &lt;= 0) return 0;
+
+        Span&lt;int&gt; freq = stackalloc int[128];
+        int distinctCount = 0;
+        int left = 0;
+        int maxLength = 0;
+
+        for (int right = 0; right &lt; s.Length; right++)
+        {
+            char c = s[right];
+            if (c &lt; 128)
+            {
+                if (freq[c] == 0) distinctCount++;
+                freq[c]++;
+            }
+
+            while (distinctCount &gt; k)
+            {
+                char leftChar = s[left];
+                if (leftChar &lt; 128)
+                {
+                    freq[leftChar]--;
+                    if (freq[leftChar] == 0) distinctCount--;
+                }
+                left++;
+            }
+
+            int currentLength = right - left + 1;
+            if (currentLength &gt; maxLength) maxLength = currentLength;
+        }
+
+        return maxLength;
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
 <h1 id='5-hashmap-dictionary-internals-deep-clr-dive-applications'>5. HASHMAP & DICTIONARY INTERNALS: DEEP CLR DIVE & APPLICATIONS</h1>
 <h2 id='51-clr-deep-dive-how-dictionarytkey-tvalue-works-internally-in-net-8'>5.1 CLR Deep Dive: How <code>Dictionary&lt;TKey, TValue&gt;</code> Works Internally in .NET 8</h2>
 <p>The <code>Dictionary&lt;TKey, TValue&gt;</code> in C# is arguably the most critical collection in enterprise .NET development. An interviewer will frequently ask:</p>
@@ -2611,27 +3636,127 @@ public static class UniqueCharSolver
 </div>
 
 <p>---</p>
-<h1 id='6-binary-search-the-monotonic-mindset'>6. BINARY SEARCH: THE MONOTONIC MINDSET</h1>
-<h2 id='61-the-universal-binary-search-paradigm'>6.1 The Universal Binary Search Paradigm</h2>
-<p>Many developers think Binary Search only applies to sorted arrays looking for an exact target number. <strong>That is only 10% of its utility.</strong></p>
-<p>Binary Search is fundamentally a tool for <strong>Monotonic Decision Spaces</strong>. If you have a predicate function $P(x)$ such that:</p>
-<p>$$P(x) \text{ is } [\text{False}, \text{False}, \dots, \text{False}, \mathbf{True}, \mathbf{True}, \dots, \mathbf{True}]$$</p>
-<p>Then Binary Search can find the <strong>exact boundary</strong> where False becomes True in $O(\log N)$ evaluations.</p>
+<h1 id='6-searching-algorithms-the-complete-searching-encyclopedia'>6. SEARCHING ALGORITHMS: THE COMPLETE SEARCHING ENCYCLOPEDIA</h1>
+<p>Searching is the fundamental operation of retrieving a target record from a data space. While novice developers treat searching as a binary choice between $O(N)$ linear scans and $O(\log N)$ binary searches, senior backend engineers evaluate algorithms based on <strong>hardware cache locality, CPU branch prediction, data distribution, and monotonic decision spaces</strong>.</p>
+<p>---</p>
+<h2 id='61-the-searching-taxonomy-mechanical-sympathy-decision-matrix'>6.1 The Searching Taxonomy & Mechanical Sympathy Decision Matrix</h2>
+<div class='mermaid'>flowchart TD
+    Start["Search Problem"] --> IsSorted{"Is the Search Space Sorted / Monotonic?"}
+    
+    IsSorted -- No --> SmallData{"Is N <= 64 Elements?"}
+    SmallData -- Yes --> LinearCache["Linear Search<br>(L1 Cache Friendly, Prefetched)"]
+    SmallData -- No --> NeedsFastLookup{"Require Repeated O(1) Lookups?"}
+    NeedsFastLookup -- Yes --> HashTable["Hash Index / Dictionary<br>(O(1) Time, O(N) Space)"]
+    NeedsFastLookup -- No --> SentinelLinear["Sentinel Linear Search<br>(O(N) with 50% fewer branch checks)"]
+    
+    IsSorted -- Yes --> IsUniform{"Are Elements Uniformly Distributed?<br>(e.g. Identity Sequence)"}
+    IsUniform -- Yes --> Interpolation["Interpolation Search<br>(O(log log N) Average)"]
+    IsUniform -- No --> IsUnbounded{"Is Array Size Infinite / Unbounded Stream?"}
+    IsUnbounded -- Yes --> Exponential["Exponential / Galloping Search<br>(O(log i) Time)"]
+    IsUnbounded -- No --> IsUnimodal{"Are You Finding Peak/Min of Unimodal Curve?"}
+    IsUnimodal -- Yes --> Ternary["Ternary Search<br>(O(log3 N) Time)"]
+    IsUnimodal -- No --> Binary["Binary Search / Monotonic Predicate<br>(O(log N) Time, O(1) Space)"]</div>
+<h3 id='complete-searching-complexity-matrix'>Complete Searching Complexity Matrix</h3>
+<div class='table-wrapper'><table>
+<tr><th>Algorithm</th><th>Preconditions</th><th>Best Time</th><th>Average Time</th><th>Worst Time</th><th>Space</th><th>Cache Friendly?</th><th>Primary Production Use Case</th></tr>
+<tr><td><strong>Linear Search</strong></td><td>None (Unsorted ok)</td><td>$O(1)$</td><td>$O(N)$</td><td>$O(N)$</td><td>$O(1)$</td><td><strong>Maximum</strong> (L1 Line Prefetch)</td><td>Arrays $< 64$ items, unsorted streams</td></tr>
+<tr><td><strong>Sentinel Linear</strong></td><td>Mutable Array / End Slot</td><td>$O(1)$</td><td>$O(N)$</td><td>$O(N)$</td><td>$O(1)$</td><td><strong>Maximum</strong></td><td>Low-latency loops eliminating <code>i &lt; N</code> check</td></tr>
+<tr><td><strong>Binary Search</strong></td><td>Sorted / Monotonic</td><td>$O(1)$</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(1)$</td><td>Moderate (Cache line jumps)</td><td>Primary database clustered index lookups</td></tr>
+<tr><td><strong>Binary Search on Answer</strong></td><td>Monotonic Predicate $P(x)$</td><td>$O(1)$</td><td>$O(K \log R)$</td><td>$O(K \log R)$</td><td>$O(1)$</td><td>High</td><td>Resource allocation, autoscaling, SLA capacities</td></tr>
+<tr><td><strong>Interpolation Search</strong></td><td>Sorted + <strong>Uniformly Distributed</strong></td><td>$O(1)$</td><td>$O(\log \log N)$</td><td>$O(N)$ (skewed)</td><td>$O(1)$</td><td>Moderate</td><td>Memory address tables, numeric sequenced IDs</td></tr>
+<tr><td><strong>Exponential Search</strong></td><td>Sorted + Unbounded / Unknown size</td><td>$O(1)$</td><td>$O(\log i)$</td><td>$O(\log i)$</td><td>$O(1)$</td><td>Moderate</td><td>Network streaming logs, boundless ring buffers</td></tr>
+<tr><td><strong>Ternary Search</strong></td><td>Unimodal Function (Single Peak/Trough)</td><td>$O(1)$</td><td>$O(\log_3 N)$</td><td>$O(\log_3 N)$</td><td>$O(1)$</td><td>Moderate</td><td>Mathematical optimization, server cost curves</td></tr>
+</table></div>
+<p>---</p>
+<h2 id='62-linear-search-the-sentinel-optimization'>6.2 Linear Search & The Sentinel Optimization</h2>
+<h3 id='1-mechanical-sympathy-why-linear-search-wins-on-small-arrays'>1. Mechanical Sympathy: Why Linear Search Wins on Small Arrays</h3>
+<p>Modern CPU architectures load memory into <strong>64-byte L1 Cache Lines</strong>. If you search an array of 32-bit integers, an entire cache line holds:</p>
+<p>$$rac{64 	ext{ bytes}}{4 	ext{ bytes/int}} = 16 	ext{ integers}$$</p>
+<p>When the CPU hardware prefetcher detects sequential memory access, it streams consecutive cache lines directly into the L1 data cache with <strong>zero CPU wait cycles</strong>.</p>
+<ul>
+<li>In contrast, Binary Search jumps wildly across memory indices ($0 	o 500,000 	o 750,000 	o \dots$), triggering <strong>L1/L2/L3 CPU Cache Misses</strong> on every step.</li>
+<li>For $N \le 64$ items, a simple linear scan is frequently <strong>faster than binary search in real wall-clock time</strong> despite Big-O!</li>
+</ul>
+<h3 id='2-the-sentinel-optimization-eliminating-boundary-checks'>2. The Sentinel Optimization (Eliminating Boundary Checks)</h3>
+<p>In a standard linear search loop, every iteration executes <strong>two boolean conditional branches</strong>:</p>
+<ol>
+<li><code>if (i &lt; length)</code> &rarr; Array bounds check.</li>
+<li><code>if (arr[i] == target)</code> &rarr; Value comparison check.</li>
+</ol>
+<p>In high-frequency low-latency execution engines, 50% of the branch instructions can be eliminated using a <strong>Sentinel</strong>:</p>
+<ol>
+<li>Temporarily place the <code>target</code> value into the last slot of the array.</li>
+<li>Run a loop with ONLY <code>while (arr[i] != target) i++</code>.</li>
+<li>No bounds checking required! The loop is mathematically guaranteed to terminate.</li>
+</ol>
 
 <div class="code-container">
     <div class="code-header">
         <span>CODE</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-">Monotonic Search Space:
-Index:    0       1       2       3       4       5       6       7
-Value:   12      24      35      48      60      75      89      99
-P(x)&gt;=50: F       F       F       F       T       T       T       T
-                                          ▲
-                          First True Boundary (Lower Bound)</code></pre>
+    <pre><code class="language-">Standard Loop:   [ Compare i &lt; N ] &amp;rarr; [ Compare arr[i] == target ] (2 Branches per step!)
+Sentinel Loop:   [ Compare arr[i] == target ]                          (1 Branch per step!)</code></pre>
 </div>
 
-<h3 id='the-three-critical-invariants'>The Three Critical Invariants</h3>
+<h3 id='3-c-production-code'>3. C# Production Code</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class LinearSearchEngine
+{
+    /// &lt;summary&gt;
+    /// Standard cache-friendly linear search for small spans.
+    /// &lt;/summary&gt;
+    public static int LinearSearch(ReadOnlySpan&lt;int&gt; data, int target)
+    {
+        for (int i = 0; i &lt; data.Length; i++)
+        {
+            if (data[i] == target) return i;
+        }
+        return -1;
+    }
+
+    /// &lt;summary&gt;
+    /// Sentinel Linear Search: Eliminates the i &lt; N boundary check from the inner loop.
+    /// Requires a mutable buffer where the last element can be swapped with target.
+    /// &lt;/summary&gt;
+    public static int SentinelLinearSearch(Span&lt;int&gt; data, int target)
+    {
+        int n = data.Length;
+        if (n == 0) return -1;
+
+        int lastVal = data[n - 1];
+        if (lastVal == target) return n - 1;
+
+        // Place sentinel at end
+        data[n - 1] = target;
+
+        int i = 0;
+        while (data[i] != target)
+        {
+            i++;
+        }
+
+        // Restore original value
+        data[n - 1] = lastVal;
+
+        // If i stopped before the last element, we found a genuine match!
+        if (i &lt; n - 1) return i;
+
+        return -1;
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='63-classic-binary-search-the-monotonic-midset'>6.3 Classic Binary Search (The Monotonic Midset)</h2>
+<h3 id='1-invariants-overflow-protection'>1. Invariants & Overflow Protection</h3>
 <ol>
 <li><strong>Midpoint Overflow Protection:</strong></li>
 </ol>
@@ -2641,36 +3766,32 @@ P(x)&gt;=50: F       F       F       F       T       T       T       T
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">   // WRONG: Can overflow int.MaxValue (2,147,483,647) when low + high &gt; Int32.MaxValue!
+    <pre><code class="language-csharp">   // WRONG: Overflows int.MaxValue when low + high &gt; 2,147,483,647
    int mid = (low + high) / 2;
 
-   // CORRECT: Mathematically equivalent, immune to integer overflow:
+   // CORRECT: Mathematically equivalent, safe from 32-bit integer overflow
    int mid = low + (high - low) / 2;</code></pre>
 </div>
 
 <ol>
-<li><strong>Loop Condition (<code>low &lt;= high</code> vs. <code>low &lt; high</code>):</strong></li>
+<li><strong>Termination Guarantee:</strong></li>
 </ol>
-<ul>
-<li>Use <code>low &lt;= high</code> when searching for a single target where the search space reduces to <code>low == high</code>. Inside, use <code>low = mid + 1</code> and <code>high = mid - 1</code>.</li>
-<li>Use <code>low &lt; high</code> when searching for an inflection point or boundary where <code>mid</code> can be the answer (<code>high = mid</code>).</li>
-</ul>
-<ol>
-<li><strong>Termination Guarantee:</strong> Every branch MUST shrink the search space by at least 1 element; otherwise, you risk an infinite loop.</li>
-</ol>
-<p>---</p>
-<h2 id='62-problem-15-classic-binary-search-exact-order-id-match'>6.2 Problem 15: Classic Binary Search (Exact Order ID Match)</h2>
-<h3 id='1-how-to-think'>1. How to Think</h3>
-<p>Find the index of a target value in a sorted array in $O(\log N)$ time.</p>
-<ul>
-<li>If target exists, return its index. If not, return <code>-1</code>.</li>
-</ul>
-<h3 id='2-how-interviewer-thinks'>2. How Interviewer Thinks</h3>
-<ul>
-<li>Tests if you handle <code>low + (high - low) / 2</code>.</li>
-<li>Tests if your boundary updates eliminate infinite loops.</li>
-</ul>
-<h3 id='3-c-solution-net-8'>3. C# Solution (.NET 8)</h3>
+<p>Using <code>low &lt;= high</code> ensures the search space terminates when <code>low == high + 1</code>. Every branch MUST update <code>low = mid + 1</code> or <code>high = mid - 1</code>.</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Halving Search Space:
+Initial Space: [ 0 ........................................ 1,000,000 ]
+Pass 1:        [ 0 .................... 500,000 ]
+Pass 2:        [ 250,000 .............. 500,000 ]
+Pass 3:        [ 375,000 .............. 500,000 ]
+Terminates in &lt;= ceil(log2(1,000,000)) = 20 comparisons!</code></pre>
+</div>
+
+<h3 id='2-c-solution-net-8'>2. C# Solution (.NET 8)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2682,8 +3803,7 @@ P(x)&gt;=50: F       F       F       F       T       T       T       T
 public static class BinarySearchEngine
 {
     /// &lt;summary&gt;
-    /// Searches for a target key in a sorted span in O(log N) time.
-    /// Scenario: Locating a customer order record in a sorted partition block.
+    /// Searches for target in sorted span in O(log N) time and O(1) space.
     /// &lt;/summary&gt;
     public static int BinarySearch(ReadOnlySpan&lt;int&gt; sortedArr, int target)
     {
@@ -2702,59 +3822,34 @@ public static class BinarySearchEngine
 
             if (midVal &lt; target)
             {
-                low = mid + 1; // Target is in the upper half
+                low = mid + 1;
             }
             else
             {
-                high = mid - 1; // Target is in the lower half
+                high = mid - 1;
             }
         }
 
-        return -1; // Target not found
+        return -1;
     }
 }</code></pre>
 </div>
 
-<h3 id='4-complexity-analysis'>4. Complexity Analysis</h3>
-<ul>
-<li><strong>Time Complexity:</strong> $O(\log N)$ — Each iteration cuts the search space in half. For $N = 1,000,000$, $\log_2(1,000,000) \approx 20$ comparisons.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — Only three local integer variables.</li>
-</ul>
 <p>---</p>
-<h2 id='63-problem-16-search-in-rotated-sorted-array-shifted-ledger-partitions'>6.3 Problem 16: Search in Rotated Sorted Array (Shifted Ledger Partitions)</h2>
+<h2 id='64-search-in-rotated-sorted-array-shifted-ledger-partitions'>6.4 Search in Rotated Sorted Array (Shifted Ledger Partitions)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
-<p>An array sorted in ascending order is rotated at an unknown pivot index (e.g., <code>[4, 5, 6, 7, 0, 1, 2]</code>). Find the index of <code>target</code> in $O(\log N)$ time.</p>
+<p>An array sorted in ascending order is rotated at an unknown pivot (e.g., <code>[4, 5, 6, 7, 0, 1, 2]</code>). Find <code>target</code> in $O(\log N)$ time.</p>
 <ul>
-<li><strong>Key Insight:</strong> If you pick the midpoint <code>mid</code>, <strong>at least one half of the array (either <code>[low..mid]</code> or <code>[mid..high]</code>) is guaranteed to be strictly sorted!</strong></li>
+<li><strong>Key Invariant:</strong> For ANY midpoint <code>mid</code>, <strong>at least one half of the array (either <code>[low..mid]</code> or <code>[mid..high]</code>) is strictly sorted!</strong></li>
 <li>Determine which half is sorted:</li>
-<li>If <code>nums[low] &lt;= nums[mid]</code>, the left half is sorted.</li>
-<li>Check if target falls within <code>[nums[low], nums[mid])</code>. If yes, narrow search to left (<code>high = mid - 1</code>). If no, search right (<code>low = mid + 1</code>).</li>
-<li>Otherwise, the right half is sorted:</li>
-<li>Check if target falls within <code>(nums[mid], nums[high]]</code>. If yes, narrow search to right (<code>low = mid + 1</code>). If no, search left (<code>high = mid - 1</code>).</li>
+<li>If <code>nums[low] &lt;= nums[mid]</code>: Left half is sorted.</li>
+<li>If <code>target &gt;= nums[low] &amp;&amp; target &lt; nums[mid]</code>, target lies in sorted left &rarr; <code>high = mid - 1</code>.</li>
+<li>Else search right &rarr; <code>low = mid + 1</code>.</li>
+<li>Else: Right half is sorted.</li>
+<li>If <code>target &gt; nums[mid] &amp;&amp; target &lt;= nums[high]</code>, target lies in sorted right &rarr; <code>low = mid + 1</code>.</li>
+<li>Else search left &rarr; <code>high = mid - 1</code>.</li>
 </ul>
-<h3 id='2-how-interviewer-thinks'>2. How Interviewer Thinks</h3>
-<ul>
-<li>Can the candidate adapt Binary Search to non-uniformly sorted data?</li>
-<li>Does the candidate accurately construct compound conditions without off-by-one errors?</li>
-</ul>
-<h3 id='3-dry-run'>3. Dry Run</h3>
-<p><strong>Input:</strong> <code>nums = [4, 5, 6, 7, 0, 1, 2]</code>, <code>target = 0</code></p>
-<ul>
-<li><code>low = 0 (4)</code>, <code>high = 6 (2)</code></li>
-<li>$mid = 0 + (6 - 0) / 2 = 3 \implies \text{nums}[3] = 7$.</li>
-<li>Compare <code>nums[low] (4)</code> vs <code>nums[mid] (7)</code>: $4 \le 7 \implies$ <strong>Left half is sorted!</strong></li>
-<li>Does target (0) lie in <code>[4, 7)</code>? No! Therefore, target must be in the right half.</li>
-<li>Set <code>low = mid + 1 = 4</code>.</li>
-<li>Next iteration: <code>low = 4 (0)</code>, <code>high = 6 (2)</code>.</li>
-<li>$mid = 4 + (6 - 4) / 2 = 5 \implies \text{nums}[5] = 1$.</li>
-<li><code>nums[mid]</code> is 1. Target is 0.</li>
-<li>Compare <code>nums[low] (0)</code> vs <code>nums[mid] (1)</code>: Left half is sorted.</li>
-<li>Does target (0) lie in <code>[0, 1)</code>? <strong>Yes!</strong></li>
-<li>Set <code>high = mid - 1 = 4</code>.</li>
-<li>Next iteration: <code>low = 4</code>, <code>high = 4</code>.</li>
-<li>$mid = 4 \implies \text{nums}[4] = 0 == \text{target}$. Found at index 4!</li>
-</ul>
-<h3 id='4-c-solution-net-8'>4. C# Solution (.NET 8)</h3>
+<h3 id='2-c-solution-net-8'>2. C# Solution (.NET 8)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2765,10 +3860,6 @@ public static class BinarySearchEngine
 
 public static class RotatedArraySearcher
 {
-    /// &lt;summary&gt;
-    /// Searches for a target in a rotated sorted array in O(log N) time.
-    /// Scenario: Querying time-series financial transactions rotated across ring buffer shards.
-    /// &lt;/summary&gt;
     public static int Search(ReadOnlySpan&lt;int&gt; nums, int target)
     {
         int low = 0;
@@ -2779,30 +3870,19 @@ public static class RotatedArraySearcher
             int mid = low + (high - low) / 2;
             if (nums[mid] == target) return mid;
 
-            // Check if left half is normally sorted
-            if (nums[low] &lt;= nums[mid])
+            if (nums[low] &lt;= nums[mid]) // Left half sorted
             {
-                // Is target within the sorted left boundaries?
                 if (target &gt;= nums[low] &amp;&amp; target &lt; nums[mid])
-                {
                     high = mid - 1;
-                }
                 else
-                {
                     low = mid + 1;
-                }
             }
-            else // Right half must be normally sorted
+            else // Right half sorted
             {
-                // Is target within the sorted right boundaries?
                 if (target &gt; nums[mid] &amp;&amp; target &lt;= nums[high])
-                {
                     low = mid + 1;
-                }
                 else
-                {
                     high = mid - 1;
-                }
             }
         }
 
@@ -2811,24 +3891,14 @@ public static class RotatedArraySearcher
 }</code></pre>
 </div>
 
-<h3 id='5-complexity-analysis'>5. Complexity Analysis</h3>
-<ul>
-<li><strong>Time Complexity:</strong> $O(\log N)$ — Every step discards half the search space.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — Zero heap allocation.</li>
-</ul>
 <p>---</p>
-<h2 id='64-problem-17-find-first-and-last-position-in-sorted-array-lower-upper-bounds'>6.4 Problem 17: Find First and Last Position in Sorted Array (Lower & Upper Bounds)</h2>
-<h3 id='1-how-to-think'>1. How to Think</h3>
-<p>Given a sorted array with possible duplicate values, find the starting and ending index of a given target value. If target is not found, return <code>[-1, -1]</code>.</p>
+<h2 id='65-find-first-and-last-position-in-sorted-array-lower-upper-bounds'>6.5 Find First and Last Position in Sorted Array (Lower & Upper Bounds)</h2>
+<h3 id='1-invariants-code'>1. Invariants & Code</h3>
+<p>Find the starting and ending index of a given target value in a sorted array containing duplicates.</p>
 <ul>
-<li><strong>Example:</strong> <code>nums = [5, 7, 7, 8, 8, 10]</code>, <code>target = 8</code> $\implies [3, 4]$.</li>
-<li><strong>Pattern:</strong> Two separate Binary Searches:</li>
+<li><code>FindFirst</code>: When <code>nums[mid] == target</code>, don't terminate! Continue searching to the left (<code>high = mid - 1</code>) to find earlier occurrences.</li>
+<li><code>FindLast</code>: When <code>nums[mid] == target</code>, continue searching to the right (<code>low = mid + 1</code>).</li>
 </ul>
-<ol>
-<li><code>FindFirst</code>: When <code>nums[mid] == target</code>, don't stop! Continue searching to the left (<code>high = mid - 1</code>) to see if an earlier occurrence exists.</li>
-<li><code>FindLast</code>: When <code>nums[mid] == target</code>, continue searching to the right (<code>low = mid + 1</code>) to see if a later occurrence exists.</li>
-</ol>
-<h3 id='2-c-solution-net-8'>2. C# Solution (.NET 8)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2839,9 +3909,6 @@ public static class RotatedArraySearcher
 
 public static class RangeFinder
 {
-    /// &lt;summary&gt;
-    /// Finds starting and ending index of a target in a sorted span in O(log N).
-    /// &lt;/summary&gt;
     public static int[] SearchRange(ReadOnlySpan&lt;int&gt; nums, int target)
     {
         int first = FindBound(nums, target, isFirst: true);
@@ -2863,15 +3930,9 @@ public static class RangeFinder
 
             if (nums[mid] == target)
             {
-                result = mid; // Record potential answer
-                if (isFirst)
-                {
-                    high = mid - 1; // Keep searching left
-                }
-                else
-                {
-                    low = mid + 1;  // Keep searching right
-                }
+                result = mid;
+                if (isFirst) high = mid - 1;
+                else low = mid + 1;
             }
             else if (nums[mid] &lt; target)
             {
@@ -2889,59 +3950,1023 @@ public static class RangeFinder
 </div>
 
 <p>---</p>
-<h1 id='7-sorting-algorithms-from-first-principles-to-net-introsort'>7. SORTING ALGORITHMS: FROM FIRST PRINCIPLES TO .NET INTROSORT</h1>
-<h2 id='71-quicksort-mergesort-internals'>7.1 QuickSort & MergeSort Internals</h2>
-<div class='table-wrapper'><table>
-<tr><th>Algorithm</th><th>Strategy</th><th>Best Time</th><th>Average Time</th><th>Worst Time</th><th>Space</th><th>Stable?</th><th>Cache Friendly?</th></tr>
-<tr><td><strong>QuickSort</strong></td><td>Divide & Conquer (Pivot Partition)</td><td>$O(N \log N)$</td><td>$O(N \log N)$</td><td>$O(N^2)$ (bad pivot)</td><td>$O(\log N)$ stack</td><td>No</td><td><strong>Excellent</strong> (in-place)</td></tr>
-<tr><td><strong>MergeSort</strong></td><td>Divide & Conquer (Sub-list Merging)</td><td>$O(N \log N)$</td><td>$O(N \log N)$</td><td>$O(N \log N)$</td><td>$O(N)$ auxiliary</td><td><strong>Yes</strong></td><td>Poor (memory copying)</td></tr>
-<tr><td><strong>IntroSort</strong></td><td>Hybrid (QuickSort + HeapSort + Insertion)</td><td>$O(N \log N)$</td><td>$O(N \log N)$</td><td>$O(N \log N)$</td><td>$O(\log N)$ stack</td><td>No</td><td><strong>Maximum</strong></td></tr>
-</table></div>
-<h3 id='why-naive-quicksort-can-degrade-to-on2'>Why Naive QuickSort Can Degrade to $O(N^2)$</h3>
-<p>In naive QuickSort, if the pivot selected is always the smallest or largest element (e.g., already sorted array with first element as pivot), the partitioning creates unbalanced subarrays of size $1$ and $N - 1$. The recursion depth becomes $N$, yielding $O(N^2)$ runtime and threatening a <code>StackOverflowException</code>.</p>
+<h2 id='66-binary-search-on-monotonic-answer-range-capacity-to-ship-packages-within-d-days-allocation-engine'>6.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages Within D Days / Allocation Engine)</h2>
+<h3 id='1-the-architectural-paradigm-search-space-as-solution-domain'>1. The Architectural Paradigm: "Search Space as Solution Domain"</h3>
+<p>In standard binary search, you search indices of an existing array. In <strong>Binary Search on the Answer</strong>, the array is completely unsorted or represents arbitrary items (e.g. package weights, jobs, page counts).</p>
+<ul>
+<li>The <strong>search space</strong> is the range of all possible answers $[	ext{MinPossibleAnswer}, \, 	ext{MaxPossibleAnswer}]$.</li>
+<li>We define a <strong>feasibility predicate</strong> $P(	ext{capacity}) 	o \{	ext{True}, 	ext{False}\}$.</li>
+<li>Because $P(	ext{capacity})$ is <strong>monotonic</strong>:</li>
+</ul>
+<p>$$	ext{Capacity: } [1, 2, \dots, C-1, \mathbf{C}, C+1, \dots]$$</p>
+<p>$$P(	ext{Capacity}): [	ext{False}, 	ext{False}, \dots, 	ext{False}, \mathbf{True}, \mathbf{True}, \dots]$$</p>
+<p>Binary Search finds the <strong>exact minimum capacity $C$</strong> where False turns into True in $O(N \log(	ext{Max} - 	ext{Min}))$!</p>
+<div class='mermaid'>flowchart LR
+    subgraph MonotonicSpace ["Monotonic Predicate Function P(Capacity)"]
+        F1["Cap=5: False (Exceeds Days)"] --> F2["Cap=10: False"] --> F3["Cap=14: False"]
+        F3 --> T1["Cap=15: True (Feasible Boundary!)"]
+        T1 --> T2["Cap=20: True"] --> T3["Cap=30: True"]
+    end</div>
+<h3 id='2-production-problem-capacity-to-ship-packages-within-d-days-leetcode-1011'>2. Production Problem: Capacity To Ship Packages Within D Days (LeetCode 1011)</h3>
+<p>A conveyor belt has packages that must be shipped within <code>days</code> days. Find the <strong>minimum ship weight capacity</strong> so that all packages are shipped within <code>days</code> in order.</p>
+<ul>
+<li><strong>Lower Bound:</strong> $\max(	ext{weights})$ — The ship must at least carry the heaviest single package.</li>
+<li><strong>Upper Bound:</strong> $\sum 	ext{weights}$ — A ship that carries all packages in 1 day.</li>
+</ul>
+<h3 id='3-c-solution-net-8'>3. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class ShippingCapacityOptimizer
+{
+    /// &lt;summary&gt;
+    /// Finds minimum ship capacity to deliver all packages within maxDays in O(N log(Sum - Max)) time.
+    /// &lt;/summary&gt;
+    public static int ShipWithinDays(ReadOnlySpan&lt;int&gt; weights, int maxDays)
+    {
+        int low = 0;
+        int high = 0;
+
+        foreach (int w in weights)
+        {
+            if (w &gt; low) low = w; // Ship must hold at least the largest item
+            high += w;           // Max capacity holds everything in 1 day
+        }
+
+        int optimalCapacity = high;
+
+        while (low &lt;= high)
+        {
+            int midCapacity = low + (high - low) / 2;
+
+            if (CanShipWithinDays(weights, midCapacity, maxDays))
+            {
+                optimalCapacity = midCapacity; // Found valid capacity; try smaller!
+                high = midCapacity - 1;
+            }
+            else
+            {
+                low = midCapacity + 1; // Cannot ship in time; must increase capacity
+            }
+        }
+
+        return optimalCapacity;
+    }
+
+    private static bool CanShipWithinDays(ReadOnlySpan&lt;int&gt; weights, int capacity, int maxDays)
+    {
+        int daysUsed = 1;
+        int currentDayLoad = 0;
+
+        foreach (int w in weights)
+        {
+            if (currentDayLoad + w &gt; capacity)
+            {
+                daysUsed++;
+                currentDayLoad = 0;
+            }
+            currentDayLoad += w;
+        }
+
+        return daysUsed &lt;= maxDays;
+    }
+}</code></pre>
+</div>
+
 <p>---</p>
-<h2 id='72-under-the-hood-net-arraysort-and-introsort'>7.2 Under the Hood: .NET <code>Array.Sort</code> and IntroSort</h2>
-<p>If you examine the .NET 8 Runtime source code (<code>System.ArraySortHelper&lt;T&gt;</code>), calling <code>Array.Sort(arr)</code> does not use pure QuickSort. It uses <strong>Introspective Sort (IntroSort)</strong>:</p>
+<h2 id='67-interpolation-search-uniformly-distributed-probing-engine'>6.7 Interpolation Search (Uniformly Distributed Probing Engine)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>When a human looks up the name "Smith" in a printed phonebook, they do not open the exact middle page (M). They open near the end (S).</p>
+<p><strong>Interpolation Search</strong> mimics this intuition for sorted arrays whose elements are <strong>uniformly distributed</strong> (e.g. sequential IDs, timestamps, linear sensor readings).</p>
+<ul>
+<li>Instead of fixed midpoint splitting ($50\%$), it uses linear interpolation:</li>
+</ul>
+<p>$$	ext{pos} = 	ext{low} + \left\lfloor rac{	ext{target} - 	ext{arr}[	ext{low}]}{	ext{arr}[	ext{high}] - 	ext{arr}[	ext{low}]} 	imes (	ext{high} - 	ext{low}) ightfloor$$</p>
 
 <div class="code-container">
     <div class="code-header">
         <span>CODE</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-">                          ┌────────────────────────┐
-                          │   Array.Sort() Call    │
-                          └───────────┬────────────┘
-                                      │
-                         Is Partition Size &lt;= 16 ?
-                                ┌─────┴─────┐
-                             Yes│           │No
-                                ▼           ▼
-                       [InsertionSort]   [QuickSort with Median-of-3 Pivot]
-                                            │
-                                  Did Recursion Depth
-                                  Exceed 2 * Log2(N)?
-                                       ┌────┴────┐
-                                    Yes│         │No
-                                       ▼         ▼
-                                  [HeapSort]  Continue QuickSort</code></pre>
+    <pre><code class="language-">Binary Search Probe:        [------------------- MID (50%) -------------------]
+Interpolation Probe:        [--------- TARGET IS 25% &amp;rarr; PROBE HERE ---]</code></pre>
 </div>
 
-<h3 id='the-three-phases-of-net-introsort'>The Three Phases of .NET IntroSort:</h3>
+<h3 id='2-performance-the-danger-warning'>2. Performance & The Danger Warning</h3>
+<ul>
+<li><strong>Best / Average Time:</strong> $O(\log \log N)$ — For $1,000,000$ uniformly distributed items, $\log_2(\log_2(10^6)) pprox 4.3$ probes!</li>
+<li><strong>Worst-Case Trap ($O(N)$):</strong> If data is <strong>exponentially distributed</strong> (e.g., <code>[1, 2, 4, 8, 16, 1024, 65536]</code>), the interpolation formula degenerates to crawling 1 element at a time, degrading to $O(N)$.</li>
+<li><strong>Engineering Rule:</strong> Only use Interpolation Search on validated linear data sets!</li>
+</ul>
+<h3 id='3-c-solution-net-8'>3. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class InterpolationSearchEngine
+{
+    /// &lt;summary&gt;
+    /// Performs interpolation search on sorted uniformly distributed data.
+    /// Average Time: O(log log N), Worst Time: O(N).
+    /// &lt;/summary&gt;
+    public static int InterpolationSearch(ReadOnlySpan&lt;int&gt; arr, int target)
+    {
+        int low = 0;
+        int high = arr.Length - 1;
+
+        while (low &lt;= high &amp;&amp; target &gt;= arr[low] &amp;&amp; target &lt;= arr[high])
+        {
+            if (low == high)
+            {
+                return arr[low] == target ? low : -1;
+            }
+
+            // Proportional slope calculation
+            long numerator = (long)(target - arr[low]) * (high - low);
+            long denominator = arr[high] - arr[low];
+            int pos = low + (int)(numerator / denominator);
+
+            if (arr[pos] == target)
+            {
+                return pos;
+            }
+
+            if (arr[pos] &lt; target)
+            {
+                low = pos + 1;
+            }
+            else
+            {
+                high = pos - 1;
+            }
+        }
+
+        return -1;
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='68-exponential-search-unbounded-ledger-streams-fast-galloping'>6.8 Exponential Search (Unbounded Ledger Streams & Fast Galloping)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>Exponential Search (also known as Galloping Search or Doubling Search) is designed for <strong>unbounded, infinite, or unknown-length streams</strong> (e.g., live append-only transactional logs, continuous telemetry feeds).</p>
+<ul>
+<li><strong>Two-Step Strategy:</strong></li>
+</ul>
 <ol>
-<li><strong>QuickSort with Median-of-3 Pivot:</strong> Selects the median of the first, middle, and last elements as the pivot. This eliminates the $O(N^2)$ worst-case on already-sorted or reverse-sorted inputs.</li>
-<li><strong>HeapSort Fallback Guard:</strong> If the recursion depth exceeds $2 \times \lfloor\log_2 N\rfloor$, IntroSort detects that QuickSort is degrading and immediately switches to <strong>HeapSort</strong>. HeapSort guarantees an upper bound of $O(N \log N)$ time and $O(1)$ space.</li>
-<li><strong>InsertionSort for Small Partitions:</strong> When a sub-partition shrinks to $\le 16$ elements, IntroSort switches to <strong>InsertionSort</strong>. On tiny arrays, InsertionSort outperforms QuickSort because it has zero recursion overhead and exploits CPU L1 cache locality with minimal branch mispredictions.</li>
+<li>Find the range where target exists by testing indices that double exponentially: $1, 2, 4, 8, 16, 32, \dots, 2^k$.</li>
+<li>Once <code>arr[bound] &gt;= target</code> (or array bounds reached), perform standard <strong>Binary Search</strong> inside the narrow slice $[rac{	ext{bound}}{2}, \, \min(	ext{bound}, N-1)]$.</li>
+</ol>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Index Doubling:
+Probe:   1 &amp;rarr; 2 &amp;rarr; 4 &amp;rarr; 8 &amp;rarr; 16 &amp;rarr; 32 &amp;rarr; 64 (arr[64] &gt;= target!)
+Narrow Binary Search between Index 32 and 64!</code></pre>
+</div>
+
+<h3 id='2-complexity-analysis'>2. Complexity Analysis</h3>
+<ul>
+<li>Let $i$ be the index where <code>target</code> resides.</li>
+<li>Doubling step takes $O(\log i)$ iterations.</li>
+<li>Binary search within a slice of size $i$ takes $O(\log i)$.</li>
+<li><strong>Total Time Complexity:</strong> $O(\log i)$ — If target is near the start of a multi-million-row dataset, Exponential Search finds it in microseconds without evaluating the full array!</li>
+</ul>
+<h3 id='3-c-solution-net-8'>3. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class ExponentialSearchEngine
+{
+    /// &lt;summary&gt;
+    /// Searches sorted data in O(log i) time where i is the target index.
+    /// Ideal for unbounded streams or when target is expected near the beginning.
+    /// &lt;/summary&gt;
+    public static int ExponentialSearch(ReadOnlySpan&lt;int&gt; arr, int target)
+    {
+        int n = arr.Length;
+        if (n == 0) return -1;
+        if (arr[0] == target) return 0;
+
+        // Phase 1: Galloping index doubling
+        int bound = 1;
+        while (bound &lt; n &amp;&amp; arr[bound] &lt; target)
+        {
+            bound *= 2;
+        }
+
+        // Phase 2: Binary Search in [bound / 2 .. min(bound, n - 1)]
+        int low = bound / 2;
+        int high = Math.Min(bound, n - 1);
+
+        while (low &lt;= high)
+        {
+            int mid = low + (high - low) / 2;
+            if (arr[mid] == target) return mid;
+
+            if (arr[mid] &lt; target) low = mid + 1;
+            else high = mid - 1;
+        }
+
+        return -1;
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='69-ternary-search-finding-extrema-in-unimodal-functions'>6.9 Ternary Search (Finding Extrema in Unimodal Functions)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>Ternary Search is a divide-and-conquer algorithm used when a function or array is <strong>unimodal</strong>: it strictly increases to a single peak (maximum) and then strictly decreases, or vice-versa.</p>
+<ul>
+<li>Standard Binary Search divides space into 2 halves using 1 midpoint.</li>
+<li>Ternary Search divides the range $[L, R]$ into <strong>3 equal segments</strong> using two midpoints $m_1$ and $m_2$:</li>
+</ul>
+<p>$$m_1 = L + rac{R - L}{3}, \quad m_2 = R - rac{R - L}{3}$$</p>
+<ul>
+<li>By comparing $f(m_1)$ and $f(m_2)$, we can discard one-third of the search space on every iteration!</li>
+</ul>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Unimodal Peak Curve:
+            /           /  \  Peak Maximum
+          /      -------/------\-------
+        m1      m2
+If f(m1) &lt; f(m2) &amp;rarr; Peak cannot be in [L, m1]. Discard left third! Set L = m1 + 1.
+If f(m1) &gt; f(m2) &amp;rarr; Peak cannot be in [m2, R]. Discard right third! Set R = m2 - 1.</code></pre>
+</div>
+
+<h3 id='2-c-solution-net-8'>2. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class TernarySearchEngine
+{
+    /// &lt;summary&gt;
+    /// Finds the peak element index in a unimodal strictly increasing-then-decreasing array in O(log3 N).
+    /// &lt;/summary&gt;
+    public static int FindPeakInUnimodal(ReadOnlySpan&lt;int&gt; arr)
+    {
+        int low = 0;
+        int high = arr.Length - 1;
+
+        while (high - low &gt; 2)
+        {
+            int third = (high - low) / 3;
+            int m1 = low + third;
+            int m2 = high - third;
+
+            if (arr[m1] &lt; arr[m2])
+            {
+                low = m1; // Peak is in [m1 .. high]
+            }
+            else
+            {
+                high = m2; // Peak is in [low .. m2]
+            }
+        }
+
+        // Exhaustive check on remaining 1-3 elements
+        int maxIdx = low;
+        for (int i = low + 1; i &lt;= high; i++)
+        {
+            if (arr[i] &gt; arr[maxIdx]) maxIdx = i;
+        }
+
+        return maxIdx;
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h1 id='7-sorting-algorithms-from-first-principles-to-net-introsort'>7. SORTING ALGORITHMS: FROM FIRST PRINCIPLES TO .NET INTROSORT</h1>
+<p>Sorting is the core foundation of data organization, database indexing, and query execution planning. In enterprise .NET systems, choosing the wrong sorting algorithm or failing to understand stability, memory allocations, and hardware cache efficiency can trigger severe performance bottlenecks, garbage collection spikes, and CPU branch thrashing.</p>
+<p>---</p>
+<h2 id='71-the-sorting-taxonomy-complexity-matrix'>7.1 The Sorting Taxonomy & Complexity Matrix</h2>
+<div class='mermaid'>flowchart TD
+    AllSorts["Sorting Algorithms Taxonomy"] --> ComparisonSorts["Comparison-Based Sorts<br>(Theoretical Lower Bound: &Omega;(N log N))"]
+    AllSorts --> NonComparisonSorts["Non-Comparison Sorts<br>(Linear Time: O(N + K))"]
+    
+    ComparisonSorts --> Quadratic["Quadratic Sorts O(N^2)<br>(Small Datasets / Embedded)"]
+    ComparisonSorts --> LogLinear["Log-Linear Sorts O(N log N)<br>(General Purpose / Production)"]
+    
+    Quadratic --> Bubble["Bubble Sort (Early Exit)"]
+    Quadratic --> Selection["Selection Sort (Min Writes)"]
+    Quadratic --> Insertion["Insertion Sort (Adaptive / Best for N &le; 16)"]
+    
+    LogLinear --> Merge["Merge Sort (Stable, External, Lists)"]
+    LogLinear --> Quick["QuickSort (Hoare / Median-of-3)"]
+    LogLinear --> Heap["HeapSort (O(1) Memory Guarantee)"]
+    LogLinear --> Intro["IntroSort (CLR Hybrid: Quick + Heap + Insert)"]
+    
+    NonComparisonSorts --> Counting["Counting Sort (Integer Keys [0..K])"]
+    NonComparisonSorts --> Radix["Radix Sort (LSD / Byte Chunking)"]</div>
+<h3 id='complete-sorting-master-comparison-table'>Complete Sorting Master Comparison Table</h3>
+<div class='table-wrapper'><table>
+<tr><th>Algorithm</th><th>Best Time</th><th>Average Time</th><th>Worst Time</th><th>Space</th><th>Stable?</th><th>In-Place?</th><th>Key Architectural Property</th></tr>
+<tr><td><strong>Bubble Sort</strong></td><td>$O(N)$ (swapped flag)</td><td>$O(N^2)$</td><td>$O(N^2)$</td><td>$O(1)$</td><td><strong>Yes</strong></td><td><strong>Yes</strong></td><td>Academic reference; early-exit detection</td></tr>
+<tr><td><strong>Selection Sort</strong></td><td>$O(N^2)$</td><td>$O(N^2)$</td><td>$O(N^2)$</td><td>$O(1)$</td><td>No</td><td><strong>Yes</strong></td><td><strong>Minimizes writes:</strong> strictly $N-1$ swaps total</td></tr>
+<tr><td><strong>Insertion Sort</strong></td><td>$O(N)$</td><td>$O(N^2)$</td><td>$O(N^2)$</td><td>$O(1)$</td><td><strong>Yes</strong></td><td><strong>Yes</strong></td><td><strong>Fastest on tiny arrays ($N \le 16$)</strong>; used in IntroSort & TimSort</td></tr>
+<tr><td><strong>Merge Sort</strong></td><td>$O(N \log N)$</td><td>$O(N \log N)$</td><td>$O(N \log N)$</td><td>$O(N)$</td><td><strong>Yes</strong></td><td>No</td><td>Stable; guaranteed worst-case; ideal for linked data</td></tr>
+<tr><td><strong>Quick Sort</strong></td><td>$O(N \log N)$</td><td>$O(N \log N)$</td><td>$O(N^2)$</td><td>$O(\log N)$</td><td>No</td><td><strong>Yes</strong></td><td>Highest practical speed; optimal L1/L2 cache locality</td></tr>
+<tr><td><strong>Heap Sort</strong></td><td>$O(N \log N)$</td><td>$O(N \log N)$</td><td>$O(N \log N)$</td><td>$O(1)$</td><td>No</td><td><strong>Yes</strong></td><td>Zero extra memory; immune to QuickSort worst-case</td></tr>
+<tr><td><strong>IntroSort</strong></td><td>$O(N \log N)$</td><td>$O(N \log N)$</td><td>$O(N \log N)$</td><td>$O(\log N)$</td><td>No</td><td><strong>Yes</strong></td><td><strong>.NET <code>Array.Sort</code> default</strong>: Quick + Heap + Insert hybrid</td></tr>
+<tr><td><strong>Counting Sort</strong></td><td>$O(N + K)$</td><td>$O(N + K)$</td><td>$O(N + K)$</td><td>$O(N + K)$</td><td><strong>Yes</strong></td><td>No</td><td>Non-comparison; linear time when $K = O(N)$</td></tr>
+<tr><td><strong>Radix Sort</strong></td><td>$O(d(N + b))$</td><td>$O(d(N + b))$</td><td>$O(d(N + b))$</td><td>$O(N + b)$</td><td><strong>Yes</strong></td><td>No</td><td>Non-comparison; fixed-width integers and hashes</td></tr>
+</table></div>
+<p>---</p>
+<h2 id='72-bubble-sort-standard-early-exit-optimization'>7.2 Bubble Sort (Standard & Early-Exit Optimization)</h2>
+<h3 id='1-invariants-mechanics'>1. Invariants & Mechanics</h3>
+<p>Bubble Sort repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order.</p>
+<ul>
+<li><strong>Pass Invariant:</strong> After pass $k$, the <strong>$k$-th largest element has "bubbled up"</strong> into its permanent final position at the end of the array.</li>
+<li><strong>The Optimization:</strong> If an entire pass completes without a single swap (<code>hasSwapped == false</code>), the array is <strong>already sorted</strong>! The algorithm terminates immediately in $O(N)$ time.</li>
+</ul>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Pass 1 Trace:
+[ 5, 1, 4, 2, 8 ] &amp;rarr; Compare (5, 1) &amp;rarr; Swap: [ 1, 5, 4, 2, 8 ]
+[ 1, 5, 4, 2, 8 ] &amp;rarr; Compare (5, 4) &amp;rarr; Swap: [ 1, 4, 5, 2, 8 ]
+[ 1, 4, 5, 2, 8 ] &amp;rarr; Compare (5, 2) &amp;rarr; Swap: [ 1, 4, 2, 5, 8 ]
+[ 1, 4, 2, 5, 8 ] &amp;rarr; Compare (5, 8) &amp;rarr; No Swap: 8 is locked in final slot!</code></pre>
+</div>
+
+<h3 id='2-c-solution-net-8'>2. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class BubbleSortEngine
+{
+    /// &lt;summary&gt;
+    /// Bubble sort with early-exit optimization. In-place O(1) space, O(N) best case.
+    /// &lt;/summary&gt;
+    public static void Sort(Span&lt;int&gt; arr)
+    {
+        int n = arr.Length;
+        for (int i = 0; i &lt; n - 1; i++)
+        {
+            bool hasSwapped = false;
+
+            // Invariant: Last i elements are already locked in sorted position
+            for (int j = 0; j &lt; n - 1 - i; j++)
+            {
+                if (arr[j] &gt; arr[j + 1])
+                {
+                    (arr[j], arr[j + 1]) = (arr[j + 1], arr[j]);
+                    hasSwapped = true;
+                }
+            }
+
+            // If no elements were swapped during this pass, array is completely sorted
+            if (!hasSwapped) break;
+        }
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='73-selection-sort-minimum-scan-minimal-memory-writes'>7.3 Selection Sort (Minimum-Scan & Minimal Memory Writes)</h2>
+<h3 id='1-invariants-mechanics'>1. Invariants & Mechanics</h3>
+<p>Selection Sort divides the array into a sorted prefix and an unsorted suffix. In each pass, it scans the unsorted suffix to find the <strong>index of the minimum element</strong>, and performs <strong>one single swap</strong> to place it at the boundary.</p>
+<ul>
+<li><strong>The Key Architectural Advantage:</strong></li>
+<li>Bubble Sort and Insertion Sort can trigger up to $O(N^2)$ memory writes.</li>
+<li>Selection Sort performs <strong>strictly at most $N - 1$ swaps</strong>!</li>
+<li>In hardware environments where <strong>memory writes degrade flash storage</strong> (e.g. EEPROM, solid-state embedded devices, NVRAM), Selection Sort is prized for minimal write amplification.</li>
+</ul>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Array Division:
+[ Sorted Prefix | Unsorted Suffix ]
+[ 1, 2, 3       | 8, 5, 4, 9, 7   ]
+                  ▲  ▲
+                 Find min in suffix (4) &amp;rarr; Swap with first unsorted element (8)!</code></pre>
+</div>
+
+<h3 id='2-c-solution-net-8'>2. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class SelectionSortEngine
+{
+    /// &lt;summary&gt;
+    /// Selection sort: Minimizes memory writes to O(N) swaps.
+    /// &lt;/summary&gt;
+    public static void Sort(Span&lt;int&gt; arr)
+    {
+        int n = arr.Length;
+
+        for (int i = 0; i &lt; n - 1; i++)
+        {
+            int minIndex = i;
+
+            for (int j = i + 1; j &lt; n; j++)
+            {
+                if (arr[j] &lt; arr[minIndex])
+                {
+                    minIndex = j;
+                }
+            }
+
+            if (minIndex != i)
+            {
+                (arr[i], arr[minIndex]) = (arr[minIndex], arr[i]);
+            }
+        }
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='74-insertion-sort-adaptive-shifting-small-partition-powerhouse'>7.4 Insertion Sort (Adaptive Shifting & Small Partition Powerhouse)</h2>
+<h3 id='1-mechanical-sympathy-why-all-runtimes-use-insertion-sort'>1. Mechanical Sympathy: Why All Runtimes Use Insertion Sort</h3>
+<p>Insertion Sort works like sorting a hand of playing cards. For element <code>i</code>, it shifts all preceding elements that are greater than <code>key</code> one position to the right, and drops <code>key</code> into its open slot.</p>
+<ul>
+<li><strong>Why It Is Essential in Modern Runtimes (.NET, Java, V8):</strong></li>
+</ul>
+<ol>
+<li><strong>Adaptive:</strong> If an array is already sorted or nearly sorted, Insertion Sort runs in strictly $O(N)$ time with minimal comparisons.</li>
+<li><strong>Cache Locality:</strong> Memory access is completely sequential and backwards adjacent, remaining entirely inside the <strong>CPU L1 Data Cache</strong>.</li>
+<li><strong>Zero Call Stack Overhead:</strong> Unlike QuickSort or MergeSort, it has no function calls or stack frame allocations.</li>
+</ol>
+<ul>
+<li>This is why <strong>.NET IntroSort switches to Insertion Sort whenever partition size is $\le 16$!</strong></li>
+</ul>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Shifting Trace:
+Array: [ 2, 4, 7, 9, | 5 ]  &amp;rarr; key = 5
+Compare 5 &lt; 9 &amp;rarr; Shift 9 right: [ 2, 4, 7, _, 9 ]
+Compare 5 &lt; 7 &amp;rarr; Shift 7 right: [ 2, 4, _, 7, 9 ]
+Compare 5 &gt;= 4 &amp;rarr; Stop shifting! Insert key: [ 2, 4, 5, 7, 9 ]</code></pre>
+</div>
+
+<h3 id='2-c-solution-net-8'>2. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class InsertionSortEngine
+{
+    /// &lt;summary&gt;
+    /// Insertion sort: In-place, stable, adaptive O(N) best case.
+    /// Optimal for small slices (N &lt;= 16) and nearly-sorted telemetry streams.
+    /// &lt;/summary&gt;
+    public static void Sort(Span&lt;int&gt; arr)
+    {
+        int n = arr.Length;
+
+        for (int i = 1; i &lt; n; i++)
+        {
+            int key = arr[i];
+            int j = i - 1;
+
+            // Shift elements of arr[0..i-1] that are greater than key to one position ahead
+            while (j &gt;= 0 &amp;&amp; arr[j] &gt; key)
+            {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+
+            arr[j + 1] = key;
+        }
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='75-merge-sort-divide-conquer-in-depth-memory-mechanics-stability'>7.5 Merge Sort (Divide & Conquer, In-Depth Memory Mechanics & Stability)</h2>
+<h3 id='1-invariants-recursion-stability'>1. Invariants, Recursion & Stability</h3>
+<p>Merge Sort is a classic Divide and Conquer algorithm:</p>
+<ol>
+<li><strong>Divide:</strong> Recursively divide array into two equal halves until sub-arrays of size 1 are reached.</li>
+<li><strong>Conquer & Combine:</strong> Merge two sorted sub-arrays into a single sorted buffer.</li>
+</ol>
+<ul>
+<li><strong>Why Stability Matters in Enterprise Systems:</strong></li>
+<li>Suppose you sort an Employee table by <code>HireDate</code>, and then sort by <code>Department</code>.</li>
+<li>A <strong>Stable Sort</strong> guarantees that within the same Department, employees remain sorted by their original <code>HireDate</code>!</li>
+<li>QuickSort and HeapSort are <strong>Unstable</strong> (they reorder equal elements). MergeSort is strictly <strong>Stable</strong> because during merging, when <code>arr[i] == arr[j]</code>, we always pick the left element first.</li>
+</ul>
+<div class='mermaid'>flowchart TD
+    Split0["[ 38, 27, 43, 3, 9, 82, 10 ]"] --> Split1A["[ 38, 27, 43, 3 ]"]
+    Split0 --> Split1B["[ 9, 82, 10 ]"]
+    
+    Split1A --> Split2A["[ 38, 27 ]"]
+    Split1A --> Split2B["[ 43, 3 ]"]
+    
+    Split2A --> Merge1A["Merge &rarr; [ 27, 38 ]"]
+    Split2B --> Merge1B["Merge &rarr; [ 3, 43 ]"]
+    
+    Merge1A & Merge1B --> Merge2A["Merge &rarr; [ 3, 27, 38, 43 ]"]
+    
+    Split1B --> Merge2B["Merge &rarr; [ 9, 10, 82 ]"]
+    Merge2A & Merge2B --> FinalMerge["Final Merge &rarr; [ 3, 9, 10, 27, 38, 43, 82 ]"]</div>
+<h3 id='2-high-performance-c-solution-reusing-temporary-buffer'>2. High-Performance C# Solution (Reusing Temporary Buffer)</h3>
+<p>Novice implementations allocate a new <code>new int[...]</code> inside every recursive call, generating massive GC pressure ($O(N \log N)$ allocations).</p>
+<p>The senior implementation allocates <strong>one single auxiliary buffer upfront</strong> ($O(N)$ allocation) and slices it using <code>Span&lt;T&gt;</code>.</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class MergeSortEngine
+{
+    /// &lt;summary&gt;
+    /// High-performance stable MergeSort with a single pre-allocated scratch buffer.
+    /// Guarantees O(N log N) worst-case time.
+    /// &lt;/summary&gt;
+    public static void Sort(Span&lt;int&gt; arr)
+    {
+        if (arr.Length &lt;= 1) return;
+
+        // Allocate auxiliary buffer once upfront
+        int[] aux = new int[arr.Length];
+        MergeSortInternal(arr, aux.AsSpan(), 0, arr.Length - 1);
+    }
+
+    private static void MergeSortInternal(Span&lt;int&gt; arr, Span&lt;int&gt; aux, int low, int high)
+    {
+        if (low &gt;= high) return;
+
+        int mid = low + (high - low) / 2;
+
+        MergeSortInternal(arr, aux, low, mid);
+        MergeSortInternal(arr, aux, mid + 1, high);
+
+        Merge(arr, aux, low, mid, high);
+    }
+
+    private static void Merge(Span&lt;int&gt; arr, Span&lt;int&gt; aux, int low, int mid, int high)
+    {
+        // Copy to aux buffer
+        for (int k = low; k &lt;= high; k++)
+        {
+            aux[k] = arr[k];
+        }
+
+        int i = low;
+        int j = mid + 1;
+        int current = low;
+
+        while (i &lt;= mid &amp;&amp; j &lt;= high)
+        {
+            // Stable condition: &#x27;&lt;=&#x27; preserves original relative ordering
+            if (aux[i] &lt;= aux[j])
+            {
+                arr[current++] = aux[i++];
+            }
+            else
+            {
+                arr[current++] = aux[j++];
+            }
+        }
+
+        // Copy remaining elements of left half (if any)
+        while (i &lt;= mid)
+        {
+            arr[current++] = aux[i++];
+        }
+
+        // Note: Remaining elements of right half are already in their correct places!
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='76-quick-sort-lomuto-vs-hoare-partitioning-median-of-3-pivot'>7.6 Quick Sort (Lomuto vs. Hoare Partitioning & Median-of-3 Pivot)</h2>
+<h3 id='1-partitioning-mechanics-lomuto-vs-hoare'>1. Partitioning Mechanics: Lomuto vs. Hoare</h3>
+<ul>
+<li><strong>Lomuto Partitioning:</strong> Uses a single scanner pointer and a boundary pointer. Simple to write, but executes <strong>3x more swap instructions</strong> and degrades severely on duplicate elements.</li>
+<li><strong>Hoare Partitioning:</strong> Uses two pointers moving inward from both ends towards each other. It terminates faster and performs on average <strong>one-third the number of swaps</strong>!</li>
+<li><strong>Median-of-3 Pivot Defense:</strong></li>
+<li>Choosing the first or last element as pivot causes $O(N^2)$ runtime on already-sorted arrays.</li>
+<li>Median-of-3 samples <code>arr[low]</code>, <code>arr[mid]</code>, <code>arr[high]</code>, finds their median value, and places it as pivot. This completely neuters the worst-case scenario.</li>
+</ul>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Hoare Partitioning Inward Scanners:
+Array: [ 5, 2, 8, 3, 9, 1, 6 ], Pivot = 5
+         ▲                 ▲
+         i &amp;rarr;             &amp;larr; j
+Advance i while arr[i] &lt; pivot; Decrement j while arr[j] &gt; pivot.
+Swap arr[i] and arr[j] when out of place!</code></pre>
+</div>
+
+<h3 id='2-c-solution-net-8-with-hoare-partitioning'>2. C# Solution (.NET 8 with Hoare Partitioning)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class QuickSortEngine
+{
+    public static void Sort(Span&lt;int&gt; arr)
+    {
+        if (arr.Length &lt;= 1) return;
+        QuickSortInternal(arr, 0, arr.Length - 1);
+    }
+
+    private static void QuickSortInternal(Span&lt;int&gt; arr, int low, int high)
+    {
+        while (low &lt; high)
+        {
+            // Small partition optimization: Switch to Insertion Sort for N &lt;= 16
+            if (high - low &lt; 16)
+            {
+                InsertionSortEngine.Sort(arr.Slice(low, high - low + 1));
+                break;
+            }
+
+            int pivotIndex = Partition(arr, low, high);
+
+            // Tail-call recursion optimization: Recurse on smaller half, loop on larger
+            if (pivotIndex - low &lt; high - pivotIndex)
+            {
+                QuickSortInternal(arr, low, pivotIndex);
+                low = pivotIndex + 1;
+            }
+            else
+            {
+                QuickSortInternal(arr, pivotIndex + 1, high);
+                high = pivotIndex;
+            }
+        }
+    }
+
+    private static int Partition(Span&lt;int&gt; arr, int low, int high)
+    {
+        // Median-of-3 Pivot Selection
+        int mid = low + (high - low) / 2;
+        if (arr[low] &gt; arr[mid]) (arr[low], arr[mid]) = (arr[mid], arr[low]);
+        if (arr[low] &gt; arr[high]) (arr[low], arr[high]) = (arr[high], arr[low]);
+        if (arr[mid] &gt; arr[high]) (arr[mid], arr[high]) = (arr[high], arr[mid]);
+
+        int pivot = arr[mid];
+        int i = low - 1;
+        int j = high + 1;
+
+        while (true)
+        {
+            do { i++; } while (arr[i] &lt; pivot);
+            do { j--; } while (arr[j] &gt; pivot);
+
+            if (i &gt;= j) return j;
+
+            (arr[i], arr[j]) = (arr[j], arr[i]);
+        }
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='77-heap-sort-in-place-array-based-max-heapify'>7.7 Heap Sort (In-Place Array-Based Max-Heapify)</h2>
+<h3 id='1-invariants-complete-binary-tree-mapping'>1. Invariants & Complete Binary Tree Mapping</h3>
+<p>Heap Sort is an in-place $O(N \log N)$ algorithm that requires <strong>$O(1)$ auxiliary memory</strong>.</p>
+<p>It models the flat array as a Complete Binary Tree:</p>
+<ul>
+<li><strong>Parent Index:</strong> $	ext{parent}(i) = \lfloor (i - 1) / 2 floor$</li>
+<li><strong>Left Child:</strong> $	ext{left}(i) = 2i + 1$</li>
+<li><strong>Right Child:</strong> $	ext{right}(i) = 2i + 2$</li>
+</ul>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Array to Binary Tree Mapping:
+Array: [ 90, 75, 80, 40, 60, 70, 50 ]
+Index:    0   1   2   3   4   5   6
+
+               90 (Index 0)
+             /         (Idx 1) 75    80 (Idx 2)
+            /  \   /       (3)  40  60  70  50 (6)</code></pre>
+</div>
+
+<h3 id='2-the-two-execution-phases'>2. The Two Execution Phases</h3>
+<ol>
+<li><strong>Phase 1: Build Max-Heap ($O(N)$ Time):</strong></li>
+</ol>
+<ul>
+<li>Starting from the lowest non-leaf node $\lfloor N/2 floor - 1$ down to index $0$, run <code>SiftDown</code>.</li>
+<li>Amazingly, building the heap is $O(N)$, not $O(N \log N)$, because the majority of nodes reside near the bottom with minimal tree height.</li>
+</ul>
+<ol>
+<li><strong>Phase 2: Repeated Extraction ($O(N \log N)$ Time):</strong></li>
+</ol>
+<ul>
+<li>The maximum element is always at index $0$.</li>
+<li>Swap <code>arr[0]</code> with <code>arr[end]</code>.</li>
+<li>Shrink the active heap boundary (<code>end--</code>).</li>
+<li>Sift down the new root <code>arr[0]</code>.</li>
+</ul>
+<h3 id='3-c-solution-net-8'>3. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class HeapSortEngine
+{
+    /// &lt;summary&gt;
+    /// In-place HeapSort with guaranteed O(N log N) worst-case time and O(1) space.
+    /// &lt;/summary&gt;
+    public static void Sort(Span&lt;int&gt; arr)
+    {
+        int n = arr.Length;
+        if (n &lt;= 1) return;
+
+        // Phase 1: Build Max-Heap in O(N) time
+        for (int i = (n / 2) - 1; i &gt;= 0; i--)
+        {
+            SiftDown(arr, i, n);
+        }
+
+        // Phase 2: Extract maximum to end and restore heap
+        for (int end = n - 1; end &gt; 0; end--)
+        {
+            (arr[0], arr[end]) = (arr[end], arr[0]); // Move max to sorted end slot
+            SiftDown(arr, 0, end);                   // Restore heap invariant on remaining [0..end-1]
+        }
+    }
+
+    private static void SiftDown(Span&lt;int&gt; arr, int root, int heapSize)
+    {
+        while (true)
+        {
+            int largest = root;
+            int leftChild = 2 * root + 1;
+            int rightChild = 2 * root + 2;
+
+            if (leftChild &lt; heapSize &amp;&amp; arr[leftChild] &gt; arr[largest])
+            {
+                largest = leftChild;
+            }
+
+            if (rightChild &lt; heapSize &amp;&amp; arr[rightChild] &gt; arr[largest])
+            {
+                largest = rightChild;
+            }
+
+            if (largest == root) break; // Heap property satisfied
+
+            (arr[root], arr[largest]) = (arr[largest], arr[root]);
+            root = largest; // Continue down the tree
+        }
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='78-counting-sort-non-comparison-on-k-integer-sorting'>7.8 Counting Sort (Non-Comparison O(N + K) Integer Sorting)</h2>
+<h3 id='1-the-power-of-direct-index-addressing'>1. The Power of Direct Index Addressing</h3>
+<p>Comparison-based sorting has a mathematical lower bound of $\Omega(N \log N)$.</p>
+<p><strong>Counting Sort</strong> breaks this barrier by avoiding comparisons entirely. It operates by counting the occurrences of each discrete integer value in a predefined range $[0..K]$.</p>
+<ul>
+<li><strong>Three Steps:</strong></li>
+</ul>
+<ol>
+<li>Count frequencies of each value into <code>count[K + 1]</code>.</li>
+<li>Compute running prefix sums in <code>count</code>: <code>count[i] += count[i - 1]</code> (this calculates the exact ending position of each value).</li>
+<li>Iterate <strong>backwards</strong> through the input array to populate the output array, maintaining <strong>absolute stability</strong>!</li>
+</ol>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Count Array Prefix Sums:
+Values:       [ 1, 4, 1, 2, 7, 5, 2 ]
+Frequencies:  Val 1: 2, Val 2: 2, Val 4: 1, Val 5: 1, Val 7: 1
+Prefix Sums:  Val 1 &amp;rarr; Index 1, Val 2 &amp;rarr; Index 3, Val 4 &amp;rarr; Index 4...</code></pre>
+</div>
+
+<h3 id='2-c-solution-net-8'>2. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class CountingSortEngine
+{
+    /// &lt;summary&gt;
+    /// Non-comparison stable sort in O(N + K) time and O(N + K) space.
+    /// &lt;/summary&gt;
+    public static void Sort(Span&lt;int&gt; arr, int minVal, int maxVal)
+    {
+        int range = maxVal - minVal + 1;
+        Span&lt;int&gt; count = stackalloc int[range &lt; 1024 ? range : 0];
+        int[]? heapCount = range &gt;= 1024 ? new int[range] : null;
+        Span&lt;int&gt; countSpan = heapCount != null ? heapCount.AsSpan() : count;
+
+        // Step 1: Tally frequencies
+        foreach (int val in arr)
+        {
+            countSpan[val - minVal]++;
+        }
+
+        // Step 2: Accumulate prefix sums
+        for (int i = 1; i &lt; range; i++)
+        {
+            countSpan[i] += countSpan[i - 1];
+        }
+
+        // Step 3: Populate output backwards for stability
+        int[] output = new int[arr.Length];
+        for (int i = arr.Length - 1; i &gt;= 0; i--)
+        {
+            int val = arr[i];
+            int destIdx = countSpan[val - minVal] - 1;
+            output[destIdx] = val;
+            countSpan[val - minVal]--;
+        }
+
+        // Copy back
+        output.AsSpan().CopyTo(arr);
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='79-radix-sort-lsd-base-10-256-distribution-engine'>7.9 Radix Sort (LSD Base-10 / 256 Distribution Engine)</h2>
+<h3 id='1-invariants-digit-bucketing'>1. Invariants & Digit Bucketing</h3>
+<p>Radix Sort sorts integers by processing individual digits, from the <strong>Least Significant Digit (LSD)</strong> to the Most Significant Digit (MSD).</p>
+<ul>
+<li>By using stable Counting Sort as a subroutine for each digit, the relative order established by earlier digits is strictly preserved!</li>
+<li><strong>Byte-Chunking Optimization (Base-256):</strong></li>
+<li>Instead of dividing by decimal 10 (<code>% 10</code>), low-level high-performance engines sort 32-bit integers in <strong>4 passes of 8-bit bytes</strong> ($2^8 = 256$ buckets) using bitwise shifts (<code>&gt;&gt; 0</code>, <code>&gt;&gt; 8</code>, <code>&gt;&gt; 16</code>, <code>&gt;&gt; 24</code>).</li>
+<li>Total passes: exactly 4, regardless of $N$!</li>
+</ul>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">LSD Radix Sort (Base 10):
+Input:   [ 170, 045, 075, 090, 002, 024, 802, 066 ]
+Pass 1 (Units):   [ 170, 090, 002, 802, 024, 045, 075, 066 ]
+Pass 2 (Tens):    [ 002, 802, 024, 045, 066, 170, 075, 090 ]
+Pass 3 (Hundreds):[ 002, 024, 045, 066, 075, 090, 170, 802 ] &amp;rarr; Sorted!</code></pre>
+</div>
+
+<h3 id='2-c-solution-net-8'>2. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class RadixSortEngine
+{
+    /// &lt;summary&gt;
+    /// LSD Radix Sort for non-negative integers in O(d * (N + 10)) time.
+    /// &lt;/summary&gt;
+    public static void Sort(Span&lt;int&gt; arr)
+    {
+        if (arr.Length &lt;= 1) return;
+
+        int max = arr[0];
+        foreach (int v in arr) if (v &gt; max) max = v;
+
+        int[] aux = new int[arr.Length];
+
+        // Process each digit position: 1, 10, 100, 1000...
+        for (long exp = 1; max / exp &gt; 0; exp *= 10)
+        {
+            CountingSortByDigit(arr, aux.AsSpan(), exp);
+        }
+    }
+
+    private static void CountingSortByDigit(Span&lt;int&gt; arr, Span&lt;int&gt; aux, long exp)
+    {
+        Span&lt;int&gt; count = stackalloc int[10];
+
+        foreach (int val in arr)
+        {
+            int digit = (int)((val / exp) % 10);
+            count[digit]++;
+        }
+
+        for (int i = 1; i &lt; 10; i++)
+        {
+            count[i] += count[i - 1];
+        }
+
+        for (int i = arr.Length - 1; i &gt;= 0; i--)
+        {
+            int digit = (int)((arr[i] / exp) % 10);
+            aux[count[digit] - 1] = arr[i];
+            count[digit]--;
+        }
+
+        aux.CopyTo(arr);
+    }
+}</code></pre>
+</div>
+
+<p>---</p>
+<h2 id='710-under-the-hood-net-8-introsort-arraysorthelpert'>7.10 Under the Hood: .NET 8 IntroSort & ArraySortHelper<T></h2>
+<p>When you invoke <code>Array.Sort(arr)</code> or <code>span.Sort()</code> in .NET 8, the CoreCLR runtime uses <strong>Introspective Sort (IntroSort)</strong> inside <code>System.ArraySortHelper&lt;T&gt;</code>:</p>
+<div class='mermaid'>flowchart TD
+    Call["Array.Sort(arr) / span.Sort()"] --> CheckLen{"Partition Length <= 16?"}
+    
+    CheckLen -- Yes --> Insertion["Run InsertionSort<br>(Zero recursion, high L1 cache locality)"]
+    
+    CheckLen -- No --> CheckDepth{"Recursion Depth > 2 * Log2(N)?"}
+    
+    CheckDepth -- Yes --> HeapFallback["HeapSort Fallback Guard<br>(Guarantees O(N log N) upper bound, O(1) space)"]
+    
+    CheckDepth -- No --> QuickPartition["QuickSort with Median-of-3 Pivot<br>(Hoare partitioning)"]
+    QuickPartition --> Recurse["Divide into sub-partitions & recurse"]
+    Recurse --> CheckLen</div>
+<h3 id='the-three-protective-pillars-of-introsort'>The Three Protective Pillars of IntroSort</h3>
+<ol>
+<li><strong>Median-of-3 QuickSort:</strong> Prevents the $O(N^2)$ trap on sorted or reverse-sorted input by picking the median of the first, middle, and last elements.</li>
+<li><strong>HeapSort Fallback Guard:</strong> If the recursion tree exceeds $2 	imes \lfloor \log_2 N floor$ levels (indicating an adversarial input designed to degrade QuickSort), the runtime instantly switches to <strong>HeapSort</strong>. This strictly guarantees an upper bound of $O(N \log N)$ and prevents <code>StackOverflowException</code>.</li>
+<li><strong>InsertionSort Leaf Optimization:</strong> When partitions shrink to $\le 16$ elements, the runtime switches to <strong>InsertionSort</strong>. On micro-arrays, InsertionSort out-performs QuickSort by avoiding function prologue/epilogue overhead and exploiting CPU branch prediction.</li>
 </ol>
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
-    <div class="callout-body"><strong>Interview Answer:</strong> <em>"Why doesn't .NET use MergeSort for <code>Array.Sort</code>?"</em></div>
+    <div class="callout-body"><strong>Interview Answer:</strong> <em>"Why does .NET not use MergeSort for <code>Array.Sort</code>?"</em></div>
 </div>
 
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
-    <div class="callout-body"><strong>Answer:</strong> MergeSort requires $O(N)$ extra memory allocation to merge arrays. IntroSort is an in-place sort requiring $O(\log N)$ stack space with superior cache locality. For reference types where stability is required, LINQ's <code>.OrderBy()</code> uses an adaptive stable sort.</div>
+    <div class="callout-body"><strong>Answer:</strong> MergeSort requires allocating an auxiliary array of size $O(N)$ on the Managed Heap, triggering high GC pressure. IntroSort operates completely in-place with $O(\log N)$ stack frames and superior cache line locality. When stability is needed (e.g., LINQ <code>.OrderBy()</code>), .NET uses a stable TimSort-inspired algorithm.</div>
 </div>
 
 <p>---</p>
@@ -4671,28 +6696,30 @@ public static class SingleNumberSolver
 <tr><td><strong><code>PriorityQueue&lt;TElement, TPriority&gt;</code></strong></td><td>N/A</td><td>$O(N)$</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(N)$</td><td>Array-backed 4-ary or binary Min-Heap; sift-up / sift-down.</td></tr>
 <tr><td><strong><code>SortedSet&lt;T&gt;</code> / <code>SortedDictionary&lt;K, V&gt;</code></strong></td><td>N/A</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(N)$</td><td>Self-balancing Red-Black Tree.</td></tr>
 </table></div>
-            </article>
+        </article>
 
-            <nav class="chapter-nav">
-                
-    <a href="Volume-X-DotNet-Platform-Core-Encyclopedia.html" class="nav-card">
-        <span class="nav-card-dir">← Previous Module</span>
-        <span class="nav-card-title">Volume X: .NET Platform & CoreCLR Runtime Encyclopedia</span>
-    </a>
-    
-                
-    <a href="Volume-2-CSharp-Encyclopedia.html" class="nav-card" style="text-align: right;">
-        <span class="nav-card-dir">Next Module →</span>
-        <span class="nav-card-title">Volume 2: C# Complete Language Encyclopedia</span>
-    </a>
-    
-            </nav>
-        </main>
+        <!-- CHAPTER NAV -->
+        <div class="chapter-nav">
+            
+<a href="Volume-X-DotNet-Platform-Core-Encyclopedia.html" class="nav-card">
+    <span class="nav-card-dir">← Previous Module</span>
+    <span class="nav-card-title">Volume X: .NET Platform & CoreCLR Runtime Encyclopedia</span>
+</a>
 
-        <aside id="toc-sidebar">
-            <div class="toc-title">On This Page</div>
-            <ul class="toc-list">
-                
+            
+<a href="Volume-2-CSharp-Encyclopedia.html" class="nav-card" style="text-align: right;">
+    <span class="nav-card-dir">Next Module →</span>
+    <span class="nav-card-title">Volume 2: C# Complete Language Encyclopedia</span>
+</a>
+
+        </div>
+    </main>
+
+    <!-- RIGHT TOC -->
+    <aside id="toc-panel">
+        <div class="toc-title">On This Page</div>
+        <ul class="toc-list">
+
         <li class="toc-item level-1">
             <a href="#the-complete-net-developer-encyclopedia-interview-mastery-guide" class="toc-link">THE COMPLETE .NET DEVELOPER ENCYCLOPEDIA + IN</a>
         </li>
@@ -4842,43 +6869,75 @@ public static class SingleNumberSolver
             <a href="#32-modern-net-8-mechanics-spant-readonlyspant-and-zero-allocation-slicing" class="toc-link">3.2 Modern .NET 8 Mechanics: Span&lt;T&gt;, ReadOnl</a>
         </li>
         
-            </ul>
-        </aside>
-    </div>
+        </ul>
+    </aside>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Theme toggle script
-            const toggle = document.getElementById('theme-toggle');
-            function updateToggleUI(theme) {
-                if (!toggle) return;
-                toggle.querySelector('.theme-icon').innerText = theme === 'dark' ? '🌙' : '☀️';
-                toggle.querySelector('.theme-label').innerText = theme === 'dark' ? 'Dark' : 'Light';
-            }
-            
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-            updateToggleUI(currentTheme);
+        // Init Highlight.js
+        hljs.highlightAll();
 
-            if (toggle) {
-                toggle.addEventListener('click', () => {
-                    const cur = document.documentElement.getAttribute('data-theme') || 'dark';
-                    const next = cur === 'dark' ? 'light' : 'dark';
-                    document.documentElement.setAttribute('data-theme', next);
-                    localStorage.setItem('theme', next);
-                    updateToggleUI(next);
-                });
-            }
-
-            // Highlight syntax
-            hljs.highlightAll();
-
-            // Mermaid diagrams
+        // Init Mermaid
+        function initMermaid(theme) {
             mermaid.initialize({
-                startOnLoad: true,
-                theme: currentTheme === 'dark' ? 'dark' : 'neutral',
-                securityLevel: 'loose'
+                startOnLoad: false,
+                theme: theme === 'dark' ? 'dark' : 'default',
+                themeVariables: {
+                    darkMode: theme === 'dark',
+                    background: theme === 'dark' ? '#0b0f19' : '#ffffff',
+                    primaryColor: '#3b82f6',
+                    primaryBorderColor: '#2563eb',
+                    lineColor: theme === 'dark' ? '#9ca3af' : '#475569',
+                    fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif'
+                }
             });
+            mermaid.run();
+        }
+        
+        const initialTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        initMermaid(initialTheme);
+
+        // Theme Toggle Handler
+        const themeToggle = document.getElementById('theme-toggle');
+        function updateToggleBtn(theme) {
+            if (!themeToggle) return;
+            themeToggle.querySelector('.theme-icon').innerText = theme === 'dark' ? '🌙' : '☀️';
+            themeToggle.querySelector('.theme-label').innerText = theme === 'dark' ? 'Dark' : 'Light';
+        }
+        updateToggleBtn(initialTheme);
+
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme') || 'dark';
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('theme', next);
+                updateToggleBtn(next);
+                location.reload(); // Re-render mermaid & styles cleanly
+            });
+        }
+
+        // Code Copy Buttons
+        document.querySelectorAll('pre').forEach(pre => {
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.innerText = 'Copy';
+            copyBtn.addEventListener('click', () => {
+                const code = pre.querySelector('code') ? pre.querySelector('code').innerText : pre.innerText;
+                navigator.clipboard.writeText(code).then(() => {
+                    copyBtn.innerText = 'Copied!';
+                    setTimeout(() => copyBtn.innerText = 'Copy', 2000);
+                });
+            });
+            pre.appendChild(copyBtn);
         });
+
+        // Filter Nav
+        function filterNav() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.style.display = item.innerText.toLowerCase().includes(input) ? '' : 'none';
+            });
+        }
     </script>
 </body>
 </html>

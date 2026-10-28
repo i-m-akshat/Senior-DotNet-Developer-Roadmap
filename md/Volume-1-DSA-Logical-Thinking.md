@@ -27,6 +27,12 @@
    - 3.6 Problem 4: Find Duplicate Number (Floyd's Cycle Detection on Array Pointers)
    - 3.7 Problem 5: Merge Intervals (Booking & Calendar Overlap Consolidation)
    - 3.8 Problem 6: Product of Array Except Self (Prefix-Suffix Accumulation Without Division)
+   - 3.9 The Two Pointers Masterclass: Deep Engineering Mechanics & Visual Invariants
+   - 3.10 Problem 7: Container With Most Water (Max Water Retention Engine - LeetCode 11)
+   - 3.11 Problem 8: 3Sum (Zero-Sum Settlement Triplet Auditor - LeetCode 15)
+   - 3.12 Problem 9: Trapping Rain Water (Hydraulic Basin Capacity Analyzer - LeetCode 42)
+   - 3.13 Problem 10: Sort Colors / Dutch National Flag (3-Way Transaction Risk Sorter - LeetCode 75)
+   - 3.14 Problem 11: Remove Duplicates & Move Zeroes (In-Place Memory Compaction)
 4. [Strings: Immutability, Memory Optimization & Pattern Matching](#4-strings-immutability-memory-optimization--pattern-matching)
    - 4.1 CLR Internals: String Layout, Interning Pool, UTF-16, and GC Pressures
    - 4.2 Problem 7: Reverse String & Words in Sentence (Zero-Allocation Token Reversal)
@@ -34,19 +40,38 @@
    - 4.4 Problem 9: Longest Substring Without Repeating Characters (Sliding Window)
    - 4.5 Problem 10: String Compression (Run-Length Encoding with Write Pointers)
    - 4.6 Problem 11: Palindrome Check & Longest Palindromic Substring
+   - 4.7 The Sliding Window Masterclass: Structural Anatomy & State Templates
+   - 4.8 Problem 12: Maximum Sum Subarray of Size K (Streaming Telemetry Throughput)
+   - 4.9 Problem 13: Minimum Size Subarray Sum (Target Threshold Breaker - LeetCode 209)
+   - 4.10 Problem 14: Minimum Window Substring (Enterprise Token Syntax Matcher - LeetCode 76)
+   - 4.11 Problem 15: Longest Repeating Character Replacement (Burst Compression Engine - LeetCode 424)
+   - 4.12 Problem 16: Longest Substring with At Most K Distinct Characters (Multi-Tenant Session Limiter)
 5. [HashMap & Dictionary Internals: Deep CLR Dive & Applications](#5-hashmap--dictionary-internals-deep-clr-dive--applications)
    - 5.1 CLR Deep Dive: How `Dictionary<TKey, TValue>` Works Internally in .NET 8
    - 5.2 Problem 12: Group Anagrams (Categorization of Financial Audit Records)
    - 5.3 Problem 13: Top K Frequent Elements (Bucket Frequency vs. Min-Heap)
    - 5.4 Problem 14: First Unique Character in a Stream
-6. [Binary Search: The Monotonic Mindset](#6-binary-search-the-monotonic-mindset)
-   - 6.1 The Universal Binary Search Paradigm
-   - 6.2 Problem 15: Classic Binary Search (Exact Order ID Match)
-   - 6.3 Problem 16: Search in Rotated Sorted Array (Shifted Ledger Partitions)
-   - 6.4 Problem 17: Find First and Last Position in Sorted Array (Lower & Upper Bounds)
+6. [Searching Algorithms: The Complete Searching Encyclopedia](#6-searching-algorithms-the-complete-searching-encyclopedia)
+   - 6.1 The Searching Taxonomy & Mechanical Sympathy Decision Matrix
+   - 6.2 Linear Search & The Sentinel Optimization (Eliminating Boundary Checks)
+   - 6.3 Classic Binary Search (The Monotonic Mindset)
+   - 6.4 Search in Rotated Sorted Array (Shifted Ledger Partitions)
+   - 6.5 Find First and Last Position in Sorted Array (Lower & Upper Bounds)
+   - 6.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages Within D Days / Allocation Engine)
+   - 6.7 Interpolation Search (Uniformly Distributed Probing Engine)
+   - 6.8 Exponential Search (Unbounded Ledger Streams & Fast Galloping)
+   - 6.9 Ternary Search (Finding Extrema in Unimodal Functions)
 7. [Sorting Algorithms: From First Principles to .NET IntroSort](#7-sorting-algorithms-from-first-principles-to-net-introsort)
-   - 7.1 QuickSort & MergeSort Internals
-   - 7.2 Under the Hood: .NET `Array.Sort` and IntroSort (QuickSort + HeapSort + InsertionSort)
+   - 7.1 The Sorting Taxonomy & Complexity Matrix
+   - 7.2 Bubble Sort (Standard & Early-Exit Optimization)
+   - 7.3 Selection Sort (Minimum-Scan & Minimal Memory Writes)
+   - 7.4 Insertion Sort (Adaptive Shifting & Small Partition Powerhouse)
+   - 7.5 Merge Sort (Divide & Conquer, In-Depth Memory Mechanics & Stability)
+   - 7.6 Quick Sort (Lomuto vs. Hoare Partitioning & Median-of-3 Pivot)
+   - 7.7 Heap Sort (In-Place Array-Based Max-Heapify)
+   - 7.8 Counting Sort (Non-Comparison O(N + K) Integer Sorting)
+   - 7.9 Radix Sort (LSD Base-10 / 256 Distribution Engine)
+   - 7.10 Under the Hood: .NET 8 IntroSort & ArraySortHelper<T>
 8. [Stack & Queue: LIFO, FIFO, and Expression Parsing](#8-stack--queue-lifo-fifo-and-expression-parsing)
    - 8.1 Memory Models: Array-Backed vs. Node-Backed Queues
    - 8.2 Problem 18: Valid Parentheses (Syntax Validation for Config Tokens)
@@ -994,6 +1019,554 @@ public static class ArrayProductSolver
 
 ---
 
+---
+
+## 3.9 The Two Pointers Masterclass: Deep Engineering Mechanics & Visual Invariants
+
+The **Two Pointers** pattern is one of the most mechanically sympathetic algorithmic archetypes in computer science. In high-performance backend systems, managing multiple pointer offsets across linear contiguous memory buffers allows $O(N)$ linear scans with $O(1)$ stack-allocated auxiliary memory, completely eliminating heap allocations, GC allocation churn, and hash table overhead.
+
+### The Three Fundamental Two-Pointer Archetypes
+
+```mermaid
+flowchart TD
+    subgraph Converging ["Archetype 1: Converging Pointers (Inward Squeeze)"]
+        A1["Left Pointer: Index 0 &rarr;"] --- A2["[ Data Array / Buffer ]"] --- A3["&larr; Right Pointer: Index N-1"]
+        A4["Condition: Move Left if sum too small, Right if sum too big"]
+    end
+
+    subgraph Parallel ["Archetype 2: Parallel / Read-Write Pointers (Compaction)"]
+        B1["Write Pointer: Slow &rarr; (Holds valid compacted boundary)"]
+        B2["Read Pointer: Fast &rarr;&rarr; (Scans stream and filters elements)"]
+    end
+
+    subgraph ThreeWay ["Archetype 3: 3-Way Partitioning (Dutch National Flag)"]
+        C1["Low Pointer: End of 0s"] --- C2["Mid Pointer: Current Scanner"] --- C3["High Pointer: Start of 2s"]
+    end
+```
+
+### Visual Memory Layout & Pointer Traversal
+
+```
+1. CONVERGING (Sorted Pairs, Water Basins, Palindromes):
+   Index:     0      1      2      3      4      5      6
+   Array:   [ 2,     7,    11,    15,    19,    23,    30 ]
+              ▲                                         ▲
+              Left (moves right &rarr;)               Right (moves left &larr;)
+
+2. READ-WRITE / FAST-SLOW (In-Place Array Compaction):
+   Index:     0      1      2      3      4      5      6
+   Array:   [ 0,     1,     0,     3,    12,     0,     5 ]
+              ▲      ▲
+            Write   Read (scans ahead, writes non-zero elements to Write)
+
+3. THREE-WAY PARTITIONING (Sort Colors / 3-Tier Risk):
+   Zones:   [ 0 0 0 | 1 1 1 | ? ? ? ? ? | 2 2 2 ]
+                    ▲       ▲           ▲
+                   Low     Mid         High
+```
+
+---
+
+## 3.10 Problem 7: Container With Most Water (Max Water Retention Engine - LeetCode 11)
+
+### 1. How to Think
+You are given an integer array `height` of length $N$ representing vertical lines drawn at indices $0$ to $N-1$. You must find two lines that together with the x-axis form a container that holds the maximum amount of water.
+
+- **Formula:** $	ext{Area} = (R - L) 	imes \min(	ext{height}[L], 	ext{height}[R])$
+- **Production Analogy:** In a High-Throughput Stream Buffer or Burst Absorption Buffer, vertical bars represent queue drain capacities across microservice nodes. We seek the maximum throughput absorption window between two edge nodes.
+- **The Core Invariant (The Mathematical Proof):**
+  - Suppose $	ext{height}[L] < 	ext{height}[R]$. The current area is bounded by $	ext{height}[L]$.
+  - What happens if we move $R$ inward ($R - 1$)?
+    - The width $(R - L)$ *decreases* by 1.
+    - The bottleneck height can *at most* be $	ext{height}[L]$ (or smaller). It can NEVER exceed $	ext{height}[L]$.
+    - Therefore, moving $R$ inward while $	ext{height}[L] < 	ext{height}[R]$ will **provably** yield a strictly smaller or equal area!
+  - **Conclusion:** The ONLY chance of finding a larger area is to move the **shorter pillar** inward in hope of encountering a taller pillar that overcomes the width reduction.
+
+### 2. How Interviewer Thinks
+- Candidates who fail propose $O(N^2)$ brute force checking all pairs.
+- Mid-level candidates guess moving pointers randomly.
+- Senior candidates clearly articulate the **proof of monotonicity elimination**: moving the taller line guarantees an inferior configuration.
+
+### 3. Visual Execution Diagram
+
+```
+Index:    0    1    2    3    4    5    6    7    8
+Height: [ 1,   8,   6,   2,   5,   4,   8,   3,   7 ]
+          L=0 (1)                                  R=8 (7)
+          Current Area = (8 - 0) * min(1, 7) = 8 * 1 = 8.
+          height[L] < height[R] (1 < 7) &rarr; Bottleneck is L. Advance L!
+
+          &darr; Next Step:
+               L=1 (8)                             R=8 (7)
+          Current Area = (8 - 1) * min(8, 7) = 7 * 7 = 49. (NEW MAX!)
+          height[L] > height[R] (8 > 7) &rarr; Bottleneck is R. Move R left!
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Engine as ContainerEngine
+    participant Left as Left Pointer (L)
+    participant Right as Right Pointer (R)
+    
+    Note over Left,Right: Initial State: L = 0, R = N-1, maxArea = 0
+    Engine->>Left: Inspect height[L]
+    Engine->>Right: Inspect height[R]
+    Engine->>Engine: Calculate width = R - L, area = width * min(h[L], h[R])
+    Engine->>Engine: maxArea = Math.Max(maxArea, area)
+    alt height[L] < height[R]
+        Engine->>Left: L++ (Eliminate left pillar: cannot produce larger area)
+    else height[L] >= height[R]
+        Engine->>Right: R-- (Eliminate right pillar: bottleneck is right)
+    end
+    Note over Left,Right: Repeat until L >= R
+```
+
+### 4. C# Solution (.NET 8 with ReadOnlySpan<int>)
+
+```csharp
+using System;
+
+public static class ContainerOptimizer
+{
+    /// <summary>
+    /// Computes the maximum water retention volume between two pillars in O(N) time and O(1) space.
+    /// Uses ReadOnlySpan to ensure zero heap allocations on high-frequency evaluation pipelines.
+    /// </summary>
+    public static int MaxArea(ReadOnlySpan<int> height)
+    {
+        if (height.Length < 2) return 0;
+
+        int left = 0;
+        int right = height.Length - 1;
+        int maxWaterArea = 0;
+
+        while (left < right)
+        {
+            int hLeft = height[left];
+            int hRight = height[right];
+            int currentWidth = right - left;
+
+            if (hLeft < hRight)
+            {
+                int currentArea = currentWidth * hLeft;
+                if (currentArea > maxWaterArea) maxWaterArea = currentArea;
+                left++; // Eliminate shorter left pillar
+            }
+            else
+            {
+                int currentArea = currentWidth * hRight;
+                if (currentArea > maxWaterArea) maxWaterArea = currentArea;
+                right--; // Eliminate shorter (or equal) right pillar
+            }
+        }
+
+        return maxWaterArea;
+    }
+}
+```
+
+### 5. Complexity Analysis
+- **Time Complexity:** $O(N)$ — Every iteration decrements $(R - L)$ by exactly 1. Total iterations $\le N$.
+- **Space Complexity:** $O(1)$ — Only three 32-bit registers (`left`, `right`, `maxWaterArea`). Zero GC allocation.
+
+---
+
+## 3.11 Problem 8: 3Sum (Zero-Sum Settlement Triplet Auditor - LeetCode 15)
+
+### 1. How to Think
+Given an integer array `nums`, find all **unique triplets** `[nums[i], nums[j], nums[k]]` such that $i 
+e j 
+e k$ and $nums[i] + nums[j] + nums[k] = 0$. The solution set must not contain duplicate triplets.
+
+- **Production Analogy:** In a Multi-Party Clearinghouse Reconciliation Engine, transactions from three parties must balance to zero ($T_1 + T_2 + T_3 = 0$) to verify balanced settlement without cash leakage.
+- **Mental Model & Transformation:**
+  1. Brute Force is $O(N^3)$, which times out on $N \ge 3,000$.
+  2. Sorting the array costs $O(N \log N)$. Once sorted, we can fix the first number `nums[i]` and reduce the remaining search to **Two Sum II (Sorted)** for the target $-nums[i]$ using converging Two Pointers ($L$ and $R$).
+  3. Total Time: $O(N \log N) + O(N^2) = O(N^2)$.
+- **The #1 Interview Trap (Duplicate Triplets):**
+  - Many candidates use a `HashSet<string>` or `HashSet<(int,int,int)>` to filter duplicates. **Interviewers reject this** because it allocates substantial heap memory and degrades cache locality.
+  - **The Senior Fix:** Handle duplicates in-place via pointer skipping:
+    - If `nums[i] == nums[i-1]`, `continue` (skip duplicate pivot).
+    - When a valid triplet is found, advance $L$ while `nums[L] == nums[L+1]` and decrement $R$ while `nums[R] == nums[R-1]`.
+
+### 2. Visual ASCII Trace
+
+```
+Sorted Array: [ -4,   -1,   -1,    0,    1,    2 ]
+                 ▲      ▲                      ▲
+               Pivot  Left                   Right
+              nums[i]=-4, target = +4
+              Sum = (-1) + 2 = 1 < 4 &rarr; Left++
+              
+Next Iteration:
+Sorted Array: [ -4,   -1,   -1,    0,    1,    2 ]
+                       ▲      ▲                ▲
+                     Pivot  Left             Right
+              nums[i]=-1, target = +1
+              Sum = nums[L] + nums[R] = (-1) + 2 = 1 == target! &rarr; MATCH [-1, -1, 2]
+              Skip duplicate nums[L] and nums[R], then converge!
+```
+
+### 3. C# Solution (.NET 8)
+
+```csharp
+using System;
+using System.Collections.Generic;
+
+public static class SettlementClearinghouse
+{
+    /// <summary>
+    /// Finds all unique triplets that sum to 0 in O(N^2) time with zero duplicate triplets.
+    /// </summary>
+    public static IList<IList<int>> ThreeSum(int[] nums)
+    {
+        var results = new List<IList<int>>();
+        if (nums == null || nums.Length < 3) return results;
+
+        // Step 1: In-place Dual-Pivot QuickSort / IntroSort
+        Array.Sort(nums);
+
+        int n = nums.Length;
+
+        for (int i = 0; i < n - 2; i++)
+        {
+            // Early exit optimization: If the smallest number is > 0, three positive numbers cannot sum to 0
+            if (nums[i] > 0) break;
+
+            // Duplicate avoidance for Pivot
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+            int left = i + 1;
+            int right = n - 1;
+            int target = -nums[i];
+
+            while (left < right)
+            {
+                int sum = nums[left] + nums[right];
+
+                if (sum == target)
+                {
+                    results.Add(new List<int> { nums[i], nums[left], nums[right] });
+
+                    // Duplicate avoidance for Left pointer
+                    while (left < right && nums[left] == nums[left + 1]) left++;
+                    // Duplicate avoidance for Right pointer
+                    while (left < right && nums[right] == nums[right - 1]) right--;
+
+                    left++;
+                    right--;
+                }
+                else if (sum < target)
+                {
+                    left++; // Need a larger value
+                }
+                else
+                {
+                    right--; // Need a smaller value
+                }
+            }
+        }
+
+        return results;
+    }
+}
+```
+
+### 4. Complexity Analysis
+- **Time Complexity:** $O(N^2)$ — Sorting takes $O(N \log N)$. The outer loop runs $N$ times, and the inner two-pointer search takes $O(N)$. $O(N \log N + N^2) = O(N^2)$.
+- **Space Complexity:** $O(1)$ auxiliary memory (ignoring the memory needed to store the output list). Sorting in .NET uses IntroSort which requires $O(\log N)$ stack space.
+
+---
+
+## 3.12 Problem 9: Trapping Rain Water (Hydraulic Basin Capacity Analyzer - LeetCode 42)
+
+### 1. How to Think
+Given $N$ non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.
+
+- **Fundamental Hydraulic Formula:** Water trapped directly above bar $i$ is:
+  $$	ext{Water}[i] = \max\Big(0, \; \min(	ext{LeftMax}[i], \, 	ext{RightMax}[i]) - 	ext{height}[i]\Big)$$
+- **Why Two Pointers Beats Prefix Arrays:**
+  - Standard Approach: Precompute `leftMax[N]` and `rightMax[N]` using two separate arrays &rarr; $O(N)$ Time and $O(N)$ Space.
+  - **Two-Pointer Optimization ($O(1)$ Space):**
+    - Maintain `leftMax` and `rightMax` scalar variables.
+    - If `height[left] < height[right]`:
+      - We know for a fact that `leftMax < rightMax` (or bounded by `height[right]`).
+      - Therefore, the water trapped at `left` is determined **strictly by `leftMax`**, regardless of any peaks between `left` and `right`!
+      - If `height[left] >= leftMax`, update `leftMax = height[left]`.
+      - Else, trapped water += `leftMax - height[left]`. Advance `left++`.
+    - Else (`height[left] >= height[right]`):
+      - Symmetrically, water at `right` is bounded strictly by `rightMax`.
+      - If `height[right] >= rightMax`, update `rightMax = height[right]`.
+      - Else, trapped water += `rightMax - height[right]`. Decrement `right--`.
+
+### 2. Visual Elevation & Basin Diagram
+
+```
+Elevation Map & Trapped Water:
+Height: [ 0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1 ]
+
+   3 |                      █
+   2 |             █  ░░░░  █  █  ░░  █
+   1 |       █  ░░ █  █  ░░ █  █  █  ██  █
+   0 | ──█───█──██─█──█──██─█──█──█──██──█─
+Index: 0  1  2  3  4  5  6  7  8  9 10 11
+       (█ = Concrete Pillar, ░░ = Trapped Rain Water)
+Total Trapped Water = 6 Units
+```
+
+```mermaid
+flowchart TD
+    Start["Initialize left=0, right=N-1, leftMax=0, rightMax=0, totalWater=0"] --> CheckCondition{"left < right?"}
+    CheckCondition -- No --> Done["Return totalWater"]
+    CheckCondition -- Yes --> CompareHeight{"height[left] < height[right]?"}
+    
+    CompareHeight -- Yes --> CheckLeft{"height[left] >= leftMax?"}
+    CheckLeft -- Yes --> UpdateLeftMax["leftMax = height[left]"]
+    CheckLeft -- No --> AddLeftWater["totalWater += (leftMax - height[left])"]
+    UpdateLeftMax --> IncLeft["left++"]
+    AddLeftWater --> IncLeft
+    IncLeft --> CheckCondition
+
+    CompareHeight -- No --> CheckRight{"height[right] >= rightMax?"}
+    CheckRight -- Yes --> UpdateRightMax["rightMax = height[right]"]
+    CheckRight -- No --> AddRightWater["totalWater += (rightMax - height[right])"]
+    UpdateRightMax --> DecRight["right--"]
+    AddRightWater --> DecRight
+    DecRight --> CheckCondition
+```
+
+### 3. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class HydraulicAnalyzer
+{
+    /// <summary>
+    /// Computes total trapped rainwater in O(N) time and O(1) auxiliary heap allocation.
+    /// </summary>
+    public static int Trap(ReadOnlySpan<int> height)
+    {
+        if (height.Length < 3) return 0;
+
+        int left = 0;
+        int right = height.Length - 1;
+        int leftMax = 0;
+        int rightMax = 0;
+        int totalWater = 0;
+
+        while (left < right)
+        {
+            if (height[left] < height[right])
+            {
+                if (height[left] >= leftMax)
+                {
+                    leftMax = height[left];
+                }
+                else
+                {
+                    totalWater += leftMax - height[left];
+                }
+                left++;
+            }
+            else
+            {
+                if (height[right] >= rightMax)
+                {
+                    rightMax = height[right];
+                }
+                else
+                {
+                    totalWater += rightMax - height[right];
+                }
+                right--;
+            }
+        }
+
+        return totalWater;
+    }
+}
+```
+
+### 4. Complexity Analysis
+- **Time Complexity:** $O(N)$ — Single pass over the span; each element is visited once.
+- **Space Complexity:** $O(1)$ — Five primitive scalar variables stored directly on the execution stack frame.
+
+---
+
+## 3.13 Problem 10: Sort Colors / Dutch National Flag (3-Way Transaction Risk Sorter - LeetCode 75)
+
+### 1. How to Think
+Given an array `nums` with $N$ objects colored red (0), white (1), or blue (2), sort them **in-place** so that objects of the same color are adjacent, in the order 0, 1, and 2.
+- **Production Analogy:** In an Enterprise Payment Router, transactions are tagged by risk tier: `0 = Low Risk (Direct Route)`, `1 = Medium Risk (SCA 3DS Challenge)`, `2 = High Risk (Manual Fraud Review)`. We need to group batches in $O(N)$ single-pass without allocating auxiliary memory.
+- **The Three Pointers Invariant:**
+  - `low`: Points to boundary where next `0` should be placed.
+  - `mid`: Current scanning pointer.
+  - `high`: Points to boundary where next `2` should be placed.
+  - **Array Partition Invariants at Any Time:**
+    - `[0 .. low-1]` $\implies$ All elements are `0`
+    - `[low .. mid-1]` $\implies$ All elements are `1`
+    - `[mid .. high]` $\implies$ Unknown / unprocessed elements
+    - `[high+1 .. N-1]` $\implies$ All elements are `2`
+
+### 2. Visual Partition Zones
+
+```
+Array State During Execution:
++-------------------+-------------------+-------------------+-------------------+
+|       0 0 0       |       1 1 1       |    ? ? ? ? ? ?    |       2 2 2       |
++-------------------+-------------------+-------------------+-------------------+
+0                 low-1 low            mid-1 mid           high high+1             N-1
+```
+
+```mermaid
+stateDiagram-v2
+    [*] --> InspectMid
+    InspectMid --> Value0: nums[mid] == 0
+    InspectMid --> Value1: nums[mid] == 1
+    InspectMid --> Value2: nums[mid] == 2
+
+    Value0 --> SwapLow: Swap(nums[low], nums[mid])
+    SwapLow --> AdvanceBoth: low++, mid++
+    AdvanceBoth --> CheckBounds
+
+    Value1 --> AdvanceMid: mid++
+    AdvanceMid --> CheckBounds
+
+    Value2 --> SwapHigh: Swap(nums[mid], nums[high])
+    SwapHigh --> DecrementHigh: high-- (Notice: mid does NOT advance!)
+    DecrementHigh --> CheckBounds
+
+    CheckBounds --> InspectMid: mid <= high
+    CheckBounds --> [*]: mid > high (Complete)
+```
+
+> **The #1 Interview Trap:** Why does `mid` NOT advance after swapping with `high`?  
+> **Answer:** Because the element swapped from `high` came from the *unprocessed* zone. It could be a `0`, `1`, or `2`! We must evaluate it on the next iteration. In contrast, when swapping with `low`, we know the incoming element at `low` was guaranteed to be a `1` (or `0` when `low == mid`), so advancing `mid` is completely safe.
+
+### 3. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class DutchNationalFlagSorter
+{
+    /// <summary>
+    /// Partitions an array into 0s, 1s, and 2s in a single pass O(N) time and O(1) space.
+    /// </summary>
+    public static void SortColors(Span<int> nums)
+    {
+        int low = 0;
+        int mid = 0;
+        int high = nums.Length - 1;
+
+        while (mid <= high)
+        {
+            switch (nums[mid])
+            {
+                case 0:
+                    // Swap nums[low] and nums[mid], then advance both
+                    (nums[low], nums[mid]) = (nums[mid], nums[low]);
+                    low++;
+                    mid++;
+                    break;
+
+                case 1:
+                    // Already in correct middle section; just advance scanner
+                    mid++;
+                    break;
+
+                case 2:
+                    // Swap nums[mid] and nums[high], shrink high boundary.
+                    // DO NOT advance mid because the newly swapped nums[mid] is unexamined!
+                    (nums[mid], nums[high]) = (nums[high], nums[mid]);
+                    high--;
+                    break;
+            }
+        }
+    }
+}
+```
+
+---
+
+## 3.14 Problem 11: Remove Duplicates & Move Zeroes (In-Place Memory Compaction)
+
+### 1. The Fast-Slow / Read-Write Architecture
+In high-throughput logging, telemetry buffers, and cache compaction engines, we frequently need to eliminate invalid entries (zeros, nulls, or duplicates) **in-place** without triggering garbage collector allocations.
+
+```
+Read/Write Pointers Trace for MoveZeroes:
+Original: [ 0,  1,  0,  3,  12 ]
+            W   R
+1. nums[R]=0  &rarr; R++
+2. nums[R]=1  &rarr; nums[W] = 1, W++, R++
+3. nums[R]=0  &rarr; R++
+4. nums[R]=3  &rarr; nums[W] = 3, W++, R++
+5. nums[R]=12 &rarr; nums[W] = 12, W++, R++
+Fill remaining [W .. N-1] with 0.
+Final:    [ 1,  3, 12,  0,   0 ]
+```
+
+### 2. C# Solutions (.NET 8)
+
+```csharp
+using System;
+
+public static class BufferCompactor
+{
+    /// <summary>
+    /// Removes duplicates from sorted span in O(N) time and O(1) space.
+    /// Returns the new valid length.
+    /// </summary>
+    public static int RemoveDuplicates(Span<int> nums)
+    {
+        if (nums.Length == 0) return 0;
+
+        int writeIndex = 1;
+
+        for (int readIndex = 1; readIndex < nums.Length; readIndex++)
+        {
+            if (nums[readIndex] != nums[readIndex - 1])
+            {
+                nums[writeIndex] = nums[readIndex];
+                writeIndex++;
+            }
+        }
+
+        return writeIndex;
+    }
+
+    /// <summary>
+    /// Moves all zeros to the end of the span while maintaining relative order of non-zeros.
+    /// O(N) time, O(1) space, zero allocations.
+    /// </summary>
+    public static void MoveZeroes(Span<int> nums)
+    {
+        int writeIndex = 0;
+
+        // Phase 1: Shift all non-zero elements to front
+        for (int readIndex = 0; readIndex < nums.Length; readIndex++)
+        {
+            if (nums[readIndex] != 0)
+            {
+                nums[writeIndex] = nums[readIndex];
+                writeIndex++;
+            }
+        }
+
+        // Phase 2: Clear remaining slots to zero
+        while (writeIndex < nums.Length)
+        {
+            nums[writeIndex++] = 0;
+        }
+    }
+}
+```
+
+---
+
 # 4. STRINGS: IMMUTABILITY, MEMORY OPTIMIZATION & PATTERN MATCHING
 
 ## 4.1 CLR Internals: String Layout, Interning Pool, UTF-16, and GC Pressures
@@ -1369,6 +1942,390 @@ public static class PalindromeEngine
 
 ---
 
+---
+
+## 4.7 The Sliding Window Masterclass: Structural Anatomy & State Templates
+
+The **Sliding Window** technique converts quadratic $O(N^2)$ brute-force inspection of contiguous subarrays or substrings into optimal $O(N)$ linear scans. Instead of recomputing aggregations across overlapping sub-ranges from scratch, the window maintains a running state by **adding the incoming element at the right boundary** and **subtracting the outgoing element at the left boundary**.
+
+### Archetype 1: Fixed-Size Window ($K$)
+Used when the window size $K$ is invariant (e.g., rolling 5-minute telemetry average, top $K$-day moving average).
+
+```
+Window slides by 1 position:
+[ E0,  E1,  E2 ], E3,  E4   &rarr; Sum = E0 + E1 + E2
+  E0, [ E1,  E2,  E3 ], E4   &rarr; NewSum = PrevSum - E0 + E3  (O(1) update!)
+```
+
+### Archetype 2: Dynamic-Size Variable Window
+Used when finding the longest, shortest, or optimal substring satisfying a variable constraint (e.g., sum $\ge S$, at most $K$ distinct tokens, minimum characters to form a template).
+
+```mermaid
+flowchart TD
+    Start["Initialize left=0, right=0, windowState = empty"] --> ExpandRight["Expand Window: Add arr[right] to windowState"]
+    ExpandRight --> ValidateCondition{"Is Window Constraint Violated / Valid?"}
+    
+    ValidateCondition -- "Violated (e.g. Too Many Distinct)" --> ShrinkLeft["Shrink Window: Remove arr[left] from windowState, left++"]
+    ShrinkLeft --> ValidateCondition
+    
+    ValidateCondition -- "Valid State" --> UpdateOptimal["Update Best Result (e.g. maxLen = Math.Max(maxLen, right - left + 1))"]
+    UpdateOptimal --> CheckEnd{"right < N - 1?"}
+    CheckEnd -- Yes --> IncRight["right++"]
+    IncRight --> ExpandRight
+    CheckEnd -- No --> Done["Return Best Result"]
+```
+
+---
+
+## 4.8 Problem 12: Maximum Sum Subarray of Size K (Streaming Telemetry Throughput)
+
+### 1. How to Think
+Given an array of integers and a number $K$, find the maximum sum of any contiguous subarray of size $K$.
+- **Production Analogy:** In a Cloud Monitoring Service, telemetry incoming rate is recorded per second. Find the highest load surge across any consecutive $K$-second SLA calculation interval.
+- **Invariant:** Compute the sum of the first $K$ elements. Then for each index $i$ from $K$ to $N-1$:
+  $$	ext{WindowSum} = 	ext{WindowSum} + 	ext{nums}[i] - 	ext{nums}[i - K]$$
+  This operation is strictly $O(1)$ per step.
+
+### 2. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class TelemetrySlidingWindow
+{
+    /// <summary>
+    /// Computes max sum of contiguous slice of size K in O(N) time and O(1) space.
+    /// </summary>
+    public static long MaxSubarraySumOfSizeK(ReadOnlySpan<int> nums, int k)
+    {
+        if (nums.Length < k || k <= 0) return 0;
+
+        long currentWindowSum = 0;
+
+        // Step 1: Establish baseline window of size K
+        for (int i = 0; i < k; i++)
+        {
+            currentWindowSum += nums[i];
+        }
+
+        long maxWindowSum = currentWindowSum;
+
+        // Step 2: Slide the window across the remaining stream
+        for (int i = k; i < nums.Length; i++)
+        {
+            currentWindowSum += nums[i] - nums[i - k]; // Add incoming, subtract outgoing
+            if (currentWindowSum > maxWindowSum)
+            {
+                maxWindowSum = currentWindowSum;
+            }
+        }
+
+        return maxWindowSum;
+    }
+}
+```
+
+---
+
+## 4.9 Problem 13: Minimum Size Subarray Sum (Target Threshold Breaker - LeetCode 209)
+
+### 1. How to Think
+Given an array of positive integers `nums` and a positive integer `target`, return the minimal length of a contiguous subarray of which the sum is greater than or equal to `target`. If there is no such subarray, return 0.
+- **Production Analogy:** In a Circuit Breaker / DDoS Protection gateway, incoming requests accumulate. Find the smallest window of milliseconds during which requests breached the saturation threshold $S$.
+- **Invariant:** Because all numbers are **positive**, expanding the right pointer monotonically *increases* the sum, and advancing the left pointer monotonically *decreases* the sum.
+- **Two-Phase Sliding Loop:**
+  1. Expand `right` until `sum >= target`.
+  2. While `sum >= target`: Record `minLen = Math.Min(minLen, right - left + 1)`, then subtract `nums[left]` and advance `left++`.
+
+### 2. Visual Trace
+
+```
+nums = [2, 3, 1, 2, 4, 3], target = 7
+1. L=0, R=0..2: sum = 2+3+1 = 6 < 7
+2. R=3: sum = 6+2 = 8 >= 7! Window [2,3,1,2], len=4.
+   Shrink L: sum - 2 = 6 < 7 &rarr; L=1.
+3. R=4: sum = 6+4 = 10 >= 7! Window [3,1,2,4], len=4.
+   Shrink L: sum - 3 = 7 >= 7! Window [1,2,4], len=3. minLen = 3!
+   Shrink L: sum - 1 = 6 < 7 &rarr; L=3.
+4. R=5: sum = 6+3 = 9 >= 7! Window [2,4,3], len=3.
+   Shrink L: sum - 2 = 7 >= 7! Window [4,3], len=2. minLen = 2! (OPTIMAL)
+```
+
+### 3. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class RateLimitBreaker
+{
+    /// <summary>
+    /// Finds minimal window length whose sum >= target in O(N) time and O(1) space.
+    /// </summary>
+    public static int MinSubArrayLen(int target, ReadOnlySpan<int> nums)
+    {
+        int minLength = int.MaxValue;
+        long currentSum = 0;
+        int left = 0;
+
+        for (int right = 0; right < nums.Length; right++)
+        {
+            currentSum += nums[right];
+
+            // Invariant: Shrink window greedily from the left as long as constraint holds
+            while (currentSum >= target)
+            {
+                int currentWindowSize = right - left + 1;
+                if (currentWindowSize < minLength) minLength = currentWindowSize;
+
+                currentSum -= nums[left];
+                left++;
+            }
+        }
+
+        return minLength == int.MaxValue ? 0 : minLength;
+    }
+}
+```
+
+### 4. Complexity Analysis
+- **Time Complexity:** $O(N)$ — Although there is a nested while loop, `left` and `right` each increment at most $N$ times. Total pointer advances $\le 2N$.
+- **Space Complexity:** $O(1)$ — Zero heap allocation.
+
+---
+
+## 4.10 Problem 14: Minimum Window Substring (Enterprise Token Syntax Matcher - LeetCode 76)
+
+### 1. How to Think
+Given two strings `s` and `t` of lengths $m$ and $n$, return the minimum window substring of `s` such that every character in `t` (including duplicates) is included in the window. If there is no such substring, return `""`.
+- **Production Analogy:** Matching distributed trace tags. An incoming HTTP trace header stream must contain all required security assertion claims (`iss`, `sub`, `aud`) within the tightest possible header segment.
+- **The Core Mechanics:**
+  1. Build a target frequency map for `t`.
+  2. Use a counter `requiredUniqueChars` tracking how many distinct characters in `t` must be satisfied.
+  3. Expand `right`: If `s[right]` matches a required character, increment its frequency in our window map. When its count matches `t`'s count, decrement `charsSatisfied`.
+  4. When `charsSatisfied == requiredUniqueChars`, our window is **valid**. Now greedily contract `left` while the window remains valid, updating our minimum window coordinates.
+
+### 2. High-Performance Zero-Allocation ASCII Array Trick
+Instead of allocating a `Dictionary<char, int>`, standard ASCII characters fit into a stack-allocated `Span<int>` of size 128:
+```csharp
+Span<int> targetFreq = stackalloc int[128];
+Span<int> windowFreq = stackalloc int[128];
+```
+This guarantees **zero Garbage Collection overhead** and blazing $O(1)$ direct array index access!
+
+### 3. Visual Execution Flowchart
+
+```mermaid
+flowchart TD
+    Init["Initialize targetFreq[128], windowFreq[128]<br>requiredMatches = unique chars in T<br>left=0, right=0, matched=0, minLen=INF"] --> ReadRight["Read char s[right]"]
+    ReadRight --> AddRight["windowFreq[s[right]]++<br>If windowFreq[c] == targetFreq[c] &rarr; matched++"]
+    AddRight --> CheckValid{"matched == requiredMatches?"}
+    
+    CheckValid -- Yes --> RecordBest["If (right - left + 1) < minLen:<br>minLen = right - left + 1, bestStart = left"]
+    RecordBest --> ShrinkLeft["char s[left]<br>If windowFreq[s[left]] == targetFreq[s[left]] &rarr; matched--<br>windowFreq[s[left]]--<br>left++"]
+    ShrinkLeft --> CheckValid
+
+    CheckValid -- No --> CheckNextRight{"right < s.Length - 1?"}
+    CheckNextRight -- Yes --> IncRight["right++"]
+    IncRight --> ReadRight
+    CheckNextRight -- No --> ReturnResult["Return s.Substring(bestStart, minLen)"]
+```
+
+### 4. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class SyntaxMatcher
+{
+    /// <summary>
+    /// Finds the minimum window in s containing all characters of t in O(N + M) time.
+    /// Utilizes stackalloc for zero heap allocation during character frequency matching.
+    /// </summary>
+    public static string MinWindow(string s, string t)
+    {
+        if (string.IsNullOrEmpty(s) || string.IsNullOrEmpty(t) || s.Length < t.Length)
+            return string.Empty;
+
+        Span<int> targetCounts = stackalloc int[128];
+        Span<int> windowCounts = stackalloc int[128];
+
+        int requiredDistinct = 0;
+        foreach (char c in t)
+        {
+            if (targetCounts[c] == 0) requiredDistinct++;
+            targetCounts[c]++;
+        }
+
+        int satisfiedDistinct = 0;
+        int left = 0;
+        int minLength = int.MaxValue;
+        int bestStart = 0;
+
+        ReadOnlySpan<char> sSpan = s.AsSpan();
+
+        for (int right = 0; right < sSpan.Length; right++)
+        {
+            char rightChar = sSpan[right];
+            if (rightChar < 128)
+            {
+                windowCounts[rightChar]++;
+                if (targetCounts[rightChar] > 0 && windowCounts[rightChar] == targetCounts[rightChar])
+                {
+                    satisfiedDistinct++;
+                }
+            }
+
+            // Window is valid; greedily shrink from left
+            while (satisfiedDistinct == requiredDistinct)
+            {
+                int currentLen = right - left + 1;
+                if (currentLen < minLength)
+                {
+                    minLength = currentLen;
+                    bestStart = left;
+                }
+
+                char leftChar = sSpan[left];
+                if (leftChar < 128)
+                {
+                    if (targetCounts[leftChar] > 0 && windowCounts[leftChar] == targetCounts[leftChar])
+                    {
+                        satisfiedDistinct--;
+                    }
+                    windowCounts[leftChar]--;
+                }
+                left++;
+            }
+        }
+
+        return minLength == int.MaxValue ? string.Empty : s.Substring(bestStart, minLength);
+    }
+}
+```
+
+### 5. Complexity Analysis
+- **Time Complexity:** $O(M + N)$ where $M = 	ext{length}(s)$ and $N = 	ext{length}(t)$. Building `targetCounts` takes $O(N)$. Scanning $s$ advances `left` and `right` at most $M$ times.
+- **Space Complexity:** $O(1)$ — `stackalloc int[128]` consumes exactly 512 bytes on the execution stack frame. Zero allocations on the .NET Managed Heap.
+
+---
+
+## 4.11 Problem 15: Longest Repeating Character Replacement (Burst Compression Engine - LeetCode 424)
+
+### 1. How to Think
+You are given a string `s` consisting of uppercase English letters and an integer `k`. You can choose up to `k` characters of the string and replace them with any other uppercase letter. Find the length of the longest substring containing the same letter you can get after performing the above operations.
+- **Production Analogy:** Run-Length burst encoding on an encrypted message stream. We allow up to $k$ corrupted bit tokens to be flipped to maximize homogeneous compression runs.
+- **The Core Invariant:**
+  - In any window of length $L = 	ext{right} - 	ext{left} + 1$:
+  - Let $	ext{maxFreq}$ be the count of the most frequent character in that window.
+  - The number of characters that need to be replaced is:
+    $$	ext{Replacements Needed} = L - 	ext{maxFreq}$$
+  - If $(L - 	ext{maxFreq}) \le k$, the window is **valid**!
+  - If $(L - 	ext{maxFreq}) > k$, the window is **invalid**: increment `left++` and decrement `freq[s[left]]`.
+
+### 2. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class BurstCompressor
+{
+    /// <summary>
+    /// Computes length of longest uniform substring after at most k replacements in O(N) time.
+    /// </summary>
+    public static int CharacterReplacement(string s, int k)
+    {
+        if (string.IsNullOrEmpty(s)) return 0;
+
+        Span<int> charCounts = stackalloc int[26];
+        int maxFreq = 0;
+        int left = 0;
+        int maxWindow = 0;
+
+        for (int right = 0; right < s.Length; right++)
+        {
+            int index = s[right] - 'A';
+            charCounts[index]++;
+            if (charCounts[index] > maxFreq) maxFreq = charCounts[index];
+
+            int windowLen = right - left + 1;
+
+            // If characters to replace exceed k, shrink window
+            if (windowLen - maxFreq > k)
+            {
+                charCounts[s[left] - 'A']--;
+                left++;
+            }
+            else
+            {
+                if (windowLen > maxWindow) maxWindow = windowLen;
+            }
+        }
+
+        return maxWindow;
+    }
+}
+```
+
+---
+
+## 4.12 Problem 16: Longest Substring with At Most K Distinct Characters (Multi-Tenant Session Limiter)
+
+### 1. How to Think
+Given a string `s` and an integer `k`, return the length of the longest substring of `s` that contains at most `k` **distinct** characters.
+- **Production Analogy:** In a Multi-Tenant SaaS Gateway, a single API session is allowed to multiplex calls across at most $k$ tenant partitions simultaneously. Find the longest contiguous event streak that remains within tenant isolation quotas.
+- **Invariant:** Maintain a character frequency map and a scalar `distinctCount`. When `distinctCount > k`, advance `left` until one character's frequency drops to 0, decrementing `distinctCount`.
+
+### 2. C# Solution (.NET 8)
+
+```csharp
+using System;
+using System.Collections.Generic;
+
+public static class MultiTenantSessionLimiter
+{
+    /// <summary>
+    /// Finds longest substring containing at most k distinct characters in O(N) time and O(1) space.
+    /// </summary>
+    public static int LengthOfLongestSubstringKDistinct(string s, int k)
+    {
+        if (string.IsNullOrEmpty(s) || k <= 0) return 0;
+
+        Span<int> freq = stackalloc int[128];
+        int distinctCount = 0;
+        int left = 0;
+        int maxLength = 0;
+
+        for (int right = 0; right < s.Length; right++)
+        {
+            char c = s[right];
+            if (c < 128)
+            {
+                if (freq[c] == 0) distinctCount++;
+                freq[c]++;
+            }
+
+            while (distinctCount > k)
+            {
+                char leftChar = s[left];
+                if (leftChar < 128)
+                {
+                    freq[leftChar]--;
+                    if (freq[leftChar] == 0) distinctCount--;
+                }
+                left++;
+            }
+
+            int currentLength = right - left + 1;
+            if (currentLength > maxLength) maxLength = currentLength;
+        }
+
+        return maxLength;
+    }
+}
+```
+
+---
+
 # 5. HASHMAP & DICTIONARY INTERNALS: DEEP CLR DIVE & APPLICATIONS
 
 ## 5.1 CLR Deep Dive: How `Dictionary<TKey, TValue>` Works Internally in .NET 8
@@ -1627,52 +2584,148 @@ public static class UniqueCharSolver
 ---
 
 
-# 6. BINARY SEARCH: THE MONOTONIC MINDSET
+# 6. SEARCHING ALGORITHMS: THE COMPLETE SEARCHING ENCYCLOPEDIA
 
-## 6.1 The Universal Binary Search Paradigm
-
-Many developers think Binary Search only applies to sorted arrays looking for an exact target number. **That is only 10% of its utility.**
-
-Binary Search is fundamentally a tool for **Monotonic Decision Spaces**. If you have a predicate function $P(x)$ such that:
-$$P(x) \text{ is } [\text{False}, \text{False}, \dots, \text{False}, \mathbf{True}, \mathbf{True}, \dots, \mathbf{True}]$$
-Then Binary Search can find the **exact boundary** where False becomes True in $O(\log N)$ evaluations.
-
-```
-Monotonic Search Space:
-Index:    0       1       2       3       4       5       6       7
-Value:   12      24      35      48      60      75      89      99
-P(x)>=50: F       F       F       F       T       T       T       T
-                                          ▲
-                          First True Boundary (Lower Bound)
-```
-
-### The Three Critical Invariants
-1. **Midpoint Overflow Protection:**
-   ```csharp
-   // WRONG: Can overflow int.MaxValue (2,147,483,647) when low + high > Int32.MaxValue!
-   int mid = (low + high) / 2;
-
-   // CORRECT: Mathematically equivalent, immune to integer overflow:
-   int mid = low + (high - low) / 2;
-   ```
-2. **Loop Condition (`low <= high` vs. `low < high`):**
-   - Use `low <= high` when searching for a single target where the search space reduces to `low == high`. Inside, use `low = mid + 1` and `high = mid - 1`.
-   - Use `low < high` when searching for an inflection point or boundary where `mid` can be the answer (`high = mid`).
-3. **Termination Guarantee:** Every branch MUST shrink the search space by at least 1 element; otherwise, you risk an infinite loop.
+Searching is the fundamental operation of retrieving a target record from a data space. While novice developers treat searching as a binary choice between $O(N)$ linear scans and $O(\log N)$ binary searches, senior backend engineers evaluate algorithms based on **hardware cache locality, CPU branch prediction, data distribution, and monotonic decision spaces**.
 
 ---
 
-## 6.2 Problem 15: Classic Binary Search (Exact Order ID Match)
+## 6.1 The Searching Taxonomy & Mechanical Sympathy Decision Matrix
 
-### 1. How to Think
-Find the index of a target value in a sorted array in $O(\log N)$ time.
-- If target exists, return its index. If not, return `-1`.
+```mermaid
+flowchart TD
+    Start["Search Problem"] --> IsSorted{"Is the Search Space Sorted / Monotonic?"}
+    
+    IsSorted -- No --> SmallData{"Is N <= 64 Elements?"}
+    SmallData -- Yes --> LinearCache["Linear Search<br>(L1 Cache Friendly, Prefetched)"]
+    SmallData -- No --> NeedsFastLookup{"Require Repeated O(1) Lookups?"}
+    NeedsFastLookup -- Yes --> HashTable["Hash Index / Dictionary<br>(O(1) Time, O(N) Space)"]
+    NeedsFastLookup -- No --> SentinelLinear["Sentinel Linear Search<br>(O(N) with 50% fewer branch checks)"]
+    
+    IsSorted -- Yes --> IsUniform{"Are Elements Uniformly Distributed?<br>(e.g. Identity Sequence)"}
+    IsUniform -- Yes --> Interpolation["Interpolation Search<br>(O(log log N) Average)"]
+    IsUniform -- No --> IsUnbounded{"Is Array Size Infinite / Unbounded Stream?"}
+    IsUnbounded -- Yes --> Exponential["Exponential / Galloping Search<br>(O(log i) Time)"]
+    IsUnbounded -- No --> IsUnimodal{"Are You Finding Peak/Min of Unimodal Curve?"}
+    IsUnimodal -- Yes --> Ternary["Ternary Search<br>(O(log3 N) Time)"]
+    IsUnimodal -- No --> Binary["Binary Search / Monotonic Predicate<br>(O(log N) Time, O(1) Space)"]
+```
 
-### 2. How Interviewer Thinks
-- Tests if you handle `low + (high - low) / 2`.
-- Tests if your boundary updates eliminate infinite loops.
+### Complete Searching Complexity Matrix
 
-### 3. C# Solution (.NET 8)
+| Algorithm | Preconditions | Best Time | Average Time | Worst Time | Space | Cache Friendly? | Primary Production Use Case |
+|---|---|---|---|---|---|---|---|
+| **Linear Search** | None (Unsorted ok) | $O(1)$ | $O(N)$ | $O(N)$ | $O(1)$ | **Maximum** (L1 Line Prefetch) | Arrays $< 64$ items, unsorted streams |
+| **Sentinel Linear** | Mutable Array / End Slot | $O(1)$ | $O(N)$ | $O(N)$ | $O(1)$ | **Maximum** | Low-latency loops eliminating `i < N` check |
+| **Binary Search** | Sorted / Monotonic | $O(1)$ | $O(\log N)$ | $O(\log N)$ | $O(1)$ | Moderate (Cache line jumps) | Primary database clustered index lookups |
+| **Binary Search on Answer** | Monotonic Predicate $P(x)$ | $O(1)$ | $O(K \log R)$ | $O(K \log R)$ | $O(1)$ | High | Resource allocation, autoscaling, SLA capacities |
+| **Interpolation Search** | Sorted + **Uniformly Distributed** | $O(1)$ | $O(\log \log N)$ | $O(N)$ (skewed) | $O(1)$ | Moderate | Memory address tables, numeric sequenced IDs |
+| **Exponential Search** | Sorted + Unbounded / Unknown size | $O(1)$ | $O(\log i)$ | $O(\log i)$ | $O(1)$ | Moderate | Network streaming logs, boundless ring buffers |
+| **Ternary Search** | Unimodal Function (Single Peak/Trough) | $O(1)$ | $O(\log_3 N)$ | $O(\log_3 N)$ | $O(1)$ | Moderate | Mathematical optimization, server cost curves |
+
+---
+
+## 6.2 Linear Search & The Sentinel Optimization
+
+### 1. Mechanical Sympathy: Why Linear Search Wins on Small Arrays
+Modern CPU architectures load memory into **64-byte L1 Cache Lines**. If you search an array of 32-bit integers, an entire cache line holds:
+$$rac{64 	ext{ bytes}}{4 	ext{ bytes/int}} = 16 	ext{ integers}$$
+When the CPU hardware prefetcher detects sequential memory access, it streams consecutive cache lines directly into the L1 data cache with **zero CPU wait cycles**. 
+- In contrast, Binary Search jumps wildly across memory indices ($0 	o 500,000 	o 750,000 	o \dots$), triggering **L1/L2/L3 CPU Cache Misses** on every step.
+- For $N \le 64$ items, a simple linear scan is frequently **faster than binary search in real wall-clock time** despite Big-O!
+
+### 2. The Sentinel Optimization (Eliminating Boundary Checks)
+In a standard linear search loop, every iteration executes **two boolean conditional branches**:
+1. `if (i < length)` &rarr; Array bounds check.
+2. `if (arr[i] == target)` &rarr; Value comparison check.
+
+In high-frequency low-latency execution engines, 50% of the branch instructions can be eliminated using a **Sentinel**:
+1. Temporarily place the `target` value into the last slot of the array.
+2. Run a loop with ONLY `while (arr[i] != target) i++`.
+3. No bounds checking required! The loop is mathematically guaranteed to terminate.
+
+```
+Standard Loop:   [ Compare i < N ] &rarr; [ Compare arr[i] == target ] (2 Branches per step!)
+Sentinel Loop:   [ Compare arr[i] == target ]                          (1 Branch per step!)
+```
+
+### 3. C# Production Code
+
+```csharp
+using System;
+
+public static class LinearSearchEngine
+{
+    /// <summary>
+    /// Standard cache-friendly linear search for small spans.
+    /// </summary>
+    public static int LinearSearch(ReadOnlySpan<int> data, int target)
+    {
+        for (int i = 0; i < data.Length; i++)
+        {
+            if (data[i] == target) return i;
+        }
+        return -1;
+    }
+
+    /// <summary>
+    /// Sentinel Linear Search: Eliminates the i < N boundary check from the inner loop.
+    /// Requires a mutable buffer where the last element can be swapped with target.
+    /// </summary>
+    public static int SentinelLinearSearch(Span<int> data, int target)
+    {
+        int n = data.Length;
+        if (n == 0) return -1;
+
+        int lastVal = data[n - 1];
+        if (lastVal == target) return n - 1;
+
+        // Place sentinel at end
+        data[n - 1] = target;
+
+        int i = 0;
+        while (data[i] != target)
+        {
+            i++;
+        }
+
+        // Restore original value
+        data[n - 1] = lastVal;
+
+        // If i stopped before the last element, we found a genuine match!
+        if (i < n - 1) return i;
+
+        return -1;
+    }
+}
+```
+
+---
+
+## 6.3 Classic Binary Search (The Monotonic Midset)
+
+### 1. Invariants & Overflow Protection
+1. **Midpoint Overflow Protection:**
+   ```csharp
+   // WRONG: Overflows int.MaxValue when low + high > 2,147,483,647
+   int mid = (low + high) / 2;
+
+   // CORRECT: Mathematically equivalent, safe from 32-bit integer overflow
+   int mid = low + (high - low) / 2;
+   ```
+2. **Termination Guarantee:**
+   Using `low <= high` ensures the search space terminates when `low == high + 1`. Every branch MUST update `low = mid + 1` or `high = mid - 1`.
+
+```
+Halving Search Space:
+Initial Space: [ 0 ........................................ 1,000,000 ]
+Pass 1:        [ 0 .................... 500,000 ]
+Pass 2:        [ 250,000 .............. 500,000 ]
+Pass 3:        [ 375,000 .............. 500,000 ]
+Terminates in <= ceil(log2(1,000,000)) = 20 comparisons!
+```
+
+### 2. C# Solution (.NET 8)
 
 ```csharp
 using System;
@@ -1680,8 +2733,7 @@ using System;
 public static class BinarySearchEngine
 {
     /// <summary>
-    /// Searches for a target key in a sorted span in O(log N) time.
-    /// Scenario: Locating a customer order record in a sorted partition block.
+    /// Searches for target in sorted span in O(log N) time and O(1) space.
     /// </summary>
     public static int BinarySearch(ReadOnlySpan<int> sortedArr, int target)
     {
@@ -1700,67 +2752,41 @@ public static class BinarySearchEngine
 
             if (midVal < target)
             {
-                low = mid + 1; // Target is in the upper half
+                low = mid + 1;
             }
             else
             {
-                high = mid - 1; // Target is in the lower half
+                high = mid - 1;
             }
         }
 
-        return -1; // Target not found
+        return -1;
     }
 }
 ```
 
-### 4. Complexity Analysis
-- **Time Complexity:** $O(\log N)$ — Each iteration cuts the search space in half. For $N = 1,000,000$, $\log_2(1,000,000) \approx 20$ comparisons.
-- **Space Complexity:** $O(1)$ — Only three local integer variables.
-
 ---
 
-## 6.3 Problem 16: Search in Rotated Sorted Array (Shifted Ledger Partitions)
+## 6.4 Search in Rotated Sorted Array (Shifted Ledger Partitions)
 
 ### 1. How to Think
-An array sorted in ascending order is rotated at an unknown pivot index (e.g., `[4, 5, 6, 7, 0, 1, 2]`). Find the index of `target` in $O(\log N)$ time.
-- **Key Insight:** If you pick the midpoint `mid`, **at least one half of the array (either `[low..mid]` or `[mid..high]`) is guaranteed to be strictly sorted!**
+An array sorted in ascending order is rotated at an unknown pivot (e.g., `[4, 5, 6, 7, 0, 1, 2]`). Find `target` in $O(\log N)$ time.
+- **Key Invariant:** For ANY midpoint `mid`, **at least one half of the array (either `[low..mid]` or `[mid..high]`) is strictly sorted!**
 - Determine which half is sorted:
-  - If `nums[low] <= nums[mid]`, the left half is sorted.
-    - Check if target falls within `[nums[low], nums[mid])`. If yes, narrow search to left (`high = mid - 1`). If no, search right (`low = mid + 1`).
-  - Otherwise, the right half is sorted:
-    - Check if target falls within `(nums[mid], nums[high]]`. If yes, narrow search to right (`low = mid + 1`). If no, search left (`high = mid - 1`).
+  - If `nums[low] <= nums[mid]`: Left half is sorted.
+    - If `target >= nums[low] && target < nums[mid]`, target lies in sorted left &rarr; `high = mid - 1`.
+    - Else search right &rarr; `low = mid + 1`.
+  - Else: Right half is sorted.
+    - If `target > nums[mid] && target <= nums[high]`, target lies in sorted right &rarr; `low = mid + 1`.
+    - Else search left &rarr; `high = mid - 1`.
 
-### 2. How Interviewer Thinks
-- Can the candidate adapt Binary Search to non-uniformly sorted data?
-- Does the candidate accurately construct compound conditions without off-by-one errors?
-
-### 3. Dry Run
-**Input:** `nums = [4, 5, 6, 7, 0, 1, 2]`, `target = 0`
-- `low = 0 (4)`, `high = 6 (2)`
-- $mid = 0 + (6 - 0) / 2 = 3 \implies \text{nums}[3] = 7$.
-- Compare `nums[low] (4)` vs `nums[mid] (7)`: $4 \le 7 \implies$ **Left half is sorted!**
-- Does target (0) lie in `[4, 7)`? No! Therefore, target must be in the right half.
-- Set `low = mid + 1 = 4`.
-- Next iteration: `low = 4 (0)`, `high = 6 (2)`.
-- $mid = 4 + (6 - 4) / 2 = 5 \implies \text{nums}[5] = 1$.
-- `nums[mid]` is 1. Target is 0.
-- Compare `nums[low] (0)` vs `nums[mid] (1)`: Left half is sorted.
-- Does target (0) lie in `[0, 1)`? **Yes!**
-- Set `high = mid - 1 = 4`.
-- Next iteration: `low = 4`, `high = 4`.
-- $mid = 4 \implies \text{nums}[4] = 0 == \text{target}$. Found at index 4!
-
-### 4. C# Solution (.NET 8)
+### 2. C# Solution (.NET 8)
 
 ```csharp
 using System;
 
 public static class RotatedArraySearcher
 {
-    /// <summary>
-    /// Searches for a target in a rotated sorted array in O(log N) time.
-    /// Scenario: Querying time-series financial transactions rotated across ring buffer shards.
-    /// </summary>
     public static int Search(ReadOnlySpan<int> nums, int target)
     {
         int low = 0;
@@ -1771,30 +2797,19 @@ public static class RotatedArraySearcher
             int mid = low + (high - low) / 2;
             if (nums[mid] == target) return mid;
 
-            // Check if left half is normally sorted
-            if (nums[low] <= nums[mid])
+            if (nums[low] <= nums[mid]) // Left half sorted
             {
-                // Is target within the sorted left boundaries?
                 if (target >= nums[low] && target < nums[mid])
-                {
                     high = mid - 1;
-                }
                 else
-                {
                     low = mid + 1;
-                }
             }
-            else // Right half must be normally sorted
+            else // Right half sorted
             {
-                // Is target within the sorted right boundaries?
                 if (target > nums[mid] && target <= nums[high])
-                {
                     low = mid + 1;
-                }
                 else
-                {
                     high = mid - 1;
-                }
             }
         }
 
@@ -1803,31 +2818,20 @@ public static class RotatedArraySearcher
 }
 ```
 
-### 5. Complexity Analysis
-- **Time Complexity:** $O(\log N)$ — Every step discards half the search space.
-- **Space Complexity:** $O(1)$ — Zero heap allocation.
-
 ---
 
-## 6.4 Problem 17: Find First and Last Position in Sorted Array (Lower & Upper Bounds)
+## 6.5 Find First and Last Position in Sorted Array (Lower & Upper Bounds)
 
-### 1. How to Think
-Given a sorted array with possible duplicate values, find the starting and ending index of a given target value. If target is not found, return `[-1, -1]`.
-- **Example:** `nums = [5, 7, 7, 8, 8, 10]`, `target = 8` $\implies [3, 4]$.
-- **Pattern:** Two separate Binary Searches:
-  1. `FindFirst`: When `nums[mid] == target`, don't stop! Continue searching to the left (`high = mid - 1`) to see if an earlier occurrence exists.
-  2. `FindLast`: When `nums[mid] == target`, continue searching to the right (`low = mid + 1`) to see if a later occurrence exists.
-
-### 2. C# Solution (.NET 8)
+### 1. Invariants & Code
+Find the starting and ending index of a given target value in a sorted array containing duplicates.
+- `FindFirst`: When `nums[mid] == target`, don't terminate! Continue searching to the left (`high = mid - 1`) to find earlier occurrences.
+- `FindLast`: When `nums[mid] == target`, continue searching to the right (`low = mid + 1`).
 
 ```csharp
 using System;
 
 public static class RangeFinder
 {
-    /// <summary>
-    /// Finds starting and ending index of a target in a sorted span in O(log N).
-    /// </summary>
     public static int[] SearchRange(ReadOnlySpan<int> nums, int target)
     {
         int first = FindBound(nums, target, isFirst: true);
@@ -1849,15 +2853,9 @@ public static class RangeFinder
 
             if (nums[mid] == target)
             {
-                result = mid; // Record potential answer
-                if (isFirst)
-                {
-                    high = mid - 1; // Keep searching left
-                }
-                else
-                {
-                    low = mid + 1;  // Keep searching right
-                }
+                result = mid;
+                if (isFirst) high = mid - 1;
+                else low = mid + 1;
             }
             else if (nums[mid] < target)
             {
@@ -1876,51 +2874,926 @@ public static class RangeFinder
 
 ---
 
-# 7. SORTING ALGORITHMS: FROM FIRST PRINCIPLES TO .NET INTROSORT
+## 6.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages Within D Days / Allocation Engine)
 
-## 7.1 QuickSort & MergeSort Internals
+### 1. The Architectural Paradigm: "Search Space as Solution Domain"
+In standard binary search, you search indices of an existing array. In **Binary Search on the Answer**, the array is completely unsorted or represents arbitrary items (e.g. package weights, jobs, page counts).
+- The **search space** is the range of all possible answers $[	ext{MinPossibleAnswer}, \, 	ext{MaxPossibleAnswer}]$.
+- We define a **feasibility predicate** $P(	ext{capacity}) 	o \{	ext{True}, 	ext{False}\}$.
+- Because $P(	ext{capacity})$ is **monotonic**:
+  $$	ext{Capacity: } [1, 2, \dots, C-1, \mathbf{C}, C+1, \dots]$$
+  $$P(	ext{Capacity}): [	ext{False}, 	ext{False}, \dots, 	ext{False}, \mathbf{True}, \mathbf{True}, \dots]$$
+  Binary Search finds the **exact minimum capacity $C$** where False turns into True in $O(N \log(	ext{Max} - 	ext{Min}))$!
 
-| Algorithm | Strategy | Best Time | Average Time | Worst Time | Space | Stable? | Cache Friendly? |
-|---|---|---|---|---|---|---|---|
-| **QuickSort** | Divide & Conquer (Pivot Partition) | $O(N \log N)$ | $O(N \log N)$ | $O(N^2)$ (bad pivot) | $O(\log N)$ stack | No | **Excellent** (in-place) |
-| **MergeSort** | Divide & Conquer (Sub-list Merging) | $O(N \log N)$ | $O(N \log N)$ | $O(N \log N)$ | $O(N)$ auxiliary | **Yes** | Poor (memory copying) |
-| **IntroSort** | Hybrid (QuickSort + HeapSort + Insertion) | $O(N \log N)$ | $O(N \log N)$ | $O(N \log N)$ | $O(\log N)$ stack | No | **Maximum** |
+```mermaid
+flowchart LR
+    subgraph MonotonicSpace ["Monotonic Predicate Function P(Capacity)"]
+        F1["Cap=5: False (Exceeds Days)"] --> F2["Cap=10: False"] --> F3["Cap=14: False"]
+        F3 --> T1["Cap=15: True (Feasible Boundary!)"]
+        T1 --> T2["Cap=20: True"] --> T3["Cap=30: True"]
+    end
+```
 
-### Why Naive QuickSort Can Degrade to $O(N^2)$
-In naive QuickSort, if the pivot selected is always the smallest or largest element (e.g., already sorted array with first element as pivot), the partitioning creates unbalanced subarrays of size $1$ and $N - 1$. The recursion depth becomes $N$, yielding $O(N^2)$ runtime and threatening a `StackOverflowException`.
+### 2. Production Problem: Capacity To Ship Packages Within D Days (LeetCode 1011)
+A conveyor belt has packages that must be shipped within `days` days. Find the **minimum ship weight capacity** so that all packages are shipped within `days` in order.
+- **Lower Bound:** $\max(	ext{weights})$ — The ship must at least carry the heaviest single package.
+- **Upper Bound:** $\sum 	ext{weights}$ — A ship that carries all packages in 1 day.
+
+### 3. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class ShippingCapacityOptimizer
+{
+    /// <summary>
+    /// Finds minimum ship capacity to deliver all packages within maxDays in O(N log(Sum - Max)) time.
+    /// </summary>
+    public static int ShipWithinDays(ReadOnlySpan<int> weights, int maxDays)
+    {
+        int low = 0;
+        int high = 0;
+
+        foreach (int w in weights)
+        {
+            if (w > low) low = w; // Ship must hold at least the largest item
+            high += w;           // Max capacity holds everything in 1 day
+        }
+
+        int optimalCapacity = high;
+
+        while (low <= high)
+        {
+            int midCapacity = low + (high - low) / 2;
+
+            if (CanShipWithinDays(weights, midCapacity, maxDays))
+            {
+                optimalCapacity = midCapacity; // Found valid capacity; try smaller!
+                high = midCapacity - 1;
+            }
+            else
+            {
+                low = midCapacity + 1; // Cannot ship in time; must increase capacity
+            }
+        }
+
+        return optimalCapacity;
+    }
+
+    private static bool CanShipWithinDays(ReadOnlySpan<int> weights, int capacity, int maxDays)
+    {
+        int daysUsed = 1;
+        int currentDayLoad = 0;
+
+        foreach (int w in weights)
+        {
+            if (currentDayLoad + w > capacity)
+            {
+                daysUsed++;
+                currentDayLoad = 0;
+            }
+            currentDayLoad += w;
+        }
+
+        return daysUsed <= maxDays;
+    }
+}
+```
 
 ---
 
-## 7.2 Under the Hood: .NET `Array.Sort` and IntroSort
+## 6.7 Interpolation Search (Uniformly Distributed Probing Engine)
 
-If you examine the .NET 8 Runtime source code (`System.ArraySortHelper<T>`), calling `Array.Sort(arr)` does not use pure QuickSort. It uses **Introspective Sort (IntroSort)**:
+### 1. How to Think
+When a human looks up the name "Smith" in a printed phonebook, they do not open the exact middle page (M). They open near the end (S).
+**Interpolation Search** mimics this intuition for sorted arrays whose elements are **uniformly distributed** (e.g. sequential IDs, timestamps, linear sensor readings).
+- Instead of fixed midpoint splitting ($50\%$), it uses linear interpolation:
+  $$	ext{pos} = 	ext{low} + \left\lfloor rac{	ext{target} - 	ext{arr}[	ext{low}]}{	ext{arr}[	ext{high}] - 	ext{arr}[	ext{low}]} 	imes (	ext{high} - 	ext{low}) ightfloor$$
 
 ```
-                          ┌────────────────────────┐
-                          │   Array.Sort() Call    │
-                          └───────────┬────────────┘
-                                      │
-                         Is Partition Size <= 16 ?
-                                ┌─────┴─────┐
-                             Yes│           │No
-                                ▼           ▼
-                       [InsertionSort]   [QuickSort with Median-of-3 Pivot]
-                                            │
-                                  Did Recursion Depth
-                                  Exceed 2 * Log2(N)?
-                                       ┌────┴────┐
-                                    Yes│         │No
-                                       ▼         ▼
-                                  [HeapSort]  Continue QuickSort
+Binary Search Probe:        [------------------- MID (50%) -------------------]
+Interpolation Probe:        [--------- TARGET IS 25% &rarr; PROBE HERE ---]
 ```
 
-### The Three Phases of .NET IntroSort:
-1. **QuickSort with Median-of-3 Pivot:** Selects the median of the first, middle, and last elements as the pivot. This eliminates the $O(N^2)$ worst-case on already-sorted or reverse-sorted inputs.
-2. **HeapSort Fallback Guard:** If the recursion depth exceeds $2 \times \lfloor\log_2 N\rfloor$, IntroSort detects that QuickSort is degrading and immediately switches to **HeapSort**. HeapSort guarantees an upper bound of $O(N \log N)$ time and $O(1)$ space.
-3. **InsertionSort for Small Partitions:** When a sub-partition shrinks to $\le 16$ elements, IntroSort switches to **InsertionSort**. On tiny arrays, InsertionSort outperforms QuickSort because it has zero recursion overhead and exploits CPU L1 cache locality with minimal branch mispredictions.
+### 2. Performance & The Danger Warning
+- **Best / Average Time:** $O(\log \log N)$ — For $1,000,000$ uniformly distributed items, $\log_2(\log_2(10^6)) pprox 4.3$ probes!
+- **Worst-Case Trap ($O(N)$):** If data is **exponentially distributed** (e.g., `[1, 2, 4, 8, 16, 1024, 65536]`), the interpolation formula degenerates to crawling 1 element at a time, degrading to $O(N)$.
+- **Engineering Rule:** Only use Interpolation Search on validated linear data sets!
 
-> **Interview Answer:** *"Why doesn't .NET use MergeSort for `Array.Sort`?"*  
-> **Answer:** MergeSort requires $O(N)$ extra memory allocation to merge arrays. IntroSort is an in-place sort requiring $O(\log N)$ stack space with superior cache locality. For reference types where stability is required, LINQ's `.OrderBy()` uses an adaptive stable sort.
+### 3. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class InterpolationSearchEngine
+{
+    /// <summary>
+    /// Performs interpolation search on sorted uniformly distributed data.
+    /// Average Time: O(log log N), Worst Time: O(N).
+    /// </summary>
+    public static int InterpolationSearch(ReadOnlySpan<int> arr, int target)
+    {
+        int low = 0;
+        int high = arr.Length - 1;
+
+        while (low <= high && target >= arr[low] && target <= arr[high])
+        {
+            if (low == high)
+            {
+                return arr[low] == target ? low : -1;
+            }
+
+            // Proportional slope calculation
+            long numerator = (long)(target - arr[low]) * (high - low);
+            long denominator = arr[high] - arr[low];
+            int pos = low + (int)(numerator / denominator);
+
+            if (arr[pos] == target)
+            {
+                return pos;
+            }
+
+            if (arr[pos] < target)
+            {
+                low = pos + 1;
+            }
+            else
+            {
+                high = pos - 1;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+---
+
+## 6.8 Exponential Search (Unbounded Ledger Streams & Fast Galloping)
+
+### 1. How to Think
+Exponential Search (also known as Galloping Search or Doubling Search) is designed for **unbounded, infinite, or unknown-length streams** (e.g., live append-only transactional logs, continuous telemetry feeds).
+- **Two-Step Strategy:**
+  1. Find the range where target exists by testing indices that double exponentially: $1, 2, 4, 8, 16, 32, \dots, 2^k$.
+  2. Once `arr[bound] >= target` (or array bounds reached), perform standard **Binary Search** inside the narrow slice $[rac{	ext{bound}}{2}, \, \min(	ext{bound}, N-1)]$.
+
+```
+Index Doubling:
+Probe:   1 &rarr; 2 &rarr; 4 &rarr; 8 &rarr; 16 &rarr; 32 &rarr; 64 (arr[64] >= target!)
+Narrow Binary Search between Index 32 and 64!
+```
+
+### 2. Complexity Analysis
+- Let $i$ be the index where `target` resides.
+- Doubling step takes $O(\log i)$ iterations.
+- Binary search within a slice of size $i$ takes $O(\log i)$.
+- **Total Time Complexity:** $O(\log i)$ — If target is near the start of a multi-million-row dataset, Exponential Search finds it in microseconds without evaluating the full array!
+
+### 3. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class ExponentialSearchEngine
+{
+    /// <summary>
+    /// Searches sorted data in O(log i) time where i is the target index.
+    /// Ideal for unbounded streams or when target is expected near the beginning.
+    /// </summary>
+    public static int ExponentialSearch(ReadOnlySpan<int> arr, int target)
+    {
+        int n = arr.Length;
+        if (n == 0) return -1;
+        if (arr[0] == target) return 0;
+
+        // Phase 1: Galloping index doubling
+        int bound = 1;
+        while (bound < n && arr[bound] < target)
+        {
+            bound *= 2;
+        }
+
+        // Phase 2: Binary Search in [bound / 2 .. min(bound, n - 1)]
+        int low = bound / 2;
+        int high = Math.Min(bound, n - 1);
+
+        while (low <= high)
+        {
+            int mid = low + (high - low) / 2;
+            if (arr[mid] == target) return mid;
+
+            if (arr[mid] < target) low = mid + 1;
+            else high = mid - 1;
+        }
+
+        return -1;
+    }
+}
+```
+
+---
+
+## 6.9 Ternary Search (Finding Extrema in Unimodal Functions)
+
+### 1. How to Think
+Ternary Search is a divide-and-conquer algorithm used when a function or array is **unimodal**: it strictly increases to a single peak (maximum) and then strictly decreases, or vice-versa.
+- Standard Binary Search divides space into 2 halves using 1 midpoint.
+- Ternary Search divides the range $[L, R]$ into **3 equal segments** using two midpoints $m_1$ and $m_2$:
+  $$m_1 = L + rac{R - L}{3}, \quad m_2 = R - rac{R - L}{3}$$
+- By comparing $f(m_1)$ and $f(m_2)$, we can discard one-third of the search space on every iteration!
+
+```
+Unimodal Peak Curve:
+            /           /  \  Peak Maximum
+          /      -------/------\-------
+        m1      m2
+If f(m1) < f(m2) &rarr; Peak cannot be in [L, m1]. Discard left third! Set L = m1 + 1.
+If f(m1) > f(m2) &rarr; Peak cannot be in [m2, R]. Discard right third! Set R = m2 - 1.
+```
+
+### 2. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class TernarySearchEngine
+{
+    /// <summary>
+    /// Finds the peak element index in a unimodal strictly increasing-then-decreasing array in O(log3 N).
+    /// </summary>
+    public static int FindPeakInUnimodal(ReadOnlySpan<int> arr)
+    {
+        int low = 0;
+        int high = arr.Length - 1;
+
+        while (high - low > 2)
+        {
+            int third = (high - low) / 3;
+            int m1 = low + third;
+            int m2 = high - third;
+
+            if (arr[m1] < arr[m2])
+            {
+                low = m1; // Peak is in [m1 .. high]
+            }
+            else
+            {
+                high = m2; // Peak is in [low .. m2]
+            }
+        }
+
+        // Exhaustive check on remaining 1-3 elements
+        int maxIdx = low;
+        for (int i = low + 1; i <= high; i++)
+        {
+            if (arr[i] > arr[maxIdx]) maxIdx = i;
+        }
+
+        return maxIdx;
+    }
+}
+```
+
+---
+
+# 7. SORTING ALGORITHMS: FROM FIRST PRINCIPLES TO .NET INTROSORT
+
+Sorting is the core foundation of data organization, database indexing, and query execution planning. In enterprise .NET systems, choosing the wrong sorting algorithm or failing to understand stability, memory allocations, and hardware cache efficiency can trigger severe performance bottlenecks, garbage collection spikes, and CPU branch thrashing.
+
+---
+
+## 7.1 The Sorting Taxonomy & Complexity Matrix
+
+```mermaid
+flowchart TD
+    AllSorts["Sorting Algorithms Taxonomy"] --> ComparisonSorts["Comparison-Based Sorts<br>(Theoretical Lower Bound: &Omega;(N log N))"]
+    AllSorts --> NonComparisonSorts["Non-Comparison Sorts<br>(Linear Time: O(N + K))"]
+    
+    ComparisonSorts --> Quadratic["Quadratic Sorts O(N^2)<br>(Small Datasets / Embedded)"]
+    ComparisonSorts --> LogLinear["Log-Linear Sorts O(N log N)<br>(General Purpose / Production)"]
+    
+    Quadratic --> Bubble["Bubble Sort (Early Exit)"]
+    Quadratic --> Selection["Selection Sort (Min Writes)"]
+    Quadratic --> Insertion["Insertion Sort (Adaptive / Best for N &le; 16)"]
+    
+    LogLinear --> Merge["Merge Sort (Stable, External, Lists)"]
+    LogLinear --> Quick["QuickSort (Hoare / Median-of-3)"]
+    LogLinear --> Heap["HeapSort (O(1) Memory Guarantee)"]
+    LogLinear --> Intro["IntroSort (CLR Hybrid: Quick + Heap + Insert)"]
+    
+    NonComparisonSorts --> Counting["Counting Sort (Integer Keys [0..K])"]
+    NonComparisonSorts --> Radix["Radix Sort (LSD / Byte Chunking)"]
+```
+
+### Complete Sorting Master Comparison Table
+
+| Algorithm | Best Time | Average Time | Worst Time | Space | Stable? | In-Place? | Key Architectural Property |
+|---|---|---|---|---|---|---|---|
+| **Bubble Sort** | $O(N)$ (swapped flag) | $O(N^2)$ | $O(N^2)$ | $O(1)$ | **Yes** | **Yes** | Academic reference; early-exit detection |
+| **Selection Sort** | $O(N^2)$ | $O(N^2)$ | $O(N^2)$ | $O(1)$ | No | **Yes** | **Minimizes writes:** strictly $N-1$ swaps total |
+| **Insertion Sort** | $O(N)$ | $O(N^2)$ | $O(N^2)$ | $O(1)$ | **Yes** | **Yes** | **Fastest on tiny arrays ($N \le 16$)**; used in IntroSort & TimSort |
+| **Merge Sort** | $O(N \log N)$ | $O(N \log N)$ | $O(N \log N)$ | $O(N)$ | **Yes** | No | Stable; guaranteed worst-case; ideal for linked data |
+| **Quick Sort** | $O(N \log N)$ | $O(N \log N)$ | $O(N^2)$ | $O(\log N)$ | No | **Yes** | Highest practical speed; optimal L1/L2 cache locality |
+| **Heap Sort** | $O(N \log N)$ | $O(N \log N)$ | $O(N \log N)$ | $O(1)$ | No | **Yes** | Zero extra memory; immune to QuickSort worst-case |
+| **IntroSort** | $O(N \log N)$ | $O(N \log N)$ | $O(N \log N)$ | $O(\log N)$ | No | **Yes** | **.NET `Array.Sort` default**: Quick + Heap + Insert hybrid |
+| **Counting Sort** | $O(N + K)$ | $O(N + K)$ | $O(N + K)$ | $O(N + K)$ | **Yes** | No | Non-comparison; linear time when $K = O(N)$ |
+| **Radix Sort** | $O(d(N + b))$ | $O(d(N + b))$ | $O(d(N + b))$ | $O(N + b)$ | **Yes** | No | Non-comparison; fixed-width integers and hashes |
+
+---
+
+## 7.2 Bubble Sort (Standard & Early-Exit Optimization)
+
+### 1. Invariants & Mechanics
+Bubble Sort repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order.
+- **Pass Invariant:** After pass $k$, the **$k$-th largest element has "bubbled up"** into its permanent final position at the end of the array.
+- **The Optimization:** If an entire pass completes without a single swap (`hasSwapped == false`), the array is **already sorted**! The algorithm terminates immediately in $O(N)$ time.
+
+```
+Pass 1 Trace:
+[ 5, 1, 4, 2, 8 ] &rarr; Compare (5, 1) &rarr; Swap: [ 1, 5, 4, 2, 8 ]
+[ 1, 5, 4, 2, 8 ] &rarr; Compare (5, 4) &rarr; Swap: [ 1, 4, 5, 2, 8 ]
+[ 1, 4, 5, 2, 8 ] &rarr; Compare (5, 2) &rarr; Swap: [ 1, 4, 2, 5, 8 ]
+[ 1, 4, 2, 5, 8 ] &rarr; Compare (5, 8) &rarr; No Swap: 8 is locked in final slot!
+```
+
+### 2. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class BubbleSortEngine
+{
+    /// <summary>
+    /// Bubble sort with early-exit optimization. In-place O(1) space, O(N) best case.
+    /// </summary>
+    public static void Sort(Span<int> arr)
+    {
+        int n = arr.Length;
+        for (int i = 0; i < n - 1; i++)
+        {
+            bool hasSwapped = false;
+
+            // Invariant: Last i elements are already locked in sorted position
+            for (int j = 0; j < n - 1 - i; j++)
+            {
+                if (arr[j] > arr[j + 1])
+                {
+                    (arr[j], arr[j + 1]) = (arr[j + 1], arr[j]);
+                    hasSwapped = true;
+                }
+            }
+
+            // If no elements were swapped during this pass, array is completely sorted
+            if (!hasSwapped) break;
+        }
+    }
+}
+```
+
+---
+
+## 7.3 Selection Sort (Minimum-Scan & Minimal Memory Writes)
+
+### 1. Invariants & Mechanics
+Selection Sort divides the array into a sorted prefix and an unsorted suffix. In each pass, it scans the unsorted suffix to find the **index of the minimum element**, and performs **one single swap** to place it at the boundary.
+- **The Key Architectural Advantage:**
+  - Bubble Sort and Insertion Sort can trigger up to $O(N^2)$ memory writes.
+  - Selection Sort performs **strictly at most $N - 1$ swaps**!
+  - In hardware environments where **memory writes degrade flash storage** (e.g. EEPROM, solid-state embedded devices, NVRAM), Selection Sort is prized for minimal write amplification.
+
+```
+Array Division:
+[ Sorted Prefix | Unsorted Suffix ]
+[ 1, 2, 3       | 8, 5, 4, 9, 7   ]
+                  ▲  ▲
+                 Find min in suffix (4) &rarr; Swap with first unsorted element (8)!
+```
+
+### 2. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class SelectionSortEngine
+{
+    /// <summary>
+    /// Selection sort: Minimizes memory writes to O(N) swaps.
+    /// </summary>
+    public static void Sort(Span<int> arr)
+    {
+        int n = arr.Length;
+
+        for (int i = 0; i < n - 1; i++)
+        {
+            int minIndex = i;
+
+            for (int j = i + 1; j < n; j++)
+            {
+                if (arr[j] < arr[minIndex])
+                {
+                    minIndex = j;
+                }
+            }
+
+            if (minIndex != i)
+            {
+                (arr[i], arr[minIndex]) = (arr[minIndex], arr[i]);
+            }
+        }
+    }
+}
+```
+
+---
+
+## 7.4 Insertion Sort (Adaptive Shifting & Small Partition Powerhouse)
+
+### 1. Mechanical Sympathy: Why All Runtimes Use Insertion Sort
+Insertion Sort works like sorting a hand of playing cards. For element `i`, it shifts all preceding elements that are greater than `key` one position to the right, and drops `key` into its open slot.
+- **Why It Is Essential in Modern Runtimes (.NET, Java, V8):**
+  1. **Adaptive:** If an array is already sorted or nearly sorted, Insertion Sort runs in strictly $O(N)$ time with minimal comparisons.
+  2. **Cache Locality:** Memory access is completely sequential and backwards adjacent, remaining entirely inside the **CPU L1 Data Cache**.
+  3. **Zero Call Stack Overhead:** Unlike QuickSort or MergeSort, it has no function calls or stack frame allocations.
+  - This is why **.NET IntroSort switches to Insertion Sort whenever partition size is $\le 16$!**
+
+```
+Shifting Trace:
+Array: [ 2, 4, 7, 9, | 5 ]  &rarr; key = 5
+Compare 5 < 9 &rarr; Shift 9 right: [ 2, 4, 7, _, 9 ]
+Compare 5 < 7 &rarr; Shift 7 right: [ 2, 4, _, 7, 9 ]
+Compare 5 >= 4 &rarr; Stop shifting! Insert key: [ 2, 4, 5, 7, 9 ]
+```
+
+### 2. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class InsertionSortEngine
+{
+    /// <summary>
+    /// Insertion sort: In-place, stable, adaptive O(N) best case.
+    /// Optimal for small slices (N <= 16) and nearly-sorted telemetry streams.
+    /// </summary>
+    public static void Sort(Span<int> arr)
+    {
+        int n = arr.Length;
+
+        for (int i = 1; i < n; i++)
+        {
+            int key = arr[i];
+            int j = i - 1;
+
+            // Shift elements of arr[0..i-1] that are greater than key to one position ahead
+            while (j >= 0 && arr[j] > key)
+            {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+
+            arr[j + 1] = key;
+        }
+    }
+}
+```
+
+---
+
+## 7.5 Merge Sort (Divide & Conquer, In-Depth Memory Mechanics & Stability)
+
+### 1. Invariants, Recursion & Stability
+Merge Sort is a classic Divide and Conquer algorithm:
+1. **Divide:** Recursively divide array into two equal halves until sub-arrays of size 1 are reached.
+2. **Conquer & Combine:** Merge two sorted sub-arrays into a single sorted buffer.
+- **Why Stability Matters in Enterprise Systems:**
+  - Suppose you sort an Employee table by `HireDate`, and then sort by `Department`.
+  - A **Stable Sort** guarantees that within the same Department, employees remain sorted by their original `HireDate`!
+  - QuickSort and HeapSort are **Unstable** (they reorder equal elements). MergeSort is strictly **Stable** because during merging, when `arr[i] == arr[j]`, we always pick the left element first.
+
+```mermaid
+flowchart TD
+    Split0["[ 38, 27, 43, 3, 9, 82, 10 ]"] --> Split1A["[ 38, 27, 43, 3 ]"]
+    Split0 --> Split1B["[ 9, 82, 10 ]"]
+    
+    Split1A --> Split2A["[ 38, 27 ]"]
+    Split1A --> Split2B["[ 43, 3 ]"]
+    
+    Split2A --> Merge1A["Merge &rarr; [ 27, 38 ]"]
+    Split2B --> Merge1B["Merge &rarr; [ 3, 43 ]"]
+    
+    Merge1A & Merge1B --> Merge2A["Merge &rarr; [ 3, 27, 38, 43 ]"]
+    
+    Split1B --> Merge2B["Merge &rarr; [ 9, 10, 82 ]"]
+    Merge2A & Merge2B --> FinalMerge["Final Merge &rarr; [ 3, 9, 10, 27, 38, 43, 82 ]"]
+```
+
+### 2. High-Performance C# Solution (Reusing Temporary Buffer)
+Novice implementations allocate a new `new int[...]` inside every recursive call, generating massive GC pressure ($O(N \log N)$ allocations).
+The senior implementation allocates **one single auxiliary buffer upfront** ($O(N)$ allocation) and slices it using `Span<T>`.
+
+```csharp
+using System;
+
+public static class MergeSortEngine
+{
+    /// <summary>
+    /// High-performance stable MergeSort with a single pre-allocated scratch buffer.
+    /// Guarantees O(N log N) worst-case time.
+    /// </summary>
+    public static void Sort(Span<int> arr)
+    {
+        if (arr.Length <= 1) return;
+
+        // Allocate auxiliary buffer once upfront
+        int[] aux = new int[arr.Length];
+        MergeSortInternal(arr, aux.AsSpan(), 0, arr.Length - 1);
+    }
+
+    private static void MergeSortInternal(Span<int> arr, Span<int> aux, int low, int high)
+    {
+        if (low >= high) return;
+
+        int mid = low + (high - low) / 2;
+
+        MergeSortInternal(arr, aux, low, mid);
+        MergeSortInternal(arr, aux, mid + 1, high);
+
+        Merge(arr, aux, low, mid, high);
+    }
+
+    private static void Merge(Span<int> arr, Span<int> aux, int low, int mid, int high)
+    {
+        // Copy to aux buffer
+        for (int k = low; k <= high; k++)
+        {
+            aux[k] = arr[k];
+        }
+
+        int i = low;
+        int j = mid + 1;
+        int current = low;
+
+        while (i <= mid && j <= high)
+        {
+            // Stable condition: '<=' preserves original relative ordering
+            if (aux[i] <= aux[j])
+            {
+                arr[current++] = aux[i++];
+            }
+            else
+            {
+                arr[current++] = aux[j++];
+            }
+        }
+
+        // Copy remaining elements of left half (if any)
+        while (i <= mid)
+        {
+            arr[current++] = aux[i++];
+        }
+
+        // Note: Remaining elements of right half are already in their correct places!
+    }
+}
+```
+
+---
+
+## 7.6 Quick Sort (Lomuto vs. Hoare Partitioning & Median-of-3 Pivot)
+
+### 1. Partitioning Mechanics: Lomuto vs. Hoare
+- **Lomuto Partitioning:** Uses a single scanner pointer and a boundary pointer. Simple to write, but executes **3x more swap instructions** and degrades severely on duplicate elements.
+- **Hoare Partitioning:** Uses two pointers moving inward from both ends towards each other. It terminates faster and performs on average **one-third the number of swaps**!
+- **Median-of-3 Pivot Defense:**
+  - Choosing the first or last element as pivot causes $O(N^2)$ runtime on already-sorted arrays.
+  - Median-of-3 samples `arr[low]`, `arr[mid]`, `arr[high]`, finds their median value, and places it as pivot. This completely neuters the worst-case scenario.
+
+```
+Hoare Partitioning Inward Scanners:
+Array: [ 5, 2, 8, 3, 9, 1, 6 ], Pivot = 5
+         ▲                 ▲
+         i &rarr;             &larr; j
+Advance i while arr[i] < pivot; Decrement j while arr[j] > pivot.
+Swap arr[i] and arr[j] when out of place!
+```
+
+### 2. C# Solution (.NET 8 with Hoare Partitioning)
+
+```csharp
+using System;
+
+public static class QuickSortEngine
+{
+    public static void Sort(Span<int> arr)
+    {
+        if (arr.Length <= 1) return;
+        QuickSortInternal(arr, 0, arr.Length - 1);
+    }
+
+    private static void QuickSortInternal(Span<int> arr, int low, int high)
+    {
+        while (low < high)
+        {
+            // Small partition optimization: Switch to Insertion Sort for N <= 16
+            if (high - low < 16)
+            {
+                InsertionSortEngine.Sort(arr.Slice(low, high - low + 1));
+                break;
+            }
+
+            int pivotIndex = Partition(arr, low, high);
+
+            // Tail-call recursion optimization: Recurse on smaller half, loop on larger
+            if (pivotIndex - low < high - pivotIndex)
+            {
+                QuickSortInternal(arr, low, pivotIndex);
+                low = pivotIndex + 1;
+            }
+            else
+            {
+                QuickSortInternal(arr, pivotIndex + 1, high);
+                high = pivotIndex;
+            }
+        }
+    }
+
+    private static int Partition(Span<int> arr, int low, int high)
+    {
+        // Median-of-3 Pivot Selection
+        int mid = low + (high - low) / 2;
+        if (arr[low] > arr[mid]) (arr[low], arr[mid]) = (arr[mid], arr[low]);
+        if (arr[low] > arr[high]) (arr[low], arr[high]) = (arr[high], arr[low]);
+        if (arr[mid] > arr[high]) (arr[mid], arr[high]) = (arr[high], arr[mid]);
+
+        int pivot = arr[mid];
+        int i = low - 1;
+        int j = high + 1;
+
+        while (true)
+        {
+            do { i++; } while (arr[i] < pivot);
+            do { j--; } while (arr[j] > pivot);
+
+            if (i >= j) return j;
+
+            (arr[i], arr[j]) = (arr[j], arr[i]);
+        }
+    }
+}
+```
+
+---
+
+## 7.7 Heap Sort (In-Place Array-Based Max-Heapify)
+
+### 1. Invariants & Complete Binary Tree Mapping
+Heap Sort is an in-place $O(N \log N)$ algorithm that requires **$O(1)$ auxiliary memory**.
+It models the flat array as a Complete Binary Tree:
+- **Parent Index:** $	ext{parent}(i) = \lfloor (i - 1) / 2 floor$
+- **Left Child:** $	ext{left}(i) = 2i + 1$
+- **Right Child:** $	ext{right}(i) = 2i + 2$
+
+```
+Array to Binary Tree Mapping:
+Array: [ 90, 75, 80, 40, 60, 70, 50 ]
+Index:    0   1   2   3   4   5   6
+
+               90 (Index 0)
+             /         (Idx 1) 75    80 (Idx 2)
+            /  \   /       (3)  40  60  70  50 (6)
+```
+
+### 2. The Two Execution Phases
+1. **Phase 1: Build Max-Heap ($O(N)$ Time):**
+   - Starting from the lowest non-leaf node $\lfloor N/2 floor - 1$ down to index $0$, run `SiftDown`.
+   - Amazingly, building the heap is $O(N)$, not $O(N \log N)$, because the majority of nodes reside near the bottom with minimal tree height.
+2. **Phase 2: Repeated Extraction ($O(N \log N)$ Time):**
+   - The maximum element is always at index $0$.
+   - Swap `arr[0]` with `arr[end]`.
+   - Shrink the active heap boundary (`end--`).
+   - Sift down the new root `arr[0]`.
+
+### 3. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class HeapSortEngine
+{
+    /// <summary>
+    /// In-place HeapSort with guaranteed O(N log N) worst-case time and O(1) space.
+    /// </summary>
+    public static void Sort(Span<int> arr)
+    {
+        int n = arr.Length;
+        if (n <= 1) return;
+
+        // Phase 1: Build Max-Heap in O(N) time
+        for (int i = (n / 2) - 1; i >= 0; i--)
+        {
+            SiftDown(arr, i, n);
+        }
+
+        // Phase 2: Extract maximum to end and restore heap
+        for (int end = n - 1; end > 0; end--)
+        {
+            (arr[0], arr[end]) = (arr[end], arr[0]); // Move max to sorted end slot
+            SiftDown(arr, 0, end);                   // Restore heap invariant on remaining [0..end-1]
+        }
+    }
+
+    private static void SiftDown(Span<int> arr, int root, int heapSize)
+    {
+        while (true)
+        {
+            int largest = root;
+            int leftChild = 2 * root + 1;
+            int rightChild = 2 * root + 2;
+
+            if (leftChild < heapSize && arr[leftChild] > arr[largest])
+            {
+                largest = leftChild;
+            }
+
+            if (rightChild < heapSize && arr[rightChild] > arr[largest])
+            {
+                largest = rightChild;
+            }
+
+            if (largest == root) break; // Heap property satisfied
+
+            (arr[root], arr[largest]) = (arr[largest], arr[root]);
+            root = largest; // Continue down the tree
+        }
+    }
+}
+```
+
+---
+
+## 7.8 Counting Sort (Non-Comparison O(N + K) Integer Sorting)
+
+### 1. The Power of Direct Index Addressing
+Comparison-based sorting has a mathematical lower bound of $\Omega(N \log N)$.
+**Counting Sort** breaks this barrier by avoiding comparisons entirely. It operates by counting the occurrences of each discrete integer value in a predefined range $[0..K]$.
+- **Three Steps:**
+  1. Count frequencies of each value into `count[K + 1]`.
+  2. Compute running prefix sums in `count`: `count[i] += count[i - 1]` (this calculates the exact ending position of each value).
+  3. Iterate **backwards** through the input array to populate the output array, maintaining **absolute stability**!
+
+```
+Count Array Prefix Sums:
+Values:       [ 1, 4, 1, 2, 7, 5, 2 ]
+Frequencies:  Val 1: 2, Val 2: 2, Val 4: 1, Val 5: 1, Val 7: 1
+Prefix Sums:  Val 1 &rarr; Index 1, Val 2 &rarr; Index 3, Val 4 &rarr; Index 4...
+```
+
+### 2. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class CountingSortEngine
+{
+    /// <summary>
+    /// Non-comparison stable sort in O(N + K) time and O(N + K) space.
+    /// </summary>
+    public static void Sort(Span<int> arr, int minVal, int maxVal)
+    {
+        int range = maxVal - minVal + 1;
+        Span<int> count = stackalloc int[range < 1024 ? range : 0];
+        int[]? heapCount = range >= 1024 ? new int[range] : null;
+        Span<int> countSpan = heapCount != null ? heapCount.AsSpan() : count;
+
+        // Step 1: Tally frequencies
+        foreach (int val in arr)
+        {
+            countSpan[val - minVal]++;
+        }
+
+        // Step 2: Accumulate prefix sums
+        for (int i = 1; i < range; i++)
+        {
+            countSpan[i] += countSpan[i - 1];
+        }
+
+        // Step 3: Populate output backwards for stability
+        int[] output = new int[arr.Length];
+        for (int i = arr.Length - 1; i >= 0; i--)
+        {
+            int val = arr[i];
+            int destIdx = countSpan[val - minVal] - 1;
+            output[destIdx] = val;
+            countSpan[val - minVal]--;
+        }
+
+        // Copy back
+        output.AsSpan().CopyTo(arr);
+    }
+}
+```
+
+---
+
+## 7.9 Radix Sort (LSD Base-10 / 256 Distribution Engine)
+
+### 1. Invariants & Digit Bucketing
+Radix Sort sorts integers by processing individual digits, from the **Least Significant Digit (LSD)** to the Most Significant Digit (MSD).
+- By using stable Counting Sort as a subroutine for each digit, the relative order established by earlier digits is strictly preserved!
+- **Byte-Chunking Optimization (Base-256):**
+  - Instead of dividing by decimal 10 (`% 10`), low-level high-performance engines sort 32-bit integers in **4 passes of 8-bit bytes** ($2^8 = 256$ buckets) using bitwise shifts (`>> 0`, `>> 8`, `>> 16`, `>> 24`).
+  - Total passes: exactly 4, regardless of $N$!
+
+```
+LSD Radix Sort (Base 10):
+Input:   [ 170, 045, 075, 090, 002, 024, 802, 066 ]
+Pass 1 (Units):   [ 170, 090, 002, 802, 024, 045, 075, 066 ]
+Pass 2 (Tens):    [ 002, 802, 024, 045, 066, 170, 075, 090 ]
+Pass 3 (Hundreds):[ 002, 024, 045, 066, 075, 090, 170, 802 ] &rarr; Sorted!
+```
+
+### 2. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class RadixSortEngine
+{
+    /// <summary>
+    /// LSD Radix Sort for non-negative integers in O(d * (N + 10)) time.
+    /// </summary>
+    public static void Sort(Span<int> arr)
+    {
+        if (arr.Length <= 1) return;
+
+        int max = arr[0];
+        foreach (int v in arr) if (v > max) max = v;
+
+        int[] aux = new int[arr.Length];
+
+        // Process each digit position: 1, 10, 100, 1000...
+        for (long exp = 1; max / exp > 0; exp *= 10)
+        {
+            CountingSortByDigit(arr, aux.AsSpan(), exp);
+        }
+    }
+
+    private static void CountingSortByDigit(Span<int> arr, Span<int> aux, long exp)
+    {
+        Span<int> count = stackalloc int[10];
+
+        foreach (int val in arr)
+        {
+            int digit = (int)((val / exp) % 10);
+            count[digit]++;
+        }
+
+        for (int i = 1; i < 10; i++)
+        {
+            count[i] += count[i - 1];
+        }
+
+        for (int i = arr.Length - 1; i >= 0; i--)
+        {
+            int digit = (int)((arr[i] / exp) % 10);
+            aux[count[digit] - 1] = arr[i];
+            count[digit]--;
+        }
+
+        aux.CopyTo(arr);
+    }
+}
+```
+
+---
+
+## 7.10 Under the Hood: .NET 8 IntroSort & ArraySortHelper<T>
+
+When you invoke `Array.Sort(arr)` or `span.Sort()` in .NET 8, the CoreCLR runtime uses **Introspective Sort (IntroSort)** inside `System.ArraySortHelper<T>`:
+
+```mermaid
+flowchart TD
+    Call["Array.Sort(arr) / span.Sort()"] --> CheckLen{"Partition Length <= 16?"}
+    
+    CheckLen -- Yes --> Insertion["Run InsertionSort<br>(Zero recursion, high L1 cache locality)"]
+    
+    CheckLen -- No --> CheckDepth{"Recursion Depth > 2 * Log2(N)?"}
+    
+    CheckDepth -- Yes --> HeapFallback["HeapSort Fallback Guard<br>(Guarantees O(N log N) upper bound, O(1) space)"]
+    
+    CheckDepth -- No --> QuickPartition["QuickSort with Median-of-3 Pivot<br>(Hoare partitioning)"]
+    QuickPartition --> Recurse["Divide into sub-partitions & recurse"]
+    Recurse --> CheckLen
+```
+
+### The Three Protective Pillars of IntroSort
+1. **Median-of-3 QuickSort:** Prevents the $O(N^2)$ trap on sorted or reverse-sorted input by picking the median of the first, middle, and last elements.
+2. **HeapSort Fallback Guard:** If the recursion tree exceeds $2 	imes \lfloor \log_2 N floor$ levels (indicating an adversarial input designed to degrade QuickSort), the runtime instantly switches to **HeapSort**. This strictly guarantees an upper bound of $O(N \log N)$ and prevents `StackOverflowException`.
+3. **InsertionSort Leaf Optimization:** When partitions shrink to $\le 16$ elements, the runtime switches to **InsertionSort**. On micro-arrays, InsertionSort out-performs QuickSort by avoiding function prologue/epilogue overhead and exploiting CPU branch prediction.
+
+> **Interview Answer:** *"Why does .NET not use MergeSort for `Array.Sort`?"*  
+> **Answer:** MergeSort requires allocating an auxiliary array of size $O(N)$ on the Managed Heap, triggering high GC pressure. IntroSort operates completely in-place with $O(\log N)$ stack frames and superior cache line locality. When stability is needed (e.g., LINQ `.OrderBy()`), .NET uses a stable TimSort-inspired algorithm.
 
 ---
 
