@@ -35,65 +35,40 @@
 
 All 14 volumes have been **100% completed**, peer-reviewed, and verified against the 12-section architecture schema.
 
-| Volume | Title | Word Count | File Size | Output Markdown | Output HTML | Status |
-|--------|-------|------------|-----------|-----------------|-------------|--------|
-| **Vol 0** | Software Engineering Fundamentals | 7,513 | 57.4 KB | `md/Volume-0-Software-Engineering-Fundamentals.md` | `htmls/Volume-0-Software-Engineering-Fundamentals.html` | ✅ Complete |
-| **Vol X** | .NET Platform & CoreCLR Runtime | 14,236 | 140.5 KB | `md/Volume-X-DotNet-Platform-Core-Encyclopedia.md` | `htmls/Volume-X-DotNet-Platform-Core-Encyclopedia.html` | ✅ Complete |
-| **Vol 1** | Logical Thinking & DSA | 19,073 | 135.2 KB | `md/Volume-1-DSA-Logical-Thinking.md` | `htmls/Volume-1-DSA-Logical-Thinking.html` | ✅ Complete |
-| **Vol 2** | C# Complete Language Encyclopedia | 28,671 | 222.6 KB | `md/Volume-2-CSharp-Encyclopedia.md` | `htmls/Volume-2-CSharp-Encyclopedia.html` | ✅ Complete |
-| **Vol 3** | Advanced C# & Memory Management | 21,811 | 181.5 KB | `md/Volume-3-Advanced-CSharp.md` | `htmls/Volume-3-Advanced-CSharp.html` | ✅ Complete |
-| **Vol 4** | OOP & Enterprise Principles | 7,636 | 64.0 KB | `md/Volume-4-OOP-Design-Principles.md` | `htmls/Volume-4-OOP-Design-Principles.html` | ✅ Complete |
-| **Vol 5** | Enterprise GoF Design Patterns | 8,281 | 80.2 KB | `md/Volume-5-Design-Patterns.md` | `htmls/Volume-5-Design-Patterns.html` | ✅ Complete |
-| **Vol 6** | ASP.NET Core Complete Architecture | 28,495 | 249.5 KB | `md/Volume-6-ASPNetCore.md` | `htmls/Volume-6-ASPNetCore.html` | ✅ Complete |
-| **Vol 7** | Entity Framework Core Internals | 15,357 | 125.9 KB | `md/Volume-7-EFCore.md` | `htmls/Volume-7-EFCore.html` | ✅ Complete |
-| **Vol 8** | Database Engine Internals & SQL Server | 27,613 | 200.8 KB | `md/Volume-8-Database-SQL.md` | `htmls/Volume-8-Database-SQL.html` | ✅ Complete |
-| **Vol 9** | Microservices & Distributed Systems | 7,665 | 70.1 KB | `md/Volume-9-Microservices.md` | `htmls/Volume-9-Microservices.html` | ✅ Complete |
-| **Vol 10** | Enterprise System Design & Scaling | 14,823 | 142.4 KB | `md/Volume-10-System-Design.md` | `htmls/Volume-10-System-Design.html` | ✅ Complete |
-| **Vol 11** | Project Interview Mastery | 6,901 | 45.1 KB | `md/Volume-11-Project-Interview-Mastery.md` | `htmls/Volume-11-Project-Interview-Mastery.html` | ✅ Complete |
-| **Vol 12** | Master Interview Question Bank | 33,336 | 247.0 KB | `md/Volume-12-Interview-Question-Bank.md` | `htmls/Volume-12-Interview-Question-Bank.html` | ✅ Complete |
-| **TOTAL** | **Comprehensive 14-Volume Master Suite** | **241,411 Words** | **1,962 KB** | **All 14 Markdown Files** | **14 HTMLs + Index Portal** | **100% COMPLETE** |
+| Volume | Title | Word Count | Output Markdown | Output HTML | Status |
+|--------|-------|------------|-----------------|-------------|--------|
+| **Vol 0** | Software Engineering Fundamentals | 7,513 | `md/Volume-0-Software-Engineering-Fundamentals.md` | `htmls/Volume-0-Software-Engineering-Fundamentals.html` | ✅ Complete |
+| **Vol X** | .NET Platform & CoreCLR Runtime | 14,236 | `md/Volume-X-DotNet-Platform-Core-Encyclopedia.md` | `htmls/Volume-X-DotNet-Platform-Core-Encyclopedia.html` | ✅ Complete |
+| **Vol 1** | Logical Thinking & DSA | 19,073 | `md/Volume-1-DSA-Logical-Thinking.md` | `htmls/Volume-1-DSA-Logical-Thinking.html` | ✅ Complete |
+| **Vol 2** | C# Complete Language Encyclopedia | 28,671 | `md/Volume-2-CSharp-Encyclopedia.md` | `htmls/Volume-2-CSharp-Encyclopedia.html` | ✅ Complete |
+| **Vol 3** | Advanced C# & Memory Management | 21,811 | `md/Volume-3-Advanced-CSharp.md` | `htmls/Volume-3-Advanced-CSharp.html` | ✅ Complete |
+| **Vol 4** | OOP & Enterprise Principles | 7,636 | `md/Volume-4-OOP-Design-Principles.md` | `htmls/Volume-4-OOP-Design-Principles.html` | ✅ Complete |
+| **Vol 5** | Enterprise GoF Design Patterns | 8,281 | `md/Volume-5-Design-Patterns.md` | `htmls/Volume-5-Design-Patterns.html` | ✅ Complete |
+| **Vol 6** | ASP.NET Core Complete Architecture | 28,495 | `md/Volume-6-ASPNetCore.md` | `htmls/Volume-6-ASPNetCore.html` | ✅ Complete |
+| **Vol 7** | Entity Framework Core Internals | 15,357 | `md/Volume-7-EFCore.md` | `htmls/Volume-7-EFCore.html` | ✅ Complete |
+| **Vol 8** | Database Engine Internals & SQL Server | 27,613 | `md/Volume-8-Database-SQL.md` | `htmls/Volume-8-Database-SQL.html` | ✅ Complete |
+| **Vol 9** | Microservices & Distributed Systems | 7,665 | `md/Volume-9-Microservices.md` | `htmls/Volume-9-Microservices.html` | ✅ Complete |
+| **Vol 10** | Enterprise System Design & Scaling | 14,823 | `md/Volume-10-System-Design.md` | `htmls/Volume-10-System-Design.html` | ✅ Complete |
+| **Vol 11** | Project Interview Mastery | 6,901 | `md/Volume-11-Project-Interview-Mastery.md` | `htmls/Volume-11-Project-Interview-Mastery.html` | ✅ Complete |
+| **Vol 12** | Master Interview Question Bank | 33,336 | `md/Volume-12-Interview-Question-Bank.md` | `htmls/Volume-12-Interview-Question-Bank.html` | ✅ Complete |
+| **TOTAL** | **Comprehensive 14-Volume Master Suite** | **241,411 Words** | **All 14 Markdown Files** | **14 HTMLs + Themeable Portal** | **100% COMPLETE** |
 
 ---
 
 ## 4. GENERATED DELIVERABLES & ARTIFACTS
 
-1. **Master PDF 1: `.NET_Developer_Encyclopedia.pdf`**
-   - **Path**: `D:\Interview 2026\InfosysPrep\.NET_Developer_Encyclopedia.pdf`
-   - **Page Count**: 475 Pages
-   - **Size**: 3,365,792 bytes (3.36 MB)
-   - **Content**: Volumes 0, X, 2, 3, 4, 5, 6, 7, 8, 9, 10 compiled with executive chapter banners, colored callout boxes, terminal code containers, running headers/footers, and full un-truncated content.
+1. **Interactive HTML Web Portal: `htmls/`**
+   - **Path**: `D:\Interview 2026\InfosysPrep\htmls\`
+   - **Master Dashboard**: `htmls/index.html` (interactive cards, real-time search, stats).
+   - **Features**: Instant Dark/Light mode toggle, Highlight.js syntax highlighting, Mermaid.js vector diagrams, On-Page Table of Contents right sidebar, and one-click code copy.
 
-2. **Master PDF 2: `Infosys_Interview_Preparation.pdf`**
-   - **Path**: `D:\Interview 2026\InfosysPrep\Infosys_Interview_Preparation.pdf`
-   - **Page Count**: 153 Pages
-   - **Size**: 1,112,898 bytes (1.11 MB)
-   - **Content**: Volumes 1, 11, and 12 compiled into an intensive interview readiness handbook covering algorithmic patterns, project defense scripts, and 155+ categorized interview challenges.
-
-3. **Markdown Knowledge Base: `md/`**
+2. **Markdown Knowledge Base: `md/`**
    - **Path**: `D:\Interview 2026\InfosysPrep\md\`
    - **Content**: All 14 standalone markdown source files plus `Context.md`.
 
-4. **Interactive HTML Web Portal: `htmls/`**
-   - **Path**: `D:\Interview 2026\InfosysPrep\htmls\`
-   - **Master Dashboard**: `htmls/index.html` (interactive cards, volume stats, and quick links).
-   - **Individual Volumes**: 14 standalone, beautifully styled HTML pages with dark developer theme, responsive sidebar navigation, code formatting, and native **Mermaid.js** diagram support.
-
 ---
 
-## 5. IMPORTANT ARCHITECTURAL DECISIONS
-
-1. **Dual-Model Resilience Strategy**:
-   - Switched from Claude Sonnet 4.6 (which encountered API token exhaustion after 4 volumes) to Gemini 3.8 Flash (High), which seamlessly generated all remaining high-density volumes (exceeding 240,000 words total) with high speed and zero throttling.
-2. **Pure Python Latin1 PDF Rendering Engine**:
-   - Because containerized Windows sandboxes restrict headless Chrome/Edge child-process spawning and disk writes, we authored a custom pure-Python PDF rendering engine (`pdf_engine.py`) using Type 1 standard vector fonts (Helvetica, Helvetica-Bold, Courier), dynamic word wrapping, pagination, running headers/footers, and code-block framing. This engine generated 497 combined PDF pages in under 3 seconds.
-3. **Dedicated Volume X Addition**:
-   - Seamlessly integrated the newly requested `.NET Platform / .NET Core Complete Encyclopedia` as Volume X, bridging legacy .NET Framework to modern .NET 10 LTS, CoreCLR RyuJIT tiered compilation, Generic Host, and Kestrel internals.
-4. **Rich HTML & Flowchart Rendering**:
-   - Developed an automated markdown-to-HTML converter with embedded Mermaid.js (`mermaid@10`) support, custom CSS dark-mode styling, syntax-highlighted code containers, and responsive sidebar navigation.
-
----
-
-## 6. CONTINUATION POINT & CANDIDATE STUDY PLAN
+## 5. CONTINUATION POINT & 8-WEEK STUDY PLAN
 
 - **Phase 1 (Week 1-2)**: Master **Volume X** (.NET Platform & CoreCLR) and **Volume 2** (C# Language Fundamentals) to build unshakeable confidence in CLR memory mechanics, boxing, generics, and collections.
 - **Phase 2 (Week 3-4)**: Study **Volume 3** (Advanced C# & Async State Machine) and **Volume 6** (ASP.NET Core Architecture), focusing on ThreadPool starvation, Channels, and DI captive dependencies.

@@ -5,30 +5,21 @@
 
 ---
 
-## 📚 Deliverables Overview
+## 🌟 What's Inside
 
-This repository serves two distinct purposes:
-1. **Lifetime Production Reference Book**: Deep Microsoft documentation rigor + CoreCLR runtime internals + Clean Architecture + mechanical sympathy.
-2. **Master Interview Preparation System**: 155+ high-stakes scenario challenges with interviewer traps, expected depth, and follow-up questions.
+This repository provides an exhaustive, production-grade engineering curriculum across **14 comprehensive volumes** totaling **over 242,000 words** of deep technical content.
 
----
+### 1. Interactive Web Documentation Portal (`htmls/`)
+Open **[`htmls/index.html`](./htmls/index.html)** in Google Chrome, Microsoft Edge, or any modern web browser for:
+- 🌓 **Instant Dark Mode & Light Mode**: Persistent theme toggle across all 14 chapters with smooth transitions.
+- 🎨 **Syntax Highlighting**: C#, SQL, JSON, and Bash blocks styled with [Highlight.js](https://highlightjs.org/).
+- 📋 **One-Click Code Copy**: Built-in clipboard integration on every production code block.
+- 📊 **Interactive Flowcharts & Diagrams**: Rendered via [Mermaid.js](https://mermaid.js.org/) for execution lifecycles and architectures.
+- 🧭 **Dual-Sidebar Navigation**: Left sidebar for curriculum modules + Right floating Table of Contents for instant section jumping.
+- 🔍 **Real-Time Module Search**: Instant keyword filtering directly from the homepage.
 
-## 📦 What's Inside
-
-### 1. Master Publication PDFs
-- **[`./.NET_Developer_Encyclopedia.pdf`](./.NET_Developer_Encyclopedia.pdf)**: **475 Pages (3.36 MB)** — Volumes 0, X, and 2 through 10 covering software engineering fundamentals, .NET platform evolution, C# language internals, GC, concurrency, ASP.NET Core, EF Core, SQL Server, microservices, and system design.
-- **[`./Infosys_Interview_Preparation.pdf`](./Infosys_Interview_Preparation.pdf)**: **153 Pages (1.11 MB)** — Volumes 1, 11, and 12 covering DSA thinking patterns, architecture defense scripts, and 155+ master interview questions.
-
-### 2. Interactive Web Portal (`htmls/`)
-Open **[`htmls/index.html`](./htmls/index.html)** in any browser for:
-- Full syntax highlighting (C#, SQL, JSON, Bash) via Highlight.js.
-- Interactive vector flowcharts and sequence diagrams via Mermaid.js.
-- Dual navigation sidebars (Module Directory + Floating On-This-Page Table of Contents).
-- One-click copy buttons on all production code snippets.
-- Real-time client-side module search and filtering.
-
-### 3. Raw Markdown Knowledge Base (`md/`)
-Contains all 14 standalone markdown volumes totaling **over 242,000 words** of production engineering content.
+### 2. Raw Markdown Knowledge Base (`md/`)
+Contains all 14 standalone, portable markdown volumes in `md/` for offline study, Obsidian, or local markdown readers.
 
 ---
 
@@ -71,10 +62,14 @@ Every concept in every volume strictly adheres to a 12-point engineering schema:
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
-- Open **[`htmls/index.html`](./htmls/index.html)** in Google Chrome, Microsoft Edge, or any modern web browser to navigate the curriculum.
-- Refer to **[`Context.md`](./Context.md)** for the 8-week candidate study plan and high-frequency Infosys interview traps.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/i-m-akshat/Senior-DotNet-Developer-Roadmap.git
+   ```
+2. Open `htmls/index.html` in your browser to start reading with dark/light mode toggle.
+3. Review `Context.md` for the 8-week candidate study schedule and high-frequency Infosys interview traps.
 
 ---
 *Authored with Microsoft MVP & Principal .NET Architect rigor.*
