@@ -1034,6 +1034,7 @@ li::marker { color: var(--primary); }
 <li>1.2 The "LINQ Crutch" vs. Mechanical Sympathy</li>
 <li>1.3 The Infosys & MNC Interview Philosophy for 3 YOE</li>
 <li>1.4 The 7-Step Universal Problem-Solving Blueprint</li>
+<li>1.5 The Universal Algorithmic Thinking Protocol: How to Reason Through Any Solution</li>
 </ul>
 <ol>
 <li><a href="#2-mastering-the-core-algorithmic-thinking-patterns">Mastering the Core Algorithmic Thinking Patterns</a></li>
@@ -1107,14 +1108,14 @@ li::marker { color: var(--primary); }
 </ol>
 <ul>
 <li>8.1 The Searching Taxonomy & Mechanical Sympathy Decision Matrix</li>
-<li>8.2 Linear Search & The Sentinel Optimization (Eliminating Boundary Checks)</li>
+<li>8.2 Linear Search & The Sentinel Optimization</li>
 <li>8.3 Classic Binary Search (The Monotonic Mindset)</li>
 <li>8.4 Search in Rotated Sorted Array (Shifted Ledger Partitions)</li>
 <li>8.5 Find First and Last Position in Sorted Array (Lower & Upper Bounds)</li>
-<li>8.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages Within D Days)</li>
-<li>8.7 Interpolation Search (Uniformly Distributed Probing Engine)</li>
-<li>8.8 Exponential Search (Unbounded Ledger Streams & Fast Galloping)</li>
-<li>8.9 Ternary Search (Finding Extrema in Unimodal Functions)</li>
+<li>8.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages)</li>
+<li>8.7 Interpolation Search</li>
+<li>8.8 Exponential Search</li>
+<li>8.9 Ternary Search</li>
 </ul>
 <ol>
 <li><a href="#9-pattern-7-sorting-algorithms-encyclopedia">Pattern 7: Sorting Algorithms Encyclopedia</a></li>
@@ -1122,13 +1123,13 @@ li::marker { color: var(--primary); }
 <ul>
 <li>9.1 The Sorting Taxonomy & Complexity Matrix</li>
 <li>9.2 Bubble Sort (Standard & Early-Exit Optimization)</li>
-<li>9.3 Selection Sort (Minimum-Scan & Minimal Memory Writes)</li>
-<li>9.4 Insertion Sort (Adaptive Shifting & Small Partition Powerhouse)</li>
-<li>9.5 Merge Sort (Divide & Conquer, In-Depth Memory Mechanics & Stability)</li>
+<li>9.3 Selection Sort</li>
+<li>9.4 Insertion Sort</li>
+<li>9.5 Merge Sort (Divide & Conquer)</li>
 <li>9.6 Quick Sort (Lomuto vs. Hoare Partitioning & Median-of-3 Pivot)</li>
-<li>9.7 Heap Sort (In-Place Array-Based Max-Heapify)</li>
-<li>9.8 Counting Sort (Non-Comparison O(N + K) Integer Sorting)</li>
-<li>9.9 Radix Sort (LSD Base-10 / 256 Distribution Engine)</li>
+<li>9.7 Heap Sort</li>
+<li>9.8 Counting Sort</li>
+<li>9.9 Radix Sort</li>
 <li>9.10 Under the Hood: .NET 8 IntroSort & ArraySortHelper<T></li>
 </ul>
 <ol>
@@ -1136,11 +1137,11 @@ li::marker { color: var(--primary); }
 </ol>
 <ul>
 <li>10.1 Memory Models: Array-Backed vs. Node-Backed Queues</li>
-<li>10.2 Problem 1: Valid Parentheses (Syntax Validation for Config Tokens)</li>
-<li>10.3 Problem 2: Min Stack (O(1) Retrieval via Companion State)</li>
-<li>10.4 Problem 3: Evaluate Reverse Polish Notation (Financial Math Engine)</li>
-<li>10.5 Problem 4: Implement Queue Using Stacks (Amortized Cost Transfer)</li>
-<li>10.6 Problem 5: Moving Average from Data Stream (Circular Queue Buffer)</li>
+<li>10.2 Problem 18: Valid Parentheses (Syntax Validation for Config Tokens)</li>
+<li>10.3 Problem 19: Min Stack (O(1) Retrieval via Companion State)</li>
+<li>10.4 Problem 20: Evaluate Reverse Polish Notation (Financial Math Engine)</li>
+<li>10.5 Problem 21: Implement Queue Using Stacks (Amortized Cost Transfer)</li>
+<li>10.6 Problem 22: Moving Average from Data Stream (Circular Queue Buffer)</li>
 </ul>
 <ol>
 <li><a href="#11-pattern-9-linked-lists">Pattern 9: Linked Lists</a></li>
@@ -1406,6 +1407,38 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='15-the-universal-algorithmic-thinking-protocol-how-to-reason-through-any-solution'>1.5 The Universal Algorithmic Thinking Protocol: How to Reason Through Any Solution</h2>
+<p>Whenever an interviewer presents any DSA problem, <strong>do not write a single line of code until you have walked through these 5 cognitive steps</strong>:</p>
+<div class='mermaid'>flowchart TD
+    Step1["<b>Step 1: Clue Extraction & Constraints</b><br/>&bull; Is the array sorted? (Two Pointers / Binary Search)<br/>&bull; Are duplicates allowed? Are numbers negative?<br/>&bull; What is N? (N &le; 1,000 &rarr; O(N^2) OK; N &ge; 100,000 &rarr; MUST be O(N) or O(N log N))"]
+    
+    Step1 --> Step2["<b>Step 2: Approach 1 &mdash; The Brute Force Mental Process</b><br/>&bull; State the naive solution aloud: 'We can test all combinations with nested loops.'<br/>&bull; State its cost: 'This takes O(N^2) time and O(1) space.'"]
+    
+    Step2 --> Step3["<b>Step 3: The Bottleneck & Mental Pivot (The Aha! Moment)</b><br/>&bull; Ask: 'Where is the duplicated CPU effort?'<br/>&bull; 'We repeatedly scan backward &rarr; A Hash Map trades O(N) RAM for O(1) lookups!'<br/>&bull; 'The array is sorted &rarr; Two Pointers skips impossible pairs!'<br/>&bull; 'Contiguous subarray &rarr; Sliding Window slides boundaries without re-summing!'"]
+    
+    Step3 --> Step4["<b>Step 4: Approach 2 &mdash; The Optimal Thinking Process</b><br/>&bull; Define state variables: left, right, map, runningSum.<br/>&bull; Define window / pointer movement rules.<br/>&bull; Define termination condition."]
+    
+    Step4 --> Step5["<b>Step 5: Step-by-Step Dry Run Table</b><br/>&bull; Trace 1 sample input through the state variables on a table.<br/>&bull; Confirm edge cases (empty array, 1 element, all duplicates)."]
+    
+    Step4 --> Step6["<b>Step 6: Write Clean NeetCode-Style C# Code</b><br/>&bull; Short intuitive variables (map, diff, l, r).<br/>&bull; Vertical breathing room.<br/>&bull; No complex out variables where standard lookups are cleaner."]
+    
+    Step6 --> Step7["<b>Step 7: Complexity & Follow-up Defense</b><br/>&bull; State Big-O Time & Space confidently.<br/>&bull; Discuss production nuances (.NET TryGetValue, Span zero-allocation)."]
+
+    style Step1 fill:#1e3a8a,stroke:#3b82f6,color:#fff
+    style Step2 fill:#854d0e,stroke:#eab308,color:#fff
+    style Step3 fill:#7c2d12,stroke:#f97316,color:#fff
+    style Step4 fill:#065f46,stroke:#10b981,color:#fff
+    style Step5 fill:#581c87,stroke:#a855f7,color:#fff
+    style Step6 fill:#0f172a,stroke:#38bdf8,color:#fff
+    style Step7 fill:#312e81,stroke:#6366f1,color:#fff</div>
+<h3 id='the-3-core-questions-to-ask-yourself-on-any-approach'>The 3 Core Questions to Ask Yourself on Any Approach:</h3>
+<ol>
+<li><strong>"What is the bottleneck?"</strong> In brute force, are you sorting? Are you scanning linearly? Are you re-calculating the sum of overlapping subarrays?</li>
+<li><strong>"Can I trade space for time?"</strong> Can a Hash Table (<code>Dictionary&lt;TKey, TValue&gt;</code>) or Hash Set remember past elements so lookups take $O(1)$ instead of $O(N)$?</li>
+<li><strong>"Does ordering help?"</strong> If the array is sorted, can converging Two Pointers (<code>l</code> and <code>r</code>) or Binary Search discard half the search space on every tick?</li>
+</ol>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
 
 <details class="chapter-accordion" id="ch-2" data-chapter="2" >
@@ -1561,12 +1594,46 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
 </div>
 
 <h3 id='cpu-cache-lines-mechanical-sympathy'>CPU Cache Lines & Mechanical Sympathy</h3>
-<p>Modern CPUs fetch memory in <strong>64-byte Cache Lines</strong> (holding 16 consecutive 32-bit integers). Iterating sequentially through an array allows the hardware prefetcher to stream data into the L1 cache with zero CPU wait cycles.</p>
+<p>Modern CPUs fetch memory in <strong>64-byte Cache Lines</strong> (holding 16 consecutive 32-bit integers). Iterating sequentially through an array allows the hardware prefetcher to stream data into the L1 cache with zero CPU wait cycles. In contrast, traversing node-based structures (<code>LinkedList&lt;T&gt;</code>) causes pointer chasing across scattered heap addresses, incurring an L3 cache miss (~200 CPU cycles) on every dereference.</p>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='32-problem-1-two-sum-unsorted-array'>3.2 Problem 1: Two Sum (Unsorted Array)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>For each number $X$, calculate its required partner $	ext{diff} = 	ext{Target} - X$. If $	ext{diff}$ is already in our map, we found our pair! Otherwise, store $X$ with its index and keep scanning.</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Find two numbers that add up to a given <code>target</code> and return their indices.</li>
+<li><strong>Mental Model:</strong> For any number $X$, there is only <strong>one</strong> exact partner that can satisfy the equation: $\text{diff} = \text{target} - X$.</li>
+<li><strong>Pattern Recognition:</strong> If an interviewer asks you to find a pair with a specific sum in an <strong>unsorted</strong> array, ask yourself: <em>"How can I remember what I have already seen so far?"</em></li>
+<li>Storing past numbers in a <code>Dictionary&lt;int, int&gt;</code> turns what would be an expensive backward scan into an instant $O(1)$ lookup!</li>
+</ul>
+<h3 id='2-how-interviewer-thinks-evaluation-traps'>2. How Interviewer Thinks (Evaluation & Traps)</h3>
+<ul>
+<li><strong>Trap 1:</strong> Jumping straight to nested loops ($O(N^2)$). Mention it as brute force, but don't code it unless requested.</li>
+<li><strong>Trap 2:</strong> Sorting the array. If you sort the array, you lose the original indices, and sorting takes $O(N \log N)$.</li>
+<li><strong>Trap 3:</strong> Inserting all elements into the dictionary first. If there are duplicates, you overwrite indices before checking! Always check for the complement <strong>on the fly during a single pass</strong>.</li>
+</ul>
+<h3 id='3-approach-1-brute-force-thinking-process-complexity'>3. Approach 1: Brute Force (Thinking Process & Complexity)</h3>
+<ul>
+<li><strong>Thinking Process:</strong> For each element at index <code>i</code>, loop through every remaining element at index <code>j = i + 1</code> to <code>nums.Length - 1</code>. If <code>nums[i] + nums[j] == target</code>, return <code>[i, j]</code>.</li>
+<li><strong>Bottleneck:</strong> We are repeatedly scanning the remaining array over and over again.</li>
+<li><strong>Complexity:</strong> Time $O(N^2)$, Space $O(1)$.</li>
+</ul>
+<h3 id='4-approach-2-optimal-thinking-process-the-mental-pivot'>4. Approach 2: Optimal Thinking Process (The Mental Pivot)</h3>
+<ul>
+<li><strong>The Mental Pivot:</strong> Trade space for time! As we iterate through index <code>i</code>:</li>
+</ul>
+<ol>
+<li>Compute the needed partner: <code>diff = target - nums[i]</code>.</li>
+<li>Ask the dictionary: <em>"Have I seen <code>diff</code> before?"</em></li>
+<li>If <strong>Yes</strong>: Return <code>[map[diff], i]</code>. We are done!</li>
+<li>If <strong>No</strong>: Record current number in the dictionary: <code>map[nums[i]] = i</code>.</li>
+</ol>
+<h3 id='5-step-by-step-dry-run-table'>5. Step-by-Step Dry Run Table</h3>
+<p><strong>Input:</strong> <code>nums = [2, 7, 11, 15]</code>, <code>target = 9</code></p>
+<div class='table-wrapper'><table>
+<tr><th>Step</th><th>Index $i$</th><th><code>nums[i]</code></th><th>Needed <code>diff = 9 - nums[i]</code></th><th>Does Map contain <code>diff</code>?</th><th>Action / Map State</th></tr>
+<tr><td><strong>1</strong></td><td><code>0</code></td><td><code>2</code></td><td><code>7</code></td><td><strong>No</strong> (Map is empty)</td><td>Add <code>{2: 0}</code> to Map</td></tr>
+<tr><td><strong>2</strong></td><td><code>1</code></td><td><code>7</code></td><td><code>2</code></td><td><strong>YES!</strong> (Found at index 0)</td><td><strong>Return <code>[0, 1]</code> immediately!</strong></td></tr>
+</table></div>
+<h3 id='6-neetcode-style-c-solution-clean-intuitive'>6. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -1596,18 +1663,51 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
-    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> In production, you can replace <code>map.ContainsKey(diff)</code> + <code>map[diff]</code> with <code>map.TryGetValue(diff, out int idx)</code> to avoid two hash lookups. In interviews, <code>ContainsKey</code> is universally accepted and much cleaner to read!</div>
+    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> In high-throughput production services, calling <code>map.ContainsKey(diff)</code> followed by <code>map[diff]</code> hashes the key twice. You can use <code>map.TryGetValue(diff, out int idx)</code> to perform a single hash lookup. In interview whiteboard rounds, <code>ContainsKey</code> is universally accepted, clean, and avoids out-variable visual clutter.</div>
 </div>
 
+<h3 id='7-complexity-analysis-follow-up-questions'>7. Complexity Analysis & Follow-Up Questions</h3>
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Single pass over the array with $O(1)$ dictionary lookups.</li>
-<li><strong>Space Complexity:</strong> $O(N)$ — Stores up to $N$ elements in the dictionary.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Single linear pass. Hash table lookups take $O(1)$ average time.</li>
+<li><strong>Space Complexity:</strong> $O(N)$ — In the worst case, the dictionary stores up to $N$ elements.</li>
+<li><strong>Follow-up:</strong> <em>"What if the array is already sorted?"</em></li>
 </ul>
+<p>$\implies$ Use <strong>Two Pointers</strong> (left at 0, right at end) to solve it in $O(1)$ auxiliary space without a dictionary!</p>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='33-problem-2-valid-anagram'>3.3 Problem 2: Valid Anagram</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Count the character frequencies in both strings. If every character appears the exact same number of times, they are anagrams.</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Determine if string <code>t</code> is an anagram of string <code>s</code> (same characters with exact same frequencies).</li>
+<li><strong>Mental Model:</strong> Anagrams are identical sets of characters rearranged in a different order.</li>
+<li><strong>Pattern Recognition:</strong> Frequency count comparison. If lengths differ, return <code>false</code> immediately.</li>
+</ul>
+<h3 id='2-how-interviewer-thinks'>2. How Interviewer Thinks</h3>
+<ul>
+<li>Did the candidate sort both strings ($O(N \log N)$)? Or did they recognize that an ASCII frequency array achieves $O(N)$?</li>
+<li>Did they use a heavy <code>Dictionary&lt;char, int&gt;</code> or a fast, zero-allocation <code>int[26]</code> array?</li>
+</ul>
+<h3 id='3-approach-1-brute-force-sorting'>3. Approach 1: Brute Force (Sorting)</h3>
+<ul>
+<li>Convert strings to character arrays, sort both with <code>Array.Sort()</code>, and compare equality.</li>
+<li><strong>Time Complexity:</strong> $O(N \log N)$.</li>
+<li><strong>Space Complexity:</strong> $O(N)$ to hold sorted character buffers.</li>
+</ul>
+<h3 id='4-approach-2-optimal-thinking-process-the-mental-pivot'>4. Approach 2: Optimal Thinking Process (The Mental Pivot)</h3>
+<ul>
+<li>Since the alphabet is fixed (26 lowercase English letters), an <code>int[26]</code> array acts as a perfect direct-index hash map!</li>
+<li>Increment count for characters in <code>s</code>, decrement count for characters in <code>t</code>.</li>
+<li>If all counts return to zero, they are anagrams!</li>
+</ul>
+<h3 id='5-step-by-step-dry-run-table'>5. Step-by-Step Dry Run Table</h3>
+<p><strong>Input:</strong> <code>s = &quot;rat&quot;</code>, <code>t = &quot;car&quot;</code></p>
+<div class='table-wrapper'><table>
+<tr><th>Char Index</th><th><code>s</code> Char</th><th><code>t</code> Char</th><th>Frequency Array State Changes</th></tr>
+<tr><td><strong>0</strong></td><td><code>&#x27;r&#x27;</code></td><td><code>&#x27;c&#x27;</code></td><td><code>count[&#x27;r&#x27;]++</code>, <code>count[&#x27;c&#x27;]--</code></td></tr>
+<tr><td><strong>1</strong></td><td><code>&#x27;a&#x27;</code></td><td><code>&#x27;a&#x27;</code></td><td><code>count[&#x27;a&#x27;]++</code>, <code>count[&#x27;a&#x27;]--</code> $\implies 0$</td></tr>
+<tr><td><strong>2</strong></td><td><code>&#x27;t&#x27;</code></td><td><code>&#x27;r&#x27;</code></td><td><code>count[&#x27;t&#x27;]++</code>, <code>count[&#x27;r&#x27;]--</code> $\implies count['r'] = 0$</td></tr>
+<tr><td><strong>Final Check</strong></td><td>—</td><td>—</td><td><code>count[&#x27;c&#x27;] == -1</code>, <code>count[&#x27;t&#x27;] == 1</code> $\implies$ <strong>Return <code>false</code>!</strong></td></tr>
+</table></div>
+<h3 id='6-neetcode-style-c-solution-clean-intuitive'>6. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -1618,32 +1718,62 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
 {
     if (s.Length != t.Length) return false;
 
-    var count = new int[26];
+    int[] counts = new int[26];
 
     for (int i = 0; i &lt; s.Length; i++)
     {
-        count[s[i] - &#x27;a&#x27;]++;
-        count[t[i] - &#x27;a&#x27;]--;
+        counts[s[i] - &#x27;a&#x27;]++;
+        counts[t[i] - &#x27;a&#x27;]--;
     }
 
-    foreach (int val in count)
+    foreach (int count in counts)
     {
-        if (val != 0) return false;
+        if (count != 0) return false;
     }
 
     return true;
 }</code></pre>
 </div>
 
+
+<div class="callout note">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> Using <code>int[] counts = new int[26]</code> allocates a tiny 128-byte array on the managed heap. For zero-allocation hot paths, use <code>Span&lt;int&gt; counts = stackalloc int[26];</code> to execute completely on the stack.</div>
+</div>
+
+<h3 id='7-complexity-analysis'>7. Complexity Analysis</h3>
 <ul>
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass over both strings.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — Array size is strictly 26 regardless of input size.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Fixed-size array of 26 integers, regardless of input length.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='34-problem-3-group-anagrams'>3.4 Problem 3: Group Anagrams</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Sort the characters of each string to create a "canonical signature" key (e.g. <code>&quot;eat&quot;</code> $	o$ <code>&quot;aet&quot;</code>, <code>&quot;tea&quot;</code> $	o$ <code>&quot;aet&quot;</code>). Group strings that share the exact same sorted key in a Dictionary.</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Group an array of strings such that all anagrams are clustered together.</li>
+<li><strong>Mental Model:</strong> Anagrams share a common "fingerprint". If we can compute the canonical signature of each word, all anagrams will map to the exact same dictionary key!</li>
+<li><strong>Signature Choice:</strong></li>
+<li>Option A: Sort the word's characters: <code>&quot;eat&quot;</code> $\implies$ <code>&quot;aet&quot;</code>.</li>
+<li>Option B: 26-character frequency count string: <code>&quot;1#0#0#...#1&quot;</code>.</li>
+</ul>
+<h3 id='2-how-interviewer-thinks'>2. How Interviewer Thinks</h3>
+<ul>
+<li>Does the candidate know how to group elements in a <code>Dictionary&lt;string, List&lt;string&gt;&gt;</code>?</li>
+<li>Can they explain why sorted strings work as dictionary keys?</li>
+</ul>
+<h3 id='3-approach-1-optimal-mental-process'>3. Approach 1 & Optimal Mental Process</h3>
+<ul>
+<li>For each word in <code>strs</code>:</li>
+</ul>
+<ol>
+<li>Convert to <code>char[]</code>, sort it, and convert back to <code>string key = new string(chars)</code>.</li>
+<li>If <code>map</code> does not contain <code>key</code>, create a new empty list.</li>
+<li>Add the original word to <code>map[key]</code>.</li>
+</ol>
+<ul>
+<li>Return <code>map.Values.ToList()</code>.</li>
+</ul>
+<h3 id='4-neetcode-style-c-solution-clean-intuitive'>4. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -1656,12 +1786,10 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
 
     foreach (string s in strs)
     {
-        // 1. Sort string to use as the canonical key
         char[] chars = s.ToCharArray();
         Array.Sort(chars);
         string key = new string(chars);
 
-        // 2. Group into list
         if (!map.ContainsKey(key))
         {
             map[key] = new List&lt;string&gt;();
@@ -1675,14 +1803,30 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N \cdot K \log K)$ where $N$ is word count and $K$ is maximum word length.</li>
-<li><strong>Space Complexity:</strong> $O(N \cdot K)$ to store keys and grouped lists.</li>
+<li><strong>Time Complexity:</strong> $O(N \cdot K \log K)$ where $N$ is number of strings and $K$ is maximum string length.</li>
+<li><strong>Space Complexity:</strong> $O(N \cdot K)$ to store keys and grouped lists in the hash map.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='35-problem-4-top-k-frequent-elements'>3.5 Problem 4: Top K Frequent Elements</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Count frequencies with a Dictionary, then use <strong>Bucket Sort</strong> where the array index represents the frequency count, avoiding full $O(N \log N)$ sorting!</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Given an integer array <code>nums</code> and integer <code>k</code>, return the <code>k</code> most frequent elements.</li>
+<li><strong>Mental Model:</strong></li>
+<li>Step 1: Count frequency of each number using a Hash Map (<code>num</code> $\implies$ <code>count</code>).</li>
+<li>Step 2: How to find the top $K$ without sorting the entire array ($O(N \log N)$)?</li>
+<li><strong>Aha! Moment:</strong> The maximum possible frequency of any element is $N$ (the length of the array). We can use <strong>Bucket Sort</strong> where index = frequency!</li>
+</ul>
+<h3 id='2-approach-1-min-heap-sorting-on-log-k'>2. Approach 1: Min-Heap / Sorting ($O(N \log K)$)</h3>
+<ul>
+<li>Maintain a min-heap of size $K$. If heap size exceeds $K$, pop the minimum. In .NET 6+, use <code>PriorityQueue&lt;int, int&gt;</code>.</li>
+</ul>
+<h3 id='3-approach-2-optimal-bucket-sort-on-time'>3. Approach 2: Optimal Bucket Sort ($O(N)$ Time)</h3>
+<ul>
+<li>Create an array of lists: <code>List&lt;int&gt;[] buckets = new List&lt;int&gt;[nums.Length + 1]</code>.</li>
+<li>Place each number into <code>buckets[frequency]</code>.</li>
+<li>Iterate backward from index $N$ down to 1 and collect elements until we have $K$ items!</li>
+</ul>
+<h3 id='4-neetcode-style-c-solution-clean-intuitive'>4. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -1691,60 +1835,76 @@ Step 7: TRACE TEST CASES &amp; STATE TIME/SPACE COMPLEXITY
     </div>
     <pre><code class="language-csharp">public int[] TopKFrequent(int[] nums, int k)
 {
-    // 1. Count frequencies
-    var count = new Dictionary&lt;int, int&gt;();
+    var countMap = new Dictionary&lt;int, int&gt;();
     foreach (int n in nums)
     {
-        count[n] = count.GetValueOrDefault(n, 0) + 1;
+        countMap[n] = countMap.GetValueOrDefault(n, 0) + 1;
     }
 
-    // 2. Bucket sort: index = frequency, value = list of numbers
+    // Buckets where index = frequency
     var buckets = new List&lt;int&gt;[nums.Length + 1];
-    foreach (var pair in count)
+
+    foreach (var pair in countMap)
     {
+        int num = pair.Key;
         int freq = pair.Value;
+
         if (buckets[freq] == null)
         {
             buckets[freq] = new List&lt;int&gt;();
         }
-        buckets[freq].Add(pair.Key);
+
+        buckets[freq].Add(num);
     }
 
-    // 3. Collect top k elements from highest frequency down to lowest
-    var res = new List&lt;int&gt;();
-    for (int i = buckets.Length - 1; i &gt;= 0 &amp;&amp; res.Count &lt; k; i--)
+    var result = new List&lt;int&gt;();
+
+    // Scan backwards from highest frequency
+    for (int i = buckets.Length - 1; i &gt;= 0 &amp;&amp; result.Count &lt; k; i--)
     {
         if (buckets[i] != null)
         {
-            res.AddRange(buckets[i]);
+            result.AddRange(buckets[i]);
         }
     }
 
-    return res.Take(k).ToArray();
+    return result.Take(k).ToArray();
 }</code></pre>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Tallying counts and walking buckets takes linear time.</li>
-<li><strong>Space Complexity:</strong> $O(N)$ — Buckets and frequency dictionary.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Linear counting and bucket filling.</li>
+<li><strong>Space Complexity:</strong> $O(N)$ — For frequency map and bucket arrays.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='36-problem-5-product-of-array-except-self'>3.6 Problem 5: Product of Array Except Self</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>The product of all numbers except <code>nums[i]</code> is simply the product of all elements to its left ($	ext{prefix}$) multiplied by the product of all elements to its right ($	ext{postfix}$).</p>
-
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">Array:   [  1,   2,   3,   4 ]
-Prefix:  [  1,   1,   2,   6 ]  (Elements to the left)
-Postfix: [ 24,  12,   4,   1 ]  (Elements to the right)
-Result:  [ 24,  12,   8,   6 ]  (Prefix * Postfix)</code></pre>
-</div>
-
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Return an array <code>output</code> where <code>output[i]</code> is the product of all elements in <code>nums</code> except <code>nums[i]</code>.</li>
+<li><strong>Constraint:</strong> Solve in $O(N)$ without using the division operator <code>/</code>!</li>
+<li><strong>Mental Model:</strong> For any index <code>i</code>, the answer is simply:</li>
+</ul>
+<p>$$\text{Product} = (\text{Product of all numbers to the left of } i) \times (\text{Product of all numbers to the right of } i)$$</p>
+<h3 id='2-approach-2-optimal-two-pass-prefixsuffix'>2. Approach 2: Optimal Two-Pass Prefix/Suffix</h3>
+<ol>
+<li>Pass 1 (Left to Right): Store prefix products in <code>res[i]</code>.</li>
+<li>Pass 2 (Right to Left): Maintain running suffix product <code>postfix</code> and multiply into <code>res[i]</code>.</li>
+</ol>
+<h3 id='3-step-by-step-dry-run-table'>3. Step-by-Step Dry Run Table</h3>
+<p><strong>Input:</strong> <code>nums = [1, 2, 3, 4]</code></p>
+<div class='table-wrapper'><table>
+<tr><th>Pass</th><th>Index <code>i</code></th><th>Running Product</th><th>Result Array State</th></tr>
+<tr><td><strong>Prefix (L &rarr; R)</strong></td><td><code>0</code></td><td><code>1</code></td><td><code>[1, _, _, _]</code></td></tr>
+<tr><td></td><td><code>1</code></td><td><code>1 * 1 = 1</code></td><td><code>[1, 1, _, _]</code></td></tr>
+<tr><td></td><td><code>2</code></td><td><code>1 * 2 = 2</code></td><td><code>[1, 1, 2, _]</code></td></tr>
+<tr><td></td><td><code>3</code></td><td><code>2 * 3 = 6</code></td><td><code>[1, 1, 2, 6]</code></td></tr>
+<tr><td><strong>Suffix (R &rarr; L)</strong></td><td><code>3</code></td><td><code>postfix = 1</code></td><td><code>res[3] = 6 <em> 1 = 6</code>, <code>postfix = 1 </em> 4 = 4</code></td></tr>
+<tr><td></td><td><code>2</code></td><td><code>postfix = 4</code></td><td><code>res[2] = 2 <em> 4 = 8</code>, <code>postfix = 4 </em> 3 = 12</code></td></tr>
+<tr><td></td><td><code>1</code></td><td><code>postfix = 12</code></td><td><code>res[1] = 1 <em> 12 = 12</code>, <code>postfix = 12 </em> 2 = 24</code></td></tr>
+<tr><td></td><td><code>0</code></td><td><code>postfix = 24</code></td><td><code>res[0] = 1 * 24 = 24</code></td></tr>
+<tr><td><strong>Final Result</strong></td><td>—</td><td>—</td><td><code>[24, 12, 8, 6]</code></td></tr>
+</table></div>
+<h3 id='4-neetcode-style-c-solution-clean-intuitive'>4. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -1756,7 +1916,7 @@ Result:  [ 24,  12,   8,   6 ]  (Prefix * Postfix)</code></pre>
     int n = nums.Length;
     int[] res = new int[n];
 
-    // 1. Calculate prefix products
+    // 1. Calculate prefix products (stored directly in result)
     int prefix = 1;
     for (int i = 0; i &lt; n; i++)
     {
@@ -1764,7 +1924,7 @@ Result:  [ 24,  12,   8,   6 ]  (Prefix * Postfix)</code></pre>
         prefix *= nums[i];
     }
 
-    // 2. Multiply with postfix products
+    // 2. Multiply by suffix products backwards
     int postfix = 1;
     for (int i = n - 1; i &gt;= 0; i--)
     {
@@ -1778,13 +1938,17 @@ Result:  [ 24,  12,   8,   6 ]  (Prefix * Postfix)</code></pre>
 
 <ul>
 <li><strong>Time Complexity:</strong> $O(N)$ — Two sequential linear passes.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ auxiliary memory (excluding the returned result array).</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — The output array does not count as extra memory.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='37-problem-6-kadanes-algorithm-maximum-subarray-sum'>3.7 Problem 6: Kadane's Algorithm (Maximum Subarray Sum)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Walk through the array keeping a running streak <code>curSum</code>. If the streak ever drops below zero, reset it to zero because a negative streak will only hurt future subarrays!</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Find the contiguous subarray with the largest sum.</li>
+<li><strong>Mental Model:</strong> As we walk through the array, should we extend the existing subarray or start fresh from the current element?</li>
+<li><strong>The Golden Rule of Kadane:</strong> If the running sum ever dips below 0, it is dead weight! A negative prefix can never help any future subarray. Reset <code>curSum = 0</code> whenever <code>curSum &lt; 0</code>.</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -1793,46 +1957,53 @@ Result:  [ 24,  12,   8,   6 ]  (Prefix * Postfix)</code></pre>
     </div>
     <pre><code class="language-csharp">public int MaxSubArray(int[] nums)
 {
+    int maxSub = nums[0];
     int curSum = 0;
-    int maxSum = nums[0];
 
     foreach (int n in nums)
     {
-        // If current streak is negative, reset it
         if (curSum &lt; 0)
         {
-            curSum = 0;
+            curSum = 0; // Discard negative prefix
         }
 
         curSum += n;
-        maxSum = Math.Max(maxSum, curSum);
+        maxSub = Math.Max(maxSub, curSum);
     }
 
-    return maxSum;
+    return maxSub;
 }</code></pre>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Single pass over the array.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — Only two scalar integers.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Single pass over array.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Two integer variables.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='38-problem-7-rotate-array-in-place-3-step-reversal'>3.8 Problem 7: Rotate Array (In-Place 3-Step Reversal)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Rotating an array to the right by $K$ steps can be done in-place in 3 simple reversals: reverse the whole array, reverse the first $K$ items, then reverse the remaining items.</p>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Rotate array to the right by <code>k</code> steps in $O(1)$ extra space.</li>
+<li><strong>The 3-Step Magic:</strong></li>
+</ul>
+<ol>
+<li>Reverse the <strong>entire</strong> array.</li>
+<li>Reverse the <strong>first <code>k</code></strong> elements.</li>
+<li>Reverse the <strong>remaining <code>n - k</code></strong> elements.</li>
+</ol>
 
 <div class="code-container">
     <div class="code-header">
         <span>CODE</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-">nums = [1, 2, 3, 4, 5], k = 2
-1. Reverse All:       [ 5, 4, 3, 2, 1 ]
-2. Reverse First 2:   [ 4, 5, 3, 2, 1 ]
-3. Reverse Remaining: [ 4, 5, 1, 2, 3 ] (Final Rotated Result!)</code></pre>
+    <pre><code class="language-">nums = [1, 2, 3, 4, 5, 6, 7], k = 3
+Step 1 (Reverse all):     [7, 6, 5, 4, 3, 2, 1]
+Step 2 (Reverse first 3): [5, 6, 7, 4, 3, 2, 1]
+Step 3 (Reverse rest 4):  [5, 6, 7, 1, 2, 3, 4] -&gt; Done!</code></pre>
 </div>
 
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -1841,15 +2012,10 @@ Result:  [ 24,  12,   8,   6 ]  (Prefix * Postfix)</code></pre>
     </div>
     <pre><code class="language-csharp">public void Rotate(int[] nums, int k)
 {
-    k = k % nums.Length;
+    k %= nums.Length; // Normalize k
 
-    // 1. Reverse entire array
     Reverse(nums, 0, nums.Length - 1);
-
-    // 2. Reverse first k elements
     Reverse(nums, 0, k - 1);
-
-    // 3. Reverse the rest
     Reverse(nums, k, nums.Length - 1);
 }
 
@@ -1857,7 +2023,7 @@ private void Reverse(int[] nums, int l, int r)
 {
     while (l &lt; r)
     {
-        (nums[l], nums[r]) = (nums[r], nums[l]);
+        (nums[l], nums[r]) = (nums[r], nums[l]); // C# tuple swap
         l++;
         r--;
     }
@@ -1865,8 +2031,8 @@ private void Reverse(int[] nums, int l, int r)
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Every element is swapped twice.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — Zero heap allocation.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Each element reversed twice.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — In-place swap with two pointers.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
@@ -1888,66 +2054,84 @@ private void Reverse(int[] nums, int l, int r)
         <a id="4-pattern-2-strings-string-algorithms" class="accordion-anchor"></a>
         <a id="4-pattern-2-strings--string-algorithms" class="accordion-anchor"></a>
 
-<p>Strings in C# (.NET 8) are immutable reference types with unique memory and garbage collection characteristics. Mastering string algorithms requires understanding both low-level CLR object layout (interning, UTF-16, GC Gen 0 churn) and classic pointer/sliding window algorithms that operate with zero heap allocations using <code>ReadOnlySpan&lt;char&gt;</code>.</p>
+<p>In high-throughput .NET enterprise applications (e.g. Payment Gateway transaction parsing, HL7/FHIR healthcare messaging, FIX protocols), strings represent the single highest source of Garbage Collection memory churn if handled incorrectly. A senior engineer must master both algorithmic string logic and CoreCLR string memory mechanics.</p>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='41-clr-internals-string-layout-interning-pool-utf-16-and-gc-pressures'>4.1 CLR Internals: String Layout, Interning Pool, UTF-16, and GC Pressures</h2>
-<p>In .NET 8, every <code>System.String</code> is an immutable reference type allocated on the Managed Heap:</p>
+<h3 id='1-memory-anatomy-of-a-systemstring'>1. Memory Anatomy of a <code>System.String</code></h3>
+<p>A string in .NET is a reference type (<code>class</code>) stored on the Managed Heap. Unlike C++ null-terminated strings, a .NET string is length-prefixed and UTF-16 encoded:</p>
 
 <div class="code-container">
     <div class="code-header">
         <span>CODE</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-">Managed Heap Memory Structure of string s = &quot;Infosys&quot;:
-[SyncBlockIndex: 8 bytes]       (Locking and object hashcode)
-[MethodTable Pointer: 8 bytes]  (Points to System.String Type Descriptor)
-[String Length: 4 bytes]         (7 characters)
-[Character Buffer: 7 * 2 bytes]  (UTF-16 encoding: &#x27;I&#x27;, &#x27;n&#x27;, &#x27;f&#x27;, &#x27;o&#x27;, &#x27;s&#x27;, &#x27;y&#x27;, &#x27;s&#x27; = 14 bytes)
-[Null Terminator: 2 bytes]       (0x0000 for native C/C++ interop compatibility)
-[Padding: 4 bytes]               (64-bit alignment)
-Total Memory = 8 + 8 + 4 + 14 + 2 + 4 = 40 bytes!</code></pre>
+    <pre><code class="language-">Managed Heap Layout of &quot;ABCD&quot; on 64-bit CoreCLR:
+[ SyncBlock (8B) | MethodTable* (8B) | Length=4 (4B) | &#x27;A&#x27; (2B) | &#x27;B&#x27; (2B) | &#x27;C&#x27; (2B) | &#x27;D&#x27; (2B) | Null &#x27; &#x27; (2B) ]
+Total Bytes Allocated = 8 + 8 + 4 + (4 * 2) + 2 = 30 bytes -&gt; Padded to 32 bytes (8-byte alignment)</code></pre>
 </div>
 
-<h3 id='the-string-immutability-trap-in-loops'>The String Immutability Trap in Loops</h3>
-<p>Because strings are immutable, modifying a string creates a completely new string object on the Managed Heap:</p>
+<ol>
+<li><strong>Object Header / SyncBlock (8 bytes on x64):</strong> Stores thread locking index and default hashcode.</li>
+<li><strong>MethodTable Pointer (8 bytes):</strong> Points to the <code>System.String</code> runtime type descriptor.</li>
+<li><strong>Length Prefix (4 bytes):</strong> 32-bit signed integer storing the character count (enabling $O(1)$ <code>.Length</code> queries).</li>
+<li><strong>Character Array (2 bytes per char):</strong> UTF-16 code units stored contiguously in memory.</li>
+<li><strong>Null Terminator (2 bytes):</strong> Injected automatically for seamless interop with native Windows/POSIX Win32 APIs.</li>
+</ol>
+<h3 id='2-the-string-immutability-trap-in-loops'>2. The String Immutability Trap in Loops</h3>
+<p>In C#, strings are <strong>immutable</strong>. Any operation that appears to mutate a string (<code>s += &quot;x&quot;</code>, <code>s.Substring()</code>, <code>s.Trim()</code>) actually allocates a completely new string object on the Managed Heap.</p>
 
 <div class="code-container">
     <div class="code-header">
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">// NAIVE CONCATENATION (DANGEROUS IN HIGH-THROUGHPUT CODE)
+    <pre><code class="language-csharp">// DISASTROUS: O(N^2) allocations - Triggers continuous Gen 0 GC pauses!
 string result = &quot;&quot;;
-for (int i = 0; i &lt; n; i++)
+for (int i = 0; i &lt; 10000; i++)
 {
-    result += i.ToString(); // Allocates a new string on EVERY iteration!
-}
-// Time Complexity: O(N^2) due to repeated memory copying.
-// Generates massive Gen 0 garbage collection pressure.</code></pre>
+    result += i.ToString(); // Allocates 10,000 strings and copies bytes repeatedly!
+}</code></pre>
 </div>
 
-<h3 id='mitigation-strategies-in-net-8'>Mitigation Strategies in .NET 8</h3>
-<ol>
-<li><strong><code>StringBuilder</code>:</strong> Backed by an internal character buffer that dynamically expands, amortizing allocations.</li>
-<li><strong><code>ReadOnlySpan&lt;char&gt;</code>:</strong> Enables zero-allocation parsing, sub-stringing, and character comparison without creating new heap strings.</li>
-<li><strong>String Interning:</strong> The CLR maintains an internal hash table called the <strong>Intern Pool</strong>. Literal strings with identical content share the exact same reference address in memory (<code>string.IsInterned(s)</code>).</li>
-</ol>
+<h3 id='3-mitigation-strategies-in-net-8'>3. Mitigation Strategies in .NET 8</h3>
+<ul>
+<li><strong><code>StringBuilder</code>:</strong> Pre-allocated circular buffer for dynamic concatenations.</li>
+<li><strong><code>Span&lt;char&gt;</code> / <code>ReadOnlySpan&lt;char&gt;</code>:</strong> Zero-allocation slicing over existing string memory on the thread stack.</li>
+<li><strong><code>string.Create&lt;T&gt;()</code>:</strong> Direct memory buffer initialization without intermediate heap allocations.</li>
+</ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='42-problem-1-reverse-words-in-a-sentence-leetcode-151'>4.2 Problem 1: Reverse Words in a Sentence (LeetCode 151)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Trim whitespace, reverse the entire character array, then reverse each individual word within its own boundaries, and finally compact multi-space gaps into single spaces.</p>
-
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">Input:    &quot;the sky is blue&quot;
-Step 1:   &quot;eulb si yks eht&quot;  (Reverse entire string)
-Step 2:   &quot;blue is sky the&quot;  (Reverse each word individually)</code></pre>
-</div>
-
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Given <code>&quot;the sky is blue&quot;</code>, return <code>&quot;blue is sky the&quot;</code>. Multiple spaces must be compacted into a single space, and leading/trailing whitespace removed.</li>
+<li><strong>Mental Model:</strong> Notice the transformation:</li>
+</ul>
+<ol>
+<li>If we reverse the entire string: <code>&quot;the sky is blue&quot;</code> $\implies$ <code>&quot;eulb si yks eht&quot;</code>.</li>
+<li>Notice that every word is in the <strong>correct destination position</strong>, but its letters are reversed!</li>
+<li>Reverse each individual word within its own boundaries: <code>&quot;blue is sky the&quot;</code>.</li>
+</ol>
+<ul>
+<li>In C#, <code>string.Split(&#x27; &#x27;, StringSplitOptions.RemoveEmptyEntries)</code> extracts all valid words while naturally compacting whitespace! Then, reverse the word array in-place.</li>
+</ul>
+<h3 id='2-how-interviewer-thinks'>2. How Interviewer Thinks</h3>
+<ul>
+<li>Tests if you know how to handle irregular spaces without messy nested conditions.</li>
+<li>Tests two-pointer array reversal technique.</li>
+</ul>
+<h3 id='3-approach-1-brute-force-on-space'>3. Approach 1: Brute Force ($O(N)$ Space)</h3>
+<ul>
+<li>Split by space, filter out blanks, reverse array, join with space.</li>
+</ul>
+<h3 id='4-step-by-step-dry-run-table'>4. Step-by-Step Dry Run Table</h3>
+<p><strong>Input:</strong> <code>s = &quot;  hello world  &quot;</code></p>
+<div class='table-wrapper'><table>
+<tr><th>Step</th><th>Action</th><th>State / Output</th></tr>
+<tr><td><strong>1</strong></td><td>Split with <code>RemoveEmptyEntries</code></td><td><code>words = [&quot;hello&quot;, &quot;world&quot;]</code></td></tr>
+<tr><td><strong>2</strong></td><td>Two pointers <code>l = 0, r = 1</code></td><td>Swap <code>words[0]</code> and <code>words[1]</code> $\implies$ <code>[&quot;world&quot;, &quot;hello&quot;]</code></td></tr>
+<tr><td><strong>3</strong></td><td><code>string.Join(&quot; &quot;, words)</code></td><td><code>&quot;world hello&quot;</code></td></tr>
+</table></div>
+<h3 id='5-neetcode-style-c-solution-clean-intuitive'>5. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -1956,10 +2140,10 @@ Step 2:   &quot;blue is sky the&quot;  (Reverse each word individually)</code></
     </div>
     <pre><code class="language-csharp">public string ReverseWords(string s)
 {
-    // 1. Split words while removing empty entries
+    // 1. Split words while stripping irregular whitespace
     string[] words = s.Split(&#x27; &#x27;, StringSplitOptions.RemoveEmptyEntries);
 
-    // 2. Reverse word array using two pointers
+    // 2. Reverse word array in-place with two pointers
     int l = 0, r = words.Length - 1;
     while (l &lt; r)
     {
@@ -1968,7 +2152,7 @@ Step 2:   &quot;blue is sky the&quot;  (Reverse each word individually)</code></
         r--;
     }
 
-    // 3. Join with a single space
+    // 3. Join with single space
     return string.Join(&quot; &quot;, words);
 }</code></pre>
 </div>
@@ -1976,28 +2160,32 @@ Step 2:   &quot;blue is sky the&quot;  (Reverse each word individually)</code></
 
 <div class="callout note">
     <div class="callout-icon">💡</div>
-    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> In zero-allocation .NET pipelines, you can perform this in-place over <code>char[]</code> or <code>Span&lt;char&gt;</code> without allocating a <code>string[]</code> array. For interview whiteboard rounds, <code>string.Split(..., RemoveEmptyEntries)</code> followed by in-place reversal is clean, expressive, and immediately understood.</div>
+    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> In zero-allocation pipelines, this can be executed over <code>char[]</code> or <code>Span&lt;char&gt;</code> without allocating a <code>string[]</code> array. For interview whiteboard rounds, <code>string.Split(..., RemoveEmptyEntries)</code> followed by in-place pointer reversal is clean and immediately understood.</div>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Linear scan and split.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Linear split and join.</li>
 <li><strong>Space Complexity:</strong> $O(N)$ — To hold word tokens.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='43-problem-2-string-compression-run-length-encoding-leetcode-443'>4.3 Problem 2: String Compression / Run-Length Encoding (LeetCode 443)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Use a fast read pointer to count contiguous identical characters, and a slow write pointer to write the character followed by the digits of its count if greater than 1.</p>
-
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">Input:  [ &#x27;a&#x27;, &#x27;a&#x27;, &#x27;b&#x27;, &#x27;b&#x27;, &#x27;c&#x27;, &#x27;c&#x27;, &#x27;c&#x27; ]
-Output: [ &#x27;a&#x27;, &#x27;2&#x27;, &#x27;b&#x27;, &#x27;2&#x27;, &#x27;c&#x27;, &#x27;3&#x27; ], returns length 6</code></pre>
-</div>
-
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Compress <code>chars = [&#x27;a&#x27;,&#x27;a&#x27;,&#x27;b&#x27;,&#x27;b&#x27;,&#x27;c&#x27;,&#x27;c&#x27;,&#x27;c&#x27;]</code> into <code>[&#x27;a&#x27;,&#x27;2&#x27;,&#x27;b&#x27;,&#x27;2&#x27;,&#x27;c&#x27;,&#x27;3&#x27;]</code> in-place, returning the new length 6.</li>
+<li><strong>Mental Model:</strong> <strong>Read Pointer & Write Pointer</strong>.</li>
+<li>A fast <code>read</code> pointer counts how many consecutive identical characters exist.</li>
+<li>A slow <code>write</code> pointer writes the character and, if count $> 1$, writes each digit of the count.</li>
+</ul>
+<h3 id='2-step-by-step-dry-run-table'>2. Step-by-Step Dry Run Table</h3>
+<p><strong>Input:</strong> <code>[&#x27;a&#x27;, &#x27;a&#x27;, &#x27;b&#x27;, &#x27;b&#x27;, &#x27;c&#x27;, &#x27;c&#x27;, &#x27;c&#x27;]</code></p>
+<div class='table-wrapper'><table>
+<tr><th><code>read</code> Scan Group</th><th>Group Char</th><th>Count</th><th><code>write</code> Action</th><th>Array State</th></tr>
+<tr><td><code>0..1</code></td><td><code>&#x27;a&#x27;</code></td><td><code>2</code></td><td>Write <code>&#x27;a&#x27;</code>, then <code>&#x27;2&#x27;</code></td><td><code>[&#x27;a&#x27;, &#x27;2&#x27;, ...]</code></td></tr>
+<tr><td><code>2..3</code></td><td><code>&#x27;b&#x27;</code></td><td><code>2</code></td><td>Write <code>&#x27;b&#x27;</code>, then <code>&#x27;2&#x27;</code></td><td><code>[&#x27;a&#x27;, &#x27;2&#x27;, &#x27;b&#x27;, &#x27;2&#x27;, ...]</code></td></tr>
+<tr><td><code>4..6</code></td><td><code>&#x27;c&#x27;</code></td><td><code>3</code></td><td>Write <code>&#x27;c&#x27;</code>, then <code>&#x27;3&#x27;</code></td><td><code>[&#x27;a&#x27;, &#x27;2&#x27;, &#x27;b&#x27;, &#x27;2&#x27;, &#x27;c&#x27;, &#x27;3&#x27;]</code></td></tr>
+<tr><td><strong>Return</strong></td><td>—</td><td>—</td><td>—</td><td>Returns <code>write = 6</code></td></tr>
+</table></div>
+<h3 id='3-neetcode-style-c-solution-clean-intuitive'>3. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2006,58 +2194,55 @@ Output: [ &#x27;a&#x27;, &#x27;2&#x27;, &#x27;b&#x27;, &#x27;2&#x27;, &#x27;c&#x
     </div>
     <pre><code class="language-csharp">public int Compress(char[] chars)
 {
-    int w = 0; // write pointer
-    int r = 0; // read pointer
+    int write = 0;
+    int read = 0;
 
-    while (r &lt; chars.Length)
+    while (read &lt; chars.Length)
     {
-        char c = chars[r];
+        char c = chars[read];
         int count = 0;
 
-        // Count contiguous matching characters
-        while (r &lt; chars.Length &amp;&amp; chars[r] == c)
+        // Count consecutive occurrences of character c
+        while (read &lt; chars.Length &amp;&amp; chars[read] == c)
         {
-            r++;
+            read++;
             count++;
         }
 
         // Write character
-        chars[w++] = c;
+        chars[write++] = c;
 
         // Write count digits if &gt; 1
         if (count &gt; 1)
         {
             foreach (char digit in count.ToString())
             {
-                chars[w++] = digit;
+                chars[write++] = digit;
             }
         }
     }
 
-    return w;
+    return write;
 }</code></pre>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Each character is visited once by <code>r</code>.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — In-place array mutation.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Single pass over character array.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Modified strictly in-place.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='44-problem-3-longest-palindromic-substring-leetcode-5'>4.4 Problem 3: Longest Palindromic Substring (LeetCode 5)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Every palindrome expands symmetrically from its center. Iterate through each index as a center for both <strong>odd-length palindromes</strong> (center is <code>i</code>) and <strong>even-length palindromes</strong> (center is <code>i, i+1</code>), expanding outward as long as characters match.</p>
-
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">Center Expansion:
-Odd:   c  b  [a]  b  c   &amp;rarr; Center is &#x27;a&#x27;, expand left and right
-Even:  c  [b   b]  c     &amp;rarr; Center is between &#x27;b&#x27; and &#x27;b&#x27;</code></pre>
-</div>
-
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Find the longest contiguous substring that reads the same backward as forward.</li>
+<li><strong>Brute Force ($O(N^3)$):</strong> Check every substring $(N^2)$ and verify if palindrome $(N)$. Far too slow!</li>
+<li><strong>Aha! Moment:</strong> <strong>Expand Around Center ($O(N^2)$ Time, $O(1)$ Space)</strong>.</li>
+<li>A palindrome mirrors around its center.</li>
+<li>An odd-length palindrome has 1 center character (e.g. <code>&quot;aba&quot;</code> center is <code>&#x27;b&#x27;</code>).</li>
+<li>An even-length palindrome has 2 center characters (e.g. <code>&quot;abba&quot;</code> center is <code>&quot;bb&quot;</code>).</li>
+<li>Iterate through every index and expand outward as long as <code>s[l] == s[r]</code>.</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2066,53 +2251,56 @@ Even:  c  [b   b]  c     &amp;rarr; Center is between &#x27;b&#x27; and &#x27;b&
     </div>
     <pre><code class="language-csharp">public string LongestPalindrome(string s)
 {
-    if (string.IsNullOrEmpty(s)) return &quot;&quot;;
-
-    string res = &quot;&quot;;
-    int resLen = 0;
+    int start = 0, maxLen = 0;
 
     for (int i = 0; i &lt; s.Length; i++)
     {
-        // 1. Odd length palindrome (center is i)
-        Expand(i, i);
+        // Odd length center (e.g. &quot;aba&quot;)
+        Expand(s, i, i, ref start, ref maxLen);
 
-        // 2. Even length palindrome (center is i, i+1)
-        Expand(i, i + 1);
+        // Even length center (e.g. &quot;abba&quot;)
+        Expand(s, i, i + 1, ref start, ref maxLen);
     }
 
-    void Expand(int l, int r)
+    return s.Substring(start, maxLen);
+}
+
+private void Expand(string s, int l, int r, ref int start, ref int maxLen)
+{
+    while (l &gt;= 0 &amp;&amp; r &lt; s.Length &amp;&amp; s[l] == s[r])
     {
-        while (l &gt;= 0 &amp;&amp; r &lt; s.Length &amp;&amp; s[l] == s[r])
+        int curLen = r - l + 1;
+        if (curLen &gt; maxLen)
         {
-            if ((r - l + 1) &gt; resLen)
-            {
-                res = s.Substring(l, r - l + 1);
-                resLen = r - l + 1;
-            }
-            l--;
-            r++;
+            start = l;
+            maxLen = curLen;
         }
+        l--;
+        r++;
     }
-
-    return res;
 }</code></pre>
 </div>
 
-
-<div class="callout note">
-    <div class="callout-icon">💡</div>
-    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> Instead of slicing <code>s.Substring(...)</code> on every expansion, track integer indices <code>bestStart</code> and <code>bestLen</code>, and call <code>s.Substring(bestStart, bestLen)</code> only once at the end to save string allocations.</div>
-</div>
-
 <ul>
-<li><strong>Time Complexity:</strong> $O(N^2)$ — Expanding from $2N - 1$ centers takes $O(N)$ each.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ auxiliary space.</li>
+<li><strong>Time Complexity:</strong> $O(N^2)$ — Up to $2N - 1$ centers expanded outward.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — No extra arrays or tables allocated.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='45-problem-4-valid-palindrome-ii-delete-at-most-1-character-leetcode-680'>4.5 Problem 4: Valid Palindrome II (Delete at Most 1 Character - LeetCode 680)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Use converging two pointers (<code>l</code> and <code>r</code>). If <code>s[l] != s[r]</code>, check if deleting either <code>s[l]</code> (test <code>l+1 .. r</code>) or <code>s[r]</code> (test <code>l .. r-1</code>) forms a valid palindrome.</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h2 id='45-problem-4-valid-palindrome-ii-leetcode-680'>4.5 Problem 4: Valid Palindrome II (LeetCode 680)</h2>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Return <code>true</code> if <code>s</code> can be a palindrome after deleting <strong>at most one</strong> character.</li>
+<li><strong>Mental Model:</strong> Use Two Pointers <code>l</code> and <code>r</code>. As long as <code>s[l] == s[r]</code>, move <code>l++</code> and <code>r--</code>.</li>
+<li>The first time a mismatch occurs (<code>s[l] != s[r]</code>), you have exactly <strong>two choices</strong>:</li>
+</ul>
+<ol>
+<li>Skip the left character: Check if <code>s[l+1 .. r]</code> is a palindrome.</li>
+<li>Skip the right character: Check if <code>s[l .. r-1]</code> is a palindrome.</li>
+</ol>
+<ul>
+<li>If either option is a valid palindrome, return <code>true</code>!</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2127,7 +2315,7 @@ Even:  c  [b   b]  c     &amp;rarr; Center is between &#x27;b&#x27; and &#x27;b&
     {
         if (s[l] != s[r])
         {
-            // Try skipping left char OR skipping right char
+            // Try skipping left OR skipping right
             return IsSubPalindrome(s, l + 1, r) || IsSubPalindrome(s, l, r - 1);
         }
         l++;
@@ -2150,27 +2338,19 @@ private bool IsSubPalindrome(string s, int l, int r)
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — At most two linear scans.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — Only pointer comparisons.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — At most two linear sweeps.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Scalar pointers on stack.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='46-problem-5-longest-common-prefix-leetcode-14'>4.6 Problem 5: Longest Common Prefix (LeetCode 14)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Start with the first word as our candidate prefix. Iterate through the rest of the words; while a word does not start with the prefix, shorten the prefix by one character from the end until it matches or becomes empty.</p>
-
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">strs = [&quot;flower&quot;, &quot;flow&quot;, &quot;flight&quot;]
-Prefix: &quot;flower&quot;
-Compare with &quot;flow&quot;:   &quot;flower&quot; &amp;rarr; &quot;flowe&quot; &amp;rarr; &quot;flow&quot; (matches!)
-Compare with &quot;flight&quot;: &quot;flow&quot; &amp;rarr; &quot;flo&quot; &amp;rarr; &quot;fl&quot; (matches!)
-Result: &quot;fl&quot;</code></pre>
-</div>
-
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Find the longest common prefix string among an array of strings <code>[&quot;flower&quot;,&quot;flow&quot;,&quot;flight&quot;]</code> $\implies$ <code>&quot;fl&quot;</code>.</li>
+<li><strong>Horizontal Scanning:</strong> Assume <code>prefix = strs[0]</code>. Compare it against each subsequent string.</li>
+<li>While <code>str.StartsWith(prefix)</code> is false, trim 1 character off the end of <code>prefix</code>:</li>
+</ul>
+<p><code>prefix = prefix.Substring(0, prefix.Length - 1)</code>.</p>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2179,17 +2359,16 @@ Result: &quot;fl&quot;</code></pre>
     </div>
     <pre><code class="language-csharp">public string LongestCommonPrefix(string[] strs)
 {
-    if (strs == null || strs.Length == 0) return &quot;&quot;;
+    if (strs.Length == 0) return &quot;&quot;;
 
     string prefix = strs[0];
 
     for (int i = 1; i &lt; strs.Length; i++)
     {
-        // While current word does not start with prefix, trim last character
         while (!strs[i].StartsWith(prefix))
         {
             prefix = prefix.Substring(0, prefix.Length - 1);
-            if (string.IsNullOrEmpty(prefix)) return &quot;&quot;;
+            if (prefix.Length == 0) return &quot;&quot;;
         }
     }
 
@@ -2198,14 +2377,17 @@ Result: &quot;fl&quot;</code></pre>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(S)$ where $S$ is the sum of all characters in all strings.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ auxiliary memory.</li>
+<li><strong>Time Complexity:</strong> $O(S)$ where $S$ is the sum of all characters across strings.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ auxiliary space.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='47-problem-6-isomorphic-strings-leetcode-205'>4.7 Problem 6: Isomorphic Strings (LeetCode 205)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Two strings <code>s</code> and <code>t</code> are isomorphic if there is a bijective (one-to-one and onto) mapping between their characters. Verify that character <code>s[i]</code> maps uniquely to <code>t[i]</code>, and <code>t[i]</code> maps uniquely back to <code>s[i]</code>.</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Determine if characters in <code>s</code> can be replaced to get <code>t</code> with a 1-to-1 bijection mapping (<code>&quot;egg&quot;</code> $\implies$ <code>&quot;add&quot;</code> is <code>true</code>; <code>&quot;foo&quot;</code> $\implies$ <code>&quot;bar&quot;</code> is <code>false</code>).</li>
+<li><strong>Mental Model:</strong> Store the <strong>last seen position</strong> of each character in both strings. If at any index <code>i</code>, <code>lastSeenS[s[i]] != lastSeenT[t[i]]</code>, the bijection is broken!</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2214,39 +2396,29 @@ Result: &quot;fl&quot;</code></pre>
     </div>
     <pre><code class="language-csharp">public bool IsIsomorphic(string s, string t)
 {
-    if (s.Length != t.Length) return false;
-
-    var mapST = new Dictionary&lt;char, char&gt;();
-    var mapTS = new Dictionary&lt;char, char&gt;();
+    int[] mapS = new int[256];
+    int[] mapT = new int[256];
 
     for (int i = 0; i &lt; s.Length; i++)
     {
-        char c1 = s[i];
-        char c2 = t[i];
+        // If last seen positions differ, mapping is not 1-to-1
+        if (mapS[s[i]] != mapT[t[i]])
+        {
+            return false;
+        }
 
-        // If c1 was already mapped, it must map to c2
-        if (mapST.ContainsKey(c1) &amp;&amp; mapST[c1] != c2) return false;
-
-        // If c2 was already mapped, it must map back to c1
-        if (mapTS.ContainsKey(c2) &amp;&amp; mapTS[c2] != c1) return false;
-
-        mapST[c1] = c2;
-        mapTS[c2] = c1;
+        // Store index + 1 (since default value in int[] is 0)
+        mapS[s[i]] = i + 1;
+        mapT[t[i]] = i + 1;
     }
 
     return true;
 }</code></pre>
 </div>
 
-
-<div class="callout note">
-    <div class="callout-icon">💡</div>
-    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> Since characters in ASCII are bounded by 128 or 256, you can replace the two dictionaries with two integer arrays <code>int[256]</code> recording last-seen timestamps, reducing memory to $O(1)$ without hash collisions.</div>
-</div>
-
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Single linear pass.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — At most 256 unique character mappings.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Single pass over string length.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Two fixed 256-integer ASCII tables.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
@@ -2268,61 +2440,74 @@ Result: &quot;fl&quot;</code></pre>
         <a id="5-pattern-3-two-pointers" class="accordion-anchor"></a>
         <a id="5-pattern-3-two-pointers" class="accordion-anchor"></a>
 
-<p>The <strong>Two Pointers</strong> pattern maintains two index pointers moving across one linear array or string. By taking advantage of sorted data or bilateral constraints, it eliminates nested loops and reduces $O(N^2)$ brute-force solutions to $O(N)$ linear scans with strictly $O(1)$ stack memory.</p>
+<p>The Two Pointers pattern is the single most efficient way to process linear data structures in $O(N)$ time and $O(1)$ space. Instead of using nested loops ($O(N^2)$), two integer indices traverse the array either converging toward each other, moving in the same direction at different speeds, or expanding outward.</p>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='51-the-two-pointers-mental-model-archetypes'>5.1 The Two Pointers Mental Model & Archetypes</h2>
-<div class='mermaid'>flowchart TD
-    subgraph Converging ["Archetype 1: Converging Pointers (Inward Squeeze)"]
-        A1["Left: Index 0 &rarr;"] --- A2["[ Sorted Array / Palindrome ]"] --- A3["&larr; Right: Index N-1"]
-        A4["Action: Squeeze inward based on comparison"]
-    end
-
-    subgraph Parallel ["Archetype 2: Parallel / Read-Write (Compaction)"]
-        B1["Write: Slow pointer &rarr; (Holds valid compacted boundary)"]
-        B2["Read: Fast pointer &rarr;&rarr; (Scans input and filters elements)"]
-    end
-
-    subgraph ThreeWay ["Archetype 3: 3-Way Partitioning (Dutch National Flag)"]
-        C1["Low: End of 0s"] --- C2["Mid: Current Scanner"] --- C3["High: Start of 2s"]
-    end</div>
-<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='52-problem-1-two-sum-ii-input-array-is-sorted'>5.2 Problem 1: Two Sum II (Input Array Is Sorted)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Because the array is sorted, the smallest numbers are on the left and the largest on the right. If the sum of <code>nums[l] + nums[r]</code> is too small, advance <code>l++</code>. If it is too big, decrement <code>r--</code>.</p>
 
 <div class="code-container">
     <div class="code-header">
         <span>CODE</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-">nums = [ 2, 7, 11, 15 ], target = 9
-l = 0 (val 2), r = 3 (val 15) &amp;rarr; sum = 17 &gt; 9 &amp;rarr; r--
-l = 0 (val 2), r = 2 (val 11) &amp;rarr; sum = 13 &gt; 9 &amp;rarr; r--
-l = 0 (val 2), r = 1 (val 7)  &amp;rarr; sum = 9 == target! Found [1, 2]!</code></pre>
+    <pre><code class="language-">1. Converging (Opposite Ends):
+   [ L -------------&gt;           &lt;------------- R ]
+   Best for: Two Sum (Sorted), Valid Palindrome, Container With Most Water, 3Sum, Trapping Rain Water.
+
+2. Fast &amp; Slow (Same Direction):
+   [ Slow --&gt;   Fast ------&gt;                     ]
+   Best for: Remove Duplicates, Move Zeroes, In-Place Compaction.
+
+3. Expand Around Center:
+   [             &lt;-- L | R --&gt;                   ]
+   Best for: Longest Palindromic Substring.</code></pre>
 </div>
 
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='52-problem-1-two-sum-ii-input-array-is-sorted'>5.2 Problem 1: Two Sum II (Input Array Is Sorted)</h2>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Find two numbers that sum to <code>target</code> in an array <strong>already sorted in ascending order</strong>. Return 1-based indices in $O(1)$ extra space.</li>
+<li><strong>Mental Model:</strong></li>
+<li>Place <code>l = 0</code> (smallest element) and <code>r = n - 1</code> (largest element).</li>
+<li>Calculate <code>curSum = nums[l] + nums[r]</code>.</li>
+<li>If <code>curSum == target</code>: Found our pair!</li>
+<li>If <code>curSum &lt; target</code>: The sum is too small! To get a larger sum, move <code>l++</code>.</li>
+<li>If <code>curSum &gt; target</code>: The sum is too big! To get a smaller sum, move <code>r--</code>.</li>
+</ul>
+<h3 id='2-how-interviewer-thinks'>2. How Interviewer Thinks</h3>
+<ul>
+<li>Did the candidate reach for a Hash Map out of habit ($O(N)$ space)?</li>
+<li>Did they recognize that because the array is <strong>sorted</strong>, two pointers can solve it in $O(1)$ auxiliary space without any heap allocations?</li>
+</ul>
+<h3 id='3-step-by-step-dry-run-table'>3. Step-by-Step Dry Run Table</h3>
+<p><strong>Input:</strong> <code>numbers = [2, 7, 11, 15]</code>, <code>target = 9</code></p>
+<div class='table-wrapper'><table>
+<tr><th>Step</th><th><code>l</code></th><th><code>r</code></th><th><code>numbers[l]</code></th><th><code>numbers[r]</code></th><th><code>curSum</code></th><th>Comparison with Target 9</th><th>Pointer Action</th></tr>
+<tr><td><strong>1</strong></td><td><code>0</code></td><td><code>3</code></td><td><code>2</code></td><td><code>15</code></td><td><code>17</code></td><td><code>17 &gt; 9</code> (Too big)</td><td>Decrement <code>r--</code></td></tr>
+<tr><td><strong>2</strong></td><td><code>0</code></td><td><code>2</code></td><td><code>2</code></td><td><code>11</code></td><td><code>13</code></td><td><code>13 &gt; 9</code> (Too big)</td><td>Decrement <code>r--</code></td></tr>
+<tr><td><strong>3</strong></td><td><code>0</code></td><td><code>1</code></td><td><code>2</code></td><td><code>7</code></td><td><code>9</code></td><td><code>9 == 9</code> (<strong>MATCH!</strong>)</td><td>Return <code>[1, 2]</code> (1-based)</td></tr>
+</table></div>
+<h3 id='4-neetcode-style-c-solution-clean-intuitive'>4. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">public int[] TwoSum(int[] nums, int target)
+    <pre><code class="language-csharp">public int[] TwoSum(int[] numbers, int target)
 {
-    int l = 0;
-    int r = nums.Length - 1;
+    int l = 0, r = numbers.Length - 1;
 
     while (l &lt; r)
     {
-        int sum = nums[l] + nums[r];
+        int curSum = numbers[l] + numbers[r];
 
-        if (sum == target)
+        if (curSum == target)
         {
-            return [l + 1, r + 1]; // 1-indexed for LeetCode 167
+            return [l + 1, r + 1]; // 1-based index
         }
 
-        if (sum &lt; target)
+        if (curSum &lt; target)
         {
             l++;
         }
@@ -2337,14 +2522,17 @@ l = 0 (val 2), r = 1 (val 7)  &amp;rarr; sum = 9 == target! Found [1, 2]!</code>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Each step eliminates one element.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — Zero heap allocation.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — In the worst case, each element is visited at most once.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Only two scalar pointers on the stack.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='53-problem-2-valid-palindrome'>5.3 Problem 2: Valid Palindrome</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Compare characters from the outside inward (<code>l</code> from start, <code>r</code> from end), skipping non-alphanumeric characters. If any mismatch occurs, it's not a palindrome.</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Determine if a string is a palindrome, considering only alphanumeric characters and ignoring cases.</li>
+<li><strong>Mental Model:</strong> Converging pointers <code>l</code> and <code>r</code>. Skip non-alphanumeric characters. Compare lowercased characters.</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2353,12 +2541,10 @@ l = 0 (val 2), r = 1 (val 7)  &amp;rarr; sum = 9 == target! Found [1, 2]!</code>
     </div>
     <pre><code class="language-csharp">public bool IsPalindrome(string s)
 {
-    int l = 0;
-    int r = s.Length - 1;
+    int l = 0, r = s.Length - 1;
 
     while (l &lt; r)
     {
-        // Skip non-alphanumeric characters
         while (l &lt; r &amp;&amp; !char.IsLetterOrDigit(s[l])) l++;
         while (l &lt; r &amp;&amp; !char.IsLetterOrDigit(s[r])) r--;
 
@@ -2376,25 +2562,19 @@ l = 0 (val 2), r = 1 (val 7)  &amp;rarr; sum = 9 == target! Found [1, 2]!</code>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Single pass over string.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — In-place pointer comparison without creating reversed strings.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Each character checked at most twice.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Zero string allocations.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='54-problem-3-container-with-most-water-leetcode-11'>5.4 Problem 3: Container With Most Water (LeetCode 11)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>The water volume is bounded by the shorter pillar ($	ext{Area} = (r - l) 	imes \min(h[l], h[r])$). Moving the taller pillar only reduces width without any chance of increasing height, so <strong>always move the shorter pillar inward</strong>!</p>
-
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">Heights: [ 1, 8, 6, 2, 5, 4, 8, 3, 7 ]
-           L                         R
-           h[L]=1 &lt; h[R]=7 &amp;rarr; Bottleneck is L. Advance L!</code></pre>
-</div>
-
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Choose two vertical lines that, together with the x-axis, form a container that holds the most water.</li>
+<li><strong>Formula:</strong> $\text{Area} = (r - l) \times \min(\text{height}[l], \text{height}[r])$.</li>
+<li><strong>The Greedy Choice:</strong> The width is widest at the outer edges (<code>l = 0, r = n - 1</code>). To find a larger area as the width narrows, we <strong>must</strong> find taller lines.</li>
+<li><strong>Which pointer to move?</strong> Always move the pointer pointing to the <strong>shorter line</strong>! Moving the taller line can never increase the area because height is limited by the shorter line.</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2403,16 +2583,15 @@ l = 0 (val 2), r = 1 (val 7)  &amp;rarr; sum = 9 == target! Found [1, 2]!</code>
     </div>
     <pre><code class="language-csharp">public int MaxArea(int[] height)
 {
-    int l = 0;
-    int r = height.Length - 1;
+    int l = 0, r = height.Length - 1;
     int maxArea = 0;
 
     while (l &lt; r)
     {
-        int area = (r - l) * Math.Min(height[l], height[r]);
-        maxArea = Math.Max(maxArea, area);
+        int h = Math.Min(height[l], height[r]);
+        int w = r - l;
+        maxArea = Math.Max(maxArea, h * w);
 
-        // Move the shorter pillar inward
         if (height[l] &lt; height[r])
         {
             l++;
@@ -2428,25 +2607,26 @@ l = 0 (val 2), r = 1 (val 7)  &amp;rarr; sum = 9 == target! Found [1, 2]!</code>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Pointers converge in at most $N$ steps.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — Only three integer registers.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Single pass from outside in.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Scalar state only.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='55-problem-4-3sum-leetcode-15'>5.5 Problem 4: 3Sum (LeetCode 15)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Sort the array first. Loop through each number as a fixed pivot, then use converging Two Pointers (<code>l</code> and <code>r</code>) to find the remaining two numbers that sum to zero, while skipping duplicate values to prevent duplicate triplets.</p>
-
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">Sorted Array: [ -4,   -1,   -1,    0,    1,    2 ]
-                 ▲      ▲                      ▲
-               Pivot  Left                   Right</code></pre>
-</div>
-
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Find all unique triplets <code>[nums[i], nums[j], nums[k]]</code> such that $i \neq j \neq k$ and $\text{sum} == 0$. No duplicate triplets allowed.</li>
+<li><strong>Mental Model:</strong></li>
+</ul>
+<ol>
+<li><strong>Sort the array first ($O(N \log N)$)</strong>.</li>
+<li>Fix the first element <code>nums[i]</code> using a loop.</li>
+<li>The problem now reduces to: <strong>Two Sum II</strong> on the remaining array!</li>
+</ol>
+<p>Find two elements in <code>nums[i + 1 .. n - 1]</code> that sum to <code>-nums[i]</code>.</p>
+<ol>
+<li>Skip duplicates for both <code>i</code> and <code>l</code> to avoid duplicate triplets in the output.</li>
+</ol>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2458,33 +2638,27 @@ l = 0 (val 2), r = 1 (val 7)  &amp;rarr; sum = 9 == target! Found [1, 2]!</code>
     Array.Sort(nums);
     var res = new List&lt;IList&lt;int&gt;&gt;();
 
-    for (int i = 0; i &lt; nums.Length; i++)
+    for (int i = 0; i &lt; nums.Length - 2; i++)
     {
-        // If the smallest number &gt; 0, three positive numbers cannot sum to 0
-        if (nums[i] &gt; 0) break;
-
-        // Skip duplicate pivot values
+        // Skip duplicate first elements
         if (i &gt; 0 &amp;&amp; nums[i] == nums[i - 1]) continue;
 
-        int l = i + 1;
-        int r = nums.Length - 1;
+        int l = i + 1, r = nums.Length - 1;
 
         while (l &lt; r)
         {
-            int sum = nums[i] + nums[l] + nums[r];
+            int total = nums[i] + nums[l] + nums[r];
 
-            if (sum == 0)
+            if (total == 0)
             {
                 res.Add([nums[i], nums[l], nums[r]]);
-
-                // Skip duplicate values for both pointers
-                while (l &lt; r &amp;&amp; nums[l] == nums[l + 1]) l++;
-                while (l &lt; r &amp;&amp; nums[r] == nums[r - 1]) r--;
-
                 l++;
                 r--;
+
+                // Skip duplicate second elements
+                while (l &lt; r &amp;&amp; nums[l] == nums[l - 1]) l++;
             }
-            else if (sum &lt; 0)
+            else if (total &lt; 0)
             {
                 l++;
             }
@@ -2500,31 +2674,23 @@ l = 0 (val 2), r = 1 (val 7)  &amp;rarr; sum = 9 == target! Found [1, 2]!</code>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N^2)$ — Sorting takes $O(N \log N)$; outer loop runs $N$ times with an $O(N)$ two-pointer scan.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ auxiliary memory (ignoring the output list).</li>
+<li><strong>Time Complexity:</strong> $O(N^2)$ — Sorting takes $O(N \log N)$, and nested two-pointer loop takes $O(N^2)$.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ auxiliary space (ignoring output list).</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='56-problem-5-trapping-rain-water-leetcode-42'>5.6 Problem 5: Trapping Rain Water (LeetCode 42)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Water trapped at any position is determined by $\min(	ext{leftMax}, 	ext{rightMax}) - 	ext{height}[i]$. By advancing whichever pointer has the smaller maximum (<code>leftMax &lt; rightMax</code>), we can calculate trapped water in $O(1)$ space without precomputing prefix arrays!</p>
-
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">Elevation Map &amp; Trapped Water:
-Height: [ 0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1 ]
-
-   3 |                      █
-   2 |             █  ░░░░  █  █  ░░  █
-   1 |       █  ░░ █  █  ░░ █  █  █  ██  █
-   0 | ──█───█──██─█──█──██─█──█──█──██──█─
-Index: 0  1  2  3  4  5  6  7  8  9 10 11
-       (█ = Concrete Pillar, ░░ = Trapped Rain Water)</code></pre>
-</div>
-
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Compute how much rain water can be trapped between elevation bars.</li>
+<li><strong>Formula:</strong> Water trapped above bar <code>i</code> is determined by the minimum of the highest wall to its left and highest wall to its right, minus its own height:</li>
+</ul>
+<p>$$\text{Water}[i] = \max(0, \min(\text{maxL}, \text{maxR}) - \text{height}[i])$$</p>
+<ul>
+<li><strong>Aha! Moment:</strong> Instead of computing arrays for <code>maxL</code> and <code>maxR</code> ($O(N)$ space), use <strong>Two Pointers</strong>!</li>
+<li>If <code>maxL &lt; maxR</code>: The limiting factor is definitely <code>maxL</code>. We can calculate water at pointer <code>l</code> immediately and advance <code>l++</code>!</li>
+<li>Otherwise: The limiting factor is <code>maxR</code>. Calculate water at <code>r</code> and decrement <code>r--</code>!</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2536,22 +2702,22 @@ Index: 0  1  2  3  4  5  6  7  8  9 10 11
     if (height.Length == 0) return 0;
 
     int l = 0, r = height.Length - 1;
-    int leftMax = height[l], rightMax = height[r];
+    int maxL = height[l], maxR = height[r];
     int res = 0;
 
     while (l &lt; r)
     {
-        if (leftMax &lt; rightMax)
+        if (maxL &lt; maxR)
         {
             l++;
-            leftMax = Math.Max(leftMax, height[l]);
-            res += leftMax - height[l];
+            maxL = Math.Max(maxL, height[l]);
+            res += maxL - height[l];
         }
         else
         {
             r--;
-            rightMax = Math.Max(rightMax, height[r]);
-            res += rightMax - height[r];
+            maxR = Math.Max(maxR, height[r]);
+            res += maxR - height[r];
         }
     }
 
@@ -2560,27 +2726,23 @@ Index: 0  1  2  3  4  5  6  7  8  9 10 11
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Single pass over the array.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — Only five scalar integer variables on the stack.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Single pass inward.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Constant memory.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='57-problem-6-sort-colors-dutch-national-flag-leetcode-75'>5.7 Problem 6: Sort Colors / Dutch National Flag (LeetCode 75)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Partition the array in-place into 3 regions (0s, 1s, 2s) using 3 pointers: <code>low</code> marks the boundary for 0s, <code>high</code> marks the boundary for 2s, and <code>mid</code> is the active scanner.</p>
-
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">Array State During Execution:
-+-------------------+-------------------+-------------------+-------------------+
-|       0 0 0       |       1 1 1       |    ? ? ? ? ? ?    |       2 2 2       |
-+-------------------+-------------------+-------------------+-------------------+
-0                 low-1 low            mid-1 mid           high high+1             N-1</code></pre>
-</div>
-
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Sort an array containing only <code>0</code>s (red), <code>1</code>s (white), and <code>2</code>s (blue) in-place in a single pass.</li>
+<li><strong>Mental Model:</strong> <strong>3 Pointers</strong>:</li>
+<li><code>l</code>: Right boundary of zeros.</li>
+<li><code>r</code>: Left boundary of twos.</li>
+<li><code>i</code>: Current inspection pointer.</li>
+<li>If <code>nums[i] == 0</code>: Swap with <code>nums[l]</code>, move both <code>l++</code> and <code>i++</code>.</li>
+<li>If <code>nums[i] == 1</code>: Already in middle, just move <code>i++</code>.</li>
+<li>If <code>nums[i] == 2</code>: Swap with <code>nums[r]</code>, decrement <code>r--</code> (do NOT increment <code>i</code>, because the swapped element from <code>r</code> must be inspected!).</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2589,27 +2751,25 @@ Index: 0  1  2  3  4  5  6  7  8  9 10 11
     </div>
     <pre><code class="language-csharp">public void SortColors(int[] nums)
 {
-    int low = 0;
-    int mid = 0;
-    int high = nums.Length - 1;
+    int l = 0, r = nums.Length - 1;
+    int i = 0;
 
-    while (mid &lt;= high)
+    while (i &lt;= r)
     {
-        if (nums[mid] == 0)
+        if (nums[i] == 0)
         {
-            (nums[low], nums[mid]) = (nums[mid], nums[low]);
-            low++;
-            mid++;
+            (nums[l], nums[i]) = (nums[i], nums[l]);
+            l++;
+            i++;
         }
-        else if (nums[mid] == 1)
+        else if (nums[i] == 2)
         {
-            mid++;
+            (nums[r], nums[i]) = (nums[i], nums[r]);
+            r--;
         }
-        else // nums[mid] == 2
+        else
         {
-            (nums[mid], nums[high]) = (nums[high], nums[mid]);
-            high--;
-            // Notice: do NOT advance mid here: the swapped value is uninspected!
+            i++;
         }
     }
 }</code></pre>
@@ -2617,13 +2777,19 @@ Index: 0  1  2  3  4  5  6  7  8  9 10 11
 
 <ul>
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass over array.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — In-place swap without auxiliary buffers.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — In-place element swaps.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='58-problem-7-remove-duplicates-from-sorted-array'>5.8 Problem 7: Remove Duplicates from Sorted Array</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Use a slow write pointer <code>w</code> that only advances when the fast read pointer <code>r</code> finds a new unique value.</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Remove duplicates in-place from a sorted array such that each unique element appears once. Return count <code>k</code>.</li>
+<li><strong>Mental Model:</strong> <strong>Fast & Slow Pointers</strong>.</li>
+<li><code>slow</code> = points to the last known unique element position.</li>
+<li><code>fast</code> = scans ahead for the next unique value (<code>nums[fast] != nums[slow]</code>).</li>
+<li>When found: <code>slow++</code>, then write <code>nums[slow] = nums[fast]</code>.</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2634,30 +2800,33 @@ Index: 0  1  2  3  4  5  6  7  8  9 10 11
 {
     if (nums.Length == 0) return 0;
 
-    int w = 1; // write pointer
+    int slow = 0;
 
-    for (int r = 1; r &lt; nums.Length; r++) // read pointer
+    for (int fast = 1; fast &lt; nums.Length; fast++)
     {
-        if (nums[r] != nums[r - 1])
+        if (nums[fast] != nums[slow])
         {
-            nums[w] = nums[r];
-            w++;
+            slow++;
+            nums[slow] = nums[fast];
         }
     }
 
-    return w;
+    return slow + 1;
 }</code></pre>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Single linear scan.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Linear sweep.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — In-place array modification.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='59-problem-8-move-zeroes'>5.9 Problem 8: Move Zeroes</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Shift all non-zero numbers to the front using a slow write pointer <code>w</code>, then fill all remaining slots up to the end with zeros.</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Move all <code>0</code>s to the end of the array while maintaining the relative order of non-zero elements.</li>
+<li><strong>Mental Model:</strong> Fast & Slow Pointers. <code>slow</code> marks the next spot for a non-zero element. Whenever <code>nums[fast] != 0</code>, swap <code>nums[slow]</code> and <code>nums[fast]</code>, then advance <code>slow++</code>.</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2666,29 +2835,22 @@ Index: 0  1  2  3  4  5  6  7  8  9 10 11
     </div>
     <pre><code class="language-csharp">public void MoveZeroes(int[] nums)
 {
-    int w = 0; // write pointer
+    int slow = 0;
 
-    // 1. Shift non-zero values to front
-    for (int r = 0; r &lt; nums.Length; r++)
+    for (int fast = 0; fast &lt; nums.Length; fast++)
     {
-        if (nums[r] != 0)
+        if (nums[fast] != 0)
         {
-            nums[w] = nums[r];
-            w++;
+            (nums[slow], nums[fast]) = (nums[fast], nums[slow]);
+            slow++;
         }
-    }
-
-    // 2. Fill remaining slots with 0
-    while (w &lt; nums.Length)
-    {
-        nums[w++] = 0;
     }
 }</code></pre>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Two linear passes.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — In-place modification.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Single pass.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Zero extra allocations.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
@@ -2710,58 +2872,51 @@ Index: 0  1  2  3  4  5  6  7  8  9 10 11
         <a id="6-pattern-4-sliding-window" class="accordion-anchor"></a>
         <a id="6-pattern-4-sliding-window" class="accordion-anchor"></a>
 
-<p>The <strong>Sliding Window</strong> pattern solves contiguous subarray and substring problems in $O(N)$ linear time by avoiding redundant recalculations. Instead of re-evaluating the entire range from scratch, the window maintains a running state: <strong>adding the incoming element at the right boundary</strong> and <strong>subtracting the outgoing element at the left boundary</strong>.</p>
+<p>The Sliding Window pattern is used to perform operations on a contiguous sub-range (window) of an array or string. It converts what would normally require nested loops ($O(N^2)$ or $O(N \cdot K)$) into a single linear sweep ($O(N)$) by sliding the window's boundaries: adding the incoming right element and subtracting the outgoing left element.</p>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='61-universal-sliding-window-architecture'>6.1 Universal Sliding Window Architecture</h2>
+<h2 id='61-universal-sliding-window-architecture-flowchart'>6.1 Universal Sliding Window Architecture & Flowchart</h2>
 <div class='mermaid'>flowchart TD
-    Start["Initialize l=0, r=0, windowState = empty"] --> ExpandRight["Expand Window: Add arr[r] to windowState"]
-    ExpandRight --> ValidateCondition{"Is Window Constraint Violated?"}
+    Start["Start: left = 0, right = 0"] --> Expand["Expand Window: Add nums[right] to window state"]
+    Expand --> CheckCondition{"Is Window Condition Violated?"}
     
-    ValidateCondition -- "Yes (Shrink Needed)" --> ShrinkLeft["Shrink Window: Remove arr[l] from windowState, l++"]
-    ShrinkLeft --> ValidateCondition
+    CheckCondition -- Yes --> Shrink["Shrink Window: Remove nums[left] from state & left++"]
+    Shrink --> CheckCondition
     
-    ValidateCondition -- "No (Valid Window)" --> UpdateOptimal["Update Best Result (e.g. maxLen = Math.Max(maxLen, r - l + 1))"]
-    UpdateOptimal --> CheckEnd{"r < N - 1?"}
-    CheckEnd -- Yes --> IncRight["r++"]
-    IncRight --> ExpandRight
-    CheckEnd -- No --> Done["Return Best Result"]</div>
+    CheckCondition -- No --> UpdateAns["Update Global Answer (maxLen, minLen, maxSum)"]
+    UpdateAns --> Advance["Advance right++"]
+    Advance --> EndCheck{"right < Length?"}
+    EndCheck -- Yes --> Expand
+    EndCheck -- No --> Done["Done: Return Optimal Answer"]</div>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='62-problem-1-maximum-sum-subarray-of-size-k-fixed-window'>6.2 Problem 1: Maximum Sum Subarray of Size K (Fixed Window)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Calculate the sum of the first $K$ numbers. Then slide the window across the rest of the array: add the new element at index $i$ and subtract the old element at index $i - K$ in $O(1)$ time.</p>
-
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">Window slides by 1 position:
-[ E0,  E1,  E2 ], E3,  E4   &amp;rarr; Sum = E0 + E1 + E2
-  E0, [ E1,  E2,  E3 ], E4   &amp;rarr; NewSum = PrevSum - E0 + E3  (O(1) update!)</code></pre>
-</div>
-
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Find maximum sum of any contiguous subarray of fixed size <code>k</code>.</li>
+<li><strong>Brute Force ($O(N \cdot K)$):</strong> For every index <code>i</code>, loop <code>k</code> times to sum elements. Redundant!</li>
+<li><strong>Optimal Thinking Process:</strong> When sliding the window one step forward:</li>
+</ul>
+<p>$$\text{newSum} = \text{oldSum} + \text{nums}[i] - \text{nums}[i - k]$$</p>
+<p>Only 1 addition and 1 subtraction instead of <code>k</code> additions!</p>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
         <span>CSHARP</span>
         <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
     </div>
-    <pre><code class="language-csharp">public long MaxSubarraySumOfSizeK(int[] nums, int k)
+    <pre><code class="language-csharp">public int MaxSubArrayK(int[] nums, int k)
 {
-    if (nums.Length &lt; k || k &lt;= 0) return 0;
+    int curSum = 0;
 
-    long curSum = 0;
-
-    // 1. Establish first window of size k
+    // 1. Calculate sum of first window
     for (int i = 0; i &lt; k; i++)
     {
         curSum += nums[i];
     }
 
-    long maxSum = curSum;
+    int maxSum = curSum;
 
-    // 2. Slide the window: add incoming, remove outgoing
+    // 2. Slide window: add right, subtract left
     for (int i = k; i &lt; nums.Length; i++)
     {
         curSum += nums[i] - nums[i - k];
@@ -2774,27 +2929,31 @@ Index: 0  1  2  3  4  5  6  7  8  9 10 11
 
 <ul>
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass over array.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — Only running sum variables.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Constant memory.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='63-problem-2-longest-substring-without-repeating-characters-leetcode-3'>6.3 Problem 2: Longest Substring Without Repeating Characters (LeetCode 3)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Expand the right pointer to add characters to a <code>HashSet</code>. If a character is already in the set (duplicate!), shrink the window from the left until the duplicate character is removed.</p>
-
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">s = &quot;abcabcbb&quot;
-r = 0 (&#x27;a&#x27;) &amp;rarr; set: {a}, len = 1
-r = 1 (&#x27;b&#x27;) &amp;rarr; set: {a, b}, len = 2
-r = 2 (&#x27;c&#x27;) &amp;rarr; set: {a, b, c}, len = 3
-r = 3 (&#x27;a&#x27;) &amp;rarr; Duplicate &#x27;a&#x27;! Remove s[l] (&#x27;a&#x27;) from set, l++ &amp;rarr; add &#x27;a&#x27; &amp;rarr; len = 3
-Max Length = 3 (&quot;abc&quot;)</code></pre>
-</div>
-
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Find length of longest substring without repeating characters in <code>&quot;abcabcbb&quot;</code> $\implies 3$ (<code>&quot;abc&quot;</code>).</li>
+<li><strong>Pattern Recognition:</strong> Contiguous substring with uniqueness constraint $\implies$ <strong>Dynamic Sliding Window with Hash Set</strong>.</li>
+<li><strong>Mental Process:</strong></li>
+<li>Fast pointer <code>r</code> expands the window by adding <code>s[r]</code> to the set.</li>
+<li>If <code>s[r]</code> is <strong>already</strong> in the set, a duplicate exists! Shrink the window from the left (<code>set.Remove(s[l]); l++;</code>) until the duplicate is evicted.</li>
+<li>Then add <code>s[r]</code> and update <code>maxLen = Math.Max(maxLen, r - l + 1)</code>.</li>
+</ul>
+<h3 id='2-step-by-step-dry-run-table'>2. Step-by-Step Dry Run Table</h3>
+<p><strong>Input:</strong> <code>s = &quot;pwwkew&quot;</code></p>
+<div class='table-wrapper'><table>
+<tr><th><code>r</code></th><th>Char <code>s[r]</code></th><th>Is in Set?</th><th>Action</th><th>Set State</th><th>Window <code>[l..r]</code></th><th><code>maxLen</code></th></tr>
+<tr><td><code>0</code></td><td><code>&#x27;p&#x27;</code></td><td>No</td><td>Add to set</td><td><code>{&#x27;p&#x27;}</code></td><td><code>&quot;p&quot;</code></td><td><code>1</code></td></tr>
+<tr><td><code>1</code></td><td><code>&#x27;w&#x27;</code></td><td>No</td><td>Add to set</td><td><code>{&#x27;p&#x27;, &#x27;w&#x27;}</code></td><td><code>&quot;pw&quot;</code></td><td><code>2</code></td></tr>
+<tr><td><code>2</code></td><td><code>&#x27;w&#x27;</code></td><td><strong>YES</strong></td><td>Remove <code>s[l]=&#x27;p&#x27;</code>, <code>l=1</code><br/>Still in set: Remove <code>s[l]=&#x27;w&#x27;</code>, <code>l=2</code><br/>Add <code>&#x27;w&#x27;</code></td><td><code>{&#x27;w&#x27;}</code></td><td><code>&quot;w&quot;</code></td><td><code>2</code></td></tr>
+<tr><td><code>3</code></td><td><code>&#x27;k&#x27;</code></td><td>No</td><td>Add to set</td><td><code>{&#x27;w&#x27;, &#x27;k&#x27;}</code></td><td><code>&quot;wk&quot;</code></td><td><code>2</code></td></tr>
+<tr><td><code>4</code></td><td><code>&#x27;e&#x27;</code></td><td>No</td><td>Add to set</td><td><code>{&#x27;w&#x27;, &#x27;k&#x27;, &#x27;e&#x27;}</code></td><td><code>&quot;wke&quot;</code></td><td><code>3</code></td></tr>
+<tr><td><code>5</code></td><td><code>&#x27;w&#x27;</code></td><td><strong>YES</strong></td><td>Remove <code>s[l]=&#x27;w&#x27;</code>, <code>l=3</code><br/>Add <code>&#x27;w&#x27;</code></td><td><code>{&#x27;k&#x27;, &#x27;e&#x27;, &#x27;w&#x27;}</code></td><td><code>&quot;kew&quot;</code></td><td><code>3</code></td></tr>
+</table></div>
+<h3 id='3-neetcode-style-c-solution-clean-intuitive'>3. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2803,20 +2962,19 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
     </div>
     <pre><code class="language-csharp">public int LengthOfLongestSubstring(string s)
 {
-    var charSet = new HashSet&lt;char&gt;();
+    var set = new HashSet&lt;char&gt;();
     int l = 0;
     int maxLen = 0;
 
     for (int r = 0; r &lt; s.Length; r++)
     {
-        // Shrink window from left until duplicate character is removed
-        while (charSet.Contains(s[r]))
+        while (set.Contains(s[r]))
         {
-            charSet.Remove(s[l]);
+            set.Remove(s[l]);
             l++;
         }
 
-        charSet.Add(s[r]);
+        set.Add(s[r]);
         maxLen = Math.Max(maxLen, r - l + 1);
     }
 
@@ -2824,21 +2982,21 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
 }</code></pre>
 </div>
 
-
-<div class="callout note">
-    <div class="callout-icon">💡</div>
-    <div class="callout-body">💡 <strong>.NET Senior Note:</strong> In high-throughput .NET APIs, you can replace <code>HashSet&lt;char&gt;</code> with a <code>stackalloc int[128]</code> array storing last-seen character indices to eliminate heap allocations. In interviews, <code>HashSet&lt;char&gt;</code> is completely accepted and much simpler to write!</div>
-</div>
-
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Each character is visited at most twice (<code>l</code> and <code>r</code>).</li>
-<li><strong>Space Complexity:</strong> $O(\min(N, M))$ where $M$ is alphabet size.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Each character is added and removed from the set at most once ($2N$ operations).</li>
+<li><strong>Space Complexity:</strong> $O(\min(N, M))$ where $M$ is alphabet size (at most 128 ASCII symbols).</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='64-problem-3-minimum-size-subarray-sum-leetcode-209'>6.4 Problem 3: Minimum Size Subarray Sum (LeetCode 209)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Expand the right pointer until <code>curSum &gt;= target</code>. Once the target is reached, shrink the window from the left greedily to record the smallest possible window length!</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Find minimal length of a contiguous subarray of which $\text{sum} \ge \text{target}$.</li>
+<li><strong>Mental Model:</strong></li>
+<li>Expand <code>r</code> and accumulate <code>curSum += nums[r]</code>.</li>
+<li>The moment <code>curSum &gt;= target</code>, we have found a valid window!</li>
+<li>Now greedily <strong>shrink from left</strong> (<code>curSum -= nums[l]; l++;</code>) to see if a shorter window can still meet the target.</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2847,15 +3005,14 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
     </div>
     <pre><code class="language-csharp">public int MinSubArrayLen(int target, int[] nums)
 {
-    int minLen = int.MaxValue;
-    long curSum = 0;
     int l = 0;
+    int curSum = 0;
+    int minLen = int.MaxValue;
 
     for (int r = 0; r &lt; nums.Length; r++)
     {
         curSum += nums[r];
 
-        // Shrink window greedily from left while sum satisfies target
         while (curSum &gt;= target)
         {
             minLen = Math.Min(minLen, r - l + 1);
@@ -2869,14 +3026,22 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Both pointers increment at most $N$ times.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — Zero heap allocation.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Linear sweep. Both <code>l</code> and <code>r</code> traverse at most $N$ steps.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Only scalar pointers.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='65-problem-4-longest-repeating-character-replacement-leetcode-424'>6.5 Problem 4: Longest Repeating Character Replacement (LeetCode 424)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>In any window of length $L = (r - l + 1)$, the number of characters we need to replace is $(L - 	ext{maxFreq})$. As long as $(L - 	ext{maxFreq}) \le k$, the window is valid! If it exceeds $k$, shrink the window from the left.</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Given string <code>s</code> and integer <code>k</code>, you can replace at most <code>k</code> characters with any letter. Return length of longest substring of identical letters.</li>
+<li><strong>The Core Equation:</strong></li>
+</ul>
+<p>$$\text{Window Length} - \text{Count of Most Frequent Char} = \text{Characters Needed to Replace}$$</p>
+<ul>
+<li>As long as <code>(r - l + 1) - maxFreq &lt;= k</code>, the window is <strong>valid</strong>!</li>
+<li>If it exceeds <code>k</code>, the window is invalid $\implies$ shrink <code>count[s[l] - &#x27;A&#x27;]--; l++;</code>.</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2885,9 +3050,9 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
     </div>
     <pre><code class="language-csharp">public int CharacterReplacement(string s, int k)
 {
-    var count = new int[26];
-    int maxFreq = 0;
+    int[] count = new int[26];
     int l = 0;
+    int maxFreq = 0;
     int maxLen = 0;
 
     for (int r = 0; r &lt; s.Length; r++)
@@ -2895,7 +3060,7 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
         count[s[r] - &#x27;A&#x27;]++;
         maxFreq = Math.Max(maxFreq, count[s[r] - &#x27;A&#x27;]);
 
-        // If characters to replace exceed k, shrink window from left
+        // If characters to replace exceed k, shrink window
         while ((r - l + 1) - maxFreq &gt; k)
         {
             count[s[l] - &#x27;A&#x27;]--;
@@ -2911,13 +3076,17 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
 
 <ul>
 <li><strong>Time Complexity:</strong> $O(N)$ — Single pass over string.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — 26-element array for alphabet counts.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Fixed 26-element array.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='66-problem-5-longest-substring-with-at-most-k-distinct-characters'>6.6 Problem 5: Longest Substring with At Most K Distinct Characters</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Track distinct characters in a frequency Dictionary. When the number of distinct keys exceeds $K$, advance the left pointer and decrement character counts until a character count hits zero and is removed.</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Find length of longest substring that contains at most <code>k</code> distinct characters.</li>
+<li><strong>Mental Model:</strong> Use a dictionary <code>map</code> to track character frequencies in the current window.</li>
+<li>While <code>map.Count &gt; k</code>: Decrement <code>map[s[l]]</code>. If frequency hits 0, <code>map.Remove(s[l])</code>. Advance <code>l++</code>.</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2926,7 +3095,7 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
     </div>
     <pre><code class="language-csharp">public int LengthOfLongestSubstringKDistinct(string s, int k)
 {
-    if (string.IsNullOrEmpty(s) || k &lt;= 0) return 0;
+    if (k == 0 || s.Length == 0) return 0;
 
     var map = new Dictionary&lt;char, int&gt;();
     int l = 0;
@@ -2936,7 +3105,6 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
     {
         map[s[r]] = map.GetValueOrDefault(s[r], 0) + 1;
 
-        // If distinct character count exceeds k, shrink window from left
         while (map.Count &gt; k)
         {
             map[s[l]]--;
@@ -2955,14 +3123,21 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Linear scan.</li>
-<li><strong>Space Complexity:</strong> $O(K)$ — Dictionary stores at most $K+1$ distinct characters.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Each character inserted and removed at most once.</li>
+<li><strong>Space Complexity:</strong> $O(K)$ — Map holds at most $K + 1$ distinct keys.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='67-problem-6-minimum-window-substring-leetcode-76-hard'>6.7 Problem 6: Minimum Window Substring (LeetCode 76 - Hard)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Keep frequency maps for target <code>t</code> and the current window. Expand <code>r</code> until the window contains all required characters (<code>have == need</code>). Then greedily shrink <code>l</code> from the left to find the minimum possible substring window length!</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Given strings <code>s</code> and <code>t</code>, return minimum window in <code>s</code> that contains <strong>all</strong> characters of <code>t</code>.</li>
+<li><strong>The Two-Counter Trick:</strong></li>
+<li>Instead of comparing entire frequency maps on every step ($O(26)$), track <code>have</code> and <code>need</code>.</li>
+<li><code>need</code> = number of unique characters in <code>t</code>.</li>
+<li><code>have</code> = number of unique characters in current window whose frequency satisfies <code>t</code>.</li>
+<li>When <code>have == need</code>, the window is <strong>complete</strong>! Record result, then try shrinking from <code>l</code>.</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -2971,19 +3146,16 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
     </div>
     <pre><code class="language-csharp">public string MinWindow(string s, string t)
 {
-    if (s.Length &lt; t.Length) return &quot;&quot;;
+    if (s.Length == 0 || t.Length == 0) return &quot;&quot;;
 
     var countT = new Dictionary&lt;char, int&gt;();
+    foreach (char c in t) countT[c] = countT.GetValueOrDefault(c, 0) + 1;
+
     var window = new Dictionary&lt;char, int&gt;();
-
-    foreach (char c in t)
-    {
-        countT[c] = countT.GetValueOrDefault(c, 0) + 1;
-    }
-
     int have = 0, need = countT.Count;
+
     int resLen = int.MaxValue;
-    int[] res = [-1, -1];
+    int resStart = 0;
     int l = 0;
 
     for (int r = 0; r &lt; s.Length; r++)
@@ -2996,17 +3168,18 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
             have++;
         }
 
-        // Window satisfies all required characters: greedily shrink from left
+        // Window satisfies t, try to minimize from left
         while (have == need)
         {
             if ((r - l + 1) &lt; resLen)
             {
-                res = [l, r];
                 resLen = r - l + 1;
+                resStart = l;
             }
 
-            window[s[l]]--;
-            if (countT.ContainsKey(s[l]) &amp;&amp; window[s[l]] &lt; countT[s[l]])
+            char leftChar = s[l];
+            window[leftChar]--;
+            if (countT.ContainsKey(leftChar) &amp;&amp; window[leftChar] &lt; countT[leftChar])
             {
                 have--;
             }
@@ -3014,13 +3187,13 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
         }
     }
 
-    return resLen != int.MaxValue ? s.Substring(res[0], resLen) : &quot;&quot;;
+    return resLen == int.MaxValue ? &quot;&quot; : s.Substring(resStart, resLen);
 }</code></pre>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N + M)$ where $N = 	ext{length}(s)$ and $M = 	ext{length}(t)$.</li>
-<li><strong>Space Complexity:</strong> $O(N + M)$ to store character counts.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ where $N = \text{s.Length}$.</li>
+<li><strong>Space Complexity:</strong> $O(M)$ where $M$ is number of unique characters in <code>s</code> and <code>t</code>.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
@@ -3042,7 +3215,7 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
         <a id="7-pattern-5-fast-slow-pointers-tortoise-hare" class="accordion-anchor"></a>
         <a id="7-pattern-5-fast-slow-pointers-tortoise-hare" class="accordion-anchor"></a>
 
-<p>The <strong>Fast & Slow Pointers</strong> pattern (also called Floyd's Cycle Detection Algorithm) uses two pointers that traverse a sequence at different speeds: the slow pointer advances 1 step at a time, while the fast pointer advances 2 steps at a time.</p>
+<p>The <strong>Fast & Slow Pointers</strong> pattern (Floyd's Cycle Detection Algorithm) uses two pointers that traverse a sequence at different speeds: the slow pointer advances 1 step at a time, while the fast pointer advances 2 steps at a time.</p>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='71-the-mathematical-principle-of-floyds-algorithm'>7.1 The Mathematical Principle of Floyd's Algorithm</h2>
 <div class='mermaid'>flowchart LR
@@ -3055,17 +3228,24 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
     end</div>
 <h3 id='why-they-are-guaranteed-to-meet-in-a-cycle'>Why They Are Guaranteed to Meet in a Cycle:</h3>
 <ol>
-<li>When both pointers enter the cycle of length $C$, the distance between them changes by:</li>
+<li>When both pointers enter the cycle of length $C$, the distance between them decreases by exactly 1 step on every tick:</li>
 </ol>
-<p>$$	ext{Speed}(	ext{Fast}) - 	ext{Speed}(	ext{Slow}) = 2 - 1 = 1 	ext{ step per tick}$$</p>
+<p>$$\text{Distance}_{t+1} = \text{Distance}_t + 1 - 2 = \text{Distance}_t - 1 \pmod C$$</p>
 <ol>
-<li>Because the gap reduces by exactly 1 step on every iteration, Fast can never "jump over" Slow without colliding. They are mathematically guaranteed to meet in at most $C$ iterations!</li>
+<li>Because the gap shrinks by 1 on every iteration, fast pointer <strong>cannot jump over</strong> the slow pointer. They are guaranteed to collide in at most $C$ iterations!</li>
 </ol>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='72-problem-1-linked-list-cycle-detection-leetcode-141'>7.2 Problem 1: Linked List Cycle Detection (LeetCode 141)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Advance <code>slow</code> by 1 and <code>fast</code> by 2. If <code>fast</code> or <code>fast.next</code> reaches <code>null</code>, there is no cycle. If <code>slow == fast</code>, a cycle exists!</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Determine if a linked list has a cycle in $O(1)$ auxiliary memory.</li>
+<li><strong>Brute Force ($O(N)$ Space):</strong> Store visited nodes in a <code>HashSet&lt;ListNode&gt;</code>. If we see a node already in the set, a cycle exists. But this costs $O(N)$ memory!</li>
+<li><strong>Optimal Mental Process:</strong> Fast & Slow pointers.</li>
+<li>Advance <code>slow = slow.next</code> and <code>fast = fast.next.next</code>.</li>
+<li>If <code>fast == null</code> or <code>fast.next == null</code>, the list ends $\implies$ no cycle.</li>
+<li>If <code>slow == fast</code>, they collided inside a loop $\implies$ cycle exists!</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -3093,26 +3273,17 @@ Max Length = 3 (&quot;abc&quot;)</code></pre>
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — In the worst-case, fast catches up to slow in $O(N)$ steps.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Linear traversal.</li>
 <li><strong>Space Complexity:</strong> $O(1)$ — Only two node pointers.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='73-problem-2-middle-of-the-linked-list-leetcode-876'>7.3 Problem 2: Middle of the Linked List (LeetCode 876)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Because <code>fast</code> travels at double the speed of <code>slow</code>, by the time <code>fast</code> reaches the end of the list, <code>slow</code> is guaranteed to be at the exact middle node!</p>
-
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">List: 1 &amp;rarr; 2 &amp;rarr; 3 &amp;rarr; 4 &amp;rarr; 5 &amp;rarr; null
-Step 0: S=1, F=1
-Step 1: S=2, F=3
-Step 2: S=3, F=5 (Fast at end! Slow is at node 3, the exact middle!)</code></pre>
-</div>
-
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Return the middle node of a singly linked list. If there are two middle nodes, return the second one.</li>
+<li><strong>Mental Model:</strong> When <code>fast</code> moves at twice the speed of <code>slow</code>, by the exact moment <code>fast</code> reaches the end of the track, <code>slow</code> will be precisely at the halfway point!</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -3135,24 +3306,25 @@ Step 2: S=3, F=5 (Fast at end! Slow is at node 3, the exact middle!)</code></pre
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Single pass through list.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — Zero heap allocation.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Single pass.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Constant memory.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='74-problem-3-find-the-duplicate-number-in-an-array-leetcode-287'>7.4 Problem 3: Find the Duplicate Number in an Array (LeetCode 287)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Because the numbers are in the range $[1..N]$ and the array has length $N+1$, we can treat the array as a linked list where <code>index</code> points to <code>nums[index]</code>. A duplicate number means two indices point to the same value, creating a cycle!</p>
-
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">Array: [ 1, 3, 4, 2, 2 ]
-0 &amp;rarr; nums[0]=1 &amp;rarr; nums[1]=3 &amp;rarr; nums[3]=2 &amp;rarr; nums[2]=4 &amp;rarr; nums[4]=2 (Points back to 2! Cycle!)</code></pre>
-</div>
-
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Given an array <code>nums</code> containing $n + 1$ integers where each integer is between $1$ and $n$, find the single duplicate number without modifying the array and using $O(1)$ extra space.</li>
+<li><strong>The Genius Analogy:</strong> Treat the array as a <strong>Linked List</strong>:</li>
+<li><code>nums[i]</code> is a pointer to the next node: $\text{next} = \text{nums}[i]$.</li>
+<li>Because numbers are in range $[1, n]$ and length is $n + 1$, by the Pigeonhole Principle at least two indices point to the same value $\implies$ <strong>A CYCLE MUST EXIST!</strong></li>
+<li>The duplicate number is the <strong>entrance to the cycle</strong>!</li>
+</ul>
+<h3 id='2-step-by-step-floyds-cycle-algorithm'>2. Step-by-Step Floyd's Cycle Algorithm</h3>
+<ol>
+<li><strong>Phase 1 (Find Collision):</strong> Move <code>slow = nums[slow]</code> (1 step) and <code>fast = nums[nums[fast]]</code> (2 steps) until <code>slow == fast</code>.</li>
+<li><strong>Phase 2 (Find Entrance):</strong> Place a second slow pointer <code>slow2 = 0</code> at the start. Advance both <code>slow</code> and <code>slow2</code> at 1 step/tick. The exact node where they collide is the duplicate value!</li>
+</ol>
+<h3 id='3-neetcode-style-c-solution-clean-intuitive'>3. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -3161,22 +3333,22 @@ Step 2: S=3, F=5 (Fast at end! Slow is at node 3, the exact middle!)</code></pre
     </div>
     <pre><code class="language-csharp">public int FindDuplicate(int[] nums)
 {
-    int slow = nums[0];
-    int fast = nums[0];
+    int slow = 0;
+    int fast = 0;
 
-    // Phase 1: Detect collision point inside the cycle
+    // Phase 1: Detect cycle collision
     do
     {
         slow = nums[slow];
         fast = nums[nums[fast]];
     } while (slow != fast);
 
-    // Phase 2: Find cycle entrance (the duplicate number)
-    slow = nums[0];
-    while (slow != fast)
+    // Phase 2: Find cycle entrance
+    int slow2 = 0;
+    while (slow != slow2)
     {
         slow = nums[slow];
-        fast = nums[fast];
+        slow2 = nums[slow2];
     }
 
     return slow;
@@ -3184,17 +3356,17 @@ Step 2: S=3, F=5 (Fast at end! Slow is at node 3, the exact middle!)</code></pre
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N)$ — Two linear phases.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — Solved without modifying the array or using auxiliary memory.</li>
+<li><strong>Time Complexity:</strong> $O(N)$ — Cycle traversal takes linear time.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Array is not modified, zero auxiliary heap allocations.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
 
-<details class="chapter-accordion" id="ch-8" data-chapter="8" >
+<details class="chapter-accordion" id="ch-6" data-chapter="8" >
     <summary class="chapter-accordion-header">
         <div class="accordion-title-wrap">
-            <span class="accordion-badge">CH 08</span>
-            <span class="accordion-title-text">8. PATTERN 6: SEARCHING ALGORITHMS ENCYCLOPEDIA</span>
+            <span class="accordion-badge">CH 06</span>
+            <span class="accordion-title-text">6. SEARCHING ALGORITHMS: THE COMPLETE SEARCHING ENCYCLOPEDIA</span>
         </div>
         <div class="accordion-status-wrap">
             <span class="accordion-status-text">Click to toggle</span>
@@ -3204,8 +3376,8 @@ Step 2: S=3, F=5 (Fast at end! Slow is at node 3, the exact middle!)</code></pre
         </div>
     </summary>
     <div class="chapter-accordion-body">
-        <a id="8-pattern-6-searching-algorithms-encyclopedia" class="accordion-anchor"></a>
-        <a id="8-pattern-6-searching-algorithms-encyclopedia" class="accordion-anchor"></a>
+        <a id="6-searching-algorithms-the-complete-searching-encyclopedia" class="accordion-anchor"></a>
+        <a id="6-searching-algorithms-the-complete-searching-encyclopedia" class="accordion-anchor"></a>
 
 <p>Searching is the fundamental operation of retrieving a target record from a data space. While novice developers treat searching as a binary choice between $O(N)$ linear scans and $O(\log N)$ binary searches, senior backend engineers evaluate algorithms based on <strong>hardware cache locality, CPU branch prediction, data distribution, and monotonic decision spaces</strong>.</p>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
@@ -3838,11 +4010,11 @@ public static class TernarySearchEngine
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
 
-<details class="chapter-accordion" id="ch-9" data-chapter="9" >
+<details class="chapter-accordion" id="ch-7" data-chapter="9" >
     <summary class="chapter-accordion-header">
         <div class="accordion-title-wrap">
-            <span class="accordion-badge">CH 09</span>
-            <span class="accordion-title-text">9. PATTERN 7: SORTING ALGORITHMS ENCYCLOPEDIA</span>
+            <span class="accordion-badge">CH 07</span>
+            <span class="accordion-title-text">7. SORTING ALGORITHMS: FROM FIRST PRINCIPLES TO .NET INTROSORT</span>
         </div>
         <div class="accordion-status-wrap">
             <span class="accordion-status-text">Click to toggle</span>
@@ -3852,8 +4024,8 @@ public static class TernarySearchEngine
         </div>
     </summary>
     <div class="chapter-accordion-body">
-        <a id="9-pattern-7-sorting-algorithms-encyclopedia" class="accordion-anchor"></a>
-        <a id="9-pattern-7-sorting-algorithms-encyclopedia" class="accordion-anchor"></a>
+        <a id="7-sorting-algorithms-from-first-principles-to-net-introsort" class="accordion-anchor"></a>
+        <a id="7-sorting-algorithms-from-first-principles-to-net-introsort" class="accordion-anchor"></a>
 
 <p>Sorting is the core foundation of data organization, database indexing, and query execution planning. In enterprise .NET systems, choosing the wrong sorting algorithm or failing to understand stability, memory allocations, and hardware cache efficiency can trigger severe performance bottlenecks, garbage collection spikes, and CPU branch thrashing.</p>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
@@ -4900,22 +5072,22 @@ public sealed class MyQueue&lt;T&gt;
 <p>Traversing a linked list forces the CPU memory controller to perform non-sequential memory pointer dereferences, causing L1/L2 cache misses.</p>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='112-problem-1-reverse-linked-list-leetcode-206'>11.2 Problem 1: Reverse Linked List (LeetCode 206)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Use three pointers: <code>prev</code> (starts null), <code>curr</code> (starts at head), and <code>next</code>. Invert each pointer backwards (<code>curr.next = prev</code>), then advance <code>prev</code> and <code>curr</code>.</p>
-
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">Iterative Step:
-1. Save next:        next = curr.next
-2. Reverse pointer:  curr.next = prev
-3. Advance prev:     prev = curr
-4. Advance curr:     curr = next</code></pre>
-</div>
-
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Invert a singly linked list in $O(1)$ extra space.</li>
+<li><strong>Mental Model:</strong> Use three pointers: <code>prev</code> (starts null), <code>curr</code> (starts at head), and <code>next</code>.</li>
+<li>On each step:</li>
+</ul>
+<ol>
+<li>Save next: <code>next = curr.next</code>.</li>
+<li>Invert pointer backward: <code>curr.next = prev</code>.</li>
+<li>Advance <code>prev = curr</code>.</li>
+<li>Advance <code>curr = next</code>.</li>
+</ol>
+<ul>
+<li>Return <code>prev</code> as the new head!</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -4945,9 +5117,13 @@ public sealed class MyQueue&lt;T&gt;
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h2 id='113-problem-2-merge-two-sorted-lists-leetcode-21'>11.3 Problem 2: Merge Two Sorted Lists (LeetCode 21)</h2>
-<h3 id='1-the-idea-in-1-sentence'>1. The Idea in 1 Sentence</h3>
-<p>Create a dummy sentinel node. Compare values at the heads of list1 and list2, splice the smaller node onto our merged tail, and advance that list's pointer.</p>
-<h3 id='2-neetcode-style-c-solution'>2. NeetCode-Style C# Solution</h3>
+<h3 id='1-how-to-think-mental-model-clues'>1. How to Think (Mental Model & Clues)</h3>
+<ul>
+<li><strong>Goal:</strong> Splice two sorted linked lists into one sorted list.</li>
+<li><strong>Mental Model:</strong> Create a <code>dummy</code> sentinel node. Compare values at the heads of <code>list1</code> and <code>list2</code>, splice the smaller node onto <code>tail.next</code>, and advance that list's pointer.</li>
+<li>Attach any remaining nodes once one list runs out!</li>
+</ul>
+<h3 id='2-neetcode-style-c-solution-clean-intuitive'>2. NeetCode-Style C# Solution (Clean & Intuitive)</h3>
 
 <div class="code-container">
     <div class="code-header">
@@ -4956,12 +5132,12 @@ public sealed class MyQueue&lt;T&gt;
     </div>
     <pre><code class="language-csharp">public ListNode MergeTwoLists(ListNode list1, ListNode list2)
 {
-    var dummy = new ListNode();
+    var dummy = new ListNode(0);
     var tail = dummy;
 
     while (list1 != null &amp;&amp; list2 != null)
     {
-        if (list1.val &lt;= list2.val)
+        if (list1.val &lt; list2.val)
         {
             tail.next = list1;
             list1 = list1.next;
@@ -4974,7 +5150,7 @@ public sealed class MyQueue&lt;T&gt;
         tail = tail.next;
     }
 
-    // Attach remaining non-empty list
+    // Attach remaining elements
     tail.next = list1 ?? list2;
 
     return dummy.next;
@@ -4982,8 +5158,8 @@ public sealed class MyQueue&lt;T&gt;
 </div>
 
 <ul>
-<li><strong>Time Complexity:</strong> $O(N + M)$ where $N, M$ are lengths of the lists.</li>
-<li><strong>Space Complexity:</strong> $O(1)$ — Splicing existing nodes in-place.</li>
+<li><strong>Time Complexity:</strong> $O(N + M)$ — Where $N$ and $M$ are list lengths.</li>
+<li><strong>Space Complexity:</strong> $O(1)$ — Reuses existing nodes without allocating new ones.</li>
 </ul>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
@@ -5400,11 +5576,11 @@ public static class WorkflowScheduler
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
 
-<details class="chapter-accordion" id="ch-14" data-chapter="14" >
+<details class="chapter-accordion" id="ch-12" data-chapter="14" >
     <summary class="chapter-accordion-header">
         <div class="accordion-title-wrap">
-            <span class="accordion-badge">CH 14</span>
-            <span class="accordion-title-text">14. PATTERN 12: HEAP & PRIORITYQUEUE (.NET 6+)</span>
+            <span class="accordion-badge">CH 12</span>
+            <span class="accordion-title-text">12. HEAP & PRIORITYQUEUE (.NET 6+)</span>
         </div>
         <div class="accordion-status-wrap">
             <span class="accordion-status-text">Click to toggle</span>
@@ -5414,8 +5590,8 @@ public static class WorkflowScheduler
         </div>
     </summary>
     <div class="chapter-accordion-body">
-        <a id="14-pattern-12-heap-priorityqueue-net-6" class="accordion-anchor"></a>
-        <a id="14-pattern-12-heap-priorityqueue-net-6" class="accordion-anchor"></a>
+        <a id="12-heap-priorityqueue-net-6" class="accordion-anchor"></a>
+        <a id="12-heap-priorityqueue-net-6" class="accordion-anchor"></a>
 
 <h2 id='141-binary-heap-mechanics-on-contiguous-arrays'>14.1 Binary Heap Mechanics on Contiguous Arrays</h2>
 <p>Prior to .NET 6, C# developers had to build custom binary heaps or misuse <code>SortedSet&lt;T&gt;</code>. Starting with .NET 6, Microsoft added <code>System.Collections.Generic.PriorityQueue&lt;TElement, TPriority&gt;</code>.</p>
@@ -5548,11 +5724,11 @@ public static class KWayMerger
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
 
-<details class="chapter-accordion" id="ch-15" data-chapter="15" >
+<details class="chapter-accordion" id="ch-13" data-chapter="15" >
     <summary class="chapter-accordion-header">
         <div class="accordion-title-wrap">
-            <span class="accordion-badge">CH 15</span>
-            <span class="accordion-title-text">15. PATTERN 13: RECURSION & BACKTRACKING</span>
+            <span class="accordion-badge">CH 13</span>
+            <span class="accordion-title-text">13. RECURSION & BACKTRACKING: STATE SPACE EXPLORATION</span>
         </div>
         <div class="accordion-status-wrap">
             <span class="accordion-status-text">Click to toggle</span>
@@ -5562,8 +5738,8 @@ public static class KWayMerger
         </div>
     </summary>
     <div class="chapter-accordion-body">
-        <a id="15-pattern-13-recursion-backtracking" class="accordion-anchor"></a>
-        <a id="15-pattern-13-recursion-backtracking" class="accordion-anchor"></a>
+        <a id="13-recursion-backtracking-state-space-exploration" class="accordion-anchor"></a>
+        <a id="13-recursion-backtracking-state-space-exploration" class="accordion-anchor"></a>
 
 <h2 id='151-backtracking-template-choose-explore-unchoose'>15.1 Backtracking Template: Choose -> Explore -> Unchoose</h2>
 <p>Backtracking is exhaustive depth-first search on a decision tree. The standard template:</p>
@@ -5738,11 +5914,11 @@ public static class PermutationGenerator
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
 
-<details class="chapter-accordion" id="ch-16" data-chapter="16" >
+<details class="chapter-accordion" id="ch-14" data-chapter="16" >
     <summary class="chapter-accordion-header">
         <div class="accordion-title-wrap">
-            <span class="accordion-badge">CH 16</span>
-            <span class="accordion-title-text">16. PATTERN 14: DYNAMIC PROGRAMMING</span>
+            <span class="accordion-badge">CH 14</span>
+            <span class="accordion-title-text">14. DYNAMIC PROGRAMMING: MEMOIZATION & TABULATION</span>
         </div>
         <div class="accordion-status-wrap">
             <span class="accordion-status-text">Click to toggle</span>
@@ -5752,8 +5928,8 @@ public static class PermutationGenerator
         </div>
     </summary>
     <div class="chapter-accordion-body">
-        <a id="16-pattern-14-dynamic-programming" class="accordion-anchor"></a>
-        <a id="16-pattern-14-dynamic-programming" class="accordion-anchor"></a>
+        <a id="14-dynamic-programming-memoization-tabulation" class="accordion-anchor"></a>
+        <a id="14-dynamic-programming-memoization-tabulation" class="accordion-anchor"></a>
 
 <h2 id='161-the-dp-framework-optimal-substructure-overlapping-subproblems'>16.1 The DP Framework: Optimal Substructure + Overlapping Subproblems</h2>
 <p>Dynamic Programming is simply <strong>recursion without doing duplicate work</strong>.</p>
@@ -5950,14 +6126,13 @@ public static class KnapsackSolver
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
 
-<details class="chapter-accordion" id="ch-17" data-chapter="17" >
+<details class="chapter-accordion" id="ch-15" data-chapter="17" >
     <summary class="chapter-accordion-header">
         <div class="accordion-title-wrap">
-            <span class="accordion-badge">CH 17</span>
-            <span class="accordion-title-text">17. PATTERN 15: GREEDY ALGORITHMS & INTERVALS</span>
+            <span class="accordion-badge">CH 15</span>
+            <span class="accordion-title-text">15. GREEDY ALGORITHMS & INTERVALS</span>
         </div>
         <div class="accordion-status-wrap">
             <span class="accordion-status-text">Click to toggle</span>
@@ -5967,13 +6142,13 @@ public static class KnapsackSolver
         </div>
     </summary>
     <div class="chapter-accordion-body">
-        <a id="17-pattern-15-greedy-algorithms-intervals" class="accordion-anchor"></a>
-        <a id="17-pattern-15-greedy-algorithms-intervals" class="accordion-anchor"></a>
+        <a id="15-greedy-algorithms-intervals" class="accordion-anchor"></a>
+        <a id="15-greedy-algorithms-intervals" class="accordion-anchor"></a>
 
-<h2 id='171-the-greedy-choice-property'>17.1 The Greedy-Choice Property</h2>
+<h2 id='151-the-greedy-choice-property'>15.1 The Greedy-Choice Property</h2>
 <p>A problem exhibits the greedy choice property if a globally optimal solution can be reached by making a locally optimal choice at each step without ever needing to reconsider past choices.</p>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='172-problem-42-best-time-to-buy-and-sell-stock-running-valley-peak'>17.2 Problem 42: Best Time to Buy and Sell Stock (Running Valley & Peak)</h2>
+<h2 id='152-problem-42-best-time-to-buy-and-sell-stock-running-valley-peak'>15.2 Problem 42: Best Time to Buy and Sell Stock (Running Valley & Peak)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Given an array <code>prices</code> where <code>prices[i]</code> is the price of a given stock on day $i$, maximize your profit by choosing a single day to buy and a different day in the future to sell.</p>
 <ul>
@@ -6020,7 +6195,7 @@ public static class StockTrader
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='173-problem-43-jump-game-boundary-horizon-expansion'>17.3 Problem 43: Jump Game (Boundary Horizon Expansion)</h2>
+<h2 id='153-problem-43-jump-game-boundary-horizon-expansion'>15.3 Problem 43: Jump Game (Boundary Horizon Expansion)</h2>
 <h3 id='1-how-to-think'>1. How to Think</h3>
 <p>Given an integer array <code>nums</code> where <code>nums[i]</code> is max jump length from position $i$, determine if you can reach the last index.</p>
 <ul>
@@ -6054,7 +6229,7 @@ public static class JumpGame
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='174-problem-44-meeting-rooms-i-ii-resource-contention-peaks'>17.4 Problem 44: Meeting Rooms I & II (Resource Contention Peaks)</h2>
+<h2 id='154-problem-44-meeting-rooms-i-ii-resource-contention-peaks'>15.4 Problem 44: Meeting Rooms I & II (Resource Contention Peaks)</h2>
 <h3 id='1-how-to-think-meeting-rooms-ii'>1. How to Think (Meeting Rooms II)</h3>
 <p>Given an array of meeting time intervals <code>intervals</code>, find the minimum number of conference rooms required.</p>
 <ul>
@@ -6119,14 +6294,13 @@ public static class ConferenceScheduler
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
 
-<details class="chapter-accordion" id="ch-18" data-chapter="18" >
+<details class="chapter-accordion" id="ch-16" data-chapter="18" >
     <summary class="chapter-accordion-header">
         <div class="accordion-title-wrap">
-            <span class="accordion-badge">CH 18</span>
-            <span class="accordion-title-text">18. PATTERN 16: BIT MANIPULATION</span>
+            <span class="accordion-badge">CH 16</span>
+            <span class="accordion-title-text">16. BIT MANIPULATION: HARDWARE-LEVEL LOGIC</span>
         </div>
         <div class="accordion-status-wrap">
             <span class="accordion-status-text">Click to toggle</span>
@@ -6136,8 +6310,278 @@ public static class ConferenceScheduler
         </div>
     </summary>
     <div class="chapter-accordion-body">
-        <a id="18-pattern-16-bit-manipulation" class="accordion-anchor"></a>
-        <a id="18-pattern-16-bit-manipulation" class="accordion-anchor"></a>
+        <a id="16-bit-manipulation-hardware-level-logic" class="accordion-anchor"></a>
+        <a id="16-bit-manipulation-hardware-level-logic" class="accordion-anchor"></a>
+
+<h2 id='161-bitwise-operators-and-bitmask-flags-in-c'>16.1 Bitwise Operators and Bitmask Flags in C#</h2>
+<p>Bit manipulation operates directly on binary representation in CPU registers in a single clock cycle.</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">Operator Summary:
+AND (&amp;) : 1 &amp; 1 = 1, else 0     (Masking / Clearing bits)
+OR  (|) : 0 | 0 = 0, else 1     (Setting bits)
+XOR (^) : Same = 0, Diff = 1    (Toggling bits, self-cancellation: A ^ A = 0, A ^ 0 = A)
+NOT (~) : Flips all bits
+&lt;&lt;      : Shift left (multiplication by 2^k)
+&gt;&gt;      : Shift right (division by 2^k)</code></pre>
+</div>
+
+<p>In .NET enterprise apps, bitwise flags represent user permission sets without database joins:</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">[Flags]
+public enum UserPermissions : uint
+{
+    None        = 0,
+    CanRead     = 1 &lt;&lt; 0, // 0001 (1)
+    CanWrite    = 1 &lt;&lt; 1, // 0010 (2)
+    CanDelete   = 1 &lt;&lt; 2, // 0100 (4)
+    CanAudit    = 1 &lt;&lt; 3  // 1000 (8)
+}</code></pre>
+</div>
+
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='162-problem-45-single-number-xor-cancellation-property'>16.2 Problem 45: Single Number (XOR Cancellation Property)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>Given a non-empty array of integers <code>nums</code>, every element appears twice except for one. Find that single one in $O(N)$ time and $O(1)$ space.</p>
+<ul>
+<li><strong>XOR Magic Properties:</strong></li>
+</ul>
+<ol>
+<li>$X \oplus X = 0$ (Any number XORed with itself cancels out).</li>
+<li>$X \oplus 0 = X$.</li>
+<li>XOR is associative and commutative.</li>
+</ol>
+<ul>
+<li>If we XOR all numbers together:</li>
+</ul>
+<p>$$(2 \oplus 2) \oplus (4 \oplus 4) \oplus 7 = 0 \oplus 0 \oplus 7 = 7!$$</p>
+<h3 id='2-c-solution-net-8'>2. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">using System;
+
+public static class SingleNumberSolver
+{
+    public static int SingleNumber(ReadOnlySpan&lt;int&gt; nums)
+    {
+        int unique = 0;
+        foreach (int num in nums)
+        {
+            unique ^= num;
+        }
+        return unique;
+    }
+}</code></pre>
+</div>
+
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='163-problem-46-number-of-1-bits-brian-kernighans-bit-clear'>16.3 Problem 46: Number of 1 Bits (Brian Kernighan's Bit Clear)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>Write a function that takes the binary representation of a positive integer and returns the number of set bits (Hamming weight).</p>
+<ul>
+<li><strong>Brian Kernighan's Insight:</strong></li>
+</ul>
+<p>Executing <code>n = n &amp; (n - 1)</code> <strong>always clears the lowest set bit (1) in binary</strong>!</p>
+<p>The loop runs only as many times as there are set bits, not 32 times.</p>
+<h3 id='2-c-solution-net-8'>2. C# Solution (.NET 8)</h3>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public static class BitCounter
+{
+    public static int HammingWeight(uint n)
+    {
+        int count = 0;
+        while (n != 0)
+        {
+            n &amp;= (n - 1); // Clears the least significant set bit
+            count++;
+        }
+        return count;
+    }
+
+    // Modern .NET 8 Hardware Intrinsics / PopCount:
+    public static int HammingWeightHardware(uint n) =&gt; System.Numerics.BitOperations.PopCount(n);
+}</code></pre>
+</div>
+
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='164-problem-47-power-of-two-bitmask-decrement-boundary'>16.4 Problem 47: Power of Two (Bitmask Decrement Boundary)</h2>
+<h3 id='1-how-to-think'>1. How to Think</h3>
+<p>Given an integer <code>n</code>, return <code>true</code> if it is a power of two.</p>
+<ul>
+<li>A power of two in binary has <strong>exactly one bit set</strong> (e.g., $16 = 10000_2$, $15 = 01111_2$).</li>
+<li>Therefore, for any positive power of two:</li>
+</ul>
+<p>$$n \ \& \ (n - 1) == 0$$</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public static class PowerOfTwoChecker
+{
+    public static bool IsPowerOfTwo(int n)
+    {
+        return n &gt; 0 &amp;&amp; (n &amp; (n - 1)) == 0;
+    }
+}</code></pre>
+</div>
+
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-17" data-chapter="19" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 17</span>
+            <span class="accordion-title-text">17. INFOSYS & TECHNICAL INTERVIEW SURVIVAL PLAYBOOK</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="17-infosys-technical-interview-survival-playbook" class="accordion-anchor"></a>
+        <a id="17-infosys-technical-interview-survival-playbook" class="accordion-anchor"></a>
+
+<h2 id='171-how-infosys-evaluates-a-3-yoe-net-developer'>17.1 How Infosys Evaluates a 3 YOE .NET Developer</h2>
+<p>Infosys technical interviewers for 3 YOE lateral hires evaluate candidates on a 4-quadrant rubric:</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CODE</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-">                          Infosys Evaluation Rubric
+                                      ▲
+                                      │
+            [Algorithmic Rigor]       │       [C# / CLR Deep Truth]
+            - Can write raw loops     │       - Knows Heap vs Stack
+            - Avoids blind LINQ       │       - Explains Dictionary internals
+            - Handles boundary cases  │       - Understands ref struct / Span
+                                      │
+         ─────────────────────────────┼─────────────────────────────►
+                                      │
+            [Clean Code &amp; Idioms]     │       [Communication &amp; Composure]
+            - Meaningful naming       │       - Thinks out loud before coding
+            - Guard clauses           │       - Asks clarifying constraints
+            - Exception management    │       - Accepts interviewer hints
+                                      │</code></pre>
+</div>
+
+<h3 id='the-deadly-sins-in-an-infosys-coding-round'>The "Deadly Sins" in an Infosys Coding Round:</h3>
+<ol>
+<li><strong>Writing LINQ when asked to solve in-place:</strong> Saying <code>.Distinct().OrderBy()</code> when asked to implement duplicate removal will cost you the interview.</li>
+<li><strong>Silent Coding:</strong> Staring at the screen for 8 minutes without uttering a word. The interviewer cannot grade your thought process.</li>
+<li><strong>Off-by-One Loop Bounds:</strong> Writing <code>&lt;</code> instead of <code>&lt;=</code> or not checking <code>Length - 1</code>, leading to <code>IndexOutOfRangeException</code>.</li>
+<li><strong>Failing to Trace Code:</strong> Declaring "My code is complete" without walking through a single concrete test case.</li>
+</ol>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='172-real-45-minute-interview-simulation-transcript'>17.2 Real 45-Minute Interview Simulation Transcript</h2>
+<p><strong>Interviewer:</strong> Lead Architect, Infosys Financial Services Practice.</p>
+<p><strong>Candidate:</strong> .NET Backend Developer (3 Years Experience).</p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<p><strong>Interviewer:</strong> <em>"Welcome, Rajesh. Let's start with a coding problem. Suppose we have an order processing pipeline. We receive an array of transaction integers, both positive and negative. I want you to find the contiguous subarray that produces the maximum total sum. How would you approach this?"</em></p>
+<p><strong>Candidate:</strong> <em>"Thank you, sir. Before writing any code, I would like to clarify a few constraints. First, can the array be empty or null? Second, can all the numbers in the array be negative? Third, what is the expected maximum size of this array?"</em></p>
+<p><strong>Interviewer:</strong> <em>"Good questions. The array will not be null or empty; it will have between 1 and $10^5$ elements. All numbers can indeed be negative. Values range between $-10^4$ and $+10^4$."</em></p>
+<p><strong>Candidate:</strong> <em>"Understood. Let me walk through a small example. If the input is <code>[-2, 1, -3, 4, -1, 2, 1, -5, 4]</code>, the subarray <code>[4, -1, 2, 1]</code> gives a sum of 6.</em></p>
+<p><em>If I think about a brute-force approach, I could generate all possible subarrays using nested loops and compute their sums. That would take $O(N^2)$ time and $O(1)$ space. However, for $N = 10^5$, $N^2$ is $10^{10}$ operations, which will cause a Time Limit Exceeded (TLE).</em></p>
+<p><em>We can optimize this to $O(N)$ linear time using Kadane’s Algorithm."</em></p>
+<p><strong>Interviewer:</strong> <em>"Explain the intuition behind Kadane's Algorithm."</em></p>
+<p><strong>Candidate:</strong> *"Certainly. At every index $i$, we make a local decision: do we extend our previous contiguous subarray streak, or do we discard it and start fresh at the current element? If our running streak has dropped below zero, carrying it forward only penalizes any future elements. So if <code>currentStreak &gt; 0</code>, we add <code>nums[i]</code>; otherwise, we reset <code>currentStreak = nums[i]</code>. We maintain a global variable <code>maxSum</code> to store the maximum streak seen.</p>
+<p>Crucially, to handle the case where all numbers are negative, like <code>[-5, -2, -8]</code>, I will initialize both <code>currentStreak</code> and <code>maxSum</code> to <code>nums[0]</code>, rather than 0. May I proceed to write the C# solution?"*</p>
+<p><strong>Interviewer:</strong> <em>"Please go ahead."</em></p>
+<p><em>(Candidate writes the code on the screen)</em></p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>CSHARP</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+    </div>
+    <pre><code class="language-csharp">public static int MaxSubArray(ReadOnlySpan&lt;int&gt; nums)
+{
+    int currentStreak = nums[0];
+    int maxSubarraySum = nums[0];
+
+    for (int i = 1; i &lt; nums.Length; i++)
+    {
+        int val = nums[i];
+        currentStreak = (currentStreak &gt; 0) ? currentStreak + val : val;
+
+        if (currentStreak &gt; maxSubarraySum)
+        {
+            maxSubarraySum = currentStreak;
+        }
+    }
+
+    return maxSubarraySum;
+}</code></pre>
+</div>
+
+<p><strong>Candidate:</strong> *"Let me trace this code with <code>[-2, 1, -3]</code>.</p>
+<p>Init: <code>currentStreak = -2</code>, <code>maxSum = -2</code>.</p>
+<p>$i = 1$, <code>val = 1</code>: <code>currentStreak</code> was negative (-2), so <code>currentStreak = 1</code>. <code>maxSum = max(-2, 1) = 1</code>.</p>
+<p>$i = 2$, <code>val = -3</code>: <code>currentStreak</code> was 1 (>0), so <code>currentStreak = 1 + (-3) = -2</code>. <code>maxSum</code> remains 1.</p>
+<p>Loop terminates. Returns 1. The code executes in $O(N)$ time and $O(1)$ auxiliary stack space. Notice I used <code>ReadOnlySpan&lt;int&gt;</code> so the caller can pass an array slice without creating GC heap allocations."*</p>
+<p><strong>Interviewer:</strong> <em>"Excellent. Now a follow-up: what if I asked you to return not just the sum, but the actual start and end indices of that subarray?"</em></p>
+<p><strong>Candidate:</strong> <em>"We can track three pointers: <code>start = 0</code>, <code>end = 0</code>, and <code>tempStart = 0</code>. Whenever we start a new streak (<code>currentStreak = nums[i]</code>), we set <code>tempStart = i</code>. Whenever <code>currentStreak &gt; maxSubarraySum</code>, we update <code>maxSubarraySum = currentStreak</code>, set <code>start = tempStart</code>, and <code>end = i</code>. When the loop finishes, <code>[start, end]</code> will be the exact boundaries."</em></p>
+<p><strong>Interviewer:</strong> <em>"Spot on, Rajesh. That's exactly what I wanted to hear."</em></p>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<h2 id='173-the-net-8-big-o-time-space-complexity-reference-matrix'>17.3 The .NET 8 Big-O Time & Space Complexity Reference Matrix</h2>
+<div class='table-wrapper'><table>
+<tr><th>Data Structure / Operation</th><th>Access</th><th>Search</th><th>Insertion</th><th>Deletion</th><th>Space Complexity</th><th>Underlying .NET 8 Internal Architecture</th></tr>
+<tr><td><strong>Array (<code>T[]</code>)</strong></td><td>$O(1)$</td><td>$O(N)$</td><td>$O(N)$ (resize)</td><td>$O(N)$ (shift)</td><td>$O(N)$</td><td>Contiguous block on GC Heap; CPU L1 cache line prefetching.</td></tr>
+<tr><td><strong><code>Span&lt;T&gt;</code> / <code>ReadOnlySpan&lt;T&gt;</code></strong></td><td>$O(1)$</td><td>$O(N)$</td><td>N/A (fixed window)</td><td>N/A</td><td>$O(1)$</td><td>Ref struct on Stack; interior pointer + 32-bit length.</td></tr>
+<tr><td><strong><code>List&lt;T&gt;</code></strong></td><td>$O(1)$</td><td>$O(N)$</td><td>Amortized $O(1)$</td><td>$O(N)$</td><td>$O(N)$</td><td>Backed by <code>T[] _items</code>; doubles capacity when full.</td></tr>
+<tr><td><strong><code>Dictionary&lt;TKey, TValue&gt;</code></strong></td><td>N/A</td><td>$O(1)$ avg, $O(N)$ worst</td><td>$O(1)$ avg, $O(N)$ worst</td><td>$O(1)$ avg</td><td>$O(N)$</td><td>Array-based separate chaining: <code>int[] _buckets</code>, <code>Entry[] _entries</code>.</td></tr>
+<tr><td><strong><code>HashSet&lt;T&gt;</code></strong></td><td>N/A</td><td>$O(1)$ avg, $O(N)$ worst</td><td>$O(1)$ avg</td><td>$O(1)$ avg</td><td>$O(N)$</td><td>Backed by hash buckets similar to <code>Dictionary</code>.</td></tr>
+<tr><td><strong><code>Stack&lt;T&gt;</code></strong></td><td>N/A</td><td>$O(N)$</td><td>$O(1)$ push</td><td>$O(1)$ pop</td><td>$O(N)$</td><td>Backed by <code>T[] _array</code>; LIFO pointer index.</td></tr>
+<tr><td><strong><code>Queue&lt;T&gt;</code></strong></td><td>N/A</td><td>$O(N)$</td><td>$O(1)$ enqueue</td><td>$O(1)$ dequeue</td><td>$O(N)$</td><td>Backed by circular <code>T[] _array</code> with head and tail index pointers.</td></tr>
+<tr><td><strong><code>LinkedList&lt;T&gt;</code></strong></td><td>$O(N)$</td><td>$O(N)$</td><td>$O(1)$ (node known)</td><td>$O(1)$ (node known)</td><td>$O(N)$</td><td>Doubly-linked nodes; high heap fragmentation; poor cache locality.</td></tr>
+<tr><td><strong><code>PriorityQueue&lt;TElement, TPriority&gt;</code></strong></td><td>N/A</td><td>$O(N)$</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(N)$</td><td>Array-backed 4-ary or binary Min-Heap; sift-up / sift-down.</td></tr>
+<tr><td><strong><code>SortedSet&lt;T&gt;</code> / <code>SortedDictionary&lt;K, V&gt;</code></strong></td><td>N/A</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(N)$</td><td>Self-balancing Red-Black Tree.</td></tr>
+</table></div>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
+</div></details>
+
+<details class="chapter-accordion" id="ch-16" data-chapter="20" >
+    <summary class="chapter-accordion-header">
+        <div class="accordion-title-wrap">
+            <span class="accordion-badge">CH 16</span>
+            <span class="accordion-title-text">16. BIT MANIPULATION: HARDWARE-LEVEL LOGIC</span>
+        </div>
+        <div class="accordion-status-wrap">
+            <span class="accordion-status-text">Click to toggle</span>
+            <span class="accordion-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+        </div>
+    </summary>
+    <div class="chapter-accordion-body">
+        <a id="16-bit-manipulation-hardware-level-logic" class="accordion-anchor"></a>
+        <a id="16-bit-manipulation-hardware-level-logic" class="accordion-anchor"></a>
 
 <h2 id='181-bitwise-operators-and-bitmask-flags-in-c'>18.1 Bitwise Operators and Bitmask Flags in C#</h2>
 <p>Bit manipulation operates directly on binary representation in CPU registers in a single clock cycle.</p>
@@ -6272,14 +6716,13 @@ public static class SingleNumberSolver
 </div>
 
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
 
-<details class="chapter-accordion" id="ch-19" data-chapter="19" >
+<details class="chapter-accordion" id="ch-17" data-chapter="21" >
     <summary class="chapter-accordion-header">
         <div class="accordion-title-wrap">
-            <span class="accordion-badge">CH 19</span>
-            <span class="accordion-title-text">19. INFOSYS & TECHNICAL INTERVIEW SURVIVAL PLAYBOOK</span>
+            <span class="accordion-badge">CH 17</span>
+            <span class="accordion-title-text">17. INFOSYS & TECHNICAL INTERVIEW SURVIVAL PLAYBOOK</span>
         </div>
         <div class="accordion-status-wrap">
             <span class="accordion-status-text">Click to toggle</span>
@@ -6289,10 +6732,10 @@ public static class SingleNumberSolver
         </div>
     </summary>
     <div class="chapter-accordion-body">
-        <a id="19-infosys-technical-interview-survival-playbook" class="accordion-anchor"></a>
-        <a id="19-infosys-technical-interview-survival-playbook" class="accordion-anchor"></a>
+        <a id="17-infosys-technical-interview-survival-playbook" class="accordion-anchor"></a>
+        <a id="17-infosys-technical-interview-survival-playbook" class="accordion-anchor"></a>
 
-<h2 id='191-how-infosys-evaluates-a-3-yoe-net-developer'>19.1 How Infosys Evaluates a 3 YOE .NET Developer</h2>
+<h2 id='171-how-infosys-evaluates-a-3-yoe-net-developer'>17.1 How Infosys Evaluates a 3 YOE .NET Developer</h2>
 <p>Infosys technical interviewers for 3 YOE lateral hires evaluate candidates on a 4-quadrant rubric:</p>
 
 <div class="code-container">
@@ -6325,7 +6768,7 @@ public static class SingleNumberSolver
 <li><strong>Failing to Trace Code:</strong> Declaring "My code is complete" without walking through a single concrete test case.</li>
 </ol>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='192-real-45-minute-interview-simulation-transcript'>19.2 Real 45-Minute Interview Simulation Transcript</h2>
+<h2 id='172-real-45-minute-interview-simulation-transcript'>17.2 Real 45-Minute Interview Simulation Transcript</h2>
 <p><strong>Interviewer:</strong> Lead Architect, Infosys Financial Services Practice.</p>
 <p><strong>Candidate:</strong> .NET Backend Developer (3 Years Experience).</p>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
@@ -6375,7 +6818,7 @@ public static class SingleNumberSolver
 <p><strong>Candidate:</strong> <em>"We can track three pointers: <code>start = 0</code>, <code>end = 0</code>, and <code>tempStart = 0</code>. Whenever we start a new streak (<code>currentStreak = nums[i]</code>), we set <code>tempStart = i</code>. Whenever <code>currentStreak &gt; maxSubarraySum</code>, we update <code>maxSubarraySum = currentStreak</code>, set <code>start = tempStart</code>, and <code>end = i</code>. When the loop finishes, <code>[start, end]</code> will be the exact boundaries."</em></p>
 <p><strong>Interviewer:</strong> <em>"Spot on, Rajesh. That's exactly what I wanted to hear."</em></p>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
-<h2 id='193-the-net-8-big-o-time-space-complexity-reference-matrix'>19.3 The .NET 8 Big-O Time & Space Complexity Reference Matrix</h2>
+<h2 id='173-the-net-8-big-o-time-space-complexity-reference-matrix'>17.3 The .NET 8 Big-O Time & Space Complexity Reference Matrix</h2>
 <div class='table-wrapper'><table>
 <tr><th>Data Structure / Operation</th><th>Access</th><th>Search</th><th>Insertion</th><th>Deletion</th><th>Space Complexity</th><th>Underlying .NET 8 Internal Architecture</th></tr>
 <tr><td><strong>Array (<code>T[]</code>)</strong></td><td>$O(1)$</td><td>$O(N)$</td><td>$O(N)$ (resize)</td><td>$O(N)$ (shift)</td><td>$O(N)$</td><td>Contiguous block on GC Heap; CPU L1 cache line prefetching.</td></tr>
@@ -6389,6 +6832,7 @@ public static class SingleNumberSolver
 <tr><td><strong><code>PriorityQueue&lt;TElement, TPriority&gt;</code></strong></td><td>N/A</td><td>$O(N)$</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(N)$</td><td>Array-backed 4-ary or binary Min-Heap; sift-up / sift-down.</td></tr>
 <tr><td><strong><code>SortedSet&lt;T&gt;</code> / <code>SortedDictionary&lt;K, V&gt;</code></strong></td><td>N/A</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(\log N)$</td><td>$O(N)$</td><td>Self-balancing Red-Black Tree.</td></tr>
 </table></div>
+<hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 </div></details>
             </article>
 
@@ -6459,6 +6903,16 @@ public static class SingleNumberSolver
 
         <li class="toc-item level-2">
             <a href="#14-the-7-step-universal-problem-solving-blueprint" class="toc-link">1.4 The 7-Step Universal Problem-Solving Blue</a>
+        </li>
+        
+
+        <li class="toc-item level-2">
+            <a href="#15-the-universal-algorithmic-thinking-protocol-how-to-reason-through-any-solution" class="toc-link">1.5 The Universal Algorithmic Thinking Protoc</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#the-3-core-questions-to-ask-yourself-on-any-approach" class="toc-link">The 3 Core Questions to Ask Yourself on Any A</a>
         </li>
         
 
@@ -6548,12 +7002,37 @@ public static class SingleNumberSolver
         
 
         <li class="toc-item level-3">
-            <a href="#1-the-idea-in-1-sentence" class="toc-link">1. The Idea in 1 Sentence</a>
+            <a href="#1-how-to-think-mental-model-clues" class="toc-link">1. How to Think (Mental Model &amp; Clues)</a>
         </li>
         
 
         <li class="toc-item level-3">
-            <a href="#2-neetcode-style-c-solution" class="toc-link">2. NeetCode-Style C# Solution</a>
+            <a href="#2-how-interviewer-thinks-evaluation-traps" class="toc-link">2. How Interviewer Thinks (Evaluation &amp; Traps</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#3-approach-1-brute-force-thinking-process-complexity" class="toc-link">3. Approach 1: Brute Force (Thinking Process </a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#4-approach-2-optimal-thinking-process-the-mental-pivot" class="toc-link">4. Approach 2: Optimal Thinking Process (The </a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#5-step-by-step-dry-run-table" class="toc-link">5. Step-by-Step Dry Run Table</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#6-neetcode-style-c-solution-clean-intuitive" class="toc-link">6. NeetCode-Style C# Solution (Clean &amp; Intuit</a>
+        </li>
+        
+
+        <li class="toc-item level-3">
+            <a href="#7-complexity-analysis-follow-up-questions" class="toc-link">7. Complexity Analysis &amp; Follow-Up Questions</a>
         </li>
         
 
@@ -6563,52 +7042,17 @@ public static class SingleNumberSolver
         
 
         <li class="toc-item level-3">
-            <a href="#1-the-idea-in-1-sentence" class="toc-link">1. The Idea in 1 Sentence</a>
+            <a href="#1-how-to-think-mental-model-clues" class="toc-link">1. How to Think (Mental Model &amp; Clues)</a>
         </li>
         
 
         <li class="toc-item level-3">
-            <a href="#2-neetcode-style-c-solution" class="toc-link">2. NeetCode-Style C# Solution</a>
-        </li>
-        
-
-        <li class="toc-item level-2">
-            <a href="#34-problem-3-group-anagrams" class="toc-link">3.4 Problem 3: Group Anagrams</a>
+            <a href="#2-how-interviewer-thinks" class="toc-link">2. How Interviewer Thinks</a>
         </li>
         
 
         <li class="toc-item level-3">
-            <a href="#1-the-idea-in-1-sentence" class="toc-link">1. The Idea in 1 Sentence</a>
-        </li>
-        
-
-        <li class="toc-item level-3">
-            <a href="#2-neetcode-style-c-solution" class="toc-link">2. NeetCode-Style C# Solution</a>
-        </li>
-        
-
-        <li class="toc-item level-2">
-            <a href="#35-problem-4-top-k-frequent-elements" class="toc-link">3.5 Problem 4: Top K Frequent Elements</a>
-        </li>
-        
-
-        <li class="toc-item level-3">
-            <a href="#1-the-idea-in-1-sentence" class="toc-link">1. The Idea in 1 Sentence</a>
-        </li>
-        
-
-        <li class="toc-item level-3">
-            <a href="#2-neetcode-style-c-solution" class="toc-link">2. NeetCode-Style C# Solution</a>
-        </li>
-        
-
-        <li class="toc-item level-2">
-            <a href="#36-problem-5-product-of-array-except-self" class="toc-link">3.6 Problem 5: Product of Array Except Self</a>
-        </li>
-        
-
-        <li class="toc-item level-3">
-            <a href="#1-the-idea-in-1-sentence" class="toc-link">1. The Idea in 1 Sentence</a>
+            <a href="#3-approach-1-brute-force-sorting" class="toc-link">3. Approach 1: Brute Force (Sorting)</a>
         </li>
         
             </ul>

@@ -15,6 +15,7 @@
    - 1.2 The "LINQ Crutch" vs. Mechanical Sympathy
    - 1.3 The Infosys & MNC Interview Philosophy for 3 YOE
    - 1.4 The 7-Step Universal Problem-Solving Blueprint
+   - 1.5 The Universal Algorithmic Thinking Protocol: How to Reason Through Any Solution
 2. [Mastering the Core Algorithmic Thinking Patterns](#2-mastering-the-core-algorithmic-thinking-patterns)
    - 2.1 The 10 Essential Algorithmic Archetypes
    - 2.2 Pattern Recognition Decision Matrix (The Clue-to-Pattern Rosetta Stone)
@@ -60,32 +61,32 @@
    - 7.4 Problem 3: Find the Duplicate Number in an Array (LeetCode 287)
 8. [Pattern 6: Searching Algorithms Encyclopedia](#8-pattern-6-searching-algorithms-encyclopedia)
    - 8.1 The Searching Taxonomy & Mechanical Sympathy Decision Matrix
-   - 8.2 Linear Search & The Sentinel Optimization (Eliminating Boundary Checks)
+   - 8.2 Linear Search & The Sentinel Optimization
    - 8.3 Classic Binary Search (The Monotonic Mindset)
    - 8.4 Search in Rotated Sorted Array (Shifted Ledger Partitions)
    - 8.5 Find First and Last Position in Sorted Array (Lower & Upper Bounds)
-   - 8.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages Within D Days)
-   - 8.7 Interpolation Search (Uniformly Distributed Probing Engine)
-   - 8.8 Exponential Search (Unbounded Ledger Streams & Fast Galloping)
-   - 8.9 Ternary Search (Finding Extrema in Unimodal Functions)
+   - 8.6 Binary Search on Monotonic Answer Range (Capacity to Ship Packages)
+   - 8.7 Interpolation Search
+   - 8.8 Exponential Search
+   - 8.9 Ternary Search
 9. [Pattern 7: Sorting Algorithms Encyclopedia](#9-pattern-7-sorting-algorithms-encyclopedia)
    - 9.1 The Sorting Taxonomy & Complexity Matrix
    - 9.2 Bubble Sort (Standard & Early-Exit Optimization)
-   - 9.3 Selection Sort (Minimum-Scan & Minimal Memory Writes)
-   - 9.4 Insertion Sort (Adaptive Shifting & Small Partition Powerhouse)
-   - 9.5 Merge Sort (Divide & Conquer, In-Depth Memory Mechanics & Stability)
+   - 9.3 Selection Sort
+   - 9.4 Insertion Sort
+   - 9.5 Merge Sort (Divide & Conquer)
    - 9.6 Quick Sort (Lomuto vs. Hoare Partitioning & Median-of-3 Pivot)
-   - 9.7 Heap Sort (In-Place Array-Based Max-Heapify)
-   - 9.8 Counting Sort (Non-Comparison O(N + K) Integer Sorting)
-   - 9.9 Radix Sort (LSD Base-10 / 256 Distribution Engine)
+   - 9.7 Heap Sort
+   - 9.8 Counting Sort
+   - 9.9 Radix Sort
    - 9.10 Under the Hood: .NET 8 IntroSort & ArraySortHelper<T>
 10. [Pattern 8: Stack & Queue](#10-pattern-8-stack--queue)
     - 10.1 Memory Models: Array-Backed vs. Node-Backed Queues
-    - 10.2 Problem 1: Valid Parentheses (Syntax Validation for Config Tokens)
-    - 10.3 Problem 2: Min Stack (O(1) Retrieval via Companion State)
-    - 10.4 Problem 3: Evaluate Reverse Polish Notation (Financial Math Engine)
-    - 10.5 Problem 4: Implement Queue Using Stacks (Amortized Cost Transfer)
-    - 10.6 Problem 5: Moving Average from Data Stream (Circular Queue Buffer)
+    - 10.2 Problem 18: Valid Parentheses (Syntax Validation for Config Tokens)
+    - 10.3 Problem 19: Min Stack (O(1) Retrieval via Companion State)
+    - 10.4 Problem 20: Evaluate Reverse Polish Notation (Financial Math Engine)
+    - 10.5 Problem 21: Implement Queue Using Stacks (Amortized Cost Transfer)
+    - 10.6 Problem 22: Moving Average from Data Stream (Circular Queue Buffer)
 11. [Pattern 9: Linked Lists](#11-pattern-9-linked-lists)
     - 11.1 Linked List Memory Architecture & Cache Miss Penalty
     - 11.2 Problem 1: Reverse Linked List (Iterative Pointer Rewiring)
@@ -272,6 +273,43 @@ Step 7: TRACE TEST CASES & STATE TIME/SPACE COMPLEXITY
 ```
 
 ---
+---
+
+## 1.5 The Universal Algorithmic Thinking Protocol: How to Reason Through Any Solution
+
+Whenever an interviewer presents any DSA problem, **do not write a single line of code until you have walked through these 5 cognitive steps**:
+
+```mermaid
+flowchart TD
+    Step1["<b>Step 1: Clue Extraction & Constraints</b><br/>&bull; Is the array sorted? (Two Pointers / Binary Search)<br/>&bull; Are duplicates allowed? Are numbers negative?<br/>&bull; What is N? (N &le; 1,000 &rarr; O(N^2) OK; N &ge; 100,000 &rarr; MUST be O(N) or O(N log N))"]
+    
+    Step1 --> Step2["<b>Step 2: Approach 1 &mdash; The Brute Force Mental Process</b><br/>&bull; State the naive solution aloud: 'We can test all combinations with nested loops.'<br/>&bull; State its cost: 'This takes O(N^2) time and O(1) space.'"]
+    
+    Step2 --> Step3["<b>Step 3: The Bottleneck & Mental Pivot (The Aha! Moment)</b><br/>&bull; Ask: 'Where is the duplicated CPU effort?'<br/>&bull; 'We repeatedly scan backward &rarr; A Hash Map trades O(N) RAM for O(1) lookups!'<br/>&bull; 'The array is sorted &rarr; Two Pointers skips impossible pairs!'<br/>&bull; 'Contiguous subarray &rarr; Sliding Window slides boundaries without re-summing!'"]
+    
+    Step3 --> Step4["<b>Step 4: Approach 2 &mdash; The Optimal Thinking Process</b><br/>&bull; Define state variables: left, right, map, runningSum.<br/>&bull; Define window / pointer movement rules.<br/>&bull; Define termination condition."]
+    
+    Step4 --> Step5["<b>Step 5: Step-by-Step Dry Run Table</b><br/>&bull; Trace 1 sample input through the state variables on a table.<br/>&bull; Confirm edge cases (empty array, 1 element, all duplicates)."]
+    
+    Step4 --> Step6["<b>Step 6: Write Clean NeetCode-Style C# Code</b><br/>&bull; Short intuitive variables (map, diff, l, r).<br/>&bull; Vertical breathing room.<br/>&bull; No complex out variables where standard lookups are cleaner."]
+    
+    Step6 --> Step7["<b>Step 7: Complexity & Follow-up Defense</b><br/>&bull; State Big-O Time & Space confidently.<br/>&bull; Discuss production nuances (.NET TryGetValue, Span zero-allocation)."]
+
+    style Step1 fill:#1e3a8a,stroke:#3b82f6,color:#fff
+    style Step2 fill:#854d0e,stroke:#eab308,color:#fff
+    style Step3 fill:#7c2d12,stroke:#f97316,color:#fff
+    style Step4 fill:#065f46,stroke:#10b981,color:#fff
+    style Step5 fill:#581c87,stroke:#a855f7,color:#fff
+    style Step6 fill:#0f172a,stroke:#38bdf8,color:#fff
+    style Step7 fill:#312e81,stroke:#6366f1,color:#fff
+```
+
+### The 3 Core Questions to Ask Yourself on Any Approach:
+1. **"What is the bottleneck?"** In brute force, are you sorting? Are you scanning linearly? Are you re-calculating the sum of overlapping subarrays?
+2. **"Can I trade space for time?"** Can a Hash Table (`Dictionary<TKey, TValue>`) or Hash Set remember past elements so lookups take $O(1)$ instead of $O(N)$?
+3. **"Does ordering help?"** If the array is sorted, can converging Two Pointers (`l` and `r`) or Binary Search discard half the search space on every tick?
+
+---
 
 # 2. MASTERING THE CORE ALGORITHMIC THINKING PATTERNS
 
@@ -383,16 +421,44 @@ Array Layout on 64-bit CLR Heap:
 ```
 
 ### CPU Cache Lines & Mechanical Sympathy
-Modern CPUs fetch memory in **64-byte Cache Lines** (holding 16 consecutive 32-bit integers). Iterating sequentially through an array allows the hardware prefetcher to stream data into the L1 cache with zero CPU wait cycles.
+Modern CPUs fetch memory in **64-byte Cache Lines** (holding 16 consecutive 32-bit integers). Iterating sequentially through an array allows the hardware prefetcher to stream data into the L1 cache with zero CPU wait cycles. In contrast, traversing node-based structures (`LinkedList<T>`) causes pointer chasing across scattered heap addresses, incurring an L3 cache miss (~200 CPU cycles) on every dereference.
 
 ---
 
 ## 3.2 Problem 1: Two Sum (Unsorted Array)
 
-### 1. The Idea in 1 Sentence
-For each number $X$, calculate its required partner $	ext{diff} = 	ext{Target} - X$. If $	ext{diff}$ is already in our map, we found our pair! Otherwise, store $X$ with its index and keep scanning.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Find two numbers that add up to a given `target` and return their indices.
+- **Mental Model:** For any number $X$, there is only **one** exact partner that can satisfy the equation: $\text{diff} = \text{target} - X$.
+- **Pattern Recognition:** If an interviewer asks you to find a pair with a specific sum in an **unsorted** array, ask yourself: *"How can I remember what I have already seen so far?"*
+- Storing past numbers in a `Dictionary<int, int>` turns what would be an expensive backward scan into an instant $O(1)$ lookup!
 
-### 2. NeetCode-Style C# Solution
+### 2. How Interviewer Thinks (Evaluation & Traps)
+- **Trap 1:** Jumping straight to nested loops ($O(N^2)$). Mention it as brute force, but don't code it unless requested.
+- **Trap 2:** Sorting the array. If you sort the array, you lose the original indices, and sorting takes $O(N \log N)$.
+- **Trap 3:** Inserting all elements into the dictionary first. If there are duplicates, you overwrite indices before checking! Always check for the complement **on the fly during a single pass**.
+
+### 3. Approach 1: Brute Force (Thinking Process & Complexity)
+- **Thinking Process:** For each element at index `i`, loop through every remaining element at index `j = i + 1` to `nums.Length - 1`. If `nums[i] + nums[j] == target`, return `[i, j]`.
+- **Bottleneck:** We are repeatedly scanning the remaining array over and over again.
+- **Complexity:** Time $O(N^2)$, Space $O(1)$.
+
+### 4. Approach 2: Optimal Thinking Process (The Mental Pivot)
+- **The Mental Pivot:** Trade space for time! As we iterate through index `i`:
+  1. Compute the needed partner: `diff = target - nums[i]`.
+  2. Ask the dictionary: *"Have I seen `diff` before?"*
+  3. If **Yes**: Return `[map[diff], i]`. We are done!
+  4. If **No**: Record current number in the dictionary: `map[nums[i]] = i`.
+
+### 5. Step-by-Step Dry Run Table
+**Input:** `nums = [2, 7, 11, 15]`, `target = 9`
+
+| Step | Index $i$ | `nums[i]` | Needed `diff = 9 - nums[i]` | Does Map contain `diff`? | Action / Map State |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **1** | `0` | `2` | `7` | **No** (Map is empty) | Add `{2: 0}` to Map |
+| **2** | `1` | `7` | `2` | **YES!** (Found at index 0) | **Return `[0, 1]` immediately!** |
+
+### 6. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public int[] TwoSum(int[] nums, int target)
@@ -415,53 +481,100 @@ public int[] TwoSum(int[] nums, int target)
 }
 ```
 
-> 💡 **.NET Senior Note:** In production, you can replace `map.ContainsKey(diff)` + `map[diff]` with `map.TryGetValue(diff, out int idx)` to avoid two hash lookups. In interviews, `ContainsKey` is universally accepted and much cleaner to read!
+> 💡 **.NET Senior Note:** In high-throughput production services, calling `map.ContainsKey(diff)` followed by `map[diff]` hashes the key twice. You can use `map.TryGetValue(diff, out int idx)` to perform a single hash lookup. In interview whiteboard rounds, `ContainsKey` is universally accepted, clean, and avoids out-variable visual clutter.
 
-- **Time Complexity:** $O(N)$ — Single pass over the array with $O(1)$ dictionary lookups.
-- **Space Complexity:** $O(N)$ — Stores up to $N$ elements in the dictionary.
+### 7. Complexity Analysis & Follow-Up Questions
+- **Time Complexity:** $O(N)$ — Single linear pass. Hash table lookups take $O(1)$ average time.
+- **Space Complexity:** $O(N)$ — In the worst case, the dictionary stores up to $N$ elements.
+- **Follow-up:** *"What if the array is already sorted?"*  
+  $\implies$ Use **Two Pointers** (left at 0, right at end) to solve it in $O(1)$ auxiliary space without a dictionary!
 
 ---
 
 ## 3.3 Problem 2: Valid Anagram
 
-### 1. The Idea in 1 Sentence
-Count the character frequencies in both strings. If every character appears the exact same number of times, they are anagrams.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Determine if string `t` is an anagram of string `s` (same characters with exact same frequencies).
+- **Mental Model:** Anagrams are identical sets of characters rearranged in a different order.
+- **Pattern Recognition:** Frequency count comparison. If lengths differ, return `false` immediately.
 
-### 2. NeetCode-Style C# Solution
+### 2. How Interviewer Thinks
+- Did the candidate sort both strings ($O(N \log N)$)? Or did they recognize that an ASCII frequency array achieves $O(N)$?
+- Did they use a heavy `Dictionary<char, int>` or a fast, zero-allocation `int[26]` array?
+
+### 3. Approach 1: Brute Force (Sorting)
+- Convert strings to character arrays, sort both with `Array.Sort()`, and compare equality.
+- **Time Complexity:** $O(N \log N)$.
+- **Space Complexity:** $O(N)$ to hold sorted character buffers.
+
+### 4. Approach 2: Optimal Thinking Process (The Mental Pivot)
+- Since the alphabet is fixed (26 lowercase English letters), an `int[26]` array acts as a perfect direct-index hash map!
+- Increment count for characters in `s`, decrement count for characters in `t`.
+- If all counts return to zero, they are anagrams!
+
+### 5. Step-by-Step Dry Run Table
+**Input:** `s = "rat"`, `t = "car"`
+
+| Char Index | `s` Char | `t` Char | Frequency Array State Changes |
+| :--- | :--- | :--- | :--- |
+| **0** | `'r'` | `'c'` | `count['r']++`, `count['c']--` |
+| **1** | `'a'` | `'a'` | `count['a']++`, `count['a']--` $\implies 0$ |
+| **2** | `'t'` | `'r'` | `count['t']++`, `count['r']--` $\implies count['r'] = 0$ |
+| **Final Check** | — | — | `count['c'] == -1`, `count['t'] == 1` $\implies$ **Return `false`!** |
+
+### 6. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public bool IsAnagram(string s, string t)
 {
     if (s.Length != t.Length) return false;
 
-    var count = new int[26];
+    int[] counts = new int[26];
 
     for (int i = 0; i < s.Length; i++)
     {
-        count[s[i] - 'a']++;
-        count[t[i] - 'a']--;
+        counts[s[i] - 'a']++;
+        counts[t[i] - 'a']--;
     }
 
-    foreach (int val in count)
+    foreach (int count in counts)
     {
-        if (val != 0) return false;
+        if (count != 0) return false;
     }
 
     return true;
 }
 ```
 
+> 💡 **.NET Senior Note:** Using `int[] counts = new int[26]` allocates a tiny 128-byte array on the managed heap. For zero-allocation hot paths, use `Span<int> counts = stackalloc int[26];` to execute completely on the stack.
+
+### 7. Complexity Analysis
 - **Time Complexity:** $O(N)$ — Single pass over both strings.
-- **Space Complexity:** $O(1)$ — Array size is strictly 26 regardless of input size.
+- **Space Complexity:** $O(1)$ — Fixed-size array of 26 integers, regardless of input length.
 
 ---
 
 ## 3.4 Problem 3: Group Anagrams
 
-### 1. The Idea in 1 Sentence
-Sort the characters of each string to create a "canonical signature" key (e.g. `"eat"` $	o$ `"aet"`, `"tea"` $	o$ `"aet"`). Group strings that share the exact same sorted key in a Dictionary.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Group an array of strings such that all anagrams are clustered together.
+- **Mental Model:** Anagrams share a common "fingerprint". If we can compute the canonical signature of each word, all anagrams will map to the exact same dictionary key!
+- **Signature Choice:**
+  - Option A: Sort the word's characters: `"eat"` $\implies$ `"aet"`.
+  - Option B: 26-character frequency count string: `"1#0#0#...#1"`.
 
-### 2. NeetCode-Style C# Solution
+### 2. How Interviewer Thinks
+- Does the candidate know how to group elements in a `Dictionary<string, List<string>>`?
+- Can they explain why sorted strings work as dictionary keys?
+
+### 3. Approach 1 & Optimal Mental Process
+- For each word in `strs`:
+  1. Convert to `char[]`, sort it, and convert back to `string key = new string(chars)`.
+  2. If `map` does not contain `key`, create a new empty list.
+  3. Add the original word to `map[key]`.
+- Return `map.Values.ToList()`.
+
+### 4. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public IList<IList<string>> GroupAnagrams(string[] strs)
@@ -470,12 +583,10 @@ public IList<IList<string>> GroupAnagrams(string[] strs)
 
     foreach (string s in strs)
     {
-        // 1. Sort string to use as the canonical key
         char[] chars = s.ToCharArray();
         Array.Sort(chars);
         string key = new string(chars);
 
-        // 2. Group into list
         if (!map.ContainsKey(key))
         {
             map[key] = new List<string>();
@@ -488,72 +599,103 @@ public IList<IList<string>> GroupAnagrams(string[] strs)
 }
 ```
 
-- **Time Complexity:** $O(N \cdot K \log K)$ where $N$ is word count and $K$ is maximum word length.
-- **Space Complexity:** $O(N \cdot K)$ to store keys and grouped lists.
+- **Time Complexity:** $O(N \cdot K \log K)$ where $N$ is number of strings and $K$ is maximum string length.
+- **Space Complexity:** $O(N \cdot K)$ to store keys and grouped lists in the hash map.
 
 ---
 
 ## 3.5 Problem 4: Top K Frequent Elements
 
-### 1. The Idea in 1 Sentence
-Count frequencies with a Dictionary, then use **Bucket Sort** where the array index represents the frequency count, avoiding full $O(N \log N)$ sorting!
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Given an integer array `nums` and integer `k`, return the `k` most frequent elements.
+- **Mental Model:**
+  - Step 1: Count frequency of each number using a Hash Map (`num` $\implies$ `count`).
+  - Step 2: How to find the top $K$ without sorting the entire array ($O(N \log N)$)?
+  - **Aha! Moment:** The maximum possible frequency of any element is $N$ (the length of the array). We can use **Bucket Sort** where index = frequency!
 
-### 2. NeetCode-Style C# Solution
+### 2. Approach 1: Min-Heap / Sorting ($O(N \log K)$)
+- Maintain a min-heap of size $K$. If heap size exceeds $K$, pop the minimum. In .NET 6+, use `PriorityQueue<int, int>`.
+
+### 3. Approach 2: Optimal Bucket Sort ($O(N)$ Time)
+- Create an array of lists: `List<int>[] buckets = new List<int>[nums.Length + 1]`.
+- Place each number into `buckets[frequency]`.
+- Iterate backward from index $N$ down to 1 and collect elements until we have $K$ items!
+
+### 4. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public int[] TopKFrequent(int[] nums, int k)
 {
-    // 1. Count frequencies
-    var count = new Dictionary<int, int>();
+    var countMap = new Dictionary<int, int>();
     foreach (int n in nums)
     {
-        count[n] = count.GetValueOrDefault(n, 0) + 1;
+        countMap[n] = countMap.GetValueOrDefault(n, 0) + 1;
     }
 
-    // 2. Bucket sort: index = frequency, value = list of numbers
+    // Buckets where index = frequency
     var buckets = new List<int>[nums.Length + 1];
-    foreach (var pair in count)
+
+    foreach (var pair in countMap)
     {
+        int num = pair.Key;
         int freq = pair.Value;
+
         if (buckets[freq] == null)
         {
             buckets[freq] = new List<int>();
         }
-        buckets[freq].Add(pair.Key);
+
+        buckets[freq].Add(num);
     }
 
-    // 3. Collect top k elements from highest frequency down to lowest
-    var res = new List<int>();
-    for (int i = buckets.Length - 1; i >= 0 && res.Count < k; i--)
+    var result = new List<int>();
+
+    // Scan backwards from highest frequency
+    for (int i = buckets.Length - 1; i >= 0 && result.Count < k; i--)
     {
         if (buckets[i] != null)
         {
-            res.AddRange(buckets[i]);
+            result.AddRange(buckets[i]);
         }
     }
 
-    return res.Take(k).ToArray();
+    return result.Take(k).ToArray();
 }
 ```
 
-- **Time Complexity:** $O(N)$ — Tallying counts and walking buckets takes linear time.
-- **Space Complexity:** $O(N)$ — Buckets and frequency dictionary.
+- **Time Complexity:** $O(N)$ — Linear counting and bucket filling.
+- **Space Complexity:** $O(N)$ — For frequency map and bucket arrays.
 
 ---
 
 ## 3.6 Problem 5: Product of Array Except Self
 
-### 1. The Idea in 1 Sentence
-The product of all numbers except `nums[i]` is simply the product of all elements to its left ($	ext{prefix}$) multiplied by the product of all elements to its right ($	ext{postfix}$).
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Return an array `output` where `output[i]` is the product of all elements in `nums` except `nums[i]`.
+- **Constraint:** Solve in $O(N)$ without using the division operator `/`!
+- **Mental Model:** For any index `i`, the answer is simply:
+  $$\text{Product} = (\text{Product of all numbers to the left of } i) \times (\text{Product of all numbers to the right of } i)$$
 
-```
-Array:   [  1,   2,   3,   4 ]
-Prefix:  [  1,   1,   2,   6 ]  (Elements to the left)
-Postfix: [ 24,  12,   4,   1 ]  (Elements to the right)
-Result:  [ 24,  12,   8,   6 ]  (Prefix * Postfix)
-```
+### 2. Approach 2: Optimal Two-Pass Prefix/Suffix
+1. Pass 1 (Left to Right): Store prefix products in `res[i]`.
+2. Pass 2 (Right to Left): Maintain running suffix product `postfix` and multiply into `res[i]`.
 
-### 2. NeetCode-Style C# Solution
+### 3. Step-by-Step Dry Run Table
+**Input:** `nums = [1, 2, 3, 4]`
+
+| Pass | Index `i` | Running Product | Result Array State |
+| :--- | :--- | :--- | :--- |
+| **Prefix (L &rarr; R)** | `0` | `1` | `[1, _, _, _]` |
+| | `1` | `1 * 1 = 1` | `[1, 1, _, _]` |
+| | `2` | `1 * 2 = 2` | `[1, 1, 2, _]` |
+| | `3` | `2 * 3 = 6` | `[1, 1, 2, 6]` |
+| **Suffix (R &rarr; L)** | `3` | `postfix = 1` | `res[3] = 6 * 1 = 6`, `postfix = 1 * 4 = 4` |
+| | `2` | `postfix = 4` | `res[2] = 2 * 4 = 8`, `postfix = 4 * 3 = 12` |
+| | `1` | `postfix = 12` | `res[1] = 1 * 12 = 12`, `postfix = 12 * 2 = 24` |
+| | `0` | `postfix = 24` | `res[0] = 1 * 24 = 24` |
+| **Final Result** | — | — | `[24, 12, 8, 6]` |
+
+### 4. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public int[] ProductExceptSelf(int[] nums)
@@ -561,7 +703,7 @@ public int[] ProductExceptSelf(int[] nums)
     int n = nums.Length;
     int[] res = new int[n];
 
-    // 1. Calculate prefix products
+    // 1. Calculate prefix products (stored directly in result)
     int prefix = 1;
     for (int i = 0; i < n; i++)
     {
@@ -569,7 +711,7 @@ public int[] ProductExceptSelf(int[] nums)
         prefix *= nums[i];
     }
 
-    // 2. Multiply with postfix products
+    // 2. Multiply by suffix products backwards
     int postfix = 1;
     for (int i = n - 1; i >= 0; i--)
     {
@@ -582,70 +724,70 @@ public int[] ProductExceptSelf(int[] nums)
 ```
 
 - **Time Complexity:** $O(N)$ — Two sequential linear passes.
-- **Space Complexity:** $O(1)$ auxiliary memory (excluding the returned result array).
+- **Space Complexity:** $O(1)$ — The output array does not count as extra memory.
 
 ---
 
 ## 3.7 Problem 6: Kadane's Algorithm (Maximum Subarray Sum)
 
-### 1. The Idea in 1 Sentence
-Walk through the array keeping a running streak `curSum`. If the streak ever drops below zero, reset it to zero because a negative streak will only hurt future subarrays!
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Find the contiguous subarray with the largest sum.
+- **Mental Model:** As we walk through the array, should we extend the existing subarray or start fresh from the current element?
+- **The Golden Rule of Kadane:** If the running sum ever dips below 0, it is dead weight! A negative prefix can never help any future subarray. Reset `curSum = 0` whenever `curSum < 0`.
 
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public int MaxSubArray(int[] nums)
 {
+    int maxSub = nums[0];
     int curSum = 0;
-    int maxSum = nums[0];
 
     foreach (int n in nums)
     {
-        // If current streak is negative, reset it
         if (curSum < 0)
         {
-            curSum = 0;
+            curSum = 0; // Discard negative prefix
         }
 
         curSum += n;
-        maxSum = Math.Max(maxSum, curSum);
+        maxSub = Math.Max(maxSub, curSum);
     }
 
-    return maxSum;
+    return maxSub;
 }
 ```
 
-- **Time Complexity:** $O(N)$ — Single pass over the array.
-- **Space Complexity:** $O(1)$ — Only two scalar integers.
+- **Time Complexity:** $O(N)$ — Single pass over array.
+- **Space Complexity:** $O(1)$ — Two integer variables.
 
 ---
 
 ## 3.8 Problem 7: Rotate Array (In-Place 3-Step Reversal)
 
-### 1. The Idea in 1 Sentence
-Rotating an array to the right by $K$ steps can be done in-place in 3 simple reversals: reverse the whole array, reverse the first $K$ items, then reverse the remaining items.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Rotate array to the right by `k` steps in $O(1)$ extra space.
+- **The 3-Step Magic:**
+  1. Reverse the **entire** array.
+  2. Reverse the **first `k`** elements.
+  3. Reverse the **remaining `n - k`** elements.
 
 ```
-nums = [1, 2, 3, 4, 5], k = 2
-1. Reverse All:       [ 5, 4, 3, 2, 1 ]
-2. Reverse First 2:   [ 4, 5, 3, 2, 1 ]
-3. Reverse Remaining: [ 4, 5, 1, 2, 3 ] (Final Rotated Result!)
+nums = [1, 2, 3, 4, 5, 6, 7], k = 3
+Step 1 (Reverse all):     [7, 6, 5, 4, 3, 2, 1]
+Step 2 (Reverse first 3): [5, 6, 7, 4, 3, 2, 1]
+Step 3 (Reverse rest 4):  [5, 6, 7, 1, 2, 3, 4] -> Done!
 ```
 
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public void Rotate(int[] nums, int k)
 {
-    k = k % nums.Length;
+    k %= nums.Length; // Normalize k
 
-    // 1. Reverse entire array
     Reverse(nums, 0, nums.Length - 1);
-
-    // 2. Reverse first k elements
     Reverse(nums, 0, k - 1);
-
-    // 3. Reverse the rest
     Reverse(nums, k, nums.Length - 1);
 }
 
@@ -653,79 +795,95 @@ private void Reverse(int[] nums, int l, int r)
 {
     while (l < r)
     {
-        (nums[l], nums[r]) = (nums[r], nums[l]);
+        (nums[l], nums[r]) = (nums[r], nums[l]); // C# tuple swap
         l++;
         r--;
     }
 }
 ```
 
-- **Time Complexity:** $O(N)$ — Every element is swapped twice.
-- **Space Complexity:** $O(1)$ — Zero heap allocation.
+- **Time Complexity:** $O(N)$ — Each element reversed twice.
+- **Space Complexity:** $O(1)$ — In-place swap with two pointers.
 
 ---
 
 # 4. PATTERN 2: STRINGS & STRING ALGORITHMS
 
-Strings in C# (.NET 8) are immutable reference types with unique memory and garbage collection characteristics. Mastering string algorithms requires understanding both low-level CLR object layout (interning, UTF-16, GC Gen 0 churn) and classic pointer/sliding window algorithms that operate with zero heap allocations using `ReadOnlySpan<char>`.
+In high-throughput .NET enterprise applications (e.g. Payment Gateway transaction parsing, HL7/FHIR healthcare messaging, FIX protocols), strings represent the single highest source of Garbage Collection memory churn if handled incorrectly. A senior engineer must master both algorithmic string logic and CoreCLR string memory mechanics.
 
 ---
 
 ## 4.1 CLR Internals: String Layout, Interning Pool, UTF-16, and GC Pressures
 
-In .NET 8, every `System.String` is an immutable reference type allocated on the Managed Heap:
+### 1. Memory Anatomy of a `System.String`
+A string in .NET is a reference type (`class`) stored on the Managed Heap. Unlike C++ null-terminated strings, a .NET string is length-prefixed and UTF-16 encoded:
 
 ```
-Managed Heap Memory Structure of string s = "Infosys":
-[SyncBlockIndex: 8 bytes]       (Locking and object hashcode)
-[MethodTable Pointer: 8 bytes]  (Points to System.String Type Descriptor)
-[String Length: 4 bytes]         (7 characters)
-[Character Buffer: 7 * 2 bytes]  (UTF-16 encoding: 'I', 'n', 'f', 'o', 's', 'y', 's' = 14 bytes)
-[Null Terminator: 2 bytes]       (0x0000 for native C/C++ interop compatibility)
-[Padding: 4 bytes]               (64-bit alignment)
-Total Memory = 8 + 8 + 4 + 14 + 2 + 4 = 40 bytes!
+Managed Heap Layout of "ABCD" on 64-bit CoreCLR:
+[ SyncBlock (8B) | MethodTable* (8B) | Length=4 (4B) | 'A' (2B) | 'B' (2B) | 'C' (2B) | 'D' (2B) | Null ' ' (2B) ]
+Total Bytes Allocated = 8 + 8 + 4 + (4 * 2) + 2 = 30 bytes -> Padded to 32 bytes (8-byte alignment)
 ```
 
-### The String Immutability Trap in Loops
-Because strings are immutable, modifying a string creates a completely new string object on the Managed Heap:
+1. **Object Header / SyncBlock (8 bytes on x64):** Stores thread locking index and default hashcode.
+2. **MethodTable Pointer (8 bytes):** Points to the `System.String` runtime type descriptor.
+3. **Length Prefix (4 bytes):** 32-bit signed integer storing the character count (enabling $O(1)$ `.Length` queries).
+4. **Character Array (2 bytes per char):** UTF-16 code units stored contiguously in memory.
+5. **Null Terminator (2 bytes):** Injected automatically for seamless interop with native Windows/POSIX Win32 APIs.
+
+### 2. The String Immutability Trap in Loops
+In C#, strings are **immutable**. Any operation that appears to mutate a string (`s += "x"`, `s.Substring()`, `s.Trim()`) actually allocates a completely new string object on the Managed Heap.
+
 ```csharp
-// NAIVE CONCATENATION (DANGEROUS IN HIGH-THROUGHPUT CODE)
+// DISASTROUS: O(N^2) allocations - Triggers continuous Gen 0 GC pauses!
 string result = "";
-for (int i = 0; i < n; i++)
+for (int i = 0; i < 10000; i++)
 {
-    result += i.ToString(); // Allocates a new string on EVERY iteration!
+    result += i.ToString(); // Allocates 10,000 strings and copies bytes repeatedly!
 }
-// Time Complexity: O(N^2) due to repeated memory copying.
-// Generates massive Gen 0 garbage collection pressure.
 ```
 
-### Mitigation Strategies in .NET 8
-1. **`StringBuilder`:** Backed by an internal character buffer that dynamically expands, amortizing allocations.
-2. **`ReadOnlySpan<char>`:** Enables zero-allocation parsing, sub-stringing, and character comparison without creating new heap strings.
-3. **String Interning:** The CLR maintains an internal hash table called the **Intern Pool**. Literal strings with identical content share the exact same reference address in memory (`string.IsInterned(s)`).
+### 3. Mitigation Strategies in .NET 8
+- **`StringBuilder`:** Pre-allocated circular buffer for dynamic concatenations.
+- **`Span<char>` / `ReadOnlySpan<char>`:** Zero-allocation slicing over existing string memory on the thread stack.
+- **`string.Create<T>()`:** Direct memory buffer initialization without intermediate heap allocations.
 
 ---
 
 ## 4.2 Problem 1: Reverse Words in a Sentence (LeetCode 151)
 
-### 1. The Idea in 1 Sentence
-Trim whitespace, reverse the entire character array, then reverse each individual word within its own boundaries, and finally compact multi-space gaps into single spaces.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Given `"the sky is blue"`, return `"blue is sky the"`. Multiple spaces must be compacted into a single space, and leading/trailing whitespace removed.
+- **Mental Model:** Notice the transformation:
+  1. If we reverse the entire string: `"the sky is blue"` $\implies$ `"eulb si yks eht"`.
+  2. Notice that every word is in the **correct destination position**, but its letters are reversed!
+  3. Reverse each individual word within its own boundaries: `"blue is sky the"`.
+- In C#, `string.Split(' ', StringSplitOptions.RemoveEmptyEntries)` extracts all valid words while naturally compacting whitespace! Then, reverse the word array in-place.
 
-```
-Input:    "the sky is blue"
-Step 1:   "eulb si yks eht"  (Reverse entire string)
-Step 2:   "blue is sky the"  (Reverse each word individually)
-```
+### 2. How Interviewer Thinks
+- Tests if you know how to handle irregular spaces without messy nested conditions.
+- Tests two-pointer array reversal technique.
 
-### 2. NeetCode-Style C# Solution
+### 3. Approach 1: Brute Force ($O(N)$ Space)
+- Split by space, filter out blanks, reverse array, join with space.
+
+### 4. Step-by-Step Dry Run Table
+**Input:** `s = "  hello world  "`
+
+| Step | Action | State / Output |
+| :--- | :--- | :--- |
+| **1** | Split with `RemoveEmptyEntries` | `words = ["hello", "world"]` |
+| **2** | Two pointers `l = 0, r = 1` | Swap `words[0]` and `words[1]` $\implies$ `["world", "hello"]` |
+| **3** | `string.Join(" ", words)` | `"world hello"` |
+
+### 5. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public string ReverseWords(string s)
 {
-    // 1. Split words while removing empty entries
+    // 1. Split words while stripping irregular whitespace
     string[] words = s.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-    // 2. Reverse word array using two pointers
+    // 2. Reverse word array in-place with two pointers
     int l = 0, r = words.Length - 1;
     while (l < r)
     {
@@ -734,131 +892,140 @@ public string ReverseWords(string s)
         r--;
     }
 
-    // 3. Join with a single space
+    // 3. Join with single space
     return string.Join(" ", words);
 }
 ```
 
-> 💡 **.NET Senior Note:** In zero-allocation .NET pipelines, you can perform this in-place over `char[]` or `Span<char>` without allocating a `string[]` array. For interview whiteboard rounds, `string.Split(..., RemoveEmptyEntries)` followed by in-place reversal is clean, expressive, and immediately understood.
+> 💡 **.NET Senior Note:** In zero-allocation pipelines, this can be executed over `char[]` or `Span<char>` without allocating a `string[]` array. For interview whiteboard rounds, `string.Split(..., RemoveEmptyEntries)` followed by in-place pointer reversal is clean and immediately understood.
 
-- **Time Complexity:** $O(N)$ — Linear scan and split.
+- **Time Complexity:** $O(N)$ — Linear split and join.
 - **Space Complexity:** $O(N)$ — To hold word tokens.
 
 ---
 
 ## 4.3 Problem 2: String Compression / Run-Length Encoding (LeetCode 443)
 
-### 1. The Idea in 1 Sentence
-Use a fast read pointer to count contiguous identical characters, and a slow write pointer to write the character followed by the digits of its count if greater than 1.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Compress `chars = ['a','a','b','b','c','c','c']` into `['a','2','b','2','c','3']` in-place, returning the new length 6.
+- **Mental Model:** **Read Pointer & Write Pointer**.
+  - A fast `read` pointer counts how many consecutive identical characters exist.
+  - A slow `write` pointer writes the character and, if count $> 1$, writes each digit of the count.
 
-```
-Input:  [ 'a', 'a', 'b', 'b', 'c', 'c', 'c' ]
-Output: [ 'a', '2', 'b', '2', 'c', '3' ], returns length 6
-```
+### 2. Step-by-Step Dry Run Table
+**Input:** `['a', 'a', 'b', 'b', 'c', 'c', 'c']`
 
-### 2. NeetCode-Style C# Solution
+| `read` Scan Group | Group Char | Count | `write` Action | Array State |
+| :--- | :--- | :--- | :--- | :--- |
+| `0..1` | `'a'` | `2` | Write `'a'`, then `'2'` | `['a', '2', ...]` |
+| `2..3` | `'b'` | `2` | Write `'b'`, then `'2'` | `['a', '2', 'b', '2', ...]` |
+| `4..6` | `'c'` | `3` | Write `'c'`, then `'3'` | `['a', '2', 'b', '2', 'c', '3']` |
+| **Return** | — | — | — | Returns `write = 6` |
+
+### 3. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public int Compress(char[] chars)
 {
-    int w = 0; // write pointer
-    int r = 0; // read pointer
+    int write = 0;
+    int read = 0;
 
-    while (r < chars.Length)
+    while (read < chars.Length)
     {
-        char c = chars[r];
+        char c = chars[read];
         int count = 0;
 
-        // Count contiguous matching characters
-        while (r < chars.Length && chars[r] == c)
+        // Count consecutive occurrences of character c
+        while (read < chars.Length && chars[read] == c)
         {
-            r++;
+            read++;
             count++;
         }
 
         // Write character
-        chars[w++] = c;
+        chars[write++] = c;
 
         // Write count digits if > 1
         if (count > 1)
         {
             foreach (char digit in count.ToString())
             {
-                chars[w++] = digit;
+                chars[write++] = digit;
             }
         }
     }
 
-    return w;
+    return write;
 }
 ```
 
-- **Time Complexity:** $O(N)$ — Each character is visited once by `r`.
-- **Space Complexity:** $O(1)$ — In-place array mutation.
+- **Time Complexity:** $O(N)$ — Single pass over character array.
+- **Space Complexity:** $O(1)$ — Modified strictly in-place.
 
 ---
 
 ## 4.4 Problem 3: Longest Palindromic Substring (LeetCode 5)
 
-### 1. The Idea in 1 Sentence
-Every palindrome expands symmetrically from its center. Iterate through each index as a center for both **odd-length palindromes** (center is `i`) and **even-length palindromes** (center is `i, i+1`), expanding outward as long as characters match.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Find the longest contiguous substring that reads the same backward as forward.
+- **Brute Force ($O(N^3)$):** Check every substring $(N^2)$ and verify if palindrome $(N)$. Far too slow!
+- **Aha! Moment:** **Expand Around Center ($O(N^2)$ Time, $O(1)$ Space)**.
+  - A palindrome mirrors around its center.
+  - An odd-length palindrome has 1 center character (e.g. `"aba"` center is `'b'`).
+  - An even-length palindrome has 2 center characters (e.g. `"abba"` center is `"bb"`).
+  - Iterate through every index and expand outward as long as `s[l] == s[r]`.
 
-```
-Center Expansion:
-Odd:   c  b  [a]  b  c   &rarr; Center is 'a', expand left and right
-Even:  c  [b   b]  c     &rarr; Center is between 'b' and 'b'
-```
-
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public string LongestPalindrome(string s)
 {
-    if (string.IsNullOrEmpty(s)) return "";
-
-    string res = "";
-    int resLen = 0;
+    int start = 0, maxLen = 0;
 
     for (int i = 0; i < s.Length; i++)
     {
-        // 1. Odd length palindrome (center is i)
-        Expand(i, i);
+        // Odd length center (e.g. "aba")
+        Expand(s, i, i, ref start, ref maxLen);
 
-        // 2. Even length palindrome (center is i, i+1)
-        Expand(i, i + 1);
+        // Even length center (e.g. "abba")
+        Expand(s, i, i + 1, ref start, ref maxLen);
     }
 
-    void Expand(int l, int r)
+    return s.Substring(start, maxLen);
+}
+
+private void Expand(string s, int l, int r, ref int start, ref int maxLen)
+{
+    while (l >= 0 && r < s.Length && s[l] == s[r])
     {
-        while (l >= 0 && r < s.Length && s[l] == s[r])
+        int curLen = r - l + 1;
+        if (curLen > maxLen)
         {
-            if ((r - l + 1) > resLen)
-            {
-                res = s.Substring(l, r - l + 1);
-                resLen = r - l + 1;
-            }
-            l--;
-            r++;
+            start = l;
+            maxLen = curLen;
         }
+        l--;
+        r++;
     }
-
-    return res;
 }
 ```
 
-> 💡 **.NET Senior Note:** Instead of slicing `s.Substring(...)` on every expansion, track integer indices `bestStart` and `bestLen`, and call `s.Substring(bestStart, bestLen)` only once at the end to save string allocations.
-
-- **Time Complexity:** $O(N^2)$ — Expanding from $2N - 1$ centers takes $O(N)$ each.
-- **Space Complexity:** $O(1)$ auxiliary space.
+- **Time Complexity:** $O(N^2)$ — Up to $2N - 1$ centers expanded outward.
+- **Space Complexity:** $O(1)$ — No extra arrays or tables allocated.
 
 ---
 
-## 4.5 Problem 4: Valid Palindrome II (Delete at Most 1 Character - LeetCode 680)
+## 4.5 Problem 4: Valid Palindrome II (LeetCode 680)
 
-### 1. The Idea in 1 Sentence
-Use converging two pointers (`l` and `r`). If `s[l] != s[r]`, check if deleting either `s[l]` (test `l+1 .. r`) or `s[r]` (test `l .. r-1`) forms a valid palindrome.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Return `true` if `s` can be a palindrome after deleting **at most one** character.
+- **Mental Model:** Use Two Pointers `l` and `r`. As long as `s[l] == s[r]`, move `l++` and `r--`.
+- The first time a mismatch occurs (`s[l] != s[r]`), you have exactly **two choices**:
+  1. Skip the left character: Check if `s[l+1 .. r]` is a palindrome.
+  2. Skip the right character: Check if `s[l .. r-1]` is a palindrome.
+- If either option is a valid palindrome, return `true`!
 
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public bool ValidPalindrome(string s)
@@ -869,7 +1036,7 @@ public bool ValidPalindrome(string s)
     {
         if (s[l] != s[r])
         {
-            // Try skipping left char OR skipping right char
+            // Try skipping left OR skipping right
             return IsSubPalindrome(s, l + 1, r) || IsSubPalindrome(s, l, r - 1);
         }
         l++;
@@ -891,40 +1058,34 @@ private bool IsSubPalindrome(string s, int l, int r)
 }
 ```
 
-- **Time Complexity:** $O(N)$ — At most two linear scans.
-- **Space Complexity:** $O(1)$ — Only pointer comparisons.
+- **Time Complexity:** $O(N)$ — At most two linear sweeps.
+- **Space Complexity:** $O(1)$ — Scalar pointers on stack.
 
 ---
 
 ## 4.6 Problem 5: Longest Common Prefix (LeetCode 14)
 
-### 1. The Idea in 1 Sentence
-Start with the first word as our candidate prefix. Iterate through the rest of the words; while a word does not start with the prefix, shorten the prefix by one character from the end until it matches or becomes empty.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Find the longest common prefix string among an array of strings `["flower","flow","flight"]` $\implies$ `"fl"`.
+- **Horizontal Scanning:** Assume `prefix = strs[0]`. Compare it against each subsequent string.
+- While `str.StartsWith(prefix)` is false, trim 1 character off the end of `prefix`:
+  `prefix = prefix.Substring(0, prefix.Length - 1)`.
 
-```
-strs = ["flower", "flow", "flight"]
-Prefix: "flower"
-Compare with "flow":   "flower" &rarr; "flowe" &rarr; "flow" (matches!)
-Compare with "flight": "flow" &rarr; "flo" &rarr; "fl" (matches!)
-Result: "fl"
-```
-
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public string LongestCommonPrefix(string[] strs)
 {
-    if (strs == null || strs.Length == 0) return "";
+    if (strs.Length == 0) return "";
 
     string prefix = strs[0];
 
     for (int i = 1; i < strs.Length; i++)
     {
-        // While current word does not start with prefix, trim last character
         while (!strs[i].StartsWith(prefix))
         {
             prefix = prefix.Substring(0, prefix.Length - 1);
-            if (string.IsNullOrEmpty(prefix)) return "";
+            if (prefix.Length == 0) return "";
         }
     }
 
@@ -932,109 +1093,112 @@ public string LongestCommonPrefix(string[] strs)
 }
 ```
 
-- **Time Complexity:** $O(S)$ where $S$ is the sum of all characters in all strings.
-- **Space Complexity:** $O(1)$ auxiliary memory.
+- **Time Complexity:** $O(S)$ where $S$ is the sum of all characters across strings.
+- **Space Complexity:** $O(1)$ auxiliary space.
 
 ---
 
 ## 4.7 Problem 6: Isomorphic Strings (LeetCode 205)
 
-### 1. The Idea in 1 Sentence
-Two strings `s` and `t` are isomorphic if there is a bijective (one-to-one and onto) mapping between their characters. Verify that character `s[i]` maps uniquely to `t[i]`, and `t[i]` maps uniquely back to `s[i]`.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Determine if characters in `s` can be replaced to get `t` with a 1-to-1 bijection mapping (`"egg"` $\implies$ `"add"` is `true`; `"foo"` $\implies$ `"bar"` is `false`).
+- **Mental Model:** Store the **last seen position** of each character in both strings. If at any index `i`, `lastSeenS[s[i]] != lastSeenT[t[i]]`, the bijection is broken!
 
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public bool IsIsomorphic(string s, string t)
 {
-    if (s.Length != t.Length) return false;
-
-    var mapST = new Dictionary<char, char>();
-    var mapTS = new Dictionary<char, char>();
+    int[] mapS = new int[256];
+    int[] mapT = new int[256];
 
     for (int i = 0; i < s.Length; i++)
     {
-        char c1 = s[i];
-        char c2 = t[i];
+        // If last seen positions differ, mapping is not 1-to-1
+        if (mapS[s[i]] != mapT[t[i]])
+        {
+            return false;
+        }
 
-        // If c1 was already mapped, it must map to c2
-        if (mapST.ContainsKey(c1) && mapST[c1] != c2) return false;
-
-        // If c2 was already mapped, it must map back to c1
-        if (mapTS.ContainsKey(c2) && mapTS[c2] != c1) return false;
-
-        mapST[c1] = c2;
-        mapTS[c2] = c1;
+        // Store index + 1 (since default value in int[] is 0)
+        mapS[s[i]] = i + 1;
+        mapT[t[i]] = i + 1;
     }
 
     return true;
 }
 ```
 
-> 💡 **.NET Senior Note:** Since characters in ASCII are bounded by 128 or 256, you can replace the two dictionaries with two integer arrays `int[256]` recording last-seen timestamps, reducing memory to $O(1)$ without hash collisions.
-
-- **Time Complexity:** $O(N)$ — Single linear pass.
-- **Space Complexity:** $O(1)$ — At most 256 unique character mappings.
+- **Time Complexity:** $O(N)$ — Single pass over string length.
+- **Space Complexity:** $O(1)$ — Two fixed 256-integer ASCII tables.
 
 ---
 
 # 5. PATTERN 3: TWO POINTERS
 
-The **Two Pointers** pattern maintains two index pointers moving across one linear array or string. By taking advantage of sorted data or bilateral constraints, it eliminates nested loops and reduces $O(N^2)$ brute-force solutions to $O(N)$ linear scans with strictly $O(1)$ stack memory.
+The Two Pointers pattern is the single most efficient way to process linear data structures in $O(N)$ time and $O(1)$ space. Instead of using nested loops ($O(N^2)$), two integer indices traverse the array either converging toward each other, moving in the same direction at different speeds, or expanding outward.
 
 ---
 
 ## 5.1 The Two Pointers Mental Model & Archetypes
 
-```mermaid
-flowchart TD
-    subgraph Converging ["Archetype 1: Converging Pointers (Inward Squeeze)"]
-        A1["Left: Index 0 &rarr;"] --- A2["[ Sorted Array / Palindrome ]"] --- A3["&larr; Right: Index N-1"]
-        A4["Action: Squeeze inward based on comparison"]
-    end
+```
+1. Converging (Opposite Ends):
+   [ L ------------->           <------------- R ]
+   Best for: Two Sum (Sorted), Valid Palindrome, Container With Most Water, 3Sum, Trapping Rain Water.
 
-    subgraph Parallel ["Archetype 2: Parallel / Read-Write (Compaction)"]
-        B1["Write: Slow pointer &rarr; (Holds valid compacted boundary)"]
-        B2["Read: Fast pointer &rarr;&rarr; (Scans input and filters elements)"]
-    end
+2. Fast & Slow (Same Direction):
+   [ Slow -->   Fast ------>                     ]
+   Best for: Remove Duplicates, Move Zeroes, In-Place Compaction.
 
-    subgraph ThreeWay ["Archetype 3: 3-Way Partitioning (Dutch National Flag)"]
-        C1["Low: End of 0s"] --- C2["Mid: Current Scanner"] --- C3["High: Start of 2s"]
-    end
+3. Expand Around Center:
+   [             <-- L | R -->                   ]
+   Best for: Longest Palindromic Substring.
 ```
 
 ---
 
 ## 5.2 Problem 1: Two Sum II (Input Array Is Sorted)
 
-### 1. The Idea in 1 Sentence
-Because the array is sorted, the smallest numbers are on the left and the largest on the right. If the sum of `nums[l] + nums[r]` is too small, advance `l++`. If it is too big, decrement `r--`.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Find two numbers that sum to `target` in an array **already sorted in ascending order**. Return 1-based indices in $O(1)$ extra space.
+- **Mental Model:**
+  - Place `l = 0` (smallest element) and `r = n - 1` (largest element).
+  - Calculate `curSum = nums[l] + nums[r]`.
+  - If `curSum == target`: Found our pair!
+  - If `curSum < target`: The sum is too small! To get a larger sum, move `l++`.
+  - If `curSum > target`: The sum is too big! To get a smaller sum, move `r--`.
 
-```
-nums = [ 2, 7, 11, 15 ], target = 9
-l = 0 (val 2), r = 3 (val 15) &rarr; sum = 17 > 9 &rarr; r--
-l = 0 (val 2), r = 2 (val 11) &rarr; sum = 13 > 9 &rarr; r--
-l = 0 (val 2), r = 1 (val 7)  &rarr; sum = 9 == target! Found [1, 2]!
-```
+### 2. How Interviewer Thinks
+- Did the candidate reach for a Hash Map out of habit ($O(N)$ space)?
+- Did they recognize that because the array is **sorted**, two pointers can solve it in $O(1)$ auxiliary space without any heap allocations?
 
-### 2. NeetCode-Style C# Solution
+### 3. Step-by-Step Dry Run Table
+**Input:** `numbers = [2, 7, 11, 15]`, `target = 9`
+
+| Step | `l` | `r` | `numbers[l]` | `numbers[r]` | `curSum` | Comparison with Target 9 | Pointer Action |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **1** | `0` | `3` | `2` | `15` | `17` | `17 > 9` (Too big) | Decrement `r--` |
+| **2** | `0` | `2` | `2` | `11` | `13` | `13 > 9` (Too big) | Decrement `r--` |
+| **3** | `0` | `1` | `2` | `7` | `9` | `9 == 9` (**MATCH!**) | Return `[1, 2]` (1-based) |
+
+### 4. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
-public int[] TwoSum(int[] nums, int target)
+public int[] TwoSum(int[] numbers, int target)
 {
-    int l = 0;
-    int r = nums.Length - 1;
+    int l = 0, r = numbers.Length - 1;
 
     while (l < r)
     {
-        int sum = nums[l] + nums[r];
+        int curSum = numbers[l] + numbers[r];
 
-        if (sum == target)
+        if (curSum == target)
         {
-            return [l + 1, r + 1]; // 1-indexed for LeetCode 167
+            return [l + 1, r + 1]; // 1-based index
         }
 
-        if (sum < target)
+        if (curSum < target)
         {
             l++;
         }
@@ -1048,27 +1212,26 @@ public int[] TwoSum(int[] nums, int target)
 }
 ```
 
-- **Time Complexity:** $O(N)$ — Each step eliminates one element.
-- **Space Complexity:** $O(1)$ — Zero heap allocation.
+- **Time Complexity:** $O(N)$ — In the worst case, each element is visited at most once.
+- **Space Complexity:** $O(1)$ — Only two scalar pointers on the stack.
 
 ---
 
 ## 5.3 Problem 2: Valid Palindrome
 
-### 1. The Idea in 1 Sentence
-Compare characters from the outside inward (`l` from start, `r` from end), skipping non-alphanumeric characters. If any mismatch occurs, it's not a palindrome.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Determine if a string is a palindrome, considering only alphanumeric characters and ignoring cases.
+- **Mental Model:** Converging pointers `l` and `r`. Skip non-alphanumeric characters. Compare lowercased characters.
 
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public bool IsPalindrome(string s)
 {
-    int l = 0;
-    int r = s.Length - 1;
+    int l = 0, r = s.Length - 1;
 
     while (l < r)
     {
-        // Skip non-alphanumeric characters
         while (l < r && !char.IsLetterOrDigit(s[l])) l++;
         while (l < r && !char.IsLetterOrDigit(s[r])) r--;
 
@@ -1085,37 +1248,33 @@ public bool IsPalindrome(string s)
 }
 ```
 
-- **Time Complexity:** $O(N)$ — Single pass over string.
-- **Space Complexity:** $O(1)$ — In-place pointer comparison without creating reversed strings.
+- **Time Complexity:** $O(N)$ — Each character checked at most twice.
+- **Space Complexity:** $O(1)$ — Zero string allocations.
 
 ---
 
 ## 5.4 Problem 3: Container With Most Water (LeetCode 11)
 
-### 1. The Idea in 1 Sentence
-The water volume is bounded by the shorter pillar ($	ext{Area} = (r - l) 	imes \min(h[l], h[r])$). Moving the taller pillar only reduces width without any chance of increasing height, so **always move the shorter pillar inward**!
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Choose two vertical lines that, together with the x-axis, form a container that holds the most water.
+- **Formula:** $\text{Area} = (r - l) \times \min(\text{height}[l], \text{height}[r])$.
+- **The Greedy Choice:** The width is widest at the outer edges (`l = 0, r = n - 1`). To find a larger area as the width narrows, we **must** find taller lines.
+- **Which pointer to move?** Always move the pointer pointing to the **shorter line**! Moving the taller line can never increase the area because height is limited by the shorter line.
 
-```
-Heights: [ 1, 8, 6, 2, 5, 4, 8, 3, 7 ]
-           L                         R
-           h[L]=1 < h[R]=7 &rarr; Bottleneck is L. Advance L!
-```
-
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public int MaxArea(int[] height)
 {
-    int l = 0;
-    int r = height.Length - 1;
+    int l = 0, r = height.Length - 1;
     int maxArea = 0;
 
     while (l < r)
     {
-        int area = (r - l) * Math.Min(height[l], height[r]);
-        maxArea = Math.Max(maxArea, area);
+        int h = Math.Min(height[l], height[r]);
+        int w = r - l;
+        maxArea = Math.Max(maxArea, h * w);
 
-        // Move the shorter pillar inward
         if (height[l] < height[r])
         {
             l++;
@@ -1130,23 +1289,23 @@ public int MaxArea(int[] height)
 }
 ```
 
-- **Time Complexity:** $O(N)$ — Pointers converge in at most $N$ steps.
-- **Space Complexity:** $O(1)$ — Only three integer registers.
+- **Time Complexity:** $O(N)$ — Single pass from outside in.
+- **Space Complexity:** $O(1)$ — Scalar state only.
 
 ---
 
 ## 5.5 Problem 4: 3Sum (LeetCode 15)
 
-### 1. The Idea in 1 Sentence
-Sort the array first. Loop through each number as a fixed pivot, then use converging Two Pointers (`l` and `r`) to find the remaining two numbers that sum to zero, while skipping duplicate values to prevent duplicate triplets.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Find all unique triplets `[nums[i], nums[j], nums[k]]` such that $i \neq j \neq k$ and $\text{sum} == 0$. No duplicate triplets allowed.
+- **Mental Model:**
+  1. **Sort the array first ($O(N \log N)$)**.
+  2. Fix the first element `nums[i]` using a loop.
+  3. The problem now reduces to: **Two Sum II** on the remaining array!
+     Find two elements in `nums[i + 1 .. n - 1]` that sum to `-nums[i]`.
+  4. Skip duplicates for both `i` and `l` to avoid duplicate triplets in the output.
 
-```
-Sorted Array: [ -4,   -1,   -1,    0,    1,    2 ]
-                 ▲      ▲                      ▲
-               Pivot  Left                   Right
-```
-
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public IList<IList<int>> ThreeSum(int[] nums)
@@ -1154,33 +1313,27 @@ public IList<IList<int>> ThreeSum(int[] nums)
     Array.Sort(nums);
     var res = new List<IList<int>>();
 
-    for (int i = 0; i < nums.Length; i++)
+    for (int i = 0; i < nums.Length - 2; i++)
     {
-        // If the smallest number > 0, three positive numbers cannot sum to 0
-        if (nums[i] > 0) break;
-
-        // Skip duplicate pivot values
+        // Skip duplicate first elements
         if (i > 0 && nums[i] == nums[i - 1]) continue;
 
-        int l = i + 1;
-        int r = nums.Length - 1;
+        int l = i + 1, r = nums.Length - 1;
 
         while (l < r)
         {
-            int sum = nums[i] + nums[l] + nums[r];
+            int total = nums[i] + nums[l] + nums[r];
 
-            if (sum == 0)
+            if (total == 0)
             {
                 res.Add([nums[i], nums[l], nums[r]]);
-
-                // Skip duplicate values for both pointers
-                while (l < r && nums[l] == nums[l + 1]) l++;
-                while (l < r && nums[r] == nums[r - 1]) r--;
-
                 l++;
                 r--;
+
+                // Skip duplicate second elements
+                while (l < r && nums[l] == nums[l - 1]) l++;
             }
-            else if (sum < 0)
+            else if (total < 0)
             {
                 l++;
             }
@@ -1195,29 +1348,22 @@ public IList<IList<int>> ThreeSum(int[] nums)
 }
 ```
 
-- **Time Complexity:** $O(N^2)$ — Sorting takes $O(N \log N)$; outer loop runs $N$ times with an $O(N)$ two-pointer scan.
-- **Space Complexity:** $O(1)$ auxiliary memory (ignoring the output list).
+- **Time Complexity:** $O(N^2)$ — Sorting takes $O(N \log N)$, and nested two-pointer loop takes $O(N^2)$.
+- **Space Complexity:** $O(1)$ auxiliary space (ignoring output list).
 
 ---
 
 ## 5.6 Problem 5: Trapping Rain Water (LeetCode 42)
 
-### 1. The Idea in 1 Sentence
-Water trapped at any position is determined by $\min(	ext{leftMax}, 	ext{rightMax}) - 	ext{height}[i]$. By advancing whichever pointer has the smaller maximum (`leftMax < rightMax`), we can calculate trapped water in $O(1)$ space without precomputing prefix arrays!
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Compute how much rain water can be trapped between elevation bars.
+- **Formula:** Water trapped above bar `i` is determined by the minimum of the highest wall to its left and highest wall to its right, minus its own height:
+  $$\text{Water}[i] = \max(0, \min(\text{maxL}, \text{maxR}) - \text{height}[i])$$
+- **Aha! Moment:** Instead of computing arrays for `maxL` and `maxR` ($O(N)$ space), use **Two Pointers**!
+  - If `maxL < maxR`: The limiting factor is definitely `maxL`. We can calculate water at pointer `l` immediately and advance `l++`!
+  - Otherwise: The limiting factor is `maxR`. Calculate water at `r` and decrement `r--`!
 
-```
-Elevation Map & Trapped Water:
-Height: [ 0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1 ]
-
-   3 |                      █
-   2 |             █  ░░░░  █  █  ░░  █
-   1 |       █  ░░ █  █  ░░ █  █  █  ██  █
-   0 | ──█───█──██─█──█──██─█──█──█──██──█─
-Index: 0  1  2  3  4  5  6  7  8  9 10 11
-       (█ = Concrete Pillar, ░░ = Trapped Rain Water)
-```
-
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public int Trap(int[] height)
@@ -1225,22 +1371,22 @@ public int Trap(int[] height)
     if (height.Length == 0) return 0;
 
     int l = 0, r = height.Length - 1;
-    int leftMax = height[l], rightMax = height[r];
+    int maxL = height[l], maxR = height[r];
     int res = 0;
 
     while (l < r)
     {
-        if (leftMax < rightMax)
+        if (maxL < maxR)
         {
             l++;
-            leftMax = Math.Max(leftMax, height[l]);
-            res += leftMax - height[l];
+            maxL = Math.Max(maxL, height[l]);
+            res += maxL - height[l];
         }
         else
         {
             r--;
-            rightMax = Math.Max(rightMax, height[r]);
-            res += rightMax - height[r];
+            maxR = Math.Max(maxR, height[r]);
+            res += maxR - height[r];
         }
     }
 
@@ -1248,181 +1394,172 @@ public int Trap(int[] height)
 }
 ```
 
-- **Time Complexity:** $O(N)$ — Single pass over the array.
-- **Space Complexity:** $O(1)$ — Only five scalar integer variables on the stack.
+- **Time Complexity:** $O(N)$ — Single pass inward.
+- **Space Complexity:** $O(1)$ — Constant memory.
 
 ---
 
 ## 5.7 Problem 6: Sort Colors / Dutch National Flag (LeetCode 75)
 
-### 1. The Idea in 1 Sentence
-Partition the array in-place into 3 regions (0s, 1s, 2s) using 3 pointers: `low` marks the boundary for 0s, `high` marks the boundary for 2s, and `mid` is the active scanner.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Sort an array containing only `0`s (red), `1`s (white), and `2`s (blue) in-place in a single pass.
+- **Mental Model:** **3 Pointers**:
+  - `l`: Right boundary of zeros.
+  - `r`: Left boundary of twos.
+  - `i`: Current inspection pointer.
+  - If `nums[i] == 0`: Swap with `nums[l]`, move both `l++` and `i++`.
+  - If `nums[i] == 1`: Already in middle, just move `i++`.
+  - If `nums[i] == 2`: Swap with `nums[r]`, decrement `r--` (do NOT increment `i`, because the swapped element from `r` must be inspected!).
 
-```
-Array State During Execution:
-+-------------------+-------------------+-------------------+-------------------+
-|       0 0 0       |       1 1 1       |    ? ? ? ? ? ?    |       2 2 2       |
-+-------------------+-------------------+-------------------+-------------------+
-0                 low-1 low            mid-1 mid           high high+1             N-1
-```
-
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public void SortColors(int[] nums)
 {
-    int low = 0;
-    int mid = 0;
-    int high = nums.Length - 1;
+    int l = 0, r = nums.Length - 1;
+    int i = 0;
 
-    while (mid <= high)
+    while (i <= r)
     {
-        if (nums[mid] == 0)
+        if (nums[i] == 0)
         {
-            (nums[low], nums[mid]) = (nums[mid], nums[low]);
-            low++;
-            mid++;
+            (nums[l], nums[i]) = (nums[i], nums[l]);
+            l++;
+            i++;
         }
-        else if (nums[mid] == 1)
+        else if (nums[i] == 2)
         {
-            mid++;
+            (nums[r], nums[i]) = (nums[i], nums[r]);
+            r--;
         }
-        else // nums[mid] == 2
+        else
         {
-            (nums[mid], nums[high]) = (nums[high], nums[mid]);
-            high--;
-            // Notice: do NOT advance mid here: the swapped value is uninspected!
+            i++;
         }
     }
 }
 ```
 
 - **Time Complexity:** $O(N)$ — Single pass over array.
-- **Space Complexity:** $O(1)$ — In-place swap without auxiliary buffers.
+- **Space Complexity:** $O(1)$ — In-place element swaps.
 
 ---
 
 ## 5.8 Problem 7: Remove Duplicates from Sorted Array
 
-### 1. The Idea in 1 Sentence
-Use a slow write pointer `w` that only advances when the fast read pointer `r` finds a new unique value.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Remove duplicates in-place from a sorted array such that each unique element appears once. Return count `k`.
+- **Mental Model:** **Fast & Slow Pointers**.
+  - `slow` = points to the last known unique element position.
+  - `fast` = scans ahead for the next unique value (`nums[fast] != nums[slow]`).
+  - When found: `slow++`, then write `nums[slow] = nums[fast]`.
 
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public int RemoveDuplicates(int[] nums)
 {
     if (nums.Length == 0) return 0;
 
-    int w = 1; // write pointer
+    int slow = 0;
 
-    for (int r = 1; r < nums.Length; r++) // read pointer
+    for (int fast = 1; fast < nums.Length; fast++)
     {
-        if (nums[r] != nums[r - 1])
+        if (nums[fast] != nums[slow])
         {
-            nums[w] = nums[r];
-            w++;
+            slow++;
+            nums[slow] = nums[fast];
         }
     }
 
-    return w;
+    return slow + 1;
 }
 ```
 
-- **Time Complexity:** $O(N)$ — Single linear scan.
+- **Time Complexity:** $O(N)$ — Linear sweep.
 - **Space Complexity:** $O(1)$ — In-place array modification.
 
 ---
 
 ## 5.9 Problem 8: Move Zeroes
 
-### 1. The Idea in 1 Sentence
-Shift all non-zero numbers to the front using a slow write pointer `w`, then fill all remaining slots up to the end with zeros.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Move all `0`s to the end of the array while maintaining the relative order of non-zero elements.
+- **Mental Model:** Fast & Slow Pointers. `slow` marks the next spot for a non-zero element. Whenever `nums[fast] != 0`, swap `nums[slow]` and `nums[fast]`, then advance `slow++`.
 
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public void MoveZeroes(int[] nums)
 {
-    int w = 0; // write pointer
+    int slow = 0;
 
-    // 1. Shift non-zero values to front
-    for (int r = 0; r < nums.Length; r++)
+    for (int fast = 0; fast < nums.Length; fast++)
     {
-        if (nums[r] != 0)
+        if (nums[fast] != 0)
         {
-            nums[w] = nums[r];
-            w++;
+            (nums[slow], nums[fast]) = (nums[fast], nums[slow]);
+            slow++;
         }
-    }
-
-    // 2. Fill remaining slots with 0
-    while (w < nums.Length)
-    {
-        nums[w++] = 0;
     }
 }
 ```
 
-- **Time Complexity:** $O(N)$ — Two linear passes.
-- **Space Complexity:** $O(1)$ — In-place modification.
+- **Time Complexity:** $O(N)$ — Single pass.
+- **Space Complexity:** $O(1)$ — Zero extra allocations.
 
 ---
 
 # 6. PATTERN 4: SLIDING WINDOW
 
-The **Sliding Window** pattern solves contiguous subarray and substring problems in $O(N)$ linear time by avoiding redundant recalculations. Instead of re-evaluating the entire range from scratch, the window maintains a running state: **adding the incoming element at the right boundary** and **subtracting the outgoing element at the left boundary**.
+The Sliding Window pattern is used to perform operations on a contiguous sub-range (window) of an array or string. It converts what would normally require nested loops ($O(N^2)$ or $O(N \cdot K)$) into a single linear sweep ($O(N)$) by sliding the window's boundaries: adding the incoming right element and subtracting the outgoing left element.
 
 ---
 
-## 6.1 Universal Sliding Window Architecture
+## 6.1 Universal Sliding Window Architecture & Flowchart
 
 ```mermaid
 flowchart TD
-    Start["Initialize l=0, r=0, windowState = empty"] --> ExpandRight["Expand Window: Add arr[r] to windowState"]
-    ExpandRight --> ValidateCondition{"Is Window Constraint Violated?"}
+    Start["Start: left = 0, right = 0"] --> Expand["Expand Window: Add nums[right] to window state"]
+    Expand --> CheckCondition{"Is Window Condition Violated?"}
     
-    ValidateCondition -- "Yes (Shrink Needed)" --> ShrinkLeft["Shrink Window: Remove arr[l] from windowState, l++"]
-    ShrinkLeft --> ValidateCondition
+    CheckCondition -- Yes --> Shrink["Shrink Window: Remove nums[left] from state & left++"]
+    Shrink --> CheckCondition
     
-    ValidateCondition -- "No (Valid Window)" --> UpdateOptimal["Update Best Result (e.g. maxLen = Math.Max(maxLen, r - l + 1))"]
-    UpdateOptimal --> CheckEnd{"r < N - 1?"}
-    CheckEnd -- Yes --> IncRight["r++"]
-    IncRight --> ExpandRight
-    CheckEnd -- No --> Done["Return Best Result"]
+    CheckCondition -- No --> UpdateAns["Update Global Answer (maxLen, minLen, maxSum)"]
+    UpdateAns --> Advance["Advance right++"]
+    Advance --> EndCheck{"right < Length?"}
+    EndCheck -- Yes --> Expand
+    EndCheck -- No --> Done["Done: Return Optimal Answer"]
 ```
 
 ---
 
 ## 6.2 Problem 1: Maximum Sum Subarray of Size K (Fixed Window)
 
-### 1. The Idea in 1 Sentence
-Calculate the sum of the first $K$ numbers. Then slide the window across the rest of the array: add the new element at index $i$ and subtract the old element at index $i - K$ in $O(1)$ time.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Find maximum sum of any contiguous subarray of fixed size `k`.
+- **Brute Force ($O(N \cdot K)$):** For every index `i`, loop `k` times to sum elements. Redundant!
+- **Optimal Thinking Process:** When sliding the window one step forward:
+  $$\text{newSum} = \text{oldSum} + \text{nums}[i] - \text{nums}[i - k]$$
+  Only 1 addition and 1 subtraction instead of `k` additions!
 
-```
-Window slides by 1 position:
-[ E0,  E1,  E2 ], E3,  E4   &rarr; Sum = E0 + E1 + E2
-  E0, [ E1,  E2,  E3 ], E4   &rarr; NewSum = PrevSum - E0 + E3  (O(1) update!)
-```
-
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
-public long MaxSubarraySumOfSizeK(int[] nums, int k)
+public int MaxSubArrayK(int[] nums, int k)
 {
-    if (nums.Length < k || k <= 0) return 0;
+    int curSum = 0;
 
-    long curSum = 0;
-
-    // 1. Establish first window of size k
+    // 1. Calculate sum of first window
     for (int i = 0; i < k; i++)
     {
         curSum += nums[i];
     }
 
-    long maxSum = curSum;
+    int maxSum = curSum;
 
-    // 2. Slide the window: add incoming, remove outgoing
+    // 2. Slide window: add right, subtract left
     for (int i = k; i < nums.Length; i++)
     {
         curSum += nums[i] - nums[i - k];
@@ -1434,43 +1571,50 @@ public long MaxSubarraySumOfSizeK(int[] nums, int k)
 ```
 
 - **Time Complexity:** $O(N)$ — Single pass over array.
-- **Space Complexity:** $O(1)$ — Only running sum variables.
+- **Space Complexity:** $O(1)$ — Constant memory.
 
 ---
 
 ## 6.3 Problem 2: Longest Substring Without Repeating Characters (LeetCode 3)
 
-### 1. The Idea in 1 Sentence
-Expand the right pointer to add characters to a `HashSet`. If a character is already in the set (duplicate!), shrink the window from the left until the duplicate character is removed.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Find length of longest substring without repeating characters in `"abcabcbb"` $\implies 3$ (`"abc"`).
+- **Pattern Recognition:** Contiguous substring with uniqueness constraint $\implies$ **Dynamic Sliding Window with Hash Set**.
+- **Mental Process:**
+  - Fast pointer `r` expands the window by adding `s[r]` to the set.
+  - If `s[r]` is **already** in the set, a duplicate exists! Shrink the window from the left (`set.Remove(s[l]); l++;`) until the duplicate is evicted.
+  - Then add `s[r]` and update `maxLen = Math.Max(maxLen, r - l + 1)`.
 
-```
-s = "abcabcbb"
-r = 0 ('a') &rarr; set: {a}, len = 1
-r = 1 ('b') &rarr; set: {a, b}, len = 2
-r = 2 ('c') &rarr; set: {a, b, c}, len = 3
-r = 3 ('a') &rarr; Duplicate 'a'! Remove s[l] ('a') from set, l++ &rarr; add 'a' &rarr; len = 3
-Max Length = 3 ("abc")
-```
+### 2. Step-by-Step Dry Run Table
+**Input:** `s = "pwwkew"`
 
-### 2. NeetCode-Style C# Solution
+| `r` | Char `s[r]` | Is in Set? | Action | Set State | Window `[l..r]` | `maxLen` |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `0` | `'p'` | No | Add to set | `{'p'}` | `"p"` | `1` |
+| `1` | `'w'` | No | Add to set | `{'p', 'w'}` | `"pw"` | `2` |
+| `2` | `'w'` | **YES** | Remove `s[l]='p'`, `l=1`<br/>Still in set: Remove `s[l]='w'`, `l=2`<br/>Add `'w'` | `{'w'}` | `"w"` | `2` |
+| `3` | `'k'` | No | Add to set | `{'w', 'k'}` | `"wk"` | `2` |
+| `4` | `'e'` | No | Add to set | `{'w', 'k', 'e'}` | `"wke"` | `3` |
+| `5` | `'w'` | **YES** | Remove `s[l]='w'`, `l=3`<br/>Add `'w'` | `{'k', 'e', 'w'}` | `"kew"` | `3` |
+
+### 3. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public int LengthOfLongestSubstring(string s)
 {
-    var charSet = new HashSet<char>();
+    var set = new HashSet<char>();
     int l = 0;
     int maxLen = 0;
 
     for (int r = 0; r < s.Length; r++)
     {
-        // Shrink window from left until duplicate character is removed
-        while (charSet.Contains(s[r]))
+        while (set.Contains(s[r]))
         {
-            charSet.Remove(s[l]);
+            set.Remove(s[l]);
             l++;
         }
 
-        charSet.Add(s[r]);
+        set.Add(s[r]);
         maxLen = Math.Max(maxLen, r - l + 1);
     }
 
@@ -1478,32 +1622,33 @@ public int LengthOfLongestSubstring(string s)
 }
 ```
 
-> 💡 **.NET Senior Note:** In high-throughput .NET APIs, you can replace `HashSet<char>` with a `stackalloc int[128]` array storing last-seen character indices to eliminate heap allocations. In interviews, `HashSet<char>` is completely accepted and much simpler to write!
-
-- **Time Complexity:** $O(N)$ — Each character is visited at most twice (`l` and `r`).
-- **Space Complexity:** $O(\min(N, M))$ where $M$ is alphabet size.
+- **Time Complexity:** $O(N)$ — Each character is added and removed from the set at most once ($2N$ operations).
+- **Space Complexity:** $O(\min(N, M))$ where $M$ is alphabet size (at most 128 ASCII symbols).
 
 ---
 
 ## 6.4 Problem 3: Minimum Size Subarray Sum (LeetCode 209)
 
-### 1. The Idea in 1 Sentence
-Expand the right pointer until `curSum >= target`. Once the target is reached, shrink the window from the left greedily to record the smallest possible window length!
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Find minimal length of a contiguous subarray of which $\text{sum} \ge \text{target}$.
+- **Mental Model:**
+  - Expand `r` and accumulate `curSum += nums[r]`.
+  - The moment `curSum >= target`, we have found a valid window!
+  - Now greedily **shrink from left** (`curSum -= nums[l]; l++;`) to see if a shorter window can still meet the target.
 
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public int MinSubArrayLen(int target, int[] nums)
 {
-    int minLen = int.MaxValue;
-    long curSum = 0;
     int l = 0;
+    int curSum = 0;
+    int minLen = int.MaxValue;
 
     for (int r = 0; r < nums.Length; r++)
     {
         curSum += nums[r];
 
-        // Shrink window greedily from left while sum satisfies target
         while (curSum >= target)
         {
             minLen = Math.Min(minLen, r - l + 1);
@@ -1516,24 +1661,28 @@ public int MinSubArrayLen(int target, int[] nums)
 }
 ```
 
-- **Time Complexity:** $O(N)$ — Both pointers increment at most $N$ times.
-- **Space Complexity:** $O(1)$ — Zero heap allocation.
+- **Time Complexity:** $O(N)$ — Linear sweep. Both `l` and `r` traverse at most $N$ steps.
+- **Space Complexity:** $O(1)$ — Only scalar pointers.
 
 ---
 
 ## 6.5 Problem 4: Longest Repeating Character Replacement (LeetCode 424)
 
-### 1. The Idea in 1 Sentence
-In any window of length $L = (r - l + 1)$, the number of characters we need to replace is $(L - 	ext{maxFreq})$. As long as $(L - 	ext{maxFreq}) \le k$, the window is valid! If it exceeds $k$, shrink the window from the left.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Given string `s` and integer `k`, you can replace at most `k` characters with any letter. Return length of longest substring of identical letters.
+- **The Core Equation:**
+  $$\text{Window Length} - \text{Count of Most Frequent Char} = \text{Characters Needed to Replace}$$
+- As long as `(r - l + 1) - maxFreq <= k`, the window is **valid**!
+- If it exceeds `k`, the window is invalid $\implies$ shrink `count[s[l] - 'A']--; l++;`.
 
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public int CharacterReplacement(string s, int k)
 {
-    var count = new int[26];
-    int maxFreq = 0;
+    int[] count = new int[26];
     int l = 0;
+    int maxFreq = 0;
     int maxLen = 0;
 
     for (int r = 0; r < s.Length; r++)
@@ -1541,7 +1690,7 @@ public int CharacterReplacement(string s, int k)
         count[s[r] - 'A']++;
         maxFreq = Math.Max(maxFreq, count[s[r] - 'A']);
 
-        // If characters to replace exceed k, shrink window from left
+        // If characters to replace exceed k, shrink window
         while ((r - l + 1) - maxFreq > k)
         {
             count[s[l] - 'A']--;
@@ -1556,21 +1705,23 @@ public int CharacterReplacement(string s, int k)
 ```
 
 - **Time Complexity:** $O(N)$ — Single pass over string.
-- **Space Complexity:** $O(1)$ — 26-element array for alphabet counts.
+- **Space Complexity:** $O(1)$ — Fixed 26-element array.
 
 ---
 
 ## 6.6 Problem 5: Longest Substring with At Most K Distinct Characters
 
-### 1. The Idea in 1 Sentence
-Track distinct characters in a frequency Dictionary. When the number of distinct keys exceeds $K$, advance the left pointer and decrement character counts until a character count hits zero and is removed.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Find length of longest substring that contains at most `k` distinct characters.
+- **Mental Model:** Use a dictionary `map` to track character frequencies in the current window.
+  - While `map.Count > k`: Decrement `map[s[l]]`. If frequency hits 0, `map.Remove(s[l])`. Advance `l++`.
 
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public int LengthOfLongestSubstringKDistinct(string s, int k)
 {
-    if (string.IsNullOrEmpty(s) || k <= 0) return 0;
+    if (k == 0 || s.Length == 0) return 0;
 
     var map = new Dictionary<char, int>();
     int l = 0;
@@ -1580,7 +1731,6 @@ public int LengthOfLongestSubstringKDistinct(string s, int k)
     {
         map[s[r]] = map.GetValueOrDefault(s[r], 0) + 1;
 
-        // If distinct character count exceeds k, shrink window from left
         while (map.Count > k)
         {
             map[s[l]]--;
@@ -1598,34 +1748,36 @@ public int LengthOfLongestSubstringKDistinct(string s, int k)
 }
 ```
 
-- **Time Complexity:** $O(N)$ — Linear scan.
-- **Space Complexity:** $O(K)$ — Dictionary stores at most $K+1$ distinct characters.
+- **Time Complexity:** $O(N)$ — Each character inserted and removed at most once.
+- **Space Complexity:** $O(K)$ — Map holds at most $K + 1$ distinct keys.
 
 ---
 
 ## 6.7 Problem 6: Minimum Window Substring (LeetCode 76 - Hard)
 
-### 1. The Idea in 1 Sentence
-Keep frequency maps for target `t` and the current window. Expand `r` until the window contains all required characters (`have == need`). Then greedily shrink `l` from the left to find the minimum possible substring window length!
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Given strings `s` and `t`, return minimum window in `s` that contains **all** characters of `t`.
+- **The Two-Counter Trick:**
+  - Instead of comparing entire frequency maps on every step ($O(26)$), track `have` and `need`.
+  - `need` = number of unique characters in `t`.
+  - `have` = number of unique characters in current window whose frequency satisfies `t`.
+  - When `have == need`, the window is **complete**! Record result, then try shrinking from `l`.
 
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public string MinWindow(string s, string t)
 {
-    if (s.Length < t.Length) return "";
+    if (s.Length == 0 || t.Length == 0) return "";
 
     var countT = new Dictionary<char, int>();
+    foreach (char c in t) countT[c] = countT.GetValueOrDefault(c, 0) + 1;
+
     var window = new Dictionary<char, int>();
-
-    foreach (char c in t)
-    {
-        countT[c] = countT.GetValueOrDefault(c, 0) + 1;
-    }
-
     int have = 0, need = countT.Count;
+
     int resLen = int.MaxValue;
-    int[] res = [-1, -1];
+    int resStart = 0;
     int l = 0;
 
     for (int r = 0; r < s.Length; r++)
@@ -1638,17 +1790,18 @@ public string MinWindow(string s, string t)
             have++;
         }
 
-        // Window satisfies all required characters: greedily shrink from left
+        // Window satisfies t, try to minimize from left
         while (have == need)
         {
             if ((r - l + 1) < resLen)
             {
-                res = [l, r];
                 resLen = r - l + 1;
+                resStart = l;
             }
 
-            window[s[l]]--;
-            if (countT.ContainsKey(s[l]) && window[s[l]] < countT[s[l]])
+            char leftChar = s[l];
+            window[leftChar]--;
+            if (countT.ContainsKey(leftChar) && window[leftChar] < countT[leftChar])
             {
                 have--;
             }
@@ -1656,18 +1809,18 @@ public string MinWindow(string s, string t)
         }
     }
 
-    return resLen != int.MaxValue ? s.Substring(res[0], resLen) : "";
+    return resLen == int.MaxValue ? "" : s.Substring(resStart, resLen);
 }
 ```
 
-- **Time Complexity:** $O(N + M)$ where $N = 	ext{length}(s)$ and $M = 	ext{length}(t)$.
-- **Space Complexity:** $O(N + M)$ to store character counts.
+- **Time Complexity:** $O(N)$ where $N = \text{s.Length}$.
+- **Space Complexity:** $O(M)$ where $M$ is number of unique characters in `s` and `t`.
 
 ---
 
 # 7. PATTERN 5: FAST & SLOW POINTERS (TORTOISE & HARE)
 
-The **Fast & Slow Pointers** pattern (also called Floyd's Cycle Detection Algorithm) uses two pointers that traverse a sequence at different speeds: the slow pointer advances 1 step at a time, while the fast pointer advances 2 steps at a time.
+The **Fast & Slow Pointers** pattern (Floyd's Cycle Detection Algorithm) uses two pointers that traverse a sequence at different speeds: the slow pointer advances 1 step at a time, while the fast pointer advances 2 steps at a time.
 
 ---
 
@@ -1685,18 +1838,23 @@ flowchart LR
 ```
 
 ### Why They Are Guaranteed to Meet in a Cycle:
-1. When both pointers enter the cycle of length $C$, the distance between them changes by:
-   $$	ext{Speed}(	ext{Fast}) - 	ext{Speed}(	ext{Slow}) = 2 - 1 = 1 	ext{ step per tick}$$
-2. Because the gap reduces by exactly 1 step on every iteration, Fast can never "jump over" Slow without colliding. They are mathematically guaranteed to meet in at most $C$ iterations!
+1. When both pointers enter the cycle of length $C$, the distance between them decreases by exactly 1 step on every tick:
+   $$\text{Distance}_{t+1} = \text{Distance}_t + 1 - 2 = \text{Distance}_t - 1 \pmod C$$
+2. Because the gap shrinks by 1 on every iteration, fast pointer **cannot jump over** the slow pointer. They are guaranteed to collide in at most $C$ iterations!
 
 ---
 
 ## 7.2 Problem 1: Linked List Cycle Detection (LeetCode 141)
 
-### 1. The Idea in 1 Sentence
-Advance `slow` by 1 and `fast` by 2. If `fast` or `fast.next` reaches `null`, there is no cycle. If `slow == fast`, a cycle exists!
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Determine if a linked list has a cycle in $O(1)$ auxiliary memory.
+- **Brute Force ($O(N)$ Space):** Store visited nodes in a `HashSet<ListNode>`. If we see a node already in the set, a cycle exists. But this costs $O(N)$ memory!
+- **Optimal Mental Process:** Fast & Slow pointers.
+  - Advance `slow = slow.next` and `fast = fast.next.next`.
+  - If `fast == null` or `fast.next == null`, the list ends $\implies$ no cycle.
+  - If `slow == fast`, they collided inside a loop $\implies$ cycle exists!
 
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public bool HasCycle(ListNode head)
@@ -1719,24 +1877,18 @@ public bool HasCycle(ListNode head)
 }
 ```
 
-- **Time Complexity:** $O(N)$ — In the worst-case, fast catches up to slow in $O(N)$ steps.
+- **Time Complexity:** $O(N)$ — Linear traversal.
 - **Space Complexity:** $O(1)$ — Only two node pointers.
 
 ---
 
 ## 7.3 Problem 2: Middle of the Linked List (LeetCode 876)
 
-### 1. The Idea in 1 Sentence
-Because `fast` travels at double the speed of `slow`, by the time `fast` reaches the end of the list, `slow` is guaranteed to be at the exact middle node!
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Return the middle node of a singly linked list. If there are two middle nodes, return the second one.
+- **Mental Model:** When `fast` moves at twice the speed of `slow`, by the exact moment `fast` reaches the end of the track, `slow` will be precisely at the halfway point!
 
-```
-List: 1 &rarr; 2 &rarr; 3 &rarr; 4 &rarr; 5 &rarr; null
-Step 0: S=1, F=1
-Step 1: S=2, F=3
-Step 2: S=3, F=5 (Fast at end! Slow is at node 3, the exact middle!)
-```
-
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public ListNode MiddleNode(ListNode head)
@@ -1754,54 +1906,57 @@ public ListNode MiddleNode(ListNode head)
 }
 ```
 
-- **Time Complexity:** $O(N)$ — Single pass through list.
-- **Space Complexity:** $O(1)$ — Zero heap allocation.
+- **Time Complexity:** $O(N)$ — Single pass.
+- **Space Complexity:** $O(1)$ — Constant memory.
 
 ---
 
 ## 7.4 Problem 3: Find the Duplicate Number in an Array (LeetCode 287)
 
-### 1. The Idea in 1 Sentence
-Because the numbers are in the range $[1..N]$ and the array has length $N+1$, we can treat the array as a linked list where `index` points to `nums[index]`. A duplicate number means two indices point to the same value, creating a cycle!
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Given an array `nums` containing $n + 1$ integers where each integer is between $1$ and $n$, find the single duplicate number without modifying the array and using $O(1)$ extra space.
+- **The Genius Analogy:** Treat the array as a **Linked List**:
+  - `nums[i]` is a pointer to the next node: $\text{next} = \text{nums}[i]$.
+  - Because numbers are in range $[1, n]$ and length is $n + 1$, by the Pigeonhole Principle at least two indices point to the same value $\implies$ **A CYCLE MUST EXIST!**
+  - The duplicate number is the **entrance to the cycle**!
 
-```
-Array: [ 1, 3, 4, 2, 2 ]
-0 &rarr; nums[0]=1 &rarr; nums[1]=3 &rarr; nums[3]=2 &rarr; nums[2]=4 &rarr; nums[4]=2 (Points back to 2! Cycle!)
-```
+### 2. Step-by-Step Floyd's Cycle Algorithm
+1. **Phase 1 (Find Collision):** Move `slow = nums[slow]` (1 step) and `fast = nums[nums[fast]]` (2 steps) until `slow == fast`.
+2. **Phase 2 (Find Entrance):** Place a second slow pointer `slow2 = 0` at the start. Advance both `slow` and `slow2` at 1 step/tick. The exact node where they collide is the duplicate value!
 
-### 2. NeetCode-Style C# Solution
+### 3. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public int FindDuplicate(int[] nums)
 {
-    int slow = nums[0];
-    int fast = nums[0];
+    int slow = 0;
+    int fast = 0;
 
-    // Phase 1: Detect collision point inside the cycle
+    // Phase 1: Detect cycle collision
     do
     {
         slow = nums[slow];
         fast = nums[nums[fast]];
     } while (slow != fast);
 
-    // Phase 2: Find cycle entrance (the duplicate number)
-    slow = nums[0];
-    while (slow != fast)
+    // Phase 2: Find cycle entrance
+    int slow2 = 0;
+    while (slow != slow2)
     {
         slow = nums[slow];
-        fast = nums[fast];
+        slow2 = nums[slow2];
     }
 
     return slow;
 }
 ```
 
-- **Time Complexity:** $O(N)$ — Two linear phases.
-- **Space Complexity:** $O(1)$ — Solved without modifying the array or using auxiliary memory.
+- **Time Complexity:** $O(N)$ — Cycle traversal takes linear time.
+- **Space Complexity:** $O(1)$ — Array is not modified, zero auxiliary heap allocations.
 
 ---
 
-# 8. PATTERN 6: SEARCHING ALGORITHMS ENCYCLOPEDIA
+# 6. SEARCHING ALGORITHMS: THE COMPLETE SEARCHING ENCYCLOPEDIA
 
 Searching is the fundamental operation of retrieving a target record from a data space. While novice developers treat searching as a binary choice between $O(N)$ linear scans and $O(\log N)$ binary searches, senior backend engineers evaluate algorithms based on **hardware cache locality, CPU branch prediction, data distribution, and monotonic decision spaces**.
 
@@ -2374,7 +2529,7 @@ public static class TernarySearchEngine
 
 ---
 
-# 9. PATTERN 7: SORTING ALGORITHMS ENCYCLOPEDIA
+# 7. SORTING ALGORITHMS: FROM FIRST PRINCIPLES TO .NET INTROSORT
 
 Sorting is the core foundation of data organization, database indexing, and query execution planning. In enterprise .NET systems, choosing the wrong sorting algorithm or failing to understand stability, memory allocations, and hardware cache efficiency can trigger severe performance bottlenecks, garbage collection spikes, and CPU branch thrashing.
 
@@ -3296,18 +3451,17 @@ Traversing a linked list forces the CPU memory controller to perform non-sequent
 
 ## 11.2 Problem 1: Reverse Linked List (LeetCode 206)
 
-### 1. The Idea in 1 Sentence
-Use three pointers: `prev` (starts null), `curr` (starts at head), and `next`. Invert each pointer backwards (`curr.next = prev`), then advance `prev` and `curr`.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Invert a singly linked list in $O(1)$ extra space.
+- **Mental Model:** Use three pointers: `prev` (starts null), `curr` (starts at head), and `next`.
+- On each step:
+  1. Save next: `next = curr.next`.
+  2. Invert pointer backward: `curr.next = prev`.
+  3. Advance `prev = curr`.
+  4. Advance `curr = next`.
+- Return `prev` as the new head!
 
-```
-Iterative Step:
-1. Save next:        next = curr.next
-2. Reverse pointer:  curr.next = prev
-3. Advance prev:     prev = curr
-4. Advance curr:     curr = next
-```
-
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public ListNode ReverseList(ListNode head)
@@ -3334,20 +3488,22 @@ public ListNode ReverseList(ListNode head)
 
 ## 11.3 Problem 2: Merge Two Sorted Lists (LeetCode 21)
 
-### 1. The Idea in 1 Sentence
-Create a dummy sentinel node. Compare values at the heads of list1 and list2, splice the smaller node onto our merged tail, and advance that list's pointer.
+### 1. How to Think (Mental Model & Clues)
+- **Goal:** Splice two sorted linked lists into one sorted list.
+- **Mental Model:** Create a `dummy` sentinel node. Compare values at the heads of `list1` and `list2`, splice the smaller node onto `tail.next`, and advance that list's pointer.
+- Attach any remaining nodes once one list runs out!
 
-### 2. NeetCode-Style C# Solution
+### 2. NeetCode-Style C# Solution (Clean & Intuitive)
 
 ```csharp
 public ListNode MergeTwoLists(ListNode list1, ListNode list2)
 {
-    var dummy = new ListNode();
+    var dummy = new ListNode(0);
     var tail = dummy;
 
     while (list1 != null && list2 != null)
     {
-        if (list1.val <= list2.val)
+        if (list1.val < list2.val)
         {
             tail.next = list1;
             list1 = list1.next;
@@ -3360,15 +3516,15 @@ public ListNode MergeTwoLists(ListNode list1, ListNode list2)
         tail = tail.next;
     }
 
-    // Attach remaining non-empty list
+    // Attach remaining elements
     tail.next = list1 ?? list2;
 
     return dummy.next;
 }
 ```
 
-- **Time Complexity:** $O(N + M)$ where $N, M$ are lengths of the lists.
-- **Space Complexity:** $O(1)$ — Splicing existing nodes in-place.
+- **Time Complexity:** $O(N + M)$ — Where $N$ and $M$ are list lengths.
+- **Space Complexity:** $O(1)$ — Reuses existing nodes without allocating new ones.
 
 ---
 
@@ -3725,7 +3881,7 @@ public static class WorkflowScheduler
 
 ---
 
-# 14. PATTERN 12: HEAP & PRIORITYQUEUE (.NET 6+)
+# 12. HEAP & PRIORITYQUEUE (.NET 6+)
 
 ## 14.1 Binary Heap Mechanics on Contiguous Arrays
 
@@ -3851,7 +4007,7 @@ public static class KWayMerger
 
 ---
 
-# 15. PATTERN 13: RECURSION & BACKTRACKING
+# 13. RECURSION & BACKTRACKING: STATE SPACE EXPLORATION
 
 ## 15.1 Backtracking Template: Choose -> Explore -> Unchoose
 
@@ -4015,7 +4171,7 @@ public static class BoardSearcher
 
 ---
 
-# 16. PATTERN 14: DYNAMIC PROGRAMMING
+# 14. DYNAMIC PROGRAMMING: MEMOIZATION & TABULATION
 
 ## 16.1 The DP Framework: Optimal Substructure + Overlapping Subproblems
 
@@ -4195,17 +4351,15 @@ public static class KnapsackSolver
 
 ---
 
----
+# 15. GREEDY ALGORITHMS & INTERVALS
 
-# 17. PATTERN 15: GREEDY ALGORITHMS & INTERVALS
-
-## 17.1 The Greedy-Choice Property
+## 15.1 The Greedy-Choice Property
 
 A problem exhibits the greedy choice property if a globally optimal solution can be reached by making a locally optimal choice at each step without ever needing to reconsider past choices.
 
 ---
 
-## 17.2 Problem 42: Best Time to Buy and Sell Stock (Running Valley & Peak)
+## 15.2 Problem 42: Best Time to Buy and Sell Stock (Running Valley & Peak)
 
 ### 1. How to Think
 Given an array `prices` where `prices[i]` is the price of a given stock on day $i$, maximize your profit by choosing a single day to buy and a different day in the future to sell.
@@ -4249,7 +4403,7 @@ public static class StockTrader
 
 ---
 
-## 17.3 Problem 43: Jump Game (Boundary Horizon Expansion)
+## 15.3 Problem 43: Jump Game (Boundary Horizon Expansion)
 
 ### 1. How to Think
 Given an integer array `nums` where `nums[i]` is max jump length from position $i$, determine if you can reach the last index.
@@ -4279,7 +4433,7 @@ public static class JumpGame
 
 ---
 
-## 17.4 Problem 44: Meeting Rooms I & II (Resource Contention Peaks)
+## 15.4 Problem 44: Meeting Rooms I & II (Resource Contention Peaks)
 
 ### 1. How to Think (Meeting Rooms II)
 Given an array of meeting time intervals `intervals`, find the minimum number of conference rooms required.
@@ -4341,9 +4495,234 @@ public static class ConferenceScheduler
 
 ---
 
+# 16. BIT MANIPULATION: HARDWARE-LEVEL LOGIC
+
+## 16.1 Bitwise Operators and Bitmask Flags in C#
+
+Bit manipulation operates directly on binary representation in CPU registers in a single clock cycle.
+
+```
+Operator Summary:
+AND (&) : 1 & 1 = 1, else 0     (Masking / Clearing bits)
+OR  (|) : 0 | 0 = 0, else 1     (Setting bits)
+XOR (^) : Same = 0, Diff = 1    (Toggling bits, self-cancellation: A ^ A = 0, A ^ 0 = A)
+NOT (~) : Flips all bits
+<<      : Shift left (multiplication by 2^k)
+>>      : Shift right (division by 2^k)
+```
+
+In .NET enterprise apps, bitwise flags represent user permission sets without database joins:
+```csharp
+[Flags]
+public enum UserPermissions : uint
+{
+    None        = 0,
+    CanRead     = 1 << 0, // 0001 (1)
+    CanWrite    = 1 << 1, // 0010 (2)
+    CanDelete   = 1 << 2, // 0100 (4)
+    CanAudit    = 1 << 3  // 1000 (8)
+}
+```
+
 ---
 
-# 18. PATTERN 16: BIT MANIPULATION
+## 16.2 Problem 45: Single Number (XOR Cancellation Property)
+
+### 1. How to Think
+Given a non-empty array of integers `nums`, every element appears twice except for one. Find that single one in $O(N)$ time and $O(1)$ space.
+- **XOR Magic Properties:**
+  1. $X \oplus X = 0$ (Any number XORed with itself cancels out).
+  2. $X \oplus 0 = X$.
+  3. XOR is associative and commutative.
+- If we XOR all numbers together:
+  $$(2 \oplus 2) \oplus (4 \oplus 4) \oplus 7 = 0 \oplus 0 \oplus 7 = 7!$$
+
+### 2. C# Solution (.NET 8)
+
+```csharp
+using System;
+
+public static class SingleNumberSolver
+{
+    public static int SingleNumber(ReadOnlySpan<int> nums)
+    {
+        int unique = 0;
+        foreach (int num in nums)
+        {
+            unique ^= num;
+        }
+        return unique;
+    }
+}
+```
+
+---
+
+## 16.3 Problem 46: Number of 1 Bits (Brian Kernighan's Bit Clear)
+
+### 1. How to Think
+Write a function that takes the binary representation of a positive integer and returns the number of set bits (Hamming weight).
+- **Brian Kernighan's Insight:**
+  Executing `n = n & (n - 1)` **always clears the lowest set bit (1) in binary**!
+  The loop runs only as many times as there are set bits, not 32 times.
+
+### 2. C# Solution (.NET 8)
+
+```csharp
+public static class BitCounter
+{
+    public static int HammingWeight(uint n)
+    {
+        int count = 0;
+        while (n != 0)
+        {
+            n &= (n - 1); // Clears the least significant set bit
+            count++;
+        }
+        return count;
+    }
+
+    // Modern .NET 8 Hardware Intrinsics / PopCount:
+    public static int HammingWeightHardware(uint n) => System.Numerics.BitOperations.PopCount(n);
+}
+```
+
+---
+
+## 16.4 Problem 47: Power of Two (Bitmask Decrement Boundary)
+
+### 1. How to Think
+Given an integer `n`, return `true` if it is a power of two.
+- A power of two in binary has **exactly one bit set** (e.g., $16 = 10000_2$, $15 = 01111_2$).
+- Therefore, for any positive power of two:
+  $$n \ \& \ (n - 1) == 0$$
+
+```csharp
+public static class PowerOfTwoChecker
+{
+    public static bool IsPowerOfTwo(int n)
+    {
+        return n > 0 && (n & (n - 1)) == 0;
+    }
+}
+```
+
+---
+
+# 17. INFOSYS & TECHNICAL INTERVIEW SURVIVAL PLAYBOOK
+
+## 17.1 How Infosys Evaluates a 3 YOE .NET Developer
+
+Infosys technical interviewers for 3 YOE lateral hires evaluate candidates on a 4-quadrant rubric:
+
+```
+                          Infosys Evaluation Rubric
+                                      ▲
+                                      │
+            [Algorithmic Rigor]       │       [C# / CLR Deep Truth]
+            - Can write raw loops     │       - Knows Heap vs Stack
+            - Avoids blind LINQ       │       - Explains Dictionary internals
+            - Handles boundary cases  │       - Understands ref struct / Span
+                                      │
+         ─────────────────────────────┼─────────────────────────────►
+                                      │
+            [Clean Code & Idioms]     │       [Communication & Composure]
+            - Meaningful naming       │       - Thinks out loud before coding
+            - Guard clauses           │       - Asks clarifying constraints
+            - Exception management    │       - Accepts interviewer hints
+                                      │
+```
+
+### The "Deadly Sins" in an Infosys Coding Round:
+1. **Writing LINQ when asked to solve in-place:** Saying `.Distinct().OrderBy()` when asked to implement duplicate removal will cost you the interview.
+2. **Silent Coding:** Staring at the screen for 8 minutes without uttering a word. The interviewer cannot grade your thought process.
+3. **Off-by-One Loop Bounds:** Writing `<` instead of `<=` or not checking `Length - 1`, leading to `IndexOutOfRangeException`.
+4. **Failing to Trace Code:** Declaring "My code is complete" without walking through a single concrete test case.
+
+---
+
+## 17.2 Real 45-Minute Interview Simulation Transcript
+
+**Interviewer:** Lead Architect, Infosys Financial Services Practice.  
+**Candidate:** .NET Backend Developer (3 Years Experience).
+
+---
+
+**Interviewer:** *"Welcome, Rajesh. Let's start with a coding problem. Suppose we have an order processing pipeline. We receive an array of transaction integers, both positive and negative. I want you to find the contiguous subarray that produces the maximum total sum. How would you approach this?"*
+
+**Candidate:** *"Thank you, sir. Before writing any code, I would like to clarify a few constraints. First, can the array be empty or null? Second, can all the numbers in the array be negative? Third, what is the expected maximum size of this array?"*
+
+**Interviewer:** *"Good questions. The array will not be null or empty; it will have between 1 and $10^5$ elements. All numbers can indeed be negative. Values range between $-10^4$ and $+10^4$."*
+
+**Candidate:** *"Understood. Let me walk through a small example. If the input is `[-2, 1, -3, 4, -1, 2, 1, -5, 4]`, the subarray `[4, -1, 2, 1]` gives a sum of 6.*  
+*If I think about a brute-force approach, I could generate all possible subarrays using nested loops and compute their sums. That would take $O(N^2)$ time and $O(1)$ space. However, for $N = 10^5$, $N^2$ is $10^{10}$ operations, which will cause a Time Limit Exceeded (TLE).*  
+*We can optimize this to $O(N)$ linear time using Kadane’s Algorithm."*
+
+**Interviewer:** *"Explain the intuition behind Kadane's Algorithm."*
+
+**Candidate:** *"Certainly. At every index $i$, we make a local decision: do we extend our previous contiguous subarray streak, or do we discard it and start fresh at the current element? If our running streak has dropped below zero, carrying it forward only penalizes any future elements. So if `currentStreak > 0`, we add `nums[i]`; otherwise, we reset `currentStreak = nums[i]`. We maintain a global variable `maxSum` to store the maximum streak seen.  
+Crucially, to handle the case where all numbers are negative, like `[-5, -2, -8]`, I will initialize both `currentStreak` and `maxSum` to `nums[0]`, rather than 0. May I proceed to write the C# solution?"*
+
+**Interviewer:** *"Please go ahead."*
+
+*(Candidate writes the code on the screen)*
+```csharp
+public static int MaxSubArray(ReadOnlySpan<int> nums)
+{
+    int currentStreak = nums[0];
+    int maxSubarraySum = nums[0];
+
+    for (int i = 1; i < nums.Length; i++)
+    {
+        int val = nums[i];
+        currentStreak = (currentStreak > 0) ? currentStreak + val : val;
+
+        if (currentStreak > maxSubarraySum)
+        {
+            maxSubarraySum = currentStreak;
+        }
+    }
+
+    return maxSubarraySum;
+}
+```
+
+**Candidate:** *"Let me trace this code with `[-2, 1, -3]`.  
+Init: `currentStreak = -2`, `maxSum = -2`.  
+$i = 1$, `val = 1`: `currentStreak` was negative (-2), so `currentStreak = 1`. `maxSum = max(-2, 1) = 1`.  
+$i = 2$, `val = -3`: `currentStreak` was 1 (>0), so `currentStreak = 1 + (-3) = -2`. `maxSum` remains 1.  
+Loop terminates. Returns 1. The code executes in $O(N)$ time and $O(1)$ auxiliary stack space. Notice I used `ReadOnlySpan<int>` so the caller can pass an array slice without creating GC heap allocations."*
+
+**Interviewer:** *"Excellent. Now a follow-up: what if I asked you to return not just the sum, but the actual start and end indices of that subarray?"*
+
+**Candidate:** *"We can track three pointers: `start = 0`, `end = 0`, and `tempStart = 0`. Whenever we start a new streak (`currentStreak = nums[i]`), we set `tempStart = i`. Whenever `currentStreak > maxSubarraySum`, we update `maxSubarraySum = currentStreak`, set `start = tempStart`, and `end = i`. When the loop finishes, `[start, end]` will be the exact boundaries."*
+
+**Interviewer:** *"Spot on, Rajesh. That's exactly what I wanted to hear."*
+
+---
+
+## 17.3 The .NET 8 Big-O Time & Space Complexity Reference Matrix
+
+| Data Structure / Operation | Access | Search | Insertion | Deletion | Space Complexity | Underlying .NET 8 Internal Architecture |
+|---|---|---|---|---|---|---|
+| **Array (`T[]`)** | $O(1)$ | $O(N)$ | $O(N)$ (resize) | $O(N)$ (shift) | $O(N)$ | Contiguous block on GC Heap; CPU L1 cache line prefetching. |
+| **`Span<T>` / `ReadOnlySpan<T>`** | $O(1)$ | $O(N)$ | N/A (fixed window) | N/A | $O(1)$ | Ref struct on Stack; interior pointer + 32-bit length. |
+| **`List<T>`** | $O(1)$ | $O(N)$ | Amortized $O(1)$ | $O(N)$ | $O(N)$ | Backed by `T[] _items`; doubles capacity when full. |
+| **`Dictionary<TKey, TValue>`** | N/A | $O(1)$ avg, $O(N)$ worst | $O(1)$ avg, $O(N)$ worst | $O(1)$ avg | $O(N)$ | Array-based separate chaining: `int[] _buckets`, `Entry[] _entries`. |
+| **`HashSet<T>`** | N/A | $O(1)$ avg, $O(N)$ worst | $O(1)$ avg | $O(1)$ avg | $O(N)$ | Backed by hash buckets similar to `Dictionary`. |
+| **`Stack<T>`** | N/A | $O(N)$ | $O(1)$ push | $O(1)$ pop | $O(N)$ | Backed by `T[] _array`; LIFO pointer index. |
+| **`Queue<T>`** | N/A | $O(N)$ | $O(1)$ enqueue | $O(1)$ dequeue | $O(N)$ | Backed by circular `T[] _array` with head and tail index pointers. |
+| **`LinkedList<T>`** | $O(N)$ | $O(N)$ | $O(1)$ (node known) | $O(1)$ (node known) | $O(N)$ | Doubly-linked nodes; high heap fragmentation; poor cache locality. |
+| **`PriorityQueue<TElement, TPriority>`** | N/A | $O(N)$ | $O(\log N)$ | $O(\log N)$ | $O(N)$ | Array-backed 4-ary or binary Min-Heap; sift-up / sift-down. |
+| **`SortedSet<T>` / `SortedDictionary<K, V>`** | N/A | $O(\log N)$ | $O(\log N)$ | $O(\log N)$ | $O(N)$ | Self-balancing Red-Black Tree. |
+
+---
+
+
+
+---
+
+# 16. BIT MANIPULATION: HARDWARE-LEVEL LOGIC
 
 ## 18.1 Bitwise Operators and Bitmask Flags in C#
 
@@ -4457,11 +4836,9 @@ public static class PowerOfTwoChecker
 
 ---
 
----
+# 17. INFOSYS & TECHNICAL INTERVIEW SURVIVAL PLAYBOOK
 
-# 19. INFOSYS & TECHNICAL INTERVIEW SURVIVAL PLAYBOOK
-
-## 19.1 How Infosys Evaluates a 3 YOE .NET Developer
+## 17.1 How Infosys Evaluates a 3 YOE .NET Developer
 
 Infosys technical interviewers for 3 YOE lateral hires evaluate candidates on a 4-quadrant rubric:
 
@@ -4491,7 +4868,7 @@ Infosys technical interviewers for 3 YOE lateral hires evaluate candidates on a 
 
 ---
 
-## 19.2 Real 45-Minute Interview Simulation Transcript
+## 17.2 Real 45-Minute Interview Simulation Transcript
 
 **Interviewer:** Lead Architect, Infosys Financial Services Practice.  
 **Candidate:** .NET Backend Developer (3 Years Experience).
@@ -4551,7 +4928,7 @@ Loop terminates. Returns 1. The code executes in $O(N)$ time and $O(1)$ auxiliar
 
 ---
 
-## 19.3 The .NET 8 Big-O Time & Space Complexity Reference Matrix
+## 17.3 The .NET 8 Big-O Time & Space Complexity Reference Matrix
 
 | Data Structure / Operation | Access | Search | Insertion | Deletion | Space Complexity | Underlying .NET 8 Internal Architecture |
 |---|---|---|---|---|---|---|
@@ -4565,3 +4942,6 @@ Loop terminates. Returns 1. The code executes in $O(N)$ time and $O(1)$ auxiliar
 | **`LinkedList<T>`** | $O(N)$ | $O(N)$ | $O(1)$ (node known) | $O(1)$ (node known) | $O(N)$ | Doubly-linked nodes; high heap fragmentation; poor cache locality. |
 | **`PriorityQueue<TElement, TPriority>`** | N/A | $O(N)$ | $O(\log N)$ | $O(\log N)$ | $O(N)$ | Array-backed 4-ary or binary Min-Heap; sift-up / sift-down. |
 | **`SortedSet<T>` / `SortedDictionary<K, V>`** | N/A | $O(\log N)$ | $O(\log N)$ | $O(\log N)$ | $O(N)$ | Self-balancing Red-Black Tree. |
+
+---
+

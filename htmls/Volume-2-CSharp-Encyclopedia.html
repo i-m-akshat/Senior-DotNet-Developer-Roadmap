@@ -1087,39 +1087,32 @@ li::marker { color: var(--primary); }
 <ol>
 <li><strong>Native AOT Pipeline:</strong> Removes the JIT compiler entirely. An AOT compiler (<code>ILCompiler</code>) performs whole-program static analysis, strips unused code (tree shaking), and outputs a native binary (<code>.exe</code> / <code>.so</code>) with an embedded minimal runtime (CoreRT/Runtime). Dynamic reflection and unconstrained code generation are restricted.</li>
 </ol>
+<div class='mermaid'>flowchart TD
+    Src["<b>C# Source Code</b><br/>(e.g., Program.cs)"] --> Roslyn["<b>Roslyn Compiler (csc)</b><br/>Lexing &rarr; Parsing &rarr; Semantic Binding &rarr; IL Lowering"]
+    Roslyn --> Asm["<b>Managed Assembly (.dll / .exe)</b><br/>CIL Bytecode + ECMA-335 Metadata"]
+    Asm --> Loader["<b>CLR Runtime / AssemblyLoader</b><br/>Loads Assembly into AssemblyLoadContext (ALC)"]
+    Loader --> MT["<b>MethodTable Initialized</b><br/>Slot points to PreJIT Stub"]
+    
+    MT --> TieredJIT{"<b>Tiered JIT Compilation</b><br/>(RyuJIT)"}
+    
+    TieredJIT -->|"1st Invocation (Fast Startup)"| Tier0["<b>Tier 0: Quick JIT</b><br/>&bull; No heavy loop unrolling or inlining<br/>&bull; Injects call & branch counters"]
+    
+    Tier0 --> Native0["<b>Native Machine Code (Tier 0)</b>"]
+    Native0 --> CallCounter{"Method Called 30+ Times?<br/>(Dynamic PGO)"}
+    
+    CallCounter -->|"Hot Method Threshold Met"| Tier1["<b>Tier 1: Highly Optimized JIT</b><br/>&bull; Dynamic Profile-Guided Optimization (PGO)<br/>&bull; Method Inlining & SIMD Vectorization<br/>&bull; Loop Unrolling & Dead Code Elimination"]
+    
+    Tier1 --> Native1["<b>Native CPU Instructions (x86_64 / ARM64)</b><br/>Direct Physical Silicon Execution"]
 
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">+---------------------------------------------------------------+
-|                       C# Source Code                          |
-+---------------------------------------------------------------+
-                               |
-                   [Roslyn Compiler (csc)]
-                               v
-+---------------------------------------------------------------+
-|  Assembly (.dll / .exe) = IL Bytecode + Embedded Metadata     |
-+---------------------------------------------------------------+
-                               |
-              [CLR Execution / Assembly Loader]
-                               v
-             +----------------------------------+
-             | MethodTable -&gt; PreJIT Stub Pointer|
-             +----------------------------------+
-                               |
-                   [Tiered JIT Compilation]
-                /                              \
-        Tier 0 (Quick JIT)              Tier 1 (PGO / Highly Optimized)
-       (Fast startup, counters)        (Inlined, Vectorized, Loop Unrolled)
-                \                              /
-                 v                            v
-+---------------------------------------------------------------+
-|               Native CPU Instructions (x86_64 / ARM64)        |
-+---------------------------------------------------------------+</code></pre>
-</div>
-
+    style Src fill:#1e3a8a,stroke:#3b82f6,color:#fff
+    style Roslyn fill:#312e81,stroke:#6366f1,color:#fff
+    style Asm fill:#064e3b,stroke:#10b981,color:#fff
+    style Loader fill:#1f2937,stroke:#9ca3af,color:#fff
+    style MT fill:#7c2d12,stroke:#f97316,color:#fff
+    style TieredJIT fill:#581c87,stroke:#a855f7,color:#fff
+    style Tier0 fill:#854d0e,stroke:#eab308,color:#fff
+    style Tier1 fill:#065f46,stroke:#34d399,color:#fff
+    style Native1 fill:#1e293b,stroke:#38bdf8,color:#fff</div>
 <h3 id='5-real-production-example'>5. Real Production Example</h3>
 <p><strong>High-Frequency Payment Gateway (Transaction Processing Core):</strong></p>
 <p>The gateway processes 15,000 TPS. At system bootstrap, Tier 0 allows ASP.NET Core Kestrel to bind HTTP ports within 400 milliseconds. Within seconds of real traffic, the payment calculation engine (<code>PaymentRoutingEngine.EvaluateFee</code>) transitions to Tier 1 via Dynamic PGO, eliminating branch mispredictions and inlining risk-check predicates. For edge container microservices with cold starts in Kubernetes, compiling the gateway with Native AOT drops memory footprints from 140MB to 18MB and boots in 12ms.</p>

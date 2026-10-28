@@ -1371,66 +1371,32 @@ Support:   Enterprise Gold  Fast Innovation  Enterprise Gold  Fast Innovation  E
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='22-end-to-end-execution-pipeline-roslyn-to-cpu'>2.2 End-to-End Execution Pipeline (Roslyn to CPU)</h3>
 <p>Every line of C# code undergoes a sophisticated multi-stage compilation and execution journey before physical CPU transistors execute it:</p>
+<div class='mermaid'>flowchart TD
+    Src["<b>C# Source Code</b><br/>(e.g., Program.cs)"] --> Roslyn["<b>Roslyn Compiler (csc)</b><br/>Lexing &rarr; Parsing &rarr; Semantic Binding &rarr; IL Lowering"]
+    Roslyn --> Asm["<b>Managed Assembly (.dll / .exe)</b><br/>CIL Bytecode + ECMA-335 Metadata"]
+    Asm --> Loader["<b>CLR Runtime / AssemblyLoader</b><br/>Loads Assembly into AssemblyLoadContext (ALC)"]
+    Loader --> MT["<b>MethodTable Initialized</b><br/>Slot points to PreJIT Stub"]
+    
+    MT --> TieredJIT{"<b>Tiered JIT Compilation</b><br/>(RyuJIT)"}
+    
+    TieredJIT -->|"1st Invocation (Fast Startup)"| Tier0["<b>Tier 0: Quick JIT</b><br/>&bull; No heavy loop unrolling or inlining<br/>&bull; Injects call & branch counters"]
+    
+    Tier0 --> Native0["<b>Native Machine Code (Tier 0)</b>"]
+    Native0 --> CallCounter{"Method Called 30+ Times?<br/>(Dynamic PGO)"}
+    
+    CallCounter -->|"Hot Method Threshold Met"| Tier1["<b>Tier 1: Highly Optimized JIT</b><br/>&bull; Dynamic Profile-Guided Optimization (PGO)<br/>&bull; Method Inlining & SIMD Vectorization<br/>&bull; Loop Unrolling & Dead Code Elimination"]
+    
+    Tier1 --> Native1["<b>Native CPU Instructions (x86_64 / ARM64)</b><br/>Direct Physical Silicon Execution"]
 
-<div class="code-container">
-    <div class="code-header">
-        <span>CODE</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
-    </div>
-    <pre><code class="language-">+--------------------+
-|   C# Source Code   |  (e.g., PaymentTransaction.cs)
-+--------------------+
-          |
-          v   [ROSLYN COMPILER - csc]
-+---------------------------------------------------------------------------------------+
-|  1. Lexical Analysis (Tokens)                                                         |
-|  2. Syntactic Analysis (Abstract Syntax Tree - AST)                                   |
-|  3. Semantic Analysis (Symbol Tables, Type Binding)                                   |
-|  4. IL Lowering (Transforming async/await to state machines, foreach to while)        |
-+---------------------------------------------------------------------------------------+
-          |
-          v
-+---------------------------------------------------------------------------------------+
-|  MANAGED ASSEMBLY (.dll / .exe)                                                       |
-|  - Intermediate Language (CIL / MSIL Bytecode instructions)                           |
-|  - ECMA-335 Metadata Tables (TypeDef, MethodDef, Param, MemberRef, TypeRef)           |
-|  - Manifest &amp; Embedded Resources                                                      |
-+---------------------------------------------------------------------------------------+
-          |
-          v   [EXECUTION TRIGGER: dotnet PaymentGateway.dll]
-+---------------------------------------------------------------------------------------+
-|  OS LOADER &amp; HOST ACTIVATION (app.exe / hostfxr.dll / hostpolicy.dll)                 |
-|  - Parses PaymentGateway.runtimeconfig.json and PaymentGateway.deps.json              |
-|  - Loads CoreCLR runtime engine (coreclr.dll / libcoreclr.so)                         |
-|  - Initializes Virtual Machine (GC Heap, ThreadPool, Type System, SyncBlocks)        |
-+---------------------------------------------------------------------------------------+
-          |
-          v   [ASSEMBLY LOADING: AssemblyLoadContext.Default]
-+---------------------------------------------------------------------------------------+
-|  CoreCLR TYPE SYSTEM INITIALIZATION                                                   |
-|  - Resolves MethodTables and EEClass structures in unmanaged process memory           |
-|  - Sets up Method VTables and JIT Pre-Stubs (MethodDesc pointers)                     |
-+---------------------------------------------------------------------------------------+
-          |
-          v   [JIT COMPILATION: RyuJIT]
-+---------------------------------------------------------------------------------------+
-|  METHOD INVOCATION (First Call hits JIT Pre-Stub)                                     |
-|  - Tier 0: Quick JIT compiles IL to unoptimized native machine code with call counters|
-|  - When invocation threshold reached (e.g. 30 calls): background JIT recompiles       |
-|  - Tier 1: Optimized JIT + Dynamic PGO (Inlining, Loop Unrolling, Vectorization)      |
-+---------------------------------------------------------------------------------------+
-          |
-          v
-+--------------------+
-| Native Machine Code|  (x86-64 / ARM64 assembly instructions)
-+--------------------+
-          |
-          v
-+--------------------+
-|   CPU EXECUTION    |  (Registers, L1/L2/L3 Hardware Cache, Instruction Pipeline)
-+--------------------+</code></pre>
-</div>
-
+    style Src fill:#1e3a8a,stroke:#3b82f6,color:#fff
+    style Roslyn fill:#312e81,stroke:#6366f1,color:#fff
+    style Asm fill:#064e3b,stroke:#10b981,color:#fff
+    style Loader fill:#1f2937,stroke:#9ca3af,color:#fff
+    style MT fill:#7c2d12,stroke:#f97316,color:#fff
+    style TieredJIT fill:#581c87,stroke:#a855f7,color:#fff
+    style Tier0 fill:#854d0e,stroke:#eab308,color:#fff
+    style Tier1 fill:#065f46,stroke:#34d399,color:#fff
+    style Native1 fill:#1e293b,stroke:#38bdf8,color:#fff</div>
 <hr style='border: 0; border-top: 1px solid var(--border); margin: 30px 0;'>
 <h3 id='23-managed-vs-unmanaged-execution-interop-mechanics'>2.3 Managed vs Unmanaged Execution & Interop Mechanics</h3>
 <h4 id='managed-code'>Managed Code:</h4>

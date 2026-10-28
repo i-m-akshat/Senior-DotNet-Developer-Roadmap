@@ -60,32 +60,33 @@ Eliminates platform-specific binaries, cross-language ABI mismatches, unmanaged 
    - **Tier 1 (Optimized JIT / PGO - Profile-Guided Optimization):** Once a method passes the invocation threshold (e.g., 30 calls), a background thread re-JITs the method, inlining hot call sites, removing redundant array bounds checks, and applying SIMD vectorization.
 5. **Native AOT Pipeline:** Removes the JIT compiler entirely. An AOT compiler (`ILCompiler`) performs whole-program static analysis, strips unused code (tree shaking), and outputs a native binary (`.exe` / `.so`) with an embedded minimal runtime (CoreRT/Runtime). Dynamic reflection and unconstrained code generation are restricted.
 
-```
-+---------------------------------------------------------------+
-|                       C# Source Code                          |
-+---------------------------------------------------------------+
-                               |
-                   [Roslyn Compiler (csc)]
-                               v
-+---------------------------------------------------------------+
-|  Assembly (.dll / .exe) = IL Bytecode + Embedded Metadata     |
-+---------------------------------------------------------------+
-                               |
-              [CLR Execution / Assembly Loader]
-                               v
-             +----------------------------------+
-             | MethodTable -> PreJIT Stub Pointer|
-             +----------------------------------+
-                               |
-                   [Tiered JIT Compilation]
-                /                              \
-        Tier 0 (Quick JIT)              Tier 1 (PGO / Highly Optimized)
-       (Fast startup, counters)        (Inlined, Vectorized, Loop Unrolled)
-                \                              /
-                 v                            v
-+---------------------------------------------------------------+
-|               Native CPU Instructions (x86_64 / ARM64)        |
-+---------------------------------------------------------------+
+```mermaid
+flowchart TD
+    Src["<b>C# Source Code</b><br/>(e.g., Program.cs)"] --> Roslyn["<b>Roslyn Compiler (csc)</b><br/>Lexing &rarr; Parsing &rarr; Semantic Binding &rarr; IL Lowering"]
+    Roslyn --> Asm["<b>Managed Assembly (.dll / .exe)</b><br/>CIL Bytecode + ECMA-335 Metadata"]
+    Asm --> Loader["<b>CLR Runtime / AssemblyLoader</b><br/>Loads Assembly into AssemblyLoadContext (ALC)"]
+    Loader --> MT["<b>MethodTable Initialized</b><br/>Slot points to PreJIT Stub"]
+    
+    MT --> TieredJIT{"<b>Tiered JIT Compilation</b><br/>(RyuJIT)"}
+    
+    TieredJIT -->|"1st Invocation (Fast Startup)"| Tier0["<b>Tier 0: Quick JIT</b><br/>&bull; No heavy loop unrolling or inlining<br/>&bull; Injects call & branch counters"]
+    
+    Tier0 --> Native0["<b>Native Machine Code (Tier 0)</b>"]
+    Native0 --> CallCounter{"Method Called 30+ Times?<br/>(Dynamic PGO)"}
+    
+    CallCounter -->|"Hot Method Threshold Met"| Tier1["<b>Tier 1: Highly Optimized JIT</b><br/>&bull; Dynamic Profile-Guided Optimization (PGO)<br/>&bull; Method Inlining & SIMD Vectorization<br/>&bull; Loop Unrolling & Dead Code Elimination"]
+    
+    Tier1 --> Native1["<b>Native CPU Instructions (x86_64 / ARM64)</b><br/>Direct Physical Silicon Execution"]
+
+    style Src fill:#1e3a8a,stroke:#3b82f6,color:#fff
+    style Roslyn fill:#312e81,stroke:#6366f1,color:#fff
+    style Asm fill:#064e3b,stroke:#10b981,color:#fff
+    style Loader fill:#1f2937,stroke:#9ca3af,color:#fff
+    style MT fill:#7c2d12,stroke:#f97316,color:#fff
+    style TieredJIT fill:#581c87,stroke:#a855f7,color:#fff
+    style Tier0 fill:#854d0e,stroke:#eab308,color:#fff
+    style Tier1 fill:#065f46,stroke:#34d399,color:#fff
+    style Native1 fill:#1e293b,stroke:#38bdf8,color:#fff
 ```
 
 ### 5. Real Production Example
